@@ -50,6 +50,9 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 				}
 				return err
 			}
+			if i > 4 {
+				time.Sleep(5 * time.Second)
+			}
 			c.CompanyID = envId
 			break
 		}

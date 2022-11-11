@@ -37,6 +37,7 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 func testAccDataSourceApplications_AllApplications_Hcl(resourceName string) (hcl string) {
 	hcl = fmt.Sprintf(`
 data "davinci_applications" "%[1]s" {
+	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
 }
 `, resourceName)
 	return hcl

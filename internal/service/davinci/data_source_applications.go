@@ -321,6 +321,10 @@ func DataSourceApplications() *schema.Resource {
 					},
 				},
 			},
+			"environment_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 		},
 	}
 }
