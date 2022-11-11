@@ -65,7 +65,7 @@ func New(version string) func() *schema.Provider {
 			DataSourcesMap: map[string]*schema.Resource{
 				"davinci_connections": davinci.DataSourceConnections(),
 				// "davinci_connection":   davinci.DataSourceConnection(),
-				// "davinci_applications": davinci.DataSourceApplications(),
+				"davinci_applications": davinci.DataSourceApplications(),
 				// "davinci_application":  davinci.DataSourceApplication(),
 			},
 		}

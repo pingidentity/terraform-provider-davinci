@@ -82,7 +82,12 @@ func DataSourceConnections() *schema.Resource {
 func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*dv.APIClient)
 	var diags diag.Diagnostics
-	sdk.GetEnvironmentId(c, d)
+
+	err := sdk.CheckAndRefreshAuth(ctx, c, d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	resp, err := c.ReadConnections(&c.CompanyID, nil)
 	if err != nil {
 		return diag.FromErr(err)

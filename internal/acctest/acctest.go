@@ -224,3 +224,49 @@ func TfHclPingOneDavinci() string {
 	}
 	`)
 }
+
+// PingoneEnvrionmentSsoHcl returns hcl for a pingone environment and assigns roles used for SSO by davinci
+// The following environment vars must be set:
+// - PINGONE_ENVIRONMENT_ID
+// - PINGONE_LICENSE_ID
+// - PINGONE_SSO_USERNAME
+// - PINGONE_SSO_PASSWORD
+//
+// The `resourceName` input can be a random charset and will be used for the name of
+// each resource and datasource in the returned hcl.
+func PingoneEnvrionmentSsoHcl(resourceName string) (hcl string) {
+	adminEnvID := os.Getenv("PINGONE_ENVIRONMENT_ID")
+	licenseID := os.Getenv("PINGONE_LICENSE_ID")
+	username := os.Getenv("PINGONE_USERNAME")
+	return fmt.Sprintf(`
+resource "pingone_environment" "%[1]s" {
+	name = "tf-testacc-dynamic-%[1]s"
+	type = "SANDBOX"
+	license_id = "%[2]s"
+	default_population {
+	}
+	service {
+		type = "SSO"
+	}
+	service {
+		type = "DaVinci"
+	}
+}
+
+data "pingone_role" "%[1]s" {
+	name = "Identity Data Admin"
+}
+
+data "pingone_user" "%[1]s"{
+	username             = "%[3]s"
+	environment_id       = "%[4]s"
+}
+
+resource "pingone_role_assignment_user" "%[1]s" {
+	environment_id       = "%[4]s"
+	user_id              = data.pingone_user.%[1]s.id
+	role_id              = data.pingone_role.%[1]s.id
+	scope_environment_id = resource.pingone_environment.%[1]s.id
+}
+`, resourceName, licenseID, username, adminEnvID)
+}
