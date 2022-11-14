@@ -130,6 +130,16 @@ func ResourceNameGen() string {
 	return acctest.RandStringFromCharSet(strlen, acctest.CharSetAlpha)
 }
 
+func RandStringFieldGen() string {
+	strlen := 10
+	return acctest.RandString(strlen)
+}
+
+func RandStringWithPrefix(prefix string) string {
+
+	return acctest.RandomWithPrefix(prefix)
+}
+
 func MainTfHcl(resourceName string) (hcl string) {
 	return fmt.Sprintf(`				
 resource "davinci_connection" "%[1]s" {

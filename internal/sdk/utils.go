@@ -30,7 +30,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 		}
 		timeout := 40
 		for i := 0; i <= timeout; {
-			_, err := c.ReadConnections(&envId, nil)
+			apps, err := c.ReadApplications(&envId, nil)
 			if err != nil {
 				httpErr, err := c.ParseDvHttpError(err)
 				if err == nil && httpErr.Status == 401 && strings.Contains(httpErr.Body, "Authorization failed") && i <= timeout {
@@ -50,7 +50,12 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 				}
 				return err
 			}
-			if i > 4 {
+			if i >= 4 {
+				// For new environments, need to wait for bootstrapping to complete.
+				// The final step is creation of the app.
+				if len(apps) == 0 {
+					tflog.Warn(ctx, "Waiting for bootstrap to complete... ")
+				}
 				time.Sleep(5 * time.Second)
 			}
 			c.CompanyID = envId

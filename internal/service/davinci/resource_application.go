@@ -19,8 +19,9 @@ func ResourceApplication() *schema.Resource {
 		DeleteContext: resourceApplicationDelete,
 		Schema: map[string]*schema.Schema{
 			"environment_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "PingOne environment id",
 			},
 			"application_id": {
 				Type:     schema.TypeString,

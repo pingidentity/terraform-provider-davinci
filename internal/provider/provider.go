@@ -58,13 +58,13 @@ func New(version string) func() *schema.Provider {
 				},
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				// "davinci_connection":  davinci.ResourceConnection(),
-				// "davinci_flow":        davinci.ResourceFlow(),
+				"davinci_connection":  davinci.ResourceConnection(),
+				"davinci_flow":        davinci.ResourceFlow(),
 				"davinci_application": davinci.ResourceApplication(),
 			},
 			DataSourcesMap: map[string]*schema.Resource{
-				"davinci_connections": davinci.DataSourceConnections(),
-				// "davinci_connection":   davinci.DataSourceConnection(),
+				"davinci_connections":  davinci.DataSourceConnections(),
+				"davinci_connection":   davinci.DataSourceConnection(),
 				"davinci_applications": davinci.DataSourceApplications(),
 				"davinci_application":  davinci.DataSourceApplication(),
 			},

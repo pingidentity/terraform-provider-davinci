@@ -71,9 +71,17 @@ func DataSourceConnections() *schema.Resource {
 				},
 			},
 			"environment_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "PingOne environment id",
+			},
+			"connector_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Filters list of returned connections",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 		},
 	}
@@ -88,9 +96,28 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
-	resp, err := c.ReadConnections(&c.CompanyID, nil)
+	//TODO: clean this up
+	var cIdsFilter []string
+	if cIds, ok := d.GetOk("connector_ids"); ok {
+		cIdsInterface := cIds.([]interface{})
+		for _, v := range cIdsInterface {
+			cIdsFilter = append(cIdsFilter, v.(string))
+		}
+	}
+
+	res, err := c.ReadConnections(&c.CompanyID, nil)
 	if err != nil {
 		return diag.FromErr(err)
+	}
+	resp := []dv.Connection{}
+	for _, resItem := range res {
+		if cIdsFilter != nil {
+			cIdFound := contains(cIdsFilter, resItem.ConnectorID)
+			if cIdFound != true {
+				continue
+			}
+			resp = append(resp, resItem)
+		}
 	}
 	conns := make([]interface{}, len(resp), len(resp))
 	for i, connItem := range resp {
@@ -157,4 +184,13 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m in
 
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 	return diags
+}
+
+func contains(s []string, str string) bool {
+	for _, a := range s {
+		if a == str {
+			return true
+		}
+	}
+	return false
 }

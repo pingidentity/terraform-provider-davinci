@@ -28,7 +28,6 @@ func DataSourceApplications() *schema.Resource {
 						},
 						"environment_id": {
 							Type:     schema.TypeString,
-							Optional: true,
 							Computed: true,
 						},
 						"customer_id": {
@@ -322,8 +321,9 @@ func DataSourceApplications() *schema.Resource {
 				},
 			},
 			"environment_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "PingOne environment id",
 			},
 		},
 	}

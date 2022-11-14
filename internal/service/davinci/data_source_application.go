@@ -18,8 +18,9 @@ func DataSourceApplication() *schema.Resource {
 				Required: true,
 			},
 			"environment_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "PingOne environment id",
 			},
 			"customer_id": {
 				Type:     schema.TypeString,

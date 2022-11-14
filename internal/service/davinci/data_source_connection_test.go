@@ -1,6 +1,7 @@
 package davinci_test
 
 import (
+	// "fmt"
 	"fmt"
 	"testing"
 
@@ -8,14 +9,12 @@ import (
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
 )
 
-func TestAccDataSourceConnection_AllConections(t *testing.T) {
+func TestAccDataSourceConnection_ReadSingle(t *testing.T) {
 
-	resourceBase := "davinci_connections"
+	resourceBase := "davinci_connection"
 	resourceName := acctest.ResourceNameGen()
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
-
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
-	hcl := baseHcl + testAccDataSourceConnection_AllConections_Hcl(resourceName)
+	hcl := testAccDataSourceConnection_Slim(resourceName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -27,21 +26,25 @@ func TestAccDataSourceConnection_AllConections(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(dataSourceFullName, "connections.0.name"),
+					resource.TestCheckResourceAttrSet(dataSourceFullName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceFullName, "connector_id"),
+					resource.TestCheckResourceAttrSet(dataSourceFullName, "created_date"),
 					resource.TestCheckResourceAttrSet(dataSourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(dataSourceFullName, "connection_id"),
 				),
 			},
 		},
 	})
 }
 
-func testAccDataSourceConnection_AllConections_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+func testAccDataSourceConnection_Slim(resourceName string) (hcl string) {
+	baseHcl := testAccDataSourceConnection_AllConections_Hcl(resourceName)
 	hcl = fmt.Sprintf(`
 %[1]s
 
-data "davinci_connections" "%[2]s" {
+data "davinci_connection" "%[2]s"{
 	environment_id = resource.pingone_environment.%[2]s.id
+	connection_id = data.davinci_connections.%[2]s.0.id
 }
 `, baseHcl, resourceName)
 	return hcl
