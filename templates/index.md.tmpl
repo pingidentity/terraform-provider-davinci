@@ -1,0 +1,31 @@
+---
+page_title: "Provider: PingOne Davinci"
+description: |-
+  The Davinci provider is used to manage PingOne DaVinci environments.
+---
+
+# DaVinci Provider
+
+The "davinci" provider allows operators to manage PingOne DaVinci infrastructure
+as code. This provider can be used along with the [PingOne provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs)
+to stand up fully orchestrated PingOne IAM Experiences.
+
+## Getting Started
+
+This provider will authenticate an API client to PingOne to configure to the DaVinci environment.
+
+### PingOne SSO
+
+You must have a PingOne account and may use multiple environments within that account.
+
+Prerequisites:
+
+- Have a PingOne environment
+- Add the DaVinci service to your Administrators environment
+- Choose or create a user identity in the Administrators account, 
+  give this user the Environment role over the admin Organization.
+- For each additional DaVinci environment that needs SSO access,
+  give this user the Identity Data Admin role for that environment.
+  This step can be done in HCL as shown below:
+
+{{ tffile "examples/provider/provider_sso.tf" }}
