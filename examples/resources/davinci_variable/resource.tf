@@ -1,0 +1,8 @@
+resource "davinci_variable" "my_global_var" {
+  environment_id = var.environment_id
+  name           = "region"
+  context        = "company"
+  description    = "identifies region for functions in flow"
+  value          = "northamerica"
+  type           = "string"
+}

@@ -75,10 +75,10 @@ resource "pingone_role_assignment_user" "admin_sso" {
   scope_environment_id = resource.pingone_environment.tf_trial.id
 }
 
-// DaVinci dependincies are as such:
-// - Connections
-// - Flows depend on Connections
-// - Apps depend on Flows
+// DaVinci dependincies are as such and should be de:
+// - Connections/Variables
+// - Flows depends_on Connections/Variables
+// - Apps depends_on Flows
 resource "davinci_flow" "initial_flow" {
   flow_json = file("default_flow.json")
   deploy    = true
@@ -88,8 +88,8 @@ resource "davinci_flow" "initial_flow" {
 
 // All other data/resources can occur after the first DV read action
 resource "davinci_application" "one" {
-  company_id = resource.pingone_environment.tf_trial.id
-  name       = "FromTF"
+  environment_id = resource.pingone_role_assignment_user.admin_sso.scope_environment_id
+  name           = "FromTF"
   oauth {
     enabled = false
     values {
