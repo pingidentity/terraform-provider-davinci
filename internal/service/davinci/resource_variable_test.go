@@ -74,7 +74,7 @@ func TestAccResourceVariable_FlowInstanceContext(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "value"),
 					//Davinci uses 0,2000 as defaults
-					resource.TestCheckResourceAttr(resourceFullName, "max", "2000"),
+					resource.TestCheckResourceAttr(resourceFullName, "max", "1000"),
 					resource.TestCheckResourceAttr(resourceFullName, "min", "0"),
 				),
 			},
@@ -94,6 +94,8 @@ resource "davinci_variable" "%[2]s" {
 	description = "desc-%[2]s"
 	value = "val-%[2]s"
 	type = "string"
+	min = 0
+	max = 1000
 }
 `, baseHcl, resourceName)
 	return hcl
