@@ -100,6 +100,9 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err := d.Set("flow_json", string(rString)); err != nil {
 		return diag.FromErr(err)
 	}
+	if err := d.Set("environment_id", string(res.Flow.CompanyID)); err != nil {
+		return diag.FromErr(err)
+	}
 
 	return diags
 }

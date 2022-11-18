@@ -6,14 +6,22 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-log v0.7.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
-	github.com/samir-gandhi/davinci-client-go v0.0.26
+	github.com/pingidentity/terraform-provider-pingone v0.7.0
+	github.com/samir-gandhi/davinci-client-go v0.0.27
 )
+
+replace github.com/samir-gandhi/davinci-client-go => /home/ubuntu/go/src/github.com/samir-gandhi/davinci-client-go
 
 require (
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
+	github.com/go-playground/locales v0.14.0 // indirect
+	github.com/go-playground/universal-translator v0.18.0 // indirect
+	github.com/go-playground/validator/v10 v10.11.1 // indirect
+	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.1.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.12.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.7.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.3.0 // indirect
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e // indirect
 	golang.org/x/oauth2 v0.1.0 // indirect
 )
