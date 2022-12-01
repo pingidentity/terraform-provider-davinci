@@ -110,14 +110,16 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 	resp := []dv.Connection{}
-	for _, resItem := range res {
-		if cIdsFilter != nil {
+	if cIdsFilter != nil {
+		for _, resItem := range res {
 			cIdFound := contains(cIdsFilter, resItem.ConnectorID)
 			if cIdFound != true {
 				continue
 			}
 			resp = append(resp, resItem)
 		}
+	} else {
+		resp = res
 	}
 	conns := make([]interface{}, len(resp), len(resp))
 	for i, connItem := range resp {

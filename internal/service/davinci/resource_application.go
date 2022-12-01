@@ -525,31 +525,12 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 			return nil, fmt.Errorf("Only one set for User Portal Values allowed")
 		}
 	}
+
+	//Set Flow Policies
 	fp, ok := d.GetOk("policies")
 	if ok {
-		fl := fp.(*schema.Set).List()
-		if len(fl) > 0 {
-			fvUpdate := []dv.Policies{}
-			for _, v := range fl {
-				flMap := v.(map[string]interface{})
-				thisFvUpdate := dv.Policies{
-					Name:     flMap["name"].(string),
-					Status:   flMap["status"].(string),
-					PolicyID: flMap["policy_id"].(string),
-				}
-				thisPolicyFlows := flMap["policy_flows"].(*schema.Set).List()
-				for _, w := range thisPolicyFlows {
-					flPMap := w.(map[string]interface{})
-					thisFvPUpdate := dv.PolicyFlows{
-						FlowID:    flPMap["flow_id"].(string),
-						VersionID: flPMap["version_id"].(int),
-						Weight:    flPMap["weight"].(int),
-					}
-					thisFvUpdate.PolicyFlows = append(thisFvUpdate.PolicyFlows, thisFvPUpdate)
-				}
-
-				fvUpdate = append(fvUpdate, thisFvUpdate)
-			}
+		fvUpdate := expandFlowPolicies(fp)
+		if len(fvUpdate) > 0 {
 			a.Policies = fvUpdate
 		}
 	}
@@ -565,4 +546,32 @@ func expandStringList(configured []interface{}) []string {
 		}
 	}
 	return vs
+}
+
+func expandFlowPolicies(fp interface{}) []dv.Policy {
+	fl := fp.(*schema.Set).List()
+	fvUpdate := []dv.Policy{}
+	if len(fl) > 0 {
+		for _, v := range fl {
+			flMap := v.(map[string]interface{})
+			thisFvUpdate := dv.Policy{
+				Name:     flMap["name"].(string),
+				Status:   flMap["status"].(string),
+				PolicyID: flMap["policy_id"].(string),
+			}
+			thisPolicyFlows := flMap["policy_flows"].(*schema.Set).List()
+			for _, w := range thisPolicyFlows {
+				flPMap := w.(map[string]interface{})
+				thisFvPUpdate := dv.PolicyFlow{
+					FlowID:    flPMap["flow_id"].(string),
+					VersionID: flPMap["version_id"].(int),
+					Weight:    flPMap["weight"].(int),
+				}
+				thisFvUpdate.PolicyFlows = append(thisFvUpdate.PolicyFlows, thisFvPUpdate)
+			}
+
+			fvUpdate = append(fvUpdate, thisFvUpdate)
+		}
+	}
+	return fvUpdate
 }

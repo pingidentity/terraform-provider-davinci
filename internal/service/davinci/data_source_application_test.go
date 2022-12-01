@@ -27,13 +27,6 @@ func TestAccDatasourceApplication_Slim(t *testing.T) {
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(dataSourceFullName, "name"),
-					// TODO - use this on integrated acc test
-					// resource.TestCheckTypeSetElemNestedAttrs(resourceFullName,
-					// 	"policies.0.policy_flows.*",
-					// 	map[string]string{
-					// 		"version_id": "-1",
-					// 		"weight":     "100",
-					// 	}),
 				),
 			},
 		},

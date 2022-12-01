@@ -94,9 +94,9 @@ func PreCheckPingOne(t *testing.T) {
 
 func PreCheckPingOneAndTfVars(t *testing.T) {
 	PreCheckPingOne(t)
-	if v := os.Getenv("TF_VAR_environment_id"); v == "" {
-		t.Fatal("TF_VAR_environment_id is missing and must be set")
-	}
+	// if v := os.Getenv("TF_VAR_environment_id"); v == "" {
+	// 	t.Fatal("TF_VAR_environment_id is missing and must be set")
+	// }
 }
 
 // func TestClient(ctx context.Context) (*client.APIClient, error) {

@@ -44,7 +44,7 @@ func testAccDataSourceConnection_Slim(resourceName string) (hcl string) {
 
 data "davinci_connection" "%[2]s"{
 	environment_id = resource.pingone_environment.%[2]s.id
-	connection_id = data.davinci_connections.%[2]s.0.id
+	connection_id = tolist(data.davinci_connections.%[2]s.connections)[0].connection_id
 }
 `, baseHcl, resourceName)
 	return hcl
