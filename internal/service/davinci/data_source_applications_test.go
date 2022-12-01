@@ -14,8 +14,7 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
-	hcl := baseHcl + testAccDataSourceApplications_AllApplications_Hcl(resourceName)
+	hcl := testAccDataSourceApplications_AllApplications_Hcl(resourceName)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -35,10 +34,17 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 }
 
 func testAccDataSourceApplications_AllApplications_Hcl(resourceName string) (hcl string) {
+	baseHcl := testAccResourceApplication_Slim_Hcl(resourceName)
 	hcl = fmt.Sprintf(`
-data "davinci_applications" "%[1]s" {
-	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+%[1]s
+
+data "davinci_applications" "%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+
+	depends_on = [
+		davinci_application.%[2]s
+	]
 }
-`, resourceName)
+`, baseHcl, resourceName)
 	return hcl
 }
