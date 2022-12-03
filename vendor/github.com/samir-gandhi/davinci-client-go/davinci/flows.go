@@ -47,6 +47,56 @@ func (c *APIClient) ReadFlows(companyId *string, args *Params) ([]Flow, error) {
 	return resp.Flow, nil
 }
 
+type flowJson struct {
+	payload *string
+}
+
+func (fj *flowJson) MakePayload() error {
+	fis := Flows{}
+	fi := FlowImport{}
+	flow := Flow{}
+	err := json.Unmarshal([]byte(*fj.payload), &fis)
+	if err == nil && len(fis.Flow) > 0 {
+		pfis := FlowsImport{
+			Name:            "",
+			Description:     "",
+			FlowInfo:        fis,
+			FlowNameMapping: map[string]string{},
+		}
+		for _, v := range fis.Flow {
+			pfis.FlowNameMapping[v.FlowID] = v.Name
+		}
+		fjBytes, err := json.Marshal(pfis)
+		if err != nil {
+			return fmt.Errorf("Unable to unmarshal json to type Flow.")
+		}
+		fjString := string(fjBytes)
+		fj.payload = &fjString
+		return nil
+	}
+	err = json.Unmarshal([]byte(*fj.payload), &fi)
+	if err == nil && fi.FlowNameMapping != nil {
+		return nil
+	}
+	err = json.Unmarshal([]byte(*fj.payload), &flow)
+	if err == nil {
+		pfi := FlowImport{
+			Name:            flow.Name,
+			Description:     flow.Description,
+			FlowNameMapping: map[string]string{flow.FlowID: flow.Name},
+			FlowInfo:        flow,
+		}
+		fjBytes, err := json.Marshal(pfi)
+		if err != nil {
+			return fmt.Errorf("Unable to unmarshal json to type Flow.")
+		}
+		fjString := string(fjBytes)
+		fj.payload = &fjString
+		return nil
+	}
+	return fmt.Errorf("Unable to unmarshal json to type Flow.")
+}
+
 func (c *APIClient) CreateFlowWithJson(companyId *string,
 	payloadJson *string) (*Flow, error) {
 	if payloadJson == nil {
@@ -60,29 +110,16 @@ func (c *APIClient) CreateFlowWithJson(companyId *string,
 	if err != nil {
 		return nil, err
 	}
-	pfi := FlowImport{}
-	pf := Flow{}
 
-	err = json.Unmarshal([]byte(*payloadJson), &pfi)
-	if err != nil || pfi.FlowNameMapping == nil {
-		log.Printf("Unable to unmarshal json to type FlowImport.\n Will try to unmarshal to type Flow")
-		err = json.Unmarshal([]byte(*payloadJson), &pf)
-		if err != nil {
-			return nil, fmt.Errorf("Unable to unmarshal json to type Flow.")
-		}
-		pfi = FlowImport{
-			Name:            pf.Name,
-			Description:     pf.Description,
-			FlowNameMapping: map[string]interface{}{pf.FlowID: pf.Name},
-			FlowInfo:        pf,
-		}
+	fj := flowJson{
+		payload: payloadJson,
 	}
-	payload, err := json.Marshal(pfi)
+	fj.MakePayload()
 
 	req := DvHttpRequest{
 		Method: "PUT",
 		Url:    fmt.Sprintf("%s/flows/import", c.HostURL),
-		Body:   strings.NewReader(string(payload)),
+		Body:   strings.NewReader(*fj.payload),
 	}
 
 	body, err := c.doRequestRetryable(req, &c.Token, nil)

@@ -404,7 +404,27 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
-	if d.HasChanges("name", "api_key_enabled", "user_portal", "oauth", "saml", "policies") {
+	// if a new policy is added it must be created
+	if d.HasChanges("policies") {
+		_, new := d.GetChange("policies")
+		pols := expandFlowPolicies(new)
+		for _, v := range pols {
+			if v.PolicyID == "" {
+				res, err := c.CreateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), v)
+				fmt.Println(res)
+				if err != nil {
+					return diag.FromErr(err)
+				}
+			} else {
+				_, err = c.UpdateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), v)
+				if err != nil {
+					return diag.FromErr(err)
+				}
+			}
+		}
+	}
+
+	if d.HasChanges("name", "api_key_enabled", "user_portal", "oauth", "saml") {
 		app, err := expandApp(d)
 		if err != nil {
 			return diag.FromErr(err)

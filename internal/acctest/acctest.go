@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pingidentity/terraform-provider-davinci/internal/provider"
-	// client "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 // ProviderFactories is a static map containing only the main provider instance
@@ -280,3 +279,7 @@ resource "pingone_role_assignment_user" "%[1]s" {
 }
 `, resourceName, licenseID, username, adminEnvID)
 }
+
+// BaselineHcl Starts with PingoneEnvrionmentSsoHcl and adds all supported resources.
+// The `resourceName` input can be a random charset and will be used for the name of
+// each resource and datasource in the returned hcl.

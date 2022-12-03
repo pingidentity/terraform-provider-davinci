@@ -431,10 +431,20 @@ type FlowInfo struct {
 }
 
 type FlowImport struct {
-	Name            string                 `json:"name,omitempty"`
-	Description     string                 `json:"description,omitempty"`
-	FlowInfo        Flow                   `json:"flowInfo,omitempty"`
-	FlowNameMapping map[string]interface{} `json:"flowNameMapping,omitempty"`
+	Name            string            `json:"name,omitempty"`
+	Description     string            `json:"description,omitempty"`
+	FlowInfo        Flow              `json:"flowInfo,omitempty"`
+	FlowNameMapping map[string]string `json:"flowNameMapping,omitempty"`
+}
+type FlowsImport struct {
+	Name            string            `json:"name,omitempty"`
+	Description     string            `json:"description,omitempty"`
+	FlowInfo        Flows             `json:"flowInfo,omitempty"`
+	FlowNameMapping map[string]string `json:"flowNameMapping,omitempty"`
+}
+
+type Flows struct {
+	Flow []Flow `json:"flows,omitempty"`
 }
 
 type Flow struct {
