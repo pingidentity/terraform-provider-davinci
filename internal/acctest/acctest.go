@@ -279,7 +279,3 @@ resource "pingone_role_assignment_user" "%[1]s" {
 }
 `, resourceName, licenseID, username, adminEnvID)
 }
-
-// BaselineHcl Starts with PingoneEnvrionmentSsoHcl and adds all supported resources.
-// The `resourceName` input can be a random charset and will be used for the name of
-// each resource and datasource in the returned hcl.
