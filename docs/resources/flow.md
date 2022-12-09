@@ -60,13 +60,13 @@ resource "davinci_flow" "subflow" {
 
 ### Required
 
-- `deploy` (Boolean) Deploy Flow after import. Defaults to `true`.
 - `environment_id` (String) Environment to import flow into.
 - `flow_json` (String) DaVinci Flow in raw json format.
 
 ### Optional
 
 - `connections` (Block Set) Connections this flow depends on. flow_json will be updated with provided connection IDs. (see [below for nested schema](#nestedblock--connections))
+- `deploy` (Boolean) Deploy Flow after import. Defaults to `true`.
 - `subflows` (Block Set) Child flows of this resource. Required if flow_json contains subflows. (see [below for nested schema](#nestedblock--subflows))
 
 ### Read-Only

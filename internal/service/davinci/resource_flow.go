@@ -28,7 +28,7 @@ func ResourceFlow() *schema.Resource {
 			},
 			"deploy": {
 				Type:        schema.TypeBool,
-				Required:    true,
+				Optional:    true,
 				Default:     true,
 				Description: "Deploy Flow after import.",
 			},
