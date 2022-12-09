@@ -13,16 +13,45 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "davinci_flow" "my_flow" {
-  flow_json      = "{\"customerId\":\"1234\",\"name\":\"tftesting\",\"description\":\"\",\"flowStatus\":\"enabled\",\"createdDate...\"\"connectorIds\":[\"httpConnector\"],\"savedDate\":1662961640542,\"variables\":[]}"
-  deploy         = false
-  environment_id = var.pingone_environment_id
+resource "davinci_connection" "subflow" {
+  name           = "Flow"
+  connector_id   = "flowConnector"
+  environment_id = var.environment_id
 }
 
-resource "davinci_flow" "file_flow" {
-  flow_json      = file("flow.json")
+resource "davinci_flow" "mainflow" {
+  environment_id = var.environment_id
+  flow_json      = "{\"customerId\":\"1234\",\"name\":\"mainflow\",\"description\":\"\",\"flowStatus\":\"enabled\",\"createdDate...\"\"connectorIds\":[\"httpConnector\",\"flowConnector\"],\"savedDate\":1662961640542,\"variables\":[]}"
   deploy         = true
-  environment_id = var.pingone_environment_id
+  subflows {
+    subflow_id   = resource.davinci_flow.subflow.flow_id
+    subflow_name = resource.davinci_flow.subflow.flow_name
+  }
+  connections {
+    //Bootstrapped connection
+    connection_id   = "867ed4363b2bc21c860085ad2baa817d"
+    connection_name = "Http"
+  }
+  connections {
+    connection_id   = davinci_connection.subflow.id
+    connection_name = davinci_connection.subflow.name
+  }
+  depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "subflow" {
+  environment_id = var.environment_id
+  flow_json      = file("subflow.json")
+  deploy         = true
+  connections {
+    connection_id   = "867ed4363b2bc21c860085ad2baa817d"
+    connection_name = "Http"
+  }
+  connections {
+    connection_id   = davinci_connection.subflow.id
+    connection_name = davinci_connection.subflow.name
+  }
+  depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 ```
 
@@ -31,13 +60,36 @@ resource "davinci_flow" "file_flow" {
 
 ### Required
 
-- `deploy` (Boolean) Deploy Flow after import.
+- `deploy` (Boolean) Deploy Flow after import. Defaults to `true`.
 - `environment_id` (String) Environment to import flow into.
 - `flow_json` (String) DaVinci Flow in raw json format.
+
+### Optional
+
+- `connections` (Block Set) Connections this flow depends on. flow_json will be updated with provided connection IDs. (see [below for nested schema](#nestedblock--connections))
+- `subflows` (Block Set) Child flows of this resource. Required if flow_json contains subflows. (see [below for nested schema](#nestedblock--subflows))
 
 ### Read-Only
 
 - `flow_id` (String) Computed Flow ID after import.
+- `flow_name` (String) Computed Flow Name after import.
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--connections"></a>
+### Nested Schema for `connections`
+
+Required:
+
+- `connection_id` (String) Connection ID
+- `connection_name` (String) Connection Name
+
+
+<a id="nestedblock--subflows"></a>
+### Nested Schema for `subflows`
+
+Required:
+
+- `subflow_id` (String) Subflow Flow ID
+- `subflow_name` (String) Subflow Name
 
 
