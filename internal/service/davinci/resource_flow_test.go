@@ -36,30 +36,6 @@ func TestAccResourceFlow_SimpleFlow(t *testing.T) {
 	})
 }
 
-func testAccResourceFlow_SimpleFlow_Hcl(resourceName, flowJson string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
-	hcl = fmt.Sprintf(`
-%[1]s
-
-data "davinci_connections" "all" {
-	connector_ids = ["httpConnector"]
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-}
-
-output "dv_connections" { 
-	value = data.davinci_connections.all
-}
-
-resource "davinci_flow" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = "{\"customerId\":\"dc7918cfa4b50966f8508072c2755c2c\",\"name\":\"tftesting\",\"description\":\"\",\"flowStatus\":\"enabled\",\"createdDate\":1662960509175,\"updatedDate\":1662961640567,\"currentVersion\":0,\"authTokenExpireIds\":[],\"deployedDate\":1662960510106,\"functionConnectionId\":null,\"isOutputSchemaSaved\":false,\"outputSchemaCompiled\":null,\"publishedVersion\":1,\"timeouts\":null,\"flowId\":\"bb45eb4a0e8a5c9d6a21c7ac2d1b3faa\",\"companyId\":\"c431739a-29cd-4d9e-b465-0b37b2c235b1\",\"versionId\":0,\"graphData\":{\"elements\":{\"nodes\":[{\"data\":{\"id\":\"pptape4ac2\",\"nodeType\":\"CONNECTION\",\"connectionId\":\"867ed4363b2bc21c860085ad2baa817d\",\"connectorId\":\"httpConnector\",\"name\":\"Http\",\"label\":\"Http\",\"status\":\"configured\",\"capabilityName\":\"customHtmlMessage\",\"type\":\"trigger\",\"properties\":{\"message\":{\"value\":\"[\\n{\\n\\\"children\\\":[\\n{\\n\\\"text\\\":\\\"hellofoobar\\\"\\n}\\n]\\n}\\n]\"}}},\"position\":{\"x\":570,\"y\":240},\"group\":\"nodes\",\"removed\":false,\"selected\":false,\"selectable\":true,\"locked\":false,\"grabbable\":true,\"pannable\":false,\"classes\":\"\"}]},\"data\":{},\"zoomingEnabled\":true,\"userZoomingEnabled\":true,\"zoom\":1,\"minZoom\":1e-50,\"maxZoom\":1e+50,\"panningEnabled\":true,\"userPanningEnabled\":true,\"pan\":{\"x\":0,\"y\":0},\"boxSelectionEnabled\":true,\"renderer\":{\"name\":\"null\"}},\"flowColor\":\"#AFD5FF\",\"connectorIds\":[\"httpConnector\"],\"savedDate\":1662961640542,\"variables\":[]}"
-	deploy = true
-	depends_on = [data.davinci_connections.all]
-}
-`, baseHcl, resourceName)
-	return hcl
-}
-
 func TestAccResourceFlow_FlowUpdate(t *testing.T) {
 
 	resourceBase := "davinci_flow"
@@ -68,7 +44,7 @@ func TestAccResourceFlow_FlowUpdate(t *testing.T) {
 	flows := acctest.FlowForTests(resourceName)
 
 	beforeHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Simple)
-	afterHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Simple)
+	afterHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Drifted)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -95,4 +71,271 @@ func TestAccResourceFlow_FlowUpdate(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccResourceFlow_SimpleFlow_Hcl(resourceName, flowJson string) (hcl string) {
+	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	hcl = fmt.Sprintf(`
+%[1]s
+
+data "davinci_connections" "all" {
+	connector_ids = ["httpConnector"]
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+}
+
+output "dv_connections" { 
+	value = data.davinci_connections.all
+}
+
+resource "davinci_flow" "%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[3]s
+	deploy = true
+	depends_on = [data.davinci_connections.all]
+}
+`, baseHcl, resourceName, flowJson)
+	return hcl
+}
+
+func TestAccResourceFlow_SubFlows(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	resourceMainflowFullName := fmt.Sprintf("%s.%s", resourceBase, "mainflow-"+resourceName)
+	resourceSubflowFullName := fmt.Sprintf("%s.%s", resourceBase, "subflow-"+resourceName)
+	resourceAnotherMainflowFullName := fmt.Sprintf("%s.%s", resourceBase, "anothermainflow-"+resourceName)
+	resourceAnotherSubflowFullName := fmt.Sprintf("%s.%s", resourceBase, "anothersubflow-"+resourceName)
+	// flows := acctest.FlowForTests(resourceName)
+
+	hcl := testAccResourceFlow_SubFlows_Hcl(resourceName)
+	hclDrifted := testAccResourceFlow_SubFlowsDrift_Hcl(resourceName)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: hcl,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "deploy"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "deploy"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "deploy"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "deploy"),
+				),
+			},
+			{
+				Config: hclDrifted,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "deploy"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "deploy"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "deploy"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "deploy"),
+				),
+			},
+		},
+	})
+}
+
+func testAccResourceFlow_SubFlows_Hcl(resourceName string) (hcl string) {
+	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	flows := acctest.FlowForTests(resourceName)
+	hcl = fmt.Sprintf(`
+%[1]s
+
+data "davinci_connections" "all" {
+	connector_ids = ["httpConnector"]
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+}
+
+resource "davinci_connection" "subflow" {
+	name = "Flow"
+	connector_id = "flowConnector"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+}
+
+resource "davinci_flow" "mainflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[3]s
+	deploy = true
+	subflows {
+		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	}
+	subflows {
+		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "anothermainflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[5]s
+	deploy = true
+	subflows {
+		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "subflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[4]s
+	deploy = true
+	subflows {
+		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "anothersubflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[6]s
+	deploy = true
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+`, baseHcl, resourceName, flows.MainFlow, flows.Subflow, flows.AnotherMainflow, flows.AnotherSubflow)
+	return hcl
+}
+
+// TODO: Tech debt - This is a copy of the above test, but with the one flow changed to have a drift.
+func testAccResourceFlow_SubFlowsDrift_Hcl(resourceName string) (hcl string) {
+	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	flows := acctest.FlowForTests(resourceName)
+	hcl = fmt.Sprintf(`
+%[1]s
+
+data "davinci_connections" "all" {
+	connector_ids = ["httpConnector"]
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+}
+
+resource "davinci_connection" "subflow" {
+	name = "Flow"
+	connector_id = "flowConnector"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+}
+
+resource "davinci_flow" "mainflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[3]s
+	deploy = true
+	subflows {
+		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	}
+	subflows {
+		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "anothermainflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[5]s
+	deploy = true
+	subflows {
+		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "subflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[4]s
+	deploy = true
+	subflows {
+		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
+		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+
+resource "davinci_flow" "anothersubflow-%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	flow_json = %[6]s
+	deploy = true
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
+}
+`, baseHcl, resourceName, flows.MainFlowDrifted, flows.Subflow, flows.AnotherMainflow, flows.AnotherSubflow)
+	return hcl
 }

@@ -51,11 +51,47 @@ type flowJson struct {
 	payload *string
 }
 
-func (fj *flowJson) MakePayload() error {
-	fis := Flows{}
+func ParseFlowImportJson(payload *string) (*FlowImport, error) {
 	fi := FlowImport{}
 	flow := Flow{}
-	err := json.Unmarshal([]byte(*fj.payload), &fis)
+	// is FlowImport or Flow
+	err := json.Unmarshal([]byte(*payload), &fi)
+	if err == nil && fi.FlowNameMapping != nil {
+		return &fi, nil
+	}
+	err = json.Unmarshal([]byte(*payload), &flow)
+	if err == nil {
+		pfi := FlowImport{
+			Name:            flow.Name,
+			Description:     flow.Description,
+			FlowNameMapping: map[string]string{flow.FlowID: flow.Name},
+			FlowInfo:        flow,
+		}
+		return &pfi, nil
+	}
+	return nil, fmt.Errorf("Unable to parse payload to type FlowImport")
+}
+
+func ParseFlowJson(payload *string) (*Flow, error) {
+	fi := FlowImport{}
+	flow := Flow{}
+	// is FlowImport or Flow
+	err := json.Unmarshal([]byte(*payload), &flow)
+	if err == nil && flow.GraphData.Elements.Nodes != nil {
+		return &flow, nil
+	}
+	err = json.Unmarshal([]byte(*payload), &fi)
+	if err == nil {
+		pfi := fi.FlowInfo
+		return &pfi, nil
+	}
+	return nil, fmt.Errorf("Unable to parse payload to type FlowImport")
+}
+
+func ParseFlowsImportJson(payload *string) (*FlowsImport, error) {
+	fis := Flows{}
+	//is Flows
+	err := json.Unmarshal([]byte(*payload), &fis)
 	if err == nil && len(fis.Flow) > 0 {
 		pfis := FlowsImport{
 			Name:            "",
@@ -66,35 +102,55 @@ func (fj *flowJson) MakePayload() error {
 		for _, v := range fis.Flow {
 			pfis.FlowNameMapping[v.FlowID] = v.Name
 		}
+		return &pfis, nil
+	}
+	return nil, fmt.Errorf("Unable parse payload to type Flows")
+}
+
+// MakeFlowPayload accepts
+// payload: string of format Flows, FlowImport, or Flow
+// output: desired type of FlowsImport, FlowImport, or Flow
+// Payloads can only be converted to matching plurality
+func MakeFlowPayload(payload *string, output string) (*string, error) {
+	if output == "" {
+		output = "FlowImport"
+		fis := Flows{}
+		err := json.Unmarshal([]byte(*payload), &fis)
+		if err == nil && len(fis.Flow) > 0 {
+			output = "FlowsImport"
+		}
+	}
+	switch output {
+	case "FlowsImport":
+		pfis, _ := ParseFlowsImportJson(payload)
 		fjBytes, err := json.Marshal(pfis)
 		if err != nil {
-			return fmt.Errorf("Unable to unmarshal json to type Flow.")
+			return nil, fmt.Errorf("Unable to marshal payload.")
 		}
 		fjString := string(fjBytes)
-		fj.payload = &fjString
-		return nil
-	}
-	err = json.Unmarshal([]byte(*fj.payload), &fi)
-	if err == nil && fi.FlowNameMapping != nil {
-		return nil
-	}
-	err = json.Unmarshal([]byte(*fj.payload), &flow)
-	if err == nil {
-		pfi := FlowImport{
-			Name:            flow.Name,
-			Description:     flow.Description,
-			FlowNameMapping: map[string]string{flow.FlowID: flow.Name},
-			FlowInfo:        flow,
-		}
+		payloadString := &fjString
+		return payloadString, nil
+	case "Flow":
+		pfi, _ := ParseFlowJson(payload)
 		fjBytes, err := json.Marshal(pfi)
 		if err != nil {
-			return fmt.Errorf("Unable to unmarshal json to type Flow.")
+			return nil, fmt.Errorf("Unable to unmarshal json to type Flow.")
 		}
 		fjString := string(fjBytes)
-		fj.payload = &fjString
-		return nil
+		payload = &fjString
+		return payload, nil
+	case "FlowImport":
+		pfi, _ := ParseFlowImportJson(payload)
+		fjBytes, err := json.Marshal(pfi)
+		if err != nil {
+			return nil, fmt.Errorf("Unable to unmarshal json to type FlowImport.")
+		}
+		fjString := string(fjBytes)
+		payload = &fjString
+		return payload, nil
+	default:
+		return nil, fmt.Errorf("Output must be one of: FlowsImport, FlowImport, or Flow.")
 	}
-	return fmt.Errorf("Unable to unmarshal json to type Flow.")
 }
 
 func (c *APIClient) CreateFlowWithJson(companyId *string,
@@ -111,15 +167,15 @@ func (c *APIClient) CreateFlowWithJson(companyId *string,
 		return nil, err
 	}
 
-	fj := flowJson{
-		payload: payloadJson,
+	payload, err := MakeFlowPayload(payloadJson, "")
+	if err != nil {
+		return nil, err
 	}
-	fj.MakePayload()
 
 	req := DvHttpRequest{
 		Method: "PUT",
 		Url:    fmt.Sprintf("%s/flows/import", c.HostURL),
-		Body:   strings.NewReader(*fj.payload),
+		Body:   strings.NewReader(*payload),
 	}
 
 	body, err := c.doRequestRetryable(req, &c.Token, nil)
@@ -190,19 +246,12 @@ func (c *APIClient) UpdateFlowWithJson(companyId *string, payloadJson *string, f
 	if err != nil {
 		return nil, err
 	}
-	pfi := FlowImport{}
 	pf := Flow{}
-
-	//handle incoming type Flow or Flow Import
-	err = json.Unmarshal([]byte(*payloadJson), &pf)
+	flow, err := MakeFlowPayload(payloadJson, "Flow")
 	if err != nil {
-		log.Printf("Unable to unmarshal json to type FlowImport.\n Will try to unmarshal to type Flow")
-		err = json.Unmarshal([]byte(*payloadJson), &pfi)
-		if err != nil {
-			return nil, fmt.Errorf("Unable to unmarshal json to type FlowImport.")
-		}
-		pf = pfi.FlowInfo
+		return nil, err
 	}
+	err = json.Unmarshal([]byte(*flow), &pf)
 
 	currentFlow, err := c.ReadFlow(cIdPointer, flowId)
 	if err != nil {

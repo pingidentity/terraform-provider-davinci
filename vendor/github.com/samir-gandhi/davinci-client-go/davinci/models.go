@@ -284,7 +284,8 @@ type EnvironmentStats struct {
 }
 
 type Message struct {
-	Message string `json:"message"`
+	Message string `json:"message,omitempty"`
+	Value   string `json:"value,omitempty"`
 }
 
 type Customer struct {
@@ -423,11 +424,11 @@ type Connection struct {
 
 type Properties map[string]interface{}
 
-type FlowsInfo struct {
-	Flow []Flow `json:"flowsInfo,omitempty"`
-}
 type FlowInfo struct {
 	Flow Flow `json:"flowInfo,omitempty"`
+}
+type FlowsInfo struct {
+	Flow []Flow `json:"flowsInfo,omitempty"`
 }
 
 type FlowImport struct {
@@ -478,20 +479,20 @@ type Flow struct {
 	SavedDate           int64         `json:"savedDate,omitempty"`
 }
 
-type GraphData struct {
-	Elements            interface{} `json:"elements"`
-	Data                interface{} `json:"data"`
-	ZoomingEnabled      bool        `json:"zoomingEnabled"`
-	UserZoomingEnabled  bool        `json:"userZoomingEnabled"`
-	Zoom                int         `json:"zoom"`
-	MinZoom             float64     `json:"minZoom"`
-	MaxZoom             float64     `json:"maxZoom"`
-	PanningEnabled      bool        `json:"panningEnabled"`
-	UserPanningEnabled  bool        `json:"userPanningEnabled"`
-	Pan                 interface{} `json:"pan"`
-	BoxSelectionEnabled bool        `json:"boxSelectionEnabled"`
-	Renderer            interface{} `json:"renderer"`
-}
+// type GraphData struct {
+// 	Elements            interface{} `json:"elements"`
+// 	Data                interface{} `json:"data"`
+// 	ZoomingEnabled      bool        `json:"zoomingEnabled"`
+// 	UserZoomingEnabled  bool        `json:"userZoomingEnabled"`
+// 	Zoom                int         `json:"zoom"`
+// 	MinZoom             float64     `json:"minZoom"`
+// 	MaxZoom             float64     `json:"maxZoom"`
+// 	PanningEnabled      bool        `json:"panningEnabled"`
+// 	UserPanningEnabled  bool        `json:"userPanningEnabled"`
+// 	Pan                 interface{} `json:"pan"`
+// 	BoxSelectionEnabled bool        `json:"boxSelectionEnabled"`
+// 	Renderer            interface{} `json:"renderer"`
+// }
 
 type Variable struct {
 	Context     string `json:"context,omitempty"`
