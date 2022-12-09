@@ -424,11 +424,11 @@ type Connection struct {
 
 type Properties map[string]interface{}
 
-type FlowsInfo struct {
-	Flow []Flow `json:"flowsInfo,omitempty"`
-}
 type FlowInfo struct {
 	Flow Flow `json:"flowInfo,omitempty"`
+}
+type FlowsInfo struct {
+	Flow []Flow `json:"flowsInfo,omitempty"`
 }
 
 type FlowImport struct {

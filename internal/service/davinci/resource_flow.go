@@ -7,7 +7,6 @@ import (
 	"reflect"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	// "github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
@@ -29,7 +28,7 @@ func ResourceFlow() *schema.Resource {
 			},
 			"deploy": {
 				Type:        schema.TypeBool,
-				Optional:    true,
+				Required:    true,
 				Default:     true,
 				Description: "Deploy Flow after import.",
 			},
@@ -47,6 +46,32 @@ func ResourceFlow() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Environment to import flow into.",
+			},
+			"connections": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Connections this flow depends on. flow_json will be updated with provided connection IDs.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Connection ID",
+						},
+						"connection_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Connection Name",
+						},
+						//TODO implement subflow version
+						// "subflow_version": {
+						// 	Type:        schema.TypeString,
+						// 	Optional: true,
+						// 	Computed: true,
+						// 	Description: "Subflow Version to use",
+						// },
+					},
+				},
 			},
 			"subflows": {
 				Type:        schema.TypeSet,
@@ -90,12 +115,17 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 	var flowJson string
 	if fj, ok := d.GetOk("flow_json"); ok {
 		flowJson = fj.(string)
-		// Flatten subflow dependencies if needed.
-		expandedFlowJson, err := expandSubFlow(d, flowJson)
+		//Update subflows if needed
+		subsJson, err := mapSubFlows(d, flowJson)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		flowJson = *expandedFlowJson
+		//Update connections if needed
+		connsJson, err := mapFlowConnections(d, *subsJson)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		flowJson = *connsJson
 	} else {
 		return diag.FromErr(fmt.Errorf("Error: flow_json not found"))
 	}
@@ -165,11 +195,15 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 
 	if d.HasChanges("flow_json") {
 		flowJson := d.Get("flow_json").(string)
-		expandedFlowJson, err := expandSubFlow(d, flowJson)
+		subsJson, err := mapSubFlows(d, flowJson)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		flowJson = *expandedFlowJson
+		connsJson, err := mapFlowConnections(d, *subsJson)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		flowJson = *connsJson
 		_, err = c.UpdateFlowWithJson(&c.CompanyID, &flowJson, flowId)
 		if err != nil {
 			return diag.FromErr(err)
@@ -206,18 +240,22 @@ func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, m interface
 
 func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 	var err error
-	desired := dv.Flow{}
-	current := dv.Flow{}
+	// exit quickly if new resource
+	if old == "" && new != "" {
+		return false
+	}
+
+	// Apply subflow dependencies if needed.
 	if _, ok := d.GetOk("subflows"); ok {
 		if new != "" {
-			newFlowJson, err := expandSubFlow(d, new)
+			newFlowJson, err := mapSubFlows(d, new)
 			if err != nil {
 				panic(err)
 			}
 			new = *newFlowJson
 		}
 		if old != "" {
-			oldFlowJson, err := expandSubFlow(d, old)
+			oldFlowJson, err := mapSubFlows(d, old)
 			if err != nil {
 				panic(err)
 			}
@@ -225,13 +263,64 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 	}
 
-	json.Unmarshal([]byte(old), &current)
-	if err != nil {
-		panic(err)
+	// Apply connection dependencies if needed.
+	if _, ok := d.GetOk("connections"); ok {
+		if new != "" {
+			newFlowJson, err := mapFlowConnections(d, new)
+			if err != nil {
+				panic(err)
+			}
+			new = *newFlowJson
+		}
+		if old != "" {
+			oldFlowJson, err := mapFlowConnections(d, old)
+			if err != nil {
+				panic(err)
+			}
+			old = *oldFlowJson
+		}
 	}
-	err = json.Unmarshal([]byte(new), &desired)
-	if err != nil {
-		panic(err)
+
+	//Prepare current and desired inputs for drift detection
+	current := dv.Flow{}
+	desired := dv.Flow{}
+	if old != "" {
+		currentFi := dv.FlowImport{}
+		currentF := dv.Flow{}
+		err = json.Unmarshal([]byte(old), &currentFi)
+		if err != nil {
+			panic(err)
+		}
+		// convert to type Flow if needed
+		if currentFi.FlowInfo.Name != "" {
+			current = currentFi.FlowInfo
+		}
+		err = json.Unmarshal([]byte(old), &currentF)
+		if err != nil {
+			panic(err)
+		}
+		if currentF.GraphData.Elements.Nodes != nil {
+			current = currentF
+		}
+	}
+	if new != "" {
+		desiredFi := dv.FlowImport{}
+		desiredF := dv.Flow{}
+		err = json.Unmarshal([]byte(new), &desiredFi)
+		if err != nil {
+			panic(err)
+		}
+		// convert to type Flow if needed
+		if desiredFi.FlowInfo.Name != "" {
+			desired = desiredFi.FlowInfo
+		}
+		err = json.Unmarshal([]byte(new), &desiredF)
+		if err != nil {
+			panic(err)
+		}
+		if desiredF.GraphData.Elements.Nodes != nil {
+			desired = desiredF
+		}
 	}
 
 	if current.Name != desired.Name {
@@ -242,8 +331,29 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		return false
 	}
 
+	// Overall GraphData Diff
 	if !reflect.DeepEqual(current.GraphData, desired.GraphData) {
-		return false
+		cGraph := current.GraphData
+		cGraph.Elements.Nodes = nil
+		dGraph := desired.GraphData
+		dGraph.Elements.Nodes = nil
+		// GraphData Diff without Nodes
+		if !reflect.DeepEqual(cGraph, dGraph) {
+			return false
+		}
+		currentNodes, err := json.Marshal(current.GraphData.Elements.Nodes)
+		if err != nil {
+			panic(err)
+		}
+		desiredNodes, err := json.Marshal(desired.GraphData.Elements.Nodes)
+		if err != nil {
+			panic(err)
+		}
+
+		// Nodes Diff - This is mainly to account for json null vs go nil
+		if string(currentNodes) != string(desiredNodes) {
+			return false
+		}
 	}
 
 	return true
@@ -284,9 +394,9 @@ func expandSubFlowProps(subflowProps map[string]interface{}) (*dv.SubFlowPropert
 	return &subflow, nil
 }
 
-func expandSubFlow(d *schema.ResourceData, flowJson string) (*string, error) {
+func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 	if sf, ok := d.GetOk("subflows"); ok {
-		fjMap, err := dv.ParseFlowJson(&flowJson)
+		fjMap, err := dv.ParseFlowImportJson(&flowJson)
 		if err != nil {
 			return nil, err
 		}
@@ -297,7 +407,7 @@ func expandSubFlow(d *schema.ResourceData, flowJson string) (*string, error) {
 				sfProp, err = expandSubFlowProps(v.Data.Properties)
 				for _, sfMap := range sfList {
 					sfValues := sfMap.(map[string]interface{})
-					if sfValues["subflow_name"] == sfProp.SubFlowID.Value.Label {
+					if sfValues["subflow_name"].(string) == sfProp.SubFlowID.Value.Label {
 						sfProp.SubFlowID.Value.Value = sfValues["subflow_id"].(string)
 						//TODO implement subflow version
 						// sfProp.SubFlowVersionID.Value = sfValues["subflow_version"].(string)
@@ -309,6 +419,31 @@ func expandSubFlow(d *schema.ResourceData, flowJson string) (*string, error) {
 				}
 				fjMap.FlowInfo.GraphData.Elements.Nodes[i] = v
 			}
+		}
+		fjByte, err := json.Marshal(fjMap)
+		if err != nil {
+			return nil, err
+		}
+		flowJson = string(fjByte)
+	}
+	return &flowJson, nil
+}
+
+func mapFlowConnections(d *schema.ResourceData, flowJson string) (*string, error) {
+	if conns, ok := d.GetOk("connections"); ok {
+		fjMap, err := dv.ParseFlowImportJson(&flowJson)
+		if err != nil {
+			return nil, err
+		}
+		connList := conns.(*schema.Set).List()
+		for i, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
+			for _, connMap := range connList {
+				connValues := connMap.(map[string]interface{})
+				if connValues["connection_name"].(string) == v.Data.Name {
+					v.Data.ConnectionID = connValues["connection_id"].(string)
+				}
+			}
+			fjMap.FlowInfo.GraphData.Elements.Nodes[i] = v
 		}
 		fjByte, err := json.Marshal(fjMap)
 		if err != nil {

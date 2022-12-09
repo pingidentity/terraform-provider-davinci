@@ -184,6 +184,14 @@ resource "davinci_flow" "mainflow-%[2]s" {
 		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
 		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
 	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 
@@ -194,6 +202,14 @@ resource "davinci_flow" "anothermainflow-%[2]s" {
 	subflows {
 		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
 		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
 	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
@@ -206,6 +222,14 @@ resource "davinci_flow" "subflow-%[2]s" {
 		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
 		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
 	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 
@@ -213,13 +237,17 @@ resource "davinci_flow" "anothersubflow-%[2]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 	flow_json = %[6]s
 	deploy = true
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 `, baseHcl, resourceName, flows.MainFlow, flows.Subflow, flows.AnotherMainflow, flows.AnotherSubflow)
 	return hcl
 }
 
-// TODO: Tech debt: This test is not working as expected. It is not detecting the drift.
+// TODO: Tech debt - This is a copy of the above test, but with the one flow changed to have a drift.
 func testAccResourceFlow_SubFlowsDrift_Hcl(resourceName string) (hcl string) {
 	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
 	flows := acctest.FlowForTests(resourceName)
@@ -249,6 +277,14 @@ resource "davinci_flow" "mainflow-%[2]s" {
 		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
 		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
 	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 
@@ -259,6 +295,14 @@ resource "davinci_flow" "anothermainflow-%[2]s" {
 	subflows {
 		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
 		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
 	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
@@ -271,6 +315,14 @@ resource "davinci_flow" "subflow-%[2]s" {
 		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
 		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
 	}
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
+	connections {
+		connection_id = davinci_connection.subflow.id
+		connection_name = davinci_connection.subflow.name
+	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 
@@ -278,6 +330,10 @@ resource "davinci_flow" "anothersubflow-%[2]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 	flow_json = %[6]s
 	deploy = true
+	connections {
+		connection_id = "867ed4363b2bc21c860085ad2baa817d"
+		connection_name = "Http"
+	}
 	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 `, baseHcl, resourceName, flows.MainFlowDrifted, flows.Subflow, flows.AnotherMainflow, flows.AnotherSubflow)
