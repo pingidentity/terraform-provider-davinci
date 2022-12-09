@@ -240,7 +240,7 @@ github.com/posener/complete/cmd/install
 # github.com/russross/blackfriday v1.6.0
 ## explicit; go 1.13
 github.com/russross/blackfriday
-# github.com/samir-gandhi/davinci-client-go v0.0.33 => /home/ubuntu/go/src/github.com/samir-gandhi/davinci-client-go
+# github.com/samir-gandhi/davinci-client-go v0.0.34
 ## explicit; go 1.18
 github.com/samir-gandhi/davinci-client-go/davinci
 # github.com/shopspring/decimal v1.3.1
@@ -434,4 +434,3 @@ google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
-# github.com/samir-gandhi/davinci-client-go => /home/ubuntu/go/src/github.com/samir-gandhi/davinci-client-go
