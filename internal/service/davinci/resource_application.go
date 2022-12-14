@@ -410,8 +410,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		pols := expandFlowPolicies(new)
 		for _, v := range pols {
 			if v.PolicyID == "" {
-				res, err := c.CreateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), v)
-				fmt.Println(res)
+				_, err := c.CreateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), v)
 				if err != nil {
 					return diag.FromErr(err)
 				}

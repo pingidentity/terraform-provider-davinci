@@ -403,7 +403,8 @@ func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 		sfList := sf.(*schema.Set).List()
 		for i, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
 			sfProp := &dv.SubFlowProperties{}
-			if v.Data.ConnectorID == "flowConnector" {
+			// Only two types of subflow capabilities use the subflowId and subflowVersionId properties
+			if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
 				sfProp, err = expandSubFlowProps(v.Data.Properties)
 				for _, sfMap := range sfList {
 					sfValues := sfMap.(map[string]interface{})

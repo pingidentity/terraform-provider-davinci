@@ -261,7 +261,7 @@ func (c *APIClient) doRequestRetryable(req DvHttpRequest, authToken *string, arg
 		var bodyRetry []byte
 		bodyRetry, resRetry, err = c.doRequest(reqRetry, authToken, args)
 		if err != nil {
-			fmt.Printf("error: %v", err)
+			// fmt.Printf("error: %v", err)
 			return nil, err
 		}
 		res = resRetry
@@ -294,6 +294,21 @@ func (c *APIClient) refreshAuth() error {
 // sample incoming must be formatted as similar to:
 // fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
 func (c *APIClient) ParseDvHttpError(e error) (*DvHttpError, error) {
+	eBefore, eBody, ok := strings.Cut(e.Error(), ", body: ")
+	_, eStatus, ok := strings.Cut(eBefore, "status: ")
+	eStatusInt, err := strconv.Atoi(eStatus)
+	if ok != true || err != nil {
+		return nil, fmt.Errorf("Invalid error parameter. ")
+	}
+	return &DvHttpError{
+		Status: eStatusInt,
+		Body:   eBody,
+	}, nil
+}
+
+// sample incoming must be formatted as similar to:
+// fmt.Errorf("status: %d, body: %s", res.StatusCode, body)
+func ParseDvHttpError(e error) (*DvHttpError, error) {
 	eBefore, eBody, ok := strings.Cut(e.Error(), ", body: ")
 	_, eStatus, ok := strings.Cut(eBefore, "status: ")
 	eStatusInt, err := strconv.Atoi(eStatus)

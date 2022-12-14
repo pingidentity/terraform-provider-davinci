@@ -22,8 +22,6 @@ func (c *APIClient) ReadFlows(companyId *string, args *Params) ([]Flow, error) {
 		return nil, err
 	}
 
-	cIdString := *cIdPointer
-	log.Print(cIdString)
 	// req, err := http.NewRequest("GET", fmt.Sprintf("%s/flows", c.HostURL), nil)
 	// if err != nil {
 	// 	return nil, err
@@ -203,9 +201,6 @@ func (c *APIClient) ReadFlow(companyId *string, flowId string) (*FlowInfo, error
 		return nil, err
 	}
 
-	cIdString := *cIdPointer
-	log.Print(cIdString)
-
 	req := DvHttpRequest{
 		Method: "GET",
 		Url:    fmt.Sprintf("%s/flows/%s", c.HostURL, flowId),
@@ -300,9 +295,6 @@ func (c *APIClient) DeleteFlow(companyId *string, flowId string) (*Message, erro
 		return nil, err
 	}
 
-	cIdString := *cIdPointer
-	log.Print(cIdString)
-
 	req := DvHttpRequest{
 		Method: "DELETE",
 		Url:    fmt.Sprintf("%s/flows/%s", c.HostURL, flowId),
@@ -332,8 +324,6 @@ func (c *APIClient) DeployFlow(companyId *string, flowId string) (*Message, erro
 		return nil, err
 	}
 
-	cIdString := *cIdPointer
-	log.Print(cIdString)
 	// req, err := http.NewRequest("PUT", fmt.Sprintf("%s/flows/%s/deploy", c.HostURL, flowId), nil)
 	// if err != nil {
 	// 	return nil, err

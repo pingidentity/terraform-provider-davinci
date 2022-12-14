@@ -216,21 +216,22 @@ func MainTfHclUpdate() string {
 
 func TfHclPingOneDavinci() string {
 	return fmt.Sprintf(`				
-	resource "davinci_connection" "crowd_strike" {
-		connector_id = "crowdStrikeConnector"
-		name         = "CrowdStrike"
-		properties {
-			name  = "clientId"
-			value = "9876"
-		}
-		properties {
-			name  = "clientSecret"
-			value = "9876"
-		}
+resource "davinci_connection" "crowd_strike" {
+	connector_id = "crowdStrikeConnector"
+	name         = "CrowdStrike"
+	properties {
+		name  = "clientId"
+		value = "9876"
 	}
-	data "davinci_connection" "crowd_strike" {
-		connection_id = davinci_connection.crowd_strike.connection_id
+	properties {
+		name  = "clientSecret"
+		value = "9876"
 	}
+}
+data "davinci_connection" "crowd_strike" {
+	connection_id = davinci_connection.crowd_strike.connection_id
+}
+
 	`)
 }
 
@@ -277,5 +278,19 @@ resource "pingone_role_assignment_user" "%[1]s" {
 	role_id              = data.pingone_role.%[1]s.id
 	scope_environment_id = resource.pingone_environment.%[1]s.id
 }
+
 `, resourceName, licenseID, username, adminEnvID)
+}
+
+func BaselineHcl(resourceName string) string {
+	pingoneHcl := PingoneEnvrionmentSsoHcl(resourceName)
+	bsConnectionsHcl := BsConnectionsHcl(resourceName)
+	return fmt.Sprintf(`
+%[1]s
+data "davinci_connections" "read_all" {
+	environment_id = resource.pingone_role_assignment_user.%[3]s.scope_environment_id
+}
+
+%[2]s
+`, pingoneHcl, bsConnectionsHcl, resourceName)
 }

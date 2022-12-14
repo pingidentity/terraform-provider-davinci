@@ -209,7 +209,6 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 			"value": "",
 		}
 		if propType, ok := pMap["type"].(string); ok {
-			// log.Printf("pType is: %v", pType)
 			thisProp["type"] = propType
 			switch propType {
 			case "string", "":
@@ -245,9 +244,7 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 func makeProperties(d *schema.ResourceData) *dv.Properties {
 	connProps := dv.Properties{}
 	props := d.Get("properties").(*schema.Set).List()
-	// fmt.Printf(props)
 	for _, raw := range props {
-		fmt.Printf("\nThis prop is: %v\n", raw)
 		prop := raw.(map[string]interface{})
 		connProps[prop["name"].(string)] = map[string]interface{}{
 			"value": prop["value"].(string),

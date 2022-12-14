@@ -88,7 +88,7 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, m inter
 	if len(res) != 1 {
 		return diag.Errorf("Received error while attempting to create variable")
 	}
-	for i, _ := range res {
+	for i := range res {
 		d.SetId(fmt.Sprintf(i))
 	}
 

@@ -12,10 +12,10 @@ func TestAccResourceFlow_SimpleFlow(t *testing.T) {
 
 	resourceBase := "davinci_flow"
 	resourceName := acctest.ResourceNameGen()
-	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
-	flows := acctest.FlowForTests(resourceName)
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
 
-	hcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Simple)
+	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl})
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -36,15 +36,15 @@ func TestAccResourceFlow_SimpleFlow(t *testing.T) {
 	})
 }
 
-func TestAccResourceFlow_FlowUpdate(t *testing.T) {
+func TestAccResourceFlow_SimpleFlowUpdate(t *testing.T) {
 
 	resourceBase := "davinci_flow"
 	resourceName := acctest.ResourceNameGen()
-	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
-	flows := acctest.FlowForTests(resourceName)
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
 
-	beforeHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Simple)
-	afterHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Drifted)
+	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl})
+	hclDrifted := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Drifted.Hcl})
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -54,7 +54,7 @@ func TestAccResourceFlow_FlowUpdate(t *testing.T) {
 		// CheckDestroy: testAccCheckExampleResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: beforeHcl,
+				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceFullName, "flow_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
@@ -62,7 +62,7 @@ func TestAccResourceFlow_FlowUpdate(t *testing.T) {
 				),
 			},
 			{
-				Config: afterHcl,
+				Config: hclDrifted,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceFullName, "flow_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
@@ -73,42 +73,18 @@ func TestAccResourceFlow_FlowUpdate(t *testing.T) {
 	})
 }
 
-func testAccResourceFlow_SimpleFlow_Hcl(resourceName, flowJson string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
-	hcl = fmt.Sprintf(`
-%[1]s
-
-data "davinci_connections" "all" {
-	connector_ids = ["httpConnector"]
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-}
-
-output "dv_connections" { 
-	value = data.davinci_connections.all
-}
-
-resource "davinci_flow" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[3]s
-	deploy = true
-	depends_on = [data.davinci_connections.all]
-}
-`, baseHcl, resourceName, flowJson)
-	return hcl
-}
-
 func TestAccResourceFlow_SubFlows(t *testing.T) {
 
 	resourceBase := "davinci_flow"
 	resourceName := acctest.ResourceNameGen()
-	resourceMainflowFullName := fmt.Sprintf("%s.%s", resourceBase, "mainflow-"+resourceName)
-	resourceSubflowFullName := fmt.Sprintf("%s.%s", resourceBase, "subflow-"+resourceName)
-	resourceAnotherMainflowFullName := fmt.Sprintf("%s.%s", resourceBase, "anothermainflow-"+resourceName)
-	resourceAnotherSubflowFullName := fmt.Sprintf("%s.%s", resourceBase, "anothersubflow-"+resourceName)
-	// flows := acctest.FlowForTests(resourceName)
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceMainflowFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Mainflow.Name)
+	resourceSubflowFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Subflow.Name)
+	resourceAnotherMainflowFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.AnotherMainflow.Name)
+	resourceAnotherSubflowFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.AnotherSubflow.Name)
 
-	hcl := testAccResourceFlow_SubFlows_Hcl(resourceName)
-	hclDrifted := testAccResourceFlow_SubFlowsDrift_Hcl(resourceName)
+	hcl := testAccResourceFlow_SubFlows_Hcl(resourceName, []string{testFlows.Mainflow.Hcl, testFlows.Subflow.Hcl, testFlows.AnotherMainflow.Hcl, testFlows.AnotherSubflow.Hcl})
+	hclDrifted := testAccResourceFlow_SubFlows_Hcl(resourceName, []string{testFlows.MainflowDrifted.Hcl, testFlows.Subflow.Hcl, testFlows.AnotherMainflow.Hcl, testFlows.AnotherSubflow.Hcl})
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -155,187 +131,33 @@ func TestAccResourceFlow_SubFlows(t *testing.T) {
 	})
 }
 
-func testAccResourceFlow_SubFlows_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
-	flows := acctest.FlowForTests(resourceName)
+func testAccResourceFlow_SubFlows_Hcl(resourceName string, flowsHcl []string) (hcl string) {
+	baseHcl := acctest.BaselineHcl(resourceName)
 	hcl = fmt.Sprintf(`
 %[1]s
 
-data "davinci_connections" "all" {
-	connector_ids = ["httpConnector"]
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-}
-
-resource "davinci_connection" "subflow" {
+resource "davinci_connection" "%[2]s-flow" {
 	name = "Flow"
 	connector_id = "flowConnector"
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 }
+`, baseHcl, resourceName)
 
-resource "davinci_flow" "mainflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[3]s
-	deploy = true
-	subflows {
-		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	for _, flowHcl := range flowsHcl {
+		hcl += flowHcl
 	}
-	subflows {
-		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
-	}
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	connections {
-		connection_id = davinci_connection.subflow.id
-		connection_name = davinci_connection.subflow.name
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-
-resource "davinci_flow" "anothermainflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[5]s
-	deploy = true
-	subflows {
-		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
-	}
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	connections {
-		connection_id = davinci_connection.subflow.id
-		connection_name = davinci_connection.subflow.name
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-
-resource "davinci_flow" "subflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[4]s
-	deploy = true
-	subflows {
-		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
-	}
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	connections {
-		connection_id = davinci_connection.subflow.id
-		connection_name = davinci_connection.subflow.name
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-
-resource "davinci_flow" "anothersubflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[6]s
-	deploy = true
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-`, baseHcl, resourceName, flows.MainFlow, flows.Subflow, flows.AnotherMainflow, flows.AnotherSubflow)
 	return hcl
 }
 
-// TODO: Tech debt - This is a copy of the above test, but with the one flow changed to have a drift.
-func testAccResourceFlow_SubFlowsDrift_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
-	flows := acctest.FlowForTests(resourceName)
+func testAccResourceFlow_SimpleFlows_Hcl(resourceName string, flowsHcl []string) (hcl string) {
+	baseHcl := acctest.BaselineHcl(resourceName)
 	hcl = fmt.Sprintf(`
 %[1]s
 
-data "davinci_connections" "all" {
-	connector_ids = ["httpConnector"]
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-}
+`, baseHcl, resourceName)
 
-resource "davinci_connection" "subflow" {
-	name = "Flow"
-	connector_id = "flowConnector"
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-}
-
-resource "davinci_flow" "mainflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[3]s
-	deploy = true
-	subflows {
-		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
+	for _, flowHcl := range flowsHcl {
+		hcl += flowHcl
 	}
-	subflows {
-		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
-	}
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	connections {
-		connection_id = davinci_connection.subflow.id
-		connection_name = davinci_connection.subflow.name
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-
-resource "davinci_flow" "anothermainflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[5]s
-	deploy = true
-	subflows {
-		subflow_id = resource.davinci_flow.subflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.subflow-%[2]s.flow_name
-	}
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	connections {
-		connection_id = davinci_connection.subflow.id
-		connection_name = davinci_connection.subflow.name
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-
-resource "davinci_flow" "subflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[4]s
-	deploy = true
-	subflows {
-		subflow_id = resource.davinci_flow.anothersubflow-%[2]s.flow_id
-		subflow_name = resource.davinci_flow.anothersubflow-%[2]s.flow_name
-	}
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	connections {
-		connection_id = davinci_connection.subflow.id
-		connection_name = davinci_connection.subflow.name
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-
-resource "davinci_flow" "anothersubflow-%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	flow_json = %[6]s
-	deploy = true
-	connections {
-		connection_id = "867ed4363b2bc21c860085ad2baa817d"
-		connection_name = "Http"
-	}
-	depends_on = [data.davinci_connections.all, davinci_connection.subflow]
-}
-`, baseHcl, resourceName, flows.MainFlowDrifted, flows.Subflow, flows.AnotherMainflow, flows.AnotherSubflow)
 	return hcl
 }

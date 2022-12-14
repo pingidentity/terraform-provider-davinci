@@ -102,9 +102,9 @@ func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
 }
 
 func testAccResourceApplication_WithFlowPolicy_Hcl(resourceName string) (hcl string) {
-	flows := acctest.FlowForTests(resourceName)
+	flows := acctest.FlowsForTests(resourceName)
 
-	baseHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Simple)
+	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.Simple.Hcl})
 	hcl = fmt.Sprintf(`
 %[1]s
 
@@ -130,20 +130,20 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "simpleflow"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[2]s.flow_id
+      flow_id    = resource.davinci_flow.%[3]s.flow_id
       version_id = -1
       weight     = 100
     }
   }
 }
-`, baseHcl, resourceName)
+`, baseHcl, resourceName, flows.Simple.Name)
 	return hcl
 }
 
 func testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
-	flows := acctest.FlowForTests(resourceName)
+	flows := acctest.FlowsForTests(resourceName)
 
-	baseHcl := testAccResourceFlow_SimpleFlow_Hcl(resourceName, flows.Simple)
+	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.Simple.Hcl})
 	hcl = fmt.Sprintf(`
 %[1]s
 
@@ -169,7 +169,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "simpleflow"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[2]s.flow_id
+      flow_id    = resource.davinci_flow.%[3]s.flow_id
       version_id = -1
       weight     = 100
     }
@@ -177,12 +177,12 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "subsequentPolicy"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[2]s.flow_id
+      flow_id    = resource.davinci_flow.%[3]s.flow_id
       version_id = -1
       weight     = 100
     }
   }
 }
-`, baseHcl, resourceName)
+`, baseHcl, resourceName, flows.Simple.Name)
 	return hcl
 }

@@ -13,10 +13,18 @@ description: |-
 ## Example Usage
 
 ```terraform
+//Read all connections - This is a good first call to make
+data "davinci_connections" "all" {
+  name           = "Flow"
+  connector_id   = "flowConnector"
+  environment_id = var.environment_id
+}
 resource "davinci_connection" "subflow" {
   name           = "Flow"
   connector_id   = "flowConnector"
   environment_id = var.environment_id
+  // Forcing dependency on the inital connection provides better consistency when waiting for bootstrap to complete
+  depends_on = [data.davinci_connections.all]
 }
 
 resource "davinci_flow" "mainflow" {
@@ -36,7 +44,6 @@ resource "davinci_flow" "mainflow" {
     connection_id   = davinci_connection.subflow.id
     connection_name = davinci_connection.subflow.name
   }
-  depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 
 resource "davinci_flow" "subflow" {
@@ -51,7 +58,6 @@ resource "davinci_flow" "subflow" {
     connection_id   = davinci_connection.subflow.id
     connection_name = davinci_connection.subflow.name
   }
-  depends_on = [data.davinci_connections.all, davinci_connection.subflow]
 }
 ```
 
