@@ -23,8 +23,9 @@ func DoRetryable(ctx context.Context, f func() (interface{}, error), timeout *ti
 			if err != nil {
 				return nil, err
 			}
-			if dvErr.Status == 400 {
-				tflog.Info(ctx, "Operation failed with 400, retrying...")
+			// TODO: Handle other error codes as they are discovered
+			if dvErr.Status == 502 && dvErr.Body == "" {
+				tflog.Info(ctx, "Rate limit hit, retrying...")
 				timeElapsed += 2 * time.Second
 				time.Sleep(2 * time.Second)
 				continue

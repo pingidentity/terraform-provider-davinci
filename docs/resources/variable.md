@@ -28,7 +28,7 @@ resource "davinci_variable" "my_global_var" {
 
 ### Required
 
-- `context` (String)
+- `context` (String) Must be one of: company, flowInstance, user
 - `environment_id` (String) PingOne environment id
 - `name` (String) Name of the variable
 - `type` (String) Must be one of: string, number, boolean, object

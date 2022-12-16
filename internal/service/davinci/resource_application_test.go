@@ -26,6 +26,7 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
+					//TODO - test attributes in TypeSet.
 					resource.TestCheckResourceAttrSet(resourceFullName, "application_id"),
 					// TODO - use this on integrated acc test
 					// resource.TestCheckTypeSetElemNestedAttrs(resourceFullName,

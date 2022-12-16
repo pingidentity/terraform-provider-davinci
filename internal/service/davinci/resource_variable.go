@@ -27,6 +27,7 @@ func ResourceVariable() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"company", "flowInstance", "user"}, false),
+				Description:  "Must be one of: company, flowInstance, user",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -81,7 +82,20 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, m inter
 		return diag.FromErr(err)
 	}
 	variablePayload := getVariableAttributes(d)
-	res, err := c.CreateVariable(&c.CompanyID, &variablePayload)
+
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.CreateVariable(&c.CompanyID, &variablePayload)
+	}, nil)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	res, ok := sdkRes.(map[string]dv.Variable)
+	if !ok {
+		err = fmt.Errorf("Unable to parse response from Davinci API for variable")
+		return diag.FromErr(err)
+	}
+
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -108,10 +122,19 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 
 	variableName := d.Id()
 
-	resp, err := c.ReadVariable(&c.CompanyID, variableName)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadVariable(&c.CompanyID, variableName)
+	}, nil)
+
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	resp, ok := sdkRes.(map[string]dv.Variable)
+	if !ok {
+		err = fmt.Errorf("Unable to parse response from Davinci API for variable with name: %s", variableName)
+		return diag.FromErr(err)
+	}
+
 	if len(resp) != 1 {
 		return diag.FromErr(fmt.Errorf("Received error while attempting to retrieve variable"))
 	}
@@ -151,10 +174,20 @@ func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, m inter
 
 	if d.HasChanges("value", "description", "mutable", "type") {
 		variablePayload := getVariableAttributes(d)
-		_, err := c.UpdateVariable(&c.CompanyID, &variablePayload)
+
+		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+			return c.UpdateVariable(&c.CompanyID, &variablePayload)
+		}, nil)
+
 		if err != nil {
 			return diag.FromErr(err)
 		}
+		resp, ok := sdkRes.(map[string]dv.Variable)
+		if !ok || len(resp) != 1 {
+			err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %s", variablePayload.Name)
+			return diag.FromErr(err)
+		}
+
 	}
 
 	return resourceVariableRead(ctx, d, m)
@@ -170,8 +203,16 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, m inter
 	}
 	variableName := d.Id()
 
-	_, err = c.DeleteVariable(&c.CompanyID, variableName)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.DeleteVariable(&c.CompanyID, variableName)
+	}, nil)
+
 	if err != nil {
+		return diag.FromErr(err)
+	}
+	resp, ok := sdkRes.(*dv.Message)
+	if !ok || resp.Message == "" {
+		err = fmt.Errorf("Unable to parse delete response from Davinci API for variable with name: %s", variableName)
 		return diag.FromErr(err)
 	}
 

@@ -2,7 +2,7 @@ package davinci
 
 import (
 	"context"
-	// "fmt"
+	"fmt"
 	// "log"
 	"strconv"
 	"time"
@@ -105,8 +105,17 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m in
 		}
 	}
 
-	res, err := c.ReadConnections(&c.CompanyID, nil)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadConnections(&c.CompanyID, nil)
+	}, nil)
+
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	res, ok := sdkRes.([]dv.Connection)
+	if !ok {
+		err = fmt.Errorf("Unable to parse connections response from Davinci API")
 		return diag.FromErr(err)
 	}
 	resp := []dv.Connection{}

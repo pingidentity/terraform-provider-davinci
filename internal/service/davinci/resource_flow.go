@@ -130,8 +130,16 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(fmt.Errorf("Error: flow_json not found"))
 	}
 
-	res, err := c.CreateFlowWithJson(&c.CompanyID, &flowJson)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.CreateFlowWithJson(&c.CompanyID, &flowJson)
+	}, nil)
+
 	if err != nil {
+		return diag.FromErr(err)
+	}
+	res, ok := sdkRes.(*dv.Flow)
+	if !ok || res.Name == "" {
+		err = fmt.Errorf("Unable to parse create response from Davinci API on flow")
 		return diag.FromErr(err)
 	}
 
@@ -157,10 +165,19 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	flowId := d.Id()
 
-	res, err := c.ReadFlow(&c.CompanyID, flowId)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadFlow(&c.CompanyID, flowId)
+	}, nil)
+
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	res, ok := sdkRes.(*dv.FlowInfo)
+	if !ok || res.Flow.Name == "" {
+		err = fmt.Errorf("Unable to parse read response from Davinci API on flow id: %v", flowId)
+		return diag.FromErr(err)
+	}
+
 	if res.Flow.FlowID == "" {
 		d.SetId("")
 		return diags
@@ -204,8 +221,17 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 			return diag.FromErr(err)
 		}
 		flowJson = *connsJson
-		_, err = c.UpdateFlowWithJson(&c.CompanyID, &flowJson, flowId)
+
+		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+			return c.UpdateFlowWithJson(&c.CompanyID, &flowJson, flowId)
+		}, nil)
+
 		if err != nil {
+			return diag.FromErr(err)
+		}
+		res, ok := sdkRes.(*dv.FlowInfo)
+		if !ok || res.Flow.Name == "" {
+			err = fmt.Errorf("Unable to parse update response from Davinci API on flow id: %v", flowId)
 			return diag.FromErr(err)
 		}
 	}
@@ -228,8 +254,16 @@ func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, m interface
 
 	flowId := d.Id()
 
-	_, err = c.DeleteFlow(&c.CompanyID, flowId)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.DeleteFlow(&c.CompanyID, flowId)
+	}, nil)
+
 	if err != nil {
+		return diag.FromErr(err)
+	}
+	res, ok := sdkRes.(*dv.Message)
+	if !ok || res.Message == "" {
+		err = fmt.Errorf("Unable to parse delete response from Davinci API on flow id: %v", flowId)
 		return diag.FromErr(err)
 	}
 

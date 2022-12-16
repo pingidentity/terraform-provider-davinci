@@ -354,8 +354,17 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
-	res, err := c.CreateInitializedApplication(&c.CompanyID, app)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.CreateInitializedApplication(&c.CompanyID, app)
+	}, nil)
+
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	res, ok := sdkRes.(*dv.App)
+	if !ok || res.Name == "" {
+		err = fmt.Errorf("Unable to parse created app response from Davinci API")
 		return diag.FromErr(err)
 	}
 
@@ -377,7 +386,18 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 
 	appId := d.Id()
 
-	resp, err := c.ReadApplication(&c.CompanyID, appId)
+	skdRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadApplication(&c.CompanyID, appId)
+	}, nil)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	resp, ok := skdRes.(*dv.App)
+	if !ok {
+		err = fmt.Errorf("failed to cast response to Application on id: %s", appId)
+		return diag.FromErr(err)
+	}
 
 	if err != nil {
 		ep, err := c.ParseDvHttpError(err)
@@ -409,14 +429,29 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		_, new := d.GetChange("policies")
 		pols := expandFlowPolicies(new)
 		for _, v := range pols {
+			appId := d.Get("application_id").(string)
 			if v.PolicyID == "" {
-				_, err := c.CreateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), v)
+				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+					return c.CreateFlowPolicy(&c.CompanyID, appId, v)
+				}, nil)
 				if err != nil {
 					return diag.FromErr(err)
 				}
+				res, ok := sdkRes.(*dv.App)
+				if !ok || res.Name == "" {
+					err = fmt.Errorf("failed to cast create policy response to Application on id: %s", appId)
+					return diag.FromErr(err)
+				}
 			} else {
-				_, err = c.UpdateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), v)
+				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+					return c.UpdateFlowPolicy(&c.CompanyID, appId, v)
+				}, nil)
 				if err != nil {
+					return diag.FromErr(err)
+				}
+				res, ok := sdkRes.(*dv.App)
+				if !ok || res.Name == "" {
+					err = fmt.Errorf("failed to cast update policy response to Application on id: %s", appId)
 					return diag.FromErr(err)
 				}
 			}
@@ -429,8 +464,16 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 			return diag.FromErr(err)
 		}
 		app.AppID = d.Get("application_id").(string)
-		_, err = c.UpdateApplication(&c.CompanyID, app)
+
+		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+			return c.UpdateApplication(&c.CompanyID, app)
+		}, nil)
 		if err != nil {
+			return diag.FromErr(err)
+		}
+		res, ok := sdkRes.(*dv.App)
+		if !ok || res.Name == "" {
+			err = fmt.Errorf("failed to cast update application response to Application on id: %s", app.AppID)
 			return diag.FromErr(err)
 		}
 	}
@@ -449,8 +492,15 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, m in
 
 	appId := d.Id()
 
-	_, err = c.DeleteApplication(&c.CompanyID, appId)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.DeleteApplication(&c.CompanyID, appId)
+	}, nil)
 	if err != nil {
+		return diag.FromErr(err)
+	}
+	res, ok := sdkRes.(*dv.Message)
+	if !ok || res.Message == "" {
+		err = fmt.Errorf("failed to delete update application response to Application on id: %s", appId)
 		return diag.FromErr(err)
 	}
 
@@ -470,7 +520,7 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	oa, ok := d.GetOk("oauth")
 	if ok {
 		oal := oa.(*schema.Set).List()
-		oaUpdate := &dv.OauthUpdate{}
+		oaUpdate := &dv.Oauth{}
 
 		//Set OAuthEnabled
 		oam := oal[0].(map[string]interface{})
@@ -481,8 +531,9 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 		oamValues := oam["values"].(*schema.Set).List()
 		if len(oamValues) == 1 {
 			oamValuesMap := oamValues[0].(map[string]interface{})
-			oaUpdate.Values = &dv.OauthValuesUpdate{
+			oaUpdate.Values = &dv.OauthValues{
 				Enabled:                    oamValuesMap["enabled"].(bool),
+				ClientSecret:               oamValuesMap["client_secret"].(string),
 				EnforceSignedRequestOpenid: oamValuesMap["enforce_signed_request_openid"].(bool),
 				SpjwksUrl:                  oamValuesMap["sp_jwks_url"].(string),
 				SpJwksOpenid:               oamValuesMap["sp_jwks_openid"].(string),
@@ -508,12 +559,12 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	if ok {
 		sl := saml.(*schema.Set).List()
 		if len(sl) == 1 {
-			svUpdate := &dv.SamlUpdate{}
+			svUpdate := &dv.Saml{}
 			sm := sl[0].(map[string]interface{})
 			samlValues := sm["values"].(*schema.Set).List()
 			if len(samlValues) == 1 {
 				svMap := samlValues[0].(map[string]interface{})
-				svUpdate.Values = &dv.SamlValuesUpdate{
+				svUpdate.Values = &dv.SamlValues{
 					Enabled:              svMap["enabled"].(bool),
 					EnforceSignedRequest: svMap["enforce_signed_request"].(bool),
 					RedirectURI:          svMap["redirect_uri"].(string),

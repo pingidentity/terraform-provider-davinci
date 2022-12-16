@@ -2,7 +2,7 @@ package davinci
 
 import (
 	"context"
-	// "fmt"
+	"fmt"
 	// "log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -74,9 +74,16 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 		return diag.FromErr(err)
 	}
 	connId := d.Get("connection_id").(string)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadConnection(&c.CompanyID, connId)
+	}, nil)
 
-	res, err := c.ReadConnection(&c.CompanyID, connId)
 	if err != nil {
+		return diag.FromErr(err)
+	}
+	res, ok := sdkRes.(*dv.Connection)
+	if !ok || res.Name == "" {
+		err = fmt.Errorf("Unable to parse response from Davinci API on connection id: %v", connId)
 		return diag.FromErr(err)
 	}
 	if err := d.Set("name", res.Name); err != nil {

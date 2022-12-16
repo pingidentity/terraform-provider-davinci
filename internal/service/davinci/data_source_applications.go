@@ -2,7 +2,7 @@ package davinci
 
 import (
 	"context"
-	// "fmt"
+	"fmt"
 	// "log"
 	"strconv"
 	"time"
@@ -338,8 +338,17 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 		return diag.FromErr(err)
 	}
 
-	resp, err := c.ReadApplications(&c.CompanyID, nil)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadApplications(&c.CompanyID, nil)
+	}, nil)
+
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	resp, ok := sdkRes.([]dv.App)
+	if !ok {
+		err = fmt.Errorf("Unable to parse apps response from Davinci API")
 		return diag.FromErr(err)
 	}
 
