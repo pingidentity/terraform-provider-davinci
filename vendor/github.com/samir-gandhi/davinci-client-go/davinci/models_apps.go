@@ -111,39 +111,11 @@ type Policy struct {
 
 type AppUpdate struct {
 	Name          string        `json:"name"`
-	Oauth         *OauthUpdate  `json:"oauth,omitempty"`
-	Saml          *SamlUpdate   `json:"saml,omitempty"`
+	Oauth         *Oauth        `json:"oauth,omitempty"`
+	Saml          *Saml         `json:"saml,omitempty"`
 	Flows         []interface{} `json:"flows,omitempty"`
 	Policies      []Policy      `json:"policies,omitempty"`
 	APIKeyEnabled bool          `json:"apiKeyEnabled,omitempty"`
 	AppID         string        `json:"appId,omitempty"`
 	UserPortal    *UserPortal   `json:"userPortal,omitempty"`
-}
-
-type OauthUpdate struct {
-	Enabled bool               `json:"enabled,omitempty"`
-	Values  *OauthValuesUpdate `json:"values,omitempty"`
-}
-
-type OauthValuesUpdate struct {
-	Enabled                    bool     `json:"enabled,omitempty"`
-	RedirectUris               []string `json:"redirectUris,omitempty"`
-	LogoutUris                 []string `json:"logoutUris,omitempty"`
-	AllowedScopes              []string `json:"allowedScopes,omitempty"`
-	AllowedGrants              []string `json:"allowedGrants,omitempty"`
-	EnforceSignedRequestOpenid bool     `json:"enforceSignedRequestOpenid,omitempty"`
-	SpjwksUrl                  string   `json:"spjwksUrl,omitempty"`
-	SpJwksOpenid               string   `json:"spJwksOpenid,omitempty"`
-}
-
-type SamlUpdate struct {
-	Values *SamlValuesUpdate `json:"values,omitempty"`
-}
-
-type SamlValuesUpdate struct {
-	Enabled              bool   `json:"enabled,omitempty"`
-	RedirectURI          string `json:"redirectUri,omitempty"`
-	Audience             string `json:"audience,omitempty"`
-	EnforceSignedRequest bool   `json:"enforceSignedRequest,omitempty"`
-	SpCert               string `json:"spCert,omitempty"`
 }
