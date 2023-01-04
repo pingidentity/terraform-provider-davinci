@@ -408,22 +408,6 @@ type RoleUpdate struct {
 	} `json:"policy,omitempty"`
 }
 
-// Representation of an instantiated connector
-// All fields are set with omitempty as nil values aren't allowed
-// to various requests requiring specific fields.
-type Connection struct {
-	CustomerID   string     `json:"customerId,omitempty"`
-	ConnectorID  string     `json:"connectorId,omitempty"`
-	Name         string     `json:"name,omitempty"`
-	CreatedDate  int64      `json:"createdDate,omitempty"`
-	Properties   Properties `json:"properties,omitempty"`
-	UpdatedDate  int64      `json:"updatedDate,omitempty"`
-	ConnectionID string     `json:"connectionId,omitempty"`
-	CompanyID    string     `json:"companyId,omitempty"`
-}
-
-type Properties map[string]interface{}
-
 type FlowInfo struct {
 	Flow Flow `json:"flowInfo,omitempty"`
 }
@@ -433,7 +417,7 @@ type FlowsInfo struct {
 
 type FlowImport struct {
 	Name            string            `json:"name,omitempty"`
-	Description     string            `json:"description,omitempty"`
+	Description     string            `json:"description"`
 	FlowInfo        Flow              `json:"flowInfo,omitempty"`
 	FlowNameMapping map[string]string `json:"flowNameMapping,omitempty"`
 }

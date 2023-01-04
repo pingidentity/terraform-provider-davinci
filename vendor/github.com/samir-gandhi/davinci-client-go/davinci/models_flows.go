@@ -21,6 +21,22 @@ type SubFlowProperties struct {
 }
 
 type Data struct {
+	ID                 string     `json:"id,omitempty"`
+	NodeType           string     `json:"nodeType,omitempty"`
+	ConnectionID       string     `json:"connectionId,omitempty"`
+	ConnectorID        string     `json:"connectorId,omitempty"`
+	Name               string     `json:"name,omitempty"`
+	Label              string     `json:"label,omitempty"`
+	Status             string     `json:"status,omitempty"`
+	CapabilityName     string     `json:"capabilityName,omitempty"`
+	Type               string     `json:"type,omitempty"`
+	Properties         Properties `json:"properties,omitempty"`
+	Source             string     `json:"source,omitempty"`
+	Target             string     `json:"target,omitempty"`
+	MultiValueSourceId string     `json:"multiValueSourceId,omitempty"`
+}
+
+type NodeData struct {
 	ID             string     `json:"id,omitempty"`
 	NodeType       string     `json:"nodeType,omitempty"`
 	ConnectionID   string     `json:"connectionId,omitempty"`
@@ -35,35 +51,51 @@ type Data struct {
 	Target         string     `json:"target,omitempty"`
 }
 
+type EdgeData struct {
+	ID                 string     `json:"id,omitempty"`
+	NodeType           string     `json:"nodeType,omitempty"`
+	ConnectionID       string     `json:"connectionId,omitempty"`
+	ConnectorID        string     `json:"connectorId,omitempty"`
+	Name               string     `json:"name,omitempty"`
+	Label              string     `json:"label,omitempty"`
+	Status             string     `json:"status,omitempty"`
+	CapabilityName     string     `json:"capabilityName,omitempty"`
+	Type               string     `json:"type,omitempty"`
+	Properties         Properties `json:"properties,omitempty"`
+	Source             string     `json:"source,omitempty"`
+	Target             string     `json:"target,omitempty"`
+	MultiValueSourceId string     `json:"multiValueSourceId,omitempty"`
+}
+
 type Position struct {
 	X float64 `json:"x,omitempty"`
 	Y float64 `json:"y,omitempty"`
 }
 
 type Nodes struct {
-	Data       Data     `json:"data,omitempty"`
+	Data       NodeData `json:"data,omitempty"`
 	Position   Position `json:"position,omitempty"`
-	Group      string   `json:"group,omitempty"`
-	Removed    bool     `json:"removed,omitempty"`
-	Selected   bool     `json:"selected,omitempty"`
-	Selectable bool     `json:"selectable,omitempty"`
-	Locked     bool     `json:"locked,omitempty"`
-	Grabbable  bool     `json:"grabbable,omitempty"`
-	Pannable   bool     `json:"pannable,omitempty"`
-	Classes    string   `json:"classes,omitempty"`
+	Group      string   `json:"group"`
+	Removed    bool     `json:"removed"`
+	Selected   bool     `json:"selected"`
+	Selectable bool     `json:"selectable"`
+	Locked     bool     `json:"locked"`
+	Grabbable  bool     `json:"grabbable"`
+	Pannable   bool     `json:"pannable"`
+	Classes    string   `json:"classes"`
 }
 
 type Edges struct {
-	Data       Data     `json:"data,omitempty"`
+	Data       EdgeData `json:"data,omitempty"`
 	Position   Position `json:"position,omitempty"`
-	Group      string   `json:"group,omitempty"`
-	Removed    bool     `json:"removed,omitempty"`
-	Selected   bool     `json:"selected,omitempty"`
-	Selectable bool     `json:"selectable,omitempty"`
-	Locked     bool     `json:"locked,omitempty"`
-	Grabbable  bool     `json:"grabbable,omitempty"`
-	Pannable   bool     `json:"pannable,omitempty"`
-	Classes    string   `json:"classes,omitempty"`
+	Group      string   `json:"group"`
+	Removed    bool     `json:"removed"`
+	Selected   bool     `json:"selected"`
+	Selectable bool     `json:"selectable"`
+	Locked     bool     `json:"locked"`
+	Grabbable  bool     `json:"grabbable"`
+	Pannable   bool     `json:"pannable"`
+	Classes    string   `json:"classes"`
 }
 
 type Elements struct {

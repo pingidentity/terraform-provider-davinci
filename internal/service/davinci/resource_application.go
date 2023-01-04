@@ -320,7 +320,8 @@ func ResourceApplication() *schema.Resource {
 						},
 						"status": {
 							Type:     schema.TypeString,
-							Computed: true,
+							Optional: true,
+							Default:  "enabled",
 						},
 						"policy_id": {
 							Type:     schema.TypeString,
@@ -395,7 +396,7 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 
 	resp, ok := skdRes.(*dv.App)
 	if !ok {
-		err = fmt.Errorf("failed to cast response to Application on id: %s", appId)
+		err = fmt.Errorf("failed to cast App type to response on Application with id: %s", appId)
 		return diag.FromErr(err)
 	}
 

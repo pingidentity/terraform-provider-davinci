@@ -173,8 +173,8 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 	res, ok := sdkRes.(*dv.FlowInfo)
-	if !ok || res.Flow.Name == "" {
-		err = fmt.Errorf("Unable to parse read response from Davinci API on flow id: %v", flowId)
+	if !ok {
+		err = fmt.Errorf("Unable to cast FlowInfo type to response from Davinci API on flow id: %v", flowId)
 		return diag.FromErr(err)
 	}
 
@@ -229,8 +229,9 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		res, ok := sdkRes.(*dv.FlowInfo)
-		if !ok || res.Flow.Name == "" {
+
+		res, ok := sdkRes.(*dv.Flow)
+		if !ok || res.Name == "" {
 			err = fmt.Errorf("Unable to parse update response from Davinci API on flow id: %v", flowId)
 			return diag.FromErr(err)
 		}

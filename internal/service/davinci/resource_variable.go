@@ -131,7 +131,7 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 	}
 	resp, ok := sdkRes.(map[string]dv.Variable)
 	if !ok {
-		err = fmt.Errorf("Unable to parse response from Davinci API for variable with name: %s", variableName)
+		err = fmt.Errorf("Unable to cast variable type to response from Davinci API for variable with name: %s", variableName)
 		return diag.FromErr(err)
 	}
 

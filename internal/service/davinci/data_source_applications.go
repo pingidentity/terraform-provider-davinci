@@ -348,7 +348,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 
 	resp, ok := sdkRes.([]dv.App)
 	if !ok {
-		err = fmt.Errorf("Unable to parse apps response from Davinci API")
+		err = fmt.Errorf("Unable to cast apps response from Davinci API")
 		return diag.FromErr(err)
 	}
 

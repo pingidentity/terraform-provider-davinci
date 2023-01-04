@@ -81,13 +81,13 @@ func (c *APIClient) UpdateFlowPolicy(companyId *string, appId string, policy Pol
 		return nil, err
 	}
 
-	res := ReadApp{}
+	res := App{}
 	err = json.Unmarshal(body, &res)
 	if err != nil {
 		return nil, err
 	}
 
-	return &res.App, nil
+	return &res, nil
 }
 
 // Deletes an application based on applicationId

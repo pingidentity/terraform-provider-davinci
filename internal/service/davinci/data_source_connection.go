@@ -82,7 +82,7 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 		return diag.FromErr(err)
 	}
 	res, ok := sdkRes.(*dv.Connection)
-	if !ok || res.Name == "" {
+	if !ok {
 		err = fmt.Errorf("Unable to parse response from Davinci API on connection id: %v", connId)
 		return diag.FromErr(err)
 	}

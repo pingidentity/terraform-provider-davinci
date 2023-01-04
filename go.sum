@@ -369,8 +369,8 @@ github.com/rogpeppe/go-internal v1.8.0 h1:FCbCCtXNOY3UtUuHUYaghJg4y7Fd14rXifAYUA
 github.com/rogpeppe/go-internal v1.8.0/go.mod h1:WmiCO8CzOY8rg0OYDC4/i/2WRWAB6poM+XZ2dLUbcbE=
 github.com/russross/blackfriday v1.6.0 h1:KqfZb0pUVN2lYqZUYRddxF4OR8ZMURnJIG5Y3VRLtww=
 github.com/russross/blackfriday v1.6.0/go.mod h1:ti0ldHuxg49ri4ksnFxlkCfN+hvslNlmVHqNRXXJNAY=
-github.com/samir-gandhi/davinci-client-go v0.0.36 h1:kCl35BV34K4MUrTHhrmaMcidD4UNdraVfsR/p//b2x0=
-github.com/samir-gandhi/davinci-client-go v0.0.36/go.mod h1:BuwBLUsGtB91mN6nICnyCIrOmAPitaQ8JFmBaLyldyU=
+github.com/samir-gandhi/davinci-client-go v0.0.37 h1:g0sVQCiyJEQ698GmNNpLyzOUKOQYWoRwwIESMqRB81g=
+github.com/samir-gandhi/davinci-client-go v0.0.37/go.mod h1:BuwBLUsGtB91mN6nICnyCIrOmAPitaQ8JFmBaLyldyU=
 github.com/sebdah/goldie v1.0.0/go.mod h1:jXP4hmWywNEwZzhMuv2ccnqTSFpuq8iyQhtQdkkZBH4=
 github.com/sergi/go-diff v1.1.0/go.mod h1:STckp+ISIX8hZLjrqAeVduY0gWCT9IjLuqbuNXdaHfM=
 github.com/sergi/go-diff v1.2.0 h1:XU+rvMAioB0UC3q1MFrIQy4Vo5/4VsRDQQXHsEya6xQ=

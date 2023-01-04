@@ -154,7 +154,7 @@ func (c *APIClient) doRequestVerbose(req *http.Request, authToken *string, args 
 	if args != nil {
 		req.URL.RawQuery = args.QueryParams().Encode()
 	}
-	// fmt.Printf("client request is: %v", req)
+
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -224,14 +224,6 @@ func (c *APIClient) doRequest(req *http.Request, authToken *string, args *Params
 }
 
 func (c *APIClient) doRequestRetryable(req DvHttpRequest, authToken *string, args *Params) ([]byte, error) {
-	// req.Close = true
-	// fmt.Printf("req.body is: %v", req.Body)
-	// urlRetry := fmt.Sprintf("%s://%s%s", req.URL.Scheme, req.URL.Host, req.URL.Path)
-	// bodyRetry, err := req.Clone()
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	reqInit, err := http.NewRequest(req.Method, req.Url, req.Body)
 	if err != nil {
 		return nil, err
@@ -256,12 +248,11 @@ func (c *APIClient) doRequestRetryable(req DvHttpRequest, authToken *string, arg
 		if err != nil {
 			return nil, err
 		}
-		// fmt.Printf("req.body retry is: %v", reqRetry.Body)
+
 		var resRetry *http.Response
 		var bodyRetry []byte
 		bodyRetry, resRetry, err = c.doRequest(reqRetry, authToken, args)
 		if err != nil {
-			// fmt.Printf("error: %v", err)
 			return nil, err
 		}
 		res = resRetry

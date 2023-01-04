@@ -126,8 +126,8 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m inter
 	}
 
 	res, ok := sdkRes.(*dv.Connection)
-	if !ok || res.Name == "" {
-		err = fmt.Errorf("Unable to parse response from Davinci API on connection id: %v", connId)
+	if !ok {
+		err = fmt.Errorf("Unable to cast Connection type to response from Davinci API on connection id: %v", connId)
 		return diag.FromErr(err)
 	}
 
