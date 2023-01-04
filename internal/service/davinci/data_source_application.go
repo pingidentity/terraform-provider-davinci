@@ -2,6 +2,7 @@ package davinci
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -322,9 +323,17 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
-	id := d.Get("application_id").(string)
-	resp, err := c.ReadApplication(&c.CompanyID, id)
+	appId := d.Get("application_id").(string)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadApplication(&c.CompanyID, appId)
+	}, nil)
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	resp, ok := sdkRes.(*dv.App)
+	if !ok {
+		err = fmt.Errorf("failed to cast response to Application for id: %s", appId)
 		return diag.FromErr(err)
 	}
 

@@ -28,7 +28,8 @@ resource "davinci_application" "use_default_flow" {
     }
   }
   policies {
-    name = "PingOne - Sign On and Password Reset"
+    name   = "PingOne - Sign On and Password Reset"
+    status = "enabled"
     policy_flows {
       flow_id    = "abc123"
       version_id = -1
@@ -129,12 +130,12 @@ Optional:
 
 - `name` (String)
 - `policy_flows` (Block Set) Weighted flows that this Application will use (see [below for nested schema](#nestedblock--policies--policy_flows))
+- `status` (String) Defaults to `enabled`.
 
 Read-Only:
 
 - `created_date` (Number)
 - `policy_id` (String)
-- `status` (String)
 
 <a id="nestedblock--policies--policy_flows"></a>
 ### Nested Schema for `policies.policy_flows`

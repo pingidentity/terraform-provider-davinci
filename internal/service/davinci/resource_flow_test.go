@@ -154,7 +154,7 @@ func testAccResourceFlow_SimpleFlows_Hcl(resourceName string, flowsHcl []string)
 	hcl = fmt.Sprintf(`
 %[1]s
 
-`, baseHcl, resourceName)
+`, baseHcl)
 
 	for _, flowHcl := range flowsHcl {
 		hcl += flowHcl

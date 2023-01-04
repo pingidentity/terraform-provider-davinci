@@ -1,27 +1,20 @@
 terraform {
   required_providers {
-    // named davinci for now until merged to actual pingone provider
     davinci = {
       source = "pingidentity/davinci"
     }
     pingone = {
       source = "pingidentity/pingone"
     }
-    time = {
-      source = "hashicorp/time"
-    }
   }
 }
 
-// Login with PingOne Admin Environment user
 provider "davinci" {
   //Must be Identity Data Admin for Environment 
-  // (typically PingOne Admin Environment User)
   username = var.pingone_username
   password = var.pingone_password
-  // This base_url is required
-  region = "NorthAmerica"
-  // User will be _authenticated_ to this environment
+  region   = "NorthAmerica"
+  // User should exist in Identities of this environment
   environment_id = var.pingone_environment_id
 }
 
@@ -75,42 +68,21 @@ resource "pingone_role_assignment_user" "admin_sso" {
   scope_environment_id = resource.pingone_environment.tf_trial.id
 }
 
-// DaVinci dependincies are as such and should be de:
-// - Connections/Variables
-// - Flows depends_on Connections/Variables
-// - Apps depends_on Flows
+// This simple read action is used to as a precursor to all other data/resources
+// Every other data/resource should have a `depends_on` pointing to this read action
+data "davinci_connections" "read_all" {
+  // NOTICE: this is NOT resource.pingone_environment. Dependency is on the role assignment, not environment.  
+  environment_id = resource.pingone_role_assignment_user.admin_sso.scope_environment_id
+}
+
 resource "davinci_flow" "initial_flow" {
   flow_json = file("default_flow.json")
   deploy    = true
   // NOTICE: this is NOT resource.pingone_environment. Dependency is on the role assignment, not environment.
   environment_id = resource.pingone_role_assignment_user.admin_sso.scope_environment_id
-}
 
-// All other data/resources can occur after the first DV read action
-resource "davinci_application" "one" {
-  environment_id = resource.pingone_role_assignment_user.admin_sso.scope_environment_id
-  name           = "FromTF"
-  oauth {
-    enabled = false
-    values {
-      enabled = false
-    }
-  }
-  policies {
-    name = "Simple Flow"
-    policy_flows {
-      flow_id    = resource.davinci_flow.initial_flow.flow_id
-      version_id = -1
-      weight     = 100
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
+  // This depends_on relieves the client from multiple initial authentication attempts
   depends_on = [
-    resource.davinci_flow.initial_flow
+    data.davinci_connections.read_all
   ]
 }

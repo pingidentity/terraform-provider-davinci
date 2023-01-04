@@ -174,6 +174,16 @@ func (c *APIClient) CreateInitializedApplication(companyId *string, payload *App
 		err = fmt.Errorf("Unable to create application. Error: %v", err)
 		return nil, err
 	}
+
+	//Merge computed fields from Created application with update payload.	(e.g. client secret)
+	if payload.Oauth == nil {
+		payload.Oauth = resp.Oauth
+	}
+	if payload.Saml == nil {
+		payload.Saml = resp.Saml
+	}
+	payload.Oauth.Values.ClientSecret = resp.Oauth.Values.ClientSecret
+
 	payload.AppID = resp.AppID
 
 	//Create Flow Policies

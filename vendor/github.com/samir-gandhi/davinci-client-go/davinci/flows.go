@@ -187,6 +187,31 @@ func (c *APIClient) CreateFlowWithJson(companyId *string,
 		return nil, err
 	}
 
+	// Call orx, this replicates the GET made from UI which seems to trigger some database function:
+	reqOrx := DvHttpRequest{
+		Method: "GET",
+		Url:    fmt.Sprintf("%s/flows/%s", c.HostURL, resp.Flow.FlowID),
+	}
+	params := Params{
+		ExtraParams: map[string]string{
+			"attributes": "orx",
+		},
+	}
+	_, err = c.doRequestRetryable(reqOrx, &c.Token, &params)
+	if err != nil {
+		return nil, err
+	}
+
+	// Call apps, this replicates the GET made from UI which seems to trigger some database function:
+	reqApps := DvHttpRequest{
+		Method: "GET",
+		Url:    fmt.Sprintf("%s/flows/%s", c.HostURL, resp.Flow.FlowID),
+	}
+	_, err = c.doRequestRetryable(reqApps, &c.Token, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	return &resp.Flow, nil
 }
 
@@ -275,13 +300,13 @@ func (c *APIClient) UpdateFlowWithJson(companyId *string, payloadJson *string, f
 		return nil, err
 	}
 
-	resp := FlowInfo{}
+	resp := Flow{}
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &resp.Flow, nil
+	return &resp, nil
 }
 
 // ReadFlows only accepts Limit as a param

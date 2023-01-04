@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -87,12 +86,21 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, m int
 
 	connection.Properties = *makeProperties(d)
 
-	res, err := c.CreateInitializedConnection(&c.CompanyID, &connection)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.CreateInitializedConnection(&c.CompanyID, &connection)
+	}, nil)
+
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(res.ConnectionID)
+	resp, ok := sdkRes.(*dv.Connection)
+	if !ok || resp.Name == "" {
+		err = fmt.Errorf("failed to cast created response to Connection")
+		return diag.FromErr(err)
+	}
+
+	d.SetId(resp.ConnectionID)
 
 	resourceConnectionRead(ctx, d, m)
 
@@ -110,14 +118,16 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m inter
 
 	connId := d.Id()
 
-	res, err := c.ReadConnection(&c.CompanyID, connId)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadConnection(&c.CompanyID, connId)
+	}, nil)
 	if err != nil {
-		ep, err := c.ParseDvHttpError(err)
-		if ep.Status == 400 && strings.Contains(ep.Body, "Error retrieving connections") {
-			d.SetId("")
-			// diags = append(diags, diag.Diagnostic{})
-			return diags
-		}
+		return diag.FromErr(err)
+	}
+
+	res, ok := sdkRes.(*dv.Connection)
+	if !ok {
+		err = fmt.Errorf("Unable to cast Connection type to response from Davinci API on connection id: %v", connId)
 		return diag.FromErr(err)
 	}
 
@@ -165,8 +175,17 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, m int
 		}
 
 		connection.Properties = *makeProperties(d)
-		_, err := c.UpdateConnection(&c.CompanyID, &connection)
+
+		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+			return c.UpdateConnection(&c.CompanyID, &connection)
+		}, nil)
 		if err != nil {
+			return diag.FromErr(err)
+		}
+
+		res, ok := sdkRes.(*dv.Connection)
+		if !ok || res.Name == "" {
+			err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
 			return diag.FromErr(err)
 		}
 	}
@@ -182,10 +201,19 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
 	connId := d.Id()
 
-	_, err = c.DeleteConnection(&c.CompanyID, connId)
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.DeleteConnection(&c.CompanyID, connId)
+	}, nil)
 	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	res, ok := sdkRes.(*dv.Message)
+	if !ok || res.Message == "" {
+		err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
 		return diag.FromErr(err)
 	}
 
