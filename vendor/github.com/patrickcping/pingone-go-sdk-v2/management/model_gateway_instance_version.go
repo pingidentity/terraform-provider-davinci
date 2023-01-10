@@ -40,7 +40,7 @@ func NewGatewayInstanceVersionWithDefaults() *GatewayInstanceVersion {
 
 // GetVersionNumber returns the VersionNumber field value if set, zero value otherwise.
 func (o *GatewayInstanceVersion) GetVersionNumber() string {
-	if o == nil || o.VersionNumber == nil {
+	if o == nil || isNil(o.VersionNumber) {
 		var ret string
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *GatewayInstanceVersion) GetVersionNumber() string {
 // GetVersionNumberOk returns a tuple with the VersionNumber field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayInstanceVersion) GetVersionNumberOk() (*string, bool) {
-	if o == nil || o.VersionNumber == nil {
-		return nil, false
+	if o == nil || isNil(o.VersionNumber) {
+    return nil, false
 	}
 	return o.VersionNumber, true
 }
 
 // HasVersionNumber returns a boolean if a field has been set.
 func (o *GatewayInstanceVersion) HasVersionNumber() bool {
-	if o != nil && o.VersionNumber != nil {
+	if o != nil && !isNil(o.VersionNumber) {
 		return true
 	}
 
@@ -72,7 +72,7 @@ func (o *GatewayInstanceVersion) SetVersionNumber(v string) {
 
 // GetUpdateStatus returns the UpdateStatus field value if set, zero value otherwise.
 func (o *GatewayInstanceVersion) GetUpdateStatus() EnumUpdateStatus {
-	if o == nil || o.UpdateStatus == nil {
+	if o == nil || isNil(o.UpdateStatus) {
 		var ret EnumUpdateStatus
 		return ret
 	}
@@ -82,15 +82,15 @@ func (o *GatewayInstanceVersion) GetUpdateStatus() EnumUpdateStatus {
 // GetUpdateStatusOk returns a tuple with the UpdateStatus field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayInstanceVersion) GetUpdateStatusOk() (*EnumUpdateStatus, bool) {
-	if o == nil || o.UpdateStatus == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdateStatus) {
+    return nil, false
 	}
 	return o.UpdateStatus, true
 }
 
 // HasUpdateStatus returns a boolean if a field has been set.
 func (o *GatewayInstanceVersion) HasUpdateStatus() bool {
-	if o != nil && o.UpdateStatus != nil {
+	if o != nil && !isNil(o.UpdateStatus) {
 		return true
 	}
 
@@ -104,10 +104,10 @@ func (o *GatewayInstanceVersion) SetUpdateStatus(v EnumUpdateStatus) {
 
 func (o GatewayInstanceVersion) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.VersionNumber != nil {
+	if !isNil(o.VersionNumber) {
 		toSerialize["versionNumber"] = o.VersionNumber
 	}
-	if o.UpdateStatus != nil {
+	if !isNil(o.UpdateStatus) {
 		toSerialize["updateStatus"] = o.UpdateStatus
 	}
 	return json.Marshal(toSerialize)

@@ -52,7 +52,7 @@ func (o *IdentityProviderSAMLAllOfIdpVerification) GetCertificates() []IdentityP
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOfIdpVerification) GetCertificatesOk() ([]IdentityProviderSAMLAllOfIdpVerificationCertificates, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.Certificates, true
 }

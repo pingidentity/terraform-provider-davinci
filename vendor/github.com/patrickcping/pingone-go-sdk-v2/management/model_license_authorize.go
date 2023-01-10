@@ -41,7 +41,7 @@ func NewLicenseAuthorizeWithDefaults() *LicenseAuthorize {
 
 // GetAllowApiAccessManagement returns the AllowApiAccessManagement field value if set, zero value otherwise.
 func (o *LicenseAuthorize) GetAllowApiAccessManagement() bool {
-	if o == nil || o.AllowApiAccessManagement == nil {
+	if o == nil || isNil(o.AllowApiAccessManagement) {
 		var ret bool
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *LicenseAuthorize) GetAllowApiAccessManagement() bool {
 // GetAllowApiAccessManagementOk returns a tuple with the AllowApiAccessManagement field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseAuthorize) GetAllowApiAccessManagementOk() (*bool, bool) {
-	if o == nil || o.AllowApiAccessManagement == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowApiAccessManagement) {
+    return nil, false
 	}
 	return o.AllowApiAccessManagement, true
 }
 
 // HasAllowApiAccessManagement returns a boolean if a field has been set.
 func (o *LicenseAuthorize) HasAllowApiAccessManagement() bool {
-	if o != nil && o.AllowApiAccessManagement != nil {
+	if o != nil && !isNil(o.AllowApiAccessManagement) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *LicenseAuthorize) SetAllowApiAccessManagement(v bool) {
 
 // GetAllowDynamicAuthorization returns the AllowDynamicAuthorization field value if set, zero value otherwise.
 func (o *LicenseAuthorize) GetAllowDynamicAuthorization() bool {
-	if o == nil || o.AllowDynamicAuthorization == nil {
+	if o == nil || isNil(o.AllowDynamicAuthorization) {
 		var ret bool
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *LicenseAuthorize) GetAllowDynamicAuthorization() bool {
 // GetAllowDynamicAuthorizationOk returns a tuple with the AllowDynamicAuthorization field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseAuthorize) GetAllowDynamicAuthorizationOk() (*bool, bool) {
-	if o == nil || o.AllowDynamicAuthorization == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowDynamicAuthorization) {
+    return nil, false
 	}
 	return o.AllowDynamicAuthorization, true
 }
 
 // HasAllowDynamicAuthorization returns a boolean if a field has been set.
 func (o *LicenseAuthorize) HasAllowDynamicAuthorization() bool {
-	if o != nil && o.AllowDynamicAuthorization != nil {
+	if o != nil && !isNil(o.AllowDynamicAuthorization) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *LicenseAuthorize) SetAllowDynamicAuthorization(v bool) {
 
 func (o LicenseAuthorize) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowApiAccessManagement != nil {
+	if !isNil(o.AllowApiAccessManagement) {
 		toSerialize["allowApiAccessManagement"] = o.AllowApiAccessManagement
 	}
-	if o.AllowDynamicAuthorization != nil {
+	if !isNil(o.AllowDynamicAuthorization) {
 		toSerialize["allowDynamicAuthorization"] = o.AllowDynamicAuthorization
 	}
 	return json.Marshal(toSerialize)

@@ -44,7 +44,7 @@ func NewGatewayLDAPAllOfKerberosWithDefaults() *GatewayLDAPAllOfKerberos {
 
 // GetServiceAccountPassword returns the ServiceAccountPassword field value if set, zero value otherwise.
 func (o *GatewayLDAPAllOfKerberos) GetServiceAccountPassword() string {
-	if o == nil || o.ServiceAccountPassword == nil {
+	if o == nil || isNil(o.ServiceAccountPassword) {
 		var ret string
 		return ret
 	}
@@ -54,15 +54,15 @@ func (o *GatewayLDAPAllOfKerberos) GetServiceAccountPassword() string {
 // GetServiceAccountPasswordOk returns a tuple with the ServiceAccountPassword field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfKerberos) GetServiceAccountPasswordOk() (*string, bool) {
-	if o == nil || o.ServiceAccountPassword == nil {
-		return nil, false
+	if o == nil || isNil(o.ServiceAccountPassword) {
+    return nil, false
 	}
 	return o.ServiceAccountPassword, true
 }
 
 // HasServiceAccountPassword returns a boolean if a field has been set.
 func (o *GatewayLDAPAllOfKerberos) HasServiceAccountPassword() bool {
-	if o != nil && o.ServiceAccountPassword != nil {
+	if o != nil && !isNil(o.ServiceAccountPassword) {
 		return true
 	}
 
@@ -88,7 +88,7 @@ func (o *GatewayLDAPAllOfKerberos) GetServiceAccountUserPrincipalName() string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfKerberos) GetServiceAccountUserPrincipalNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ServiceAccountUserPrincipalName, true
 }
@@ -100,7 +100,7 @@ func (o *GatewayLDAPAllOfKerberos) SetServiceAccountUserPrincipalName(v string) 
 
 // GetMinutesToRetainPreviousCredentials returns the MinutesToRetainPreviousCredentials field value if set, zero value otherwise.
 func (o *GatewayLDAPAllOfKerberos) GetMinutesToRetainPreviousCredentials() int32 {
-	if o == nil || o.MinutesToRetainPreviousCredentials == nil {
+	if o == nil || isNil(o.MinutesToRetainPreviousCredentials) {
 		var ret int32
 		return ret
 	}
@@ -110,15 +110,15 @@ func (o *GatewayLDAPAllOfKerberos) GetMinutesToRetainPreviousCredentials() int32
 // GetMinutesToRetainPreviousCredentialsOk returns a tuple with the MinutesToRetainPreviousCredentials field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfKerberos) GetMinutesToRetainPreviousCredentialsOk() (*int32, bool) {
-	if o == nil || o.MinutesToRetainPreviousCredentials == nil {
-		return nil, false
+	if o == nil || isNil(o.MinutesToRetainPreviousCredentials) {
+    return nil, false
 	}
 	return o.MinutesToRetainPreviousCredentials, true
 }
 
 // HasMinutesToRetainPreviousCredentials returns a boolean if a field has been set.
 func (o *GatewayLDAPAllOfKerberos) HasMinutesToRetainPreviousCredentials() bool {
-	if o != nil && o.MinutesToRetainPreviousCredentials != nil {
+	if o != nil && !isNil(o.MinutesToRetainPreviousCredentials) {
 		return true
 	}
 
@@ -132,13 +132,13 @@ func (o *GatewayLDAPAllOfKerberos) SetMinutesToRetainPreviousCredentials(v int32
 
 func (o GatewayLDAPAllOfKerberos) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ServiceAccountPassword != nil {
+	if !isNil(o.ServiceAccountPassword) {
 		toSerialize["serviceAccountPassword"] = o.ServiceAccountPassword
 	}
 	if true {
 		toSerialize["serviceAccountUserPrincipalName"] = o.ServiceAccountUserPrincipalName
 	}
-	if o.MinutesToRetainPreviousCredentials != nil {
+	if !isNil(o.MinutesToRetainPreviousCredentials) {
 		toSerialize["minutesToRetainPreviousCredentials"] = o.MinutesToRetainPreviousCredentials
 	}
 	return json.Marshal(toSerialize)

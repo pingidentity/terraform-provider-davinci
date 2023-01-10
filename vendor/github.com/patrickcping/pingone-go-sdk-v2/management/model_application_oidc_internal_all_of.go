@@ -40,7 +40,7 @@ func NewApplicationOIDCInternalAllOfWithDefaults() *ApplicationOIDCInternalAllOf
 
 // GetPkceEnforcement returns the PkceEnforcement field value if set, zero value otherwise.
 func (o *ApplicationOIDCInternalAllOf) GetPkceEnforcement() EnumApplicationOIDCPKCEOption {
-	if o == nil || o.PkceEnforcement == nil {
+	if o == nil || isNil(o.PkceEnforcement) {
 		var ret EnumApplicationOIDCPKCEOption
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *ApplicationOIDCInternalAllOf) GetPkceEnforcement() EnumApplicationOIDCP
 // GetPkceEnforcementOk returns a tuple with the PkceEnforcement field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCInternalAllOf) GetPkceEnforcementOk() (*EnumApplicationOIDCPKCEOption, bool) {
-	if o == nil || o.PkceEnforcement == nil {
-		return nil, false
+	if o == nil || isNil(o.PkceEnforcement) {
+    return nil, false
 	}
 	return o.PkceEnforcement, true
 }
 
 // HasPkceEnforcement returns a boolean if a field has been set.
 func (o *ApplicationOIDCInternalAllOf) HasPkceEnforcement() bool {
-	if o != nil && o.PkceEnforcement != nil {
+	if o != nil && !isNil(o.PkceEnforcement) {
 		return true
 	}
 
@@ -84,7 +84,7 @@ func (o *ApplicationOIDCInternalAllOf) GetTokenEndpointAuthMethod() EnumApplicat
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCInternalAllOf) GetTokenEndpointAuthMethodOk() (*EnumApplicationOIDCTokenAuthMethod, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TokenEndpointAuthMethod, true
 }
@@ -96,7 +96,7 @@ func (o *ApplicationOIDCInternalAllOf) SetTokenEndpointAuthMethod(v EnumApplicat
 
 func (o ApplicationOIDCInternalAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.PkceEnforcement != nil {
+	if !isNil(o.PkceEnforcement) {
 		toSerialize["pkceEnforcement"] = o.PkceEnforcement
 	}
 	if true {

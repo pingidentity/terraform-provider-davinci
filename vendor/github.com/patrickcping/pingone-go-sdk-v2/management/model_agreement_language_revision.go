@@ -51,7 +51,7 @@ func NewAgreementLanguageRevisionWithDefaults() *AgreementLanguageRevision {
 
 // GetAgreement returns the Agreement field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetAgreement() AgreementLanguageAgreement {
-	if o == nil || o.Agreement == nil {
+	if o == nil || isNil(o.Agreement) {
 		var ret AgreementLanguageAgreement
 		return ret
 	}
@@ -61,15 +61,15 @@ func (o *AgreementLanguageRevision) GetAgreement() AgreementLanguageAgreement {
 // GetAgreementOk returns a tuple with the Agreement field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetAgreementOk() (*AgreementLanguageAgreement, bool) {
-	if o == nil || o.Agreement == nil {
-		return nil, false
+	if o == nil || isNil(o.Agreement) {
+    return nil, false
 	}
 	return o.Agreement, true
 }
 
 // HasAgreement returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasAgreement() bool {
-	if o != nil && o.Agreement != nil {
+	if o != nil && !isNil(o.Agreement) {
 		return true
 	}
 
@@ -83,7 +83,7 @@ func (o *AgreementLanguageRevision) SetAgreement(v AgreementLanguageAgreement) {
 
 // GetContentType returns the ContentType field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetContentType() string {
-	if o == nil || o.ContentType == nil {
+	if o == nil || isNil(o.ContentType) {
 		var ret string
 		return ret
 	}
@@ -93,15 +93,15 @@ func (o *AgreementLanguageRevision) GetContentType() string {
 // GetContentTypeOk returns a tuple with the ContentType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetContentTypeOk() (*string, bool) {
-	if o == nil || o.ContentType == nil {
-		return nil, false
+	if o == nil || isNil(o.ContentType) {
+    return nil, false
 	}
 	return o.ContentType, true
 }
 
 // HasContentType returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasContentType() bool {
-	if o != nil && o.ContentType != nil {
+	if o != nil && !isNil(o.ContentType) {
 		return true
 	}
 
@@ -115,7 +115,7 @@ func (o *AgreementLanguageRevision) SetContentType(v string) {
 
 // GetEffectiveAt returns the EffectiveAt field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetEffectiveAt() string {
-	if o == nil || o.EffectiveAt == nil {
+	if o == nil || isNil(o.EffectiveAt) {
 		var ret string
 		return ret
 	}
@@ -125,15 +125,15 @@ func (o *AgreementLanguageRevision) GetEffectiveAt() string {
 // GetEffectiveAtOk returns a tuple with the EffectiveAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetEffectiveAtOk() (*string, bool) {
-	if o == nil || o.EffectiveAt == nil {
-		return nil, false
+	if o == nil || isNil(o.EffectiveAt) {
+    return nil, false
 	}
 	return o.EffectiveAt, true
 }
 
 // HasEffectiveAt returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasEffectiveAt() bool {
-	if o != nil && o.EffectiveAt != nil {
+	if o != nil && !isNil(o.EffectiveAt) {
 		return true
 	}
 
@@ -147,7 +147,7 @@ func (o *AgreementLanguageRevision) SetEffectiveAt(v string) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -157,15 +157,15 @@ func (o *AgreementLanguageRevision) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -179,7 +179,7 @@ func (o *AgreementLanguageRevision) SetId(v string) {
 
 // GetLanguage returns the Language field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetLanguage() AgreementLanguageRevisionLanguage {
-	if o == nil || o.Language == nil {
+	if o == nil || isNil(o.Language) {
 		var ret AgreementLanguageRevisionLanguage
 		return ret
 	}
@@ -189,15 +189,15 @@ func (o *AgreementLanguageRevision) GetLanguage() AgreementLanguageRevisionLangu
 // GetLanguageOk returns a tuple with the Language field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetLanguageOk() (*AgreementLanguageRevisionLanguage, bool) {
-	if o == nil || o.Language == nil {
-		return nil, false
+	if o == nil || isNil(o.Language) {
+    return nil, false
 	}
 	return o.Language, true
 }
 
 // HasLanguage returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasLanguage() bool {
-	if o != nil && o.Language != nil {
+	if o != nil && !isNil(o.Language) {
 		return true
 	}
 
@@ -211,7 +211,7 @@ func (o *AgreementLanguageRevision) SetLanguage(v AgreementLanguageRevisionLangu
 
 // GetNotValidAfter returns the NotValidAfter field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetNotValidAfter() string {
-	if o == nil || o.NotValidAfter == nil {
+	if o == nil || isNil(o.NotValidAfter) {
 		var ret string
 		return ret
 	}
@@ -221,15 +221,15 @@ func (o *AgreementLanguageRevision) GetNotValidAfter() string {
 // GetNotValidAfterOk returns a tuple with the NotValidAfter field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetNotValidAfterOk() (*string, bool) {
-	if o == nil || o.NotValidAfter == nil {
-		return nil, false
+	if o == nil || isNil(o.NotValidAfter) {
+    return nil, false
 	}
 	return o.NotValidAfter, true
 }
 
 // HasNotValidAfter returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasNotValidAfter() bool {
-	if o != nil && o.NotValidAfter != nil {
+	if o != nil && !isNil(o.NotValidAfter) {
 		return true
 	}
 
@@ -243,7 +243,7 @@ func (o *AgreementLanguageRevision) SetNotValidAfter(v string) {
 
 // GetRequiresReconsent returns the RequiresReconsent field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetRequiresReconsent() bool {
-	if o == nil || o.RequiresReconsent == nil {
+	if o == nil || isNil(o.RequiresReconsent) {
 		var ret bool
 		return ret
 	}
@@ -253,15 +253,15 @@ func (o *AgreementLanguageRevision) GetRequiresReconsent() bool {
 // GetRequiresReconsentOk returns a tuple with the RequiresReconsent field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetRequiresReconsentOk() (*bool, bool) {
-	if o == nil || o.RequiresReconsent == nil {
-		return nil, false
+	if o == nil || isNil(o.RequiresReconsent) {
+    return nil, false
 	}
 	return o.RequiresReconsent, true
 }
 
 // HasRequiresReconsent returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasRequiresReconsent() bool {
-	if o != nil && o.RequiresReconsent != nil {
+	if o != nil && !isNil(o.RequiresReconsent) {
 		return true
 	}
 
@@ -275,7 +275,7 @@ func (o *AgreementLanguageRevision) SetRequiresReconsent(v bool) {
 
 // GetText returns the Text field value if set, zero value otherwise.
 func (o *AgreementLanguageRevision) GetText() string {
-	if o == nil || o.Text == nil {
+	if o == nil || isNil(o.Text) {
 		var ret string
 		return ret
 	}
@@ -285,15 +285,15 @@ func (o *AgreementLanguageRevision) GetText() string {
 // GetTextOk returns a tuple with the Text field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageRevision) GetTextOk() (*string, bool) {
-	if o == nil || o.Text == nil {
-		return nil, false
+	if o == nil || isNil(o.Text) {
+    return nil, false
 	}
 	return o.Text, true
 }
 
 // HasText returns a boolean if a field has been set.
 func (o *AgreementLanguageRevision) HasText() bool {
-	if o != nil && o.Text != nil {
+	if o != nil && !isNil(o.Text) {
 		return true
 	}
 
@@ -307,28 +307,28 @@ func (o *AgreementLanguageRevision) SetText(v string) {
 
 func (o AgreementLanguageRevision) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Agreement != nil {
+	if !isNil(o.Agreement) {
 		toSerialize["agreement"] = o.Agreement
 	}
-	if o.ContentType != nil {
+	if !isNil(o.ContentType) {
 		toSerialize["contentType"] = o.ContentType
 	}
-	if o.EffectiveAt != nil {
+	if !isNil(o.EffectiveAt) {
 		toSerialize["effectiveAt"] = o.EffectiveAt
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Language != nil {
+	if !isNil(o.Language) {
 		toSerialize["language"] = o.Language
 	}
-	if o.NotValidAfter != nil {
+	if !isNil(o.NotValidAfter) {
 		toSerialize["notValidAfter"] = o.NotValidAfter
 	}
-	if o.RequiresReconsent != nil {
+	if !isNil(o.RequiresReconsent) {
 		toSerialize["requiresReconsent"] = o.RequiresReconsent
 	}
-	if o.Text != nil {
+	if !isNil(o.Text) {
 		toSerialize["text"] = o.Text
 	}
 	return json.Marshal(toSerialize)

@@ -57,7 +57,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetId() string {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Id, true
 }
@@ -69,7 +69,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) SetId(v string) {
 
 // GetPush returns the Push field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetPush() DeviceAuthenticationPolicyMobileApplicationsInnerPush {
-	if o == nil || o.Push == nil {
+	if o == nil || isNil(o.Push) {
 		var ret DeviceAuthenticationPolicyMobileApplicationsInnerPush
 		return ret
 	}
@@ -79,15 +79,15 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetPush() DeviceAuth
 // GetPushOk returns a tuple with the Push field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetPushOk() (*DeviceAuthenticationPolicyMobileApplicationsInnerPush, bool) {
-	if o == nil || o.Push == nil {
-		return nil, false
+	if o == nil || isNil(o.Push) {
+    return nil, false
 	}
 	return o.Push, true
 }
 
 // HasPush returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) HasPush() bool {
-	if o != nil && o.Push != nil {
+	if o != nil && !isNil(o.Push) {
 		return true
 	}
 
@@ -101,7 +101,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) SetPush(v DeviceAuth
 
 // GetOtp returns the Otp field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetOtp() DeviceAuthenticationPolicyMobileApplicationsInnerOtp {
-	if o == nil || o.Otp == nil {
+	if o == nil || isNil(o.Otp) {
 		var ret DeviceAuthenticationPolicyMobileApplicationsInnerOtp
 		return ret
 	}
@@ -111,15 +111,15 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetOtp() DeviceAuthe
 // GetOtpOk returns a tuple with the Otp field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetOtpOk() (*DeviceAuthenticationPolicyMobileApplicationsInnerOtp, bool) {
-	if o == nil || o.Otp == nil {
-		return nil, false
+	if o == nil || isNil(o.Otp) {
+    return nil, false
 	}
 	return o.Otp, true
 }
 
 // HasOtp returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) HasOtp() bool {
-	if o != nil && o.Otp != nil {
+	if o != nil && !isNil(o.Otp) {
 		return true
 	}
 
@@ -133,7 +133,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) SetOtp(v DeviceAuthe
 
 // GetDeviceAuthorization returns the DeviceAuthorization field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetDeviceAuthorization() DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization {
-	if o == nil || o.DeviceAuthorization == nil {
+	if o == nil || isNil(o.DeviceAuthorization) {
 		var ret DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization
 		return ret
 	}
@@ -143,15 +143,15 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetDeviceAuthorizati
 // GetDeviceAuthorizationOk returns a tuple with the DeviceAuthorization field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetDeviceAuthorizationOk() (*DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization, bool) {
-	if o == nil || o.DeviceAuthorization == nil {
-		return nil, false
+	if o == nil || isNil(o.DeviceAuthorization) {
+    return nil, false
 	}
 	return o.DeviceAuthorization, true
 }
 
 // HasDeviceAuthorization returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) HasDeviceAuthorization() bool {
-	if o != nil && o.DeviceAuthorization != nil {
+	if o != nil && !isNil(o.DeviceAuthorization) {
 		return true
 	}
 
@@ -165,7 +165,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) SetDeviceAuthorizati
 
 // GetAutoEnrollment returns the AutoEnrollment field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetAutoEnrollment() DeviceAuthenticationPolicyMobileApplicationsInnerAutoEnrollment {
-	if o == nil || o.AutoEnrollment == nil {
+	if o == nil || isNil(o.AutoEnrollment) {
 		var ret DeviceAuthenticationPolicyMobileApplicationsInnerAutoEnrollment
 		return ret
 	}
@@ -175,15 +175,15 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetAutoEnrollment() 
 // GetAutoEnrollmentOk returns a tuple with the AutoEnrollment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetAutoEnrollmentOk() (*DeviceAuthenticationPolicyMobileApplicationsInnerAutoEnrollment, bool) {
-	if o == nil || o.AutoEnrollment == nil {
-		return nil, false
+	if o == nil || isNil(o.AutoEnrollment) {
+    return nil, false
 	}
 	return o.AutoEnrollment, true
 }
 
 // HasAutoEnrollment returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) HasAutoEnrollment() bool {
-	if o != nil && o.AutoEnrollment != nil {
+	if o != nil && !isNil(o.AutoEnrollment) {
 		return true
 	}
 
@@ -197,7 +197,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) SetAutoEnrollment(v 
 
 // GetIntegrityDetection returns the IntegrityDetection field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetIntegrityDetection() EnumMFADevicePolicyMobileIntegrityDetection {
-	if o == nil || o.IntegrityDetection == nil {
+	if o == nil || isNil(o.IntegrityDetection) {
 		var ret EnumMFADevicePolicyMobileIntegrityDetection
 		return ret
 	}
@@ -207,15 +207,15 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetIntegrityDetectio
 // GetIntegrityDetectionOk returns a tuple with the IntegrityDetection field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) GetIntegrityDetectionOk() (*EnumMFADevicePolicyMobileIntegrityDetection, bool) {
-	if o == nil || o.IntegrityDetection == nil {
-		return nil, false
+	if o == nil || isNil(o.IntegrityDetection) {
+    return nil, false
 	}
 	return o.IntegrityDetection, true
 }
 
 // HasIntegrityDetection returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInner) HasIntegrityDetection() bool {
-	if o != nil && o.IntegrityDetection != nil {
+	if o != nil && !isNil(o.IntegrityDetection) {
 		return true
 	}
 
@@ -232,19 +232,19 @@ func (o DeviceAuthenticationPolicyMobileApplicationsInner) MarshalJSON() ([]byte
 	if true {
 		toSerialize["id"] = o.Id
 	}
-	if o.Push != nil {
+	if !isNil(o.Push) {
 		toSerialize["push"] = o.Push
 	}
-	if o.Otp != nil {
+	if !isNil(o.Otp) {
 		toSerialize["otp"] = o.Otp
 	}
-	if o.DeviceAuthorization != nil {
+	if !isNil(o.DeviceAuthorization) {
 		toSerialize["deviceAuthorization"] = o.DeviceAuthorization
 	}
-	if o.AutoEnrollment != nil {
+	if !isNil(o.AutoEnrollment) {
 		toSerialize["autoEnrollment"] = o.AutoEnrollment
 	}
-	if o.IntegrityDetection != nil {
+	if !isNil(o.IntegrityDetection) {
 		toSerialize["integrityDetection"] = o.IntegrityDetection
 	}
 	return json.Marshal(toSerialize)

@@ -87,7 +87,7 @@ func NewIdentityProviderOIDCWithDefaults() *IdentityProviderOIDC {
 
 // GetLinks returns the Links field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetLinks() map[string]interface{} {
-	if o == nil || o.Links == nil {
+	if o == nil || isNil(o.Links) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -97,15 +97,15 @@ func (o *IdentityProviderOIDC) GetLinks() map[string]interface{} {
 // GetLinksOk returns a tuple with the Links field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetLinksOk() (map[string]interface{}, bool) {
-	if o == nil || o.Links == nil {
-		return nil, false
+	if o == nil || isNil(o.Links) {
+    return map[string]interface{}{}, false
 	}
 	return o.Links, true
 }
 
 // HasLinks returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasLinks() bool {
-	if o != nil && o.Links != nil {
+	if o != nil && !isNil(o.Links) {
 		return true
 	}
 
@@ -119,7 +119,7 @@ func (o *IdentityProviderOIDC) SetLinks(v map[string]interface{}) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -129,15 +129,15 @@ func (o *IdentityProviderOIDC) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -163,7 +163,7 @@ func (o *IdentityProviderOIDC) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -175,7 +175,7 @@ func (o *IdentityProviderOIDC) SetEnabled(v bool) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -185,15 +185,15 @@ func (o *IdentityProviderOIDC) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -207,7 +207,7 @@ func (o *IdentityProviderOIDC) SetEnvironment(v ObjectEnvironment) {
 
 // GetIcon returns the Icon field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetIcon() IdentityProviderCommonIcon {
-	if o == nil || o.Icon == nil {
+	if o == nil || isNil(o.Icon) {
 		var ret IdentityProviderCommonIcon
 		return ret
 	}
@@ -217,15 +217,15 @@ func (o *IdentityProviderOIDC) GetIcon() IdentityProviderCommonIcon {
 // GetIconOk returns a tuple with the Icon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetIconOk() (*IdentityProviderCommonIcon, bool) {
-	if o == nil || o.Icon == nil {
-		return nil, false
+	if o == nil || isNil(o.Icon) {
+    return nil, false
 	}
 	return o.Icon, true
 }
 
 // HasIcon returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasIcon() bool {
-	if o != nil && o.Icon != nil {
+	if o != nil && !isNil(o.Icon) {
 		return true
 	}
 
@@ -239,7 +239,7 @@ func (o *IdentityProviderOIDC) SetIcon(v IdentityProviderCommonIcon) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -249,15 +249,15 @@ func (o *IdentityProviderOIDC) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -271,7 +271,7 @@ func (o *IdentityProviderOIDC) SetId(v string) {
 
 // GetLoginButtonIcon returns the LoginButtonIcon field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetLoginButtonIcon() IdentityProviderCommonLoginButtonIcon {
-	if o == nil || o.LoginButtonIcon == nil {
+	if o == nil || isNil(o.LoginButtonIcon) {
 		var ret IdentityProviderCommonLoginButtonIcon
 		return ret
 	}
@@ -281,15 +281,15 @@ func (o *IdentityProviderOIDC) GetLoginButtonIcon() IdentityProviderCommonLoginB
 // GetLoginButtonIconOk returns a tuple with the LoginButtonIcon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetLoginButtonIconOk() (*IdentityProviderCommonLoginButtonIcon, bool) {
-	if o == nil || o.LoginButtonIcon == nil {
-		return nil, false
+	if o == nil || isNil(o.LoginButtonIcon) {
+    return nil, false
 	}
 	return o.LoginButtonIcon, true
 }
 
 // HasLoginButtonIcon returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasLoginButtonIcon() bool {
-	if o != nil && o.LoginButtonIcon != nil {
+	if o != nil && !isNil(o.LoginButtonIcon) {
 		return true
 	}
 
@@ -315,7 +315,7 @@ func (o *IdentityProviderOIDC) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -327,7 +327,7 @@ func (o *IdentityProviderOIDC) SetName(v string) {
 
 // GetRegistration returns the Registration field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetRegistration() IdentityProviderCommonRegistration {
-	if o == nil || o.Registration == nil {
+	if o == nil || isNil(o.Registration) {
 		var ret IdentityProviderCommonRegistration
 		return ret
 	}
@@ -337,15 +337,15 @@ func (o *IdentityProviderOIDC) GetRegistration() IdentityProviderCommonRegistrat
 // GetRegistrationOk returns a tuple with the Registration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetRegistrationOk() (*IdentityProviderCommonRegistration, bool) {
-	if o == nil || o.Registration == nil {
-		return nil, false
+	if o == nil || isNil(o.Registration) {
+    return nil, false
 	}
 	return o.Registration, true
 }
 
 // HasRegistration returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasRegistration() bool {
-	if o != nil && o.Registration != nil {
+	if o != nil && !isNil(o.Registration) {
 		return true
 	}
 
@@ -371,7 +371,7 @@ func (o *IdentityProviderOIDC) GetType() EnumIdentityProviderExt {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetTypeOk() (*EnumIdentityProviderExt, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -383,7 +383,7 @@ func (o *IdentityProviderOIDC) SetType(v EnumIdentityProviderExt) {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetCreatedAt() string {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret string
 		return ret
 	}
@@ -393,15 +393,15 @@ func (o *IdentityProviderOIDC) GetCreatedAt() string {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetCreatedAtOk() (*string, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -415,7 +415,7 @@ func (o *IdentityProviderOIDC) SetCreatedAt(v string) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetUpdatedAt() string {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret string
 		return ret
 	}
@@ -425,15 +425,15 @@ func (o *IdentityProviderOIDC) GetUpdatedAt() string {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetUpdatedAtOk() (*string, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -459,7 +459,7 @@ func (o *IdentityProviderOIDC) GetAuthorizationEndpoint() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetAuthorizationEndpointOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.AuthorizationEndpoint, true
 }
@@ -483,7 +483,7 @@ func (o *IdentityProviderOIDC) GetClientId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetClientIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientId, true
 }
@@ -507,7 +507,7 @@ func (o *IdentityProviderOIDC) GetClientSecret() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetClientSecretOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientSecret, true
 }
@@ -519,7 +519,7 @@ func (o *IdentityProviderOIDC) SetClientSecret(v string) {
 
 // GetDiscoveryEndpoint returns the DiscoveryEndpoint field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetDiscoveryEndpoint() string {
-	if o == nil || o.DiscoveryEndpoint == nil {
+	if o == nil || isNil(o.DiscoveryEndpoint) {
 		var ret string
 		return ret
 	}
@@ -529,15 +529,15 @@ func (o *IdentityProviderOIDC) GetDiscoveryEndpoint() string {
 // GetDiscoveryEndpointOk returns a tuple with the DiscoveryEndpoint field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetDiscoveryEndpointOk() (*string, bool) {
-	if o == nil || o.DiscoveryEndpoint == nil {
-		return nil, false
+	if o == nil || isNil(o.DiscoveryEndpoint) {
+    return nil, false
 	}
 	return o.DiscoveryEndpoint, true
 }
 
 // HasDiscoveryEndpoint returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasDiscoveryEndpoint() bool {
-	if o != nil && o.DiscoveryEndpoint != nil {
+	if o != nil && !isNil(o.DiscoveryEndpoint) {
 		return true
 	}
 
@@ -563,7 +563,7 @@ func (o *IdentityProviderOIDC) GetIssuer() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetIssuerOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Issuer, true
 }
@@ -587,7 +587,7 @@ func (o *IdentityProviderOIDC) GetJwksEndpoint() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetJwksEndpointOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.JwksEndpoint, true
 }
@@ -611,7 +611,7 @@ func (o *IdentityProviderOIDC) GetScopes() []string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetScopesOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.Scopes, true
 }
@@ -635,7 +635,7 @@ func (o *IdentityProviderOIDC) GetTokenEndpoint() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetTokenEndpointOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TokenEndpoint, true
 }
@@ -659,7 +659,7 @@ func (o *IdentityProviderOIDC) GetTokenEndpointAuthMethod() EnumIdentityProvider
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetTokenEndpointAuthMethodOk() (*EnumIdentityProviderOIDCTokenAuthMethod, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TokenEndpointAuthMethod, true
 }
@@ -671,7 +671,7 @@ func (o *IdentityProviderOIDC) SetTokenEndpointAuthMethod(v EnumIdentityProvider
 
 // GetUserInfoEndpoint returns the UserInfoEndpoint field value if set, zero value otherwise.
 func (o *IdentityProviderOIDC) GetUserInfoEndpoint() string {
-	if o == nil || o.UserInfoEndpoint == nil {
+	if o == nil || isNil(o.UserInfoEndpoint) {
 		var ret string
 		return ret
 	}
@@ -681,15 +681,15 @@ func (o *IdentityProviderOIDC) GetUserInfoEndpoint() string {
 // GetUserInfoEndpointOk returns a tuple with the UserInfoEndpoint field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderOIDC) GetUserInfoEndpointOk() (*string, bool) {
-	if o == nil || o.UserInfoEndpoint == nil {
-		return nil, false
+	if o == nil || isNil(o.UserInfoEndpoint) {
+    return nil, false
 	}
 	return o.UserInfoEndpoint, true
 }
 
 // HasUserInfoEndpoint returns a boolean if a field has been set.
 func (o *IdentityProviderOIDC) HasUserInfoEndpoint() bool {
-	if o != nil && o.UserInfoEndpoint != nil {
+	if o != nil && !isNil(o.UserInfoEndpoint) {
 		return true
 	}
 
@@ -703,40 +703,40 @@ func (o *IdentityProviderOIDC) SetUserInfoEndpoint(v string) {
 
 func (o IdentityProviderOIDC) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Links != nil {
+	if !isNil(o.Links) {
 		toSerialize["_links"] = o.Links
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Icon != nil {
+	if !isNil(o.Icon) {
 		toSerialize["icon"] = o.Icon
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.LoginButtonIcon != nil {
+	if !isNil(o.LoginButtonIcon) {
 		toSerialize["loginButtonIcon"] = o.LoginButtonIcon
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.Registration != nil {
+	if !isNil(o.Registration) {
 		toSerialize["registration"] = o.Registration
 	}
 	if true {
 		toSerialize["type"] = o.Type
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	if true {
@@ -748,7 +748,7 @@ func (o IdentityProviderOIDC) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["clientSecret"] = o.ClientSecret
 	}
-	if o.DiscoveryEndpoint != nil {
+	if !isNil(o.DiscoveryEndpoint) {
 		toSerialize["discoveryEndpoint"] = o.DiscoveryEndpoint
 	}
 	if true {
@@ -766,7 +766,7 @@ func (o IdentityProviderOIDC) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["tokenEndpointAuthMethod"] = o.TokenEndpointAuthMethod
 	}
-	if o.UserInfoEndpoint != nil {
+	if !isNil(o.UserInfoEndpoint) {
 		toSerialize["userInfoEndpoint"] = o.UserInfoEndpoint
 	}
 	return json.Marshal(toSerialize)

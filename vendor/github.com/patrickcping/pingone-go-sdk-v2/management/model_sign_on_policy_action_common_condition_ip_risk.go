@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionIPRisk) GetIpRisk() SignOnPolicyAction
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionIPRisk) GetIpRiskOk() (*SignOnPolicyActionCommonConditionIPRiskIpRisk, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.IpRisk, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionCommonConditionIPRisk) GetValid() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionIPRisk) GetValidOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Valid, true
 }

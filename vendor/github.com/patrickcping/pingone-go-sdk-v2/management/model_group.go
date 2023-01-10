@@ -54,7 +54,7 @@ func NewGroupWithDefaults() *Group {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *Group) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -64,15 +64,15 @@ func (o *Group) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *Group) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -86,7 +86,7 @@ func (o *Group) SetId(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *Group) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -96,15 +96,15 @@ func (o *Group) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *Group) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -118,7 +118,7 @@ func (o *Group) SetEnvironment(v ObjectEnvironment) {
 
 // GetPopulation returns the Population field value if set, zero value otherwise.
 func (o *Group) GetPopulation() GroupPopulation {
-	if o == nil || o.Population == nil {
+	if o == nil || isNil(o.Population) {
 		var ret GroupPopulation
 		return ret
 	}
@@ -128,15 +128,15 @@ func (o *Group) GetPopulation() GroupPopulation {
 // GetPopulationOk returns a tuple with the Population field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetPopulationOk() (*GroupPopulation, bool) {
-	if o == nil || o.Population == nil {
-		return nil, false
+	if o == nil || isNil(o.Population) {
+    return nil, false
 	}
 	return o.Population, true
 }
 
 // HasPopulation returns a boolean if a field has been set.
 func (o *Group) HasPopulation() bool {
-	if o != nil && o.Population != nil {
+	if o != nil && !isNil(o.Population) {
 		return true
 	}
 
@@ -162,7 +162,7 @@ func (o *Group) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *Group) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -174,7 +174,7 @@ func (o *Group) SetName(v string) {
 
 // GetUserFilter returns the UserFilter field value if set, zero value otherwise.
 func (o *Group) GetUserFilter() string {
-	if o == nil || o.UserFilter == nil {
+	if o == nil || isNil(o.UserFilter) {
 		var ret string
 		return ret
 	}
@@ -184,15 +184,15 @@ func (o *Group) GetUserFilter() string {
 // GetUserFilterOk returns a tuple with the UserFilter field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetUserFilterOk() (*string, bool) {
-	if o == nil || o.UserFilter == nil {
-		return nil, false
+	if o == nil || isNil(o.UserFilter) {
+    return nil, false
 	}
 	return o.UserFilter, true
 }
 
 // HasUserFilter returns a boolean if a field has been set.
 func (o *Group) HasUserFilter() bool {
-	if o != nil && o.UserFilter != nil {
+	if o != nil && !isNil(o.UserFilter) {
 		return true
 	}
 
@@ -206,7 +206,7 @@ func (o *Group) SetUserFilter(v string) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *Group) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -216,15 +216,15 @@ func (o *Group) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *Group) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -238,7 +238,7 @@ func (o *Group) SetDescription(v string) {
 
 // GetExternalId returns the ExternalId field value if set, zero value otherwise.
 func (o *Group) GetExternalId() string {
-	if o == nil || o.ExternalId == nil {
+	if o == nil || isNil(o.ExternalId) {
 		var ret string
 		return ret
 	}
@@ -248,15 +248,15 @@ func (o *Group) GetExternalId() string {
 // GetExternalIdOk returns a tuple with the ExternalId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetExternalIdOk() (*string, bool) {
-	if o == nil || o.ExternalId == nil {
-		return nil, false
+	if o == nil || isNil(o.ExternalId) {
+    return nil, false
 	}
 	return o.ExternalId, true
 }
 
 // HasExternalId returns a boolean if a field has been set.
 func (o *Group) HasExternalId() bool {
-	if o != nil && o.ExternalId != nil {
+	if o != nil && !isNil(o.ExternalId) {
 		return true
 	}
 
@@ -270,7 +270,7 @@ func (o *Group) SetExternalId(v string) {
 
 // GetCustomData returns the CustomData field value if set, zero value otherwise.
 func (o *Group) GetCustomData() map[string]interface{} {
-	if o == nil || o.CustomData == nil {
+	if o == nil || isNil(o.CustomData) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -280,15 +280,15 @@ func (o *Group) GetCustomData() map[string]interface{} {
 // GetCustomDataOk returns a tuple with the CustomData field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetCustomDataOk() (map[string]interface{}, bool) {
-	if o == nil || o.CustomData == nil {
-		return nil, false
+	if o == nil || isNil(o.CustomData) {
+    return map[string]interface{}{}, false
 	}
 	return o.CustomData, true
 }
 
 // HasCustomData returns a boolean if a field has been set.
 func (o *Group) HasCustomData() bool {
-	if o != nil && o.CustomData != nil {
+	if o != nil && !isNil(o.CustomData) {
 		return true
 	}
 
@@ -302,7 +302,7 @@ func (o *Group) SetCustomData(v map[string]interface{}) {
 
 // GetDirectMemberCounts returns the DirectMemberCounts field value if set, zero value otherwise.
 func (o *Group) GetDirectMemberCounts() GroupDirectMemberCounts {
-	if o == nil || o.DirectMemberCounts == nil {
+	if o == nil || isNil(o.DirectMemberCounts) {
 		var ret GroupDirectMemberCounts
 		return ret
 	}
@@ -312,15 +312,15 @@ func (o *Group) GetDirectMemberCounts() GroupDirectMemberCounts {
 // GetDirectMemberCountsOk returns a tuple with the DirectMemberCounts field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetDirectMemberCountsOk() (*GroupDirectMemberCounts, bool) {
-	if o == nil || o.DirectMemberCounts == nil {
-		return nil, false
+	if o == nil || isNil(o.DirectMemberCounts) {
+    return nil, false
 	}
 	return o.DirectMemberCounts, true
 }
 
 // HasDirectMemberCounts returns a boolean if a field has been set.
 func (o *Group) HasDirectMemberCounts() bool {
-	if o != nil && o.DirectMemberCounts != nil {
+	if o != nil && !isNil(o.DirectMemberCounts) {
 		return true
 	}
 
@@ -334,7 +334,7 @@ func (o *Group) SetDirectMemberCounts(v GroupDirectMemberCounts) {
 
 // GetTotalMemberCounts returns the TotalMemberCounts field value if set, zero value otherwise.
 func (o *Group) GetTotalMemberCounts() GroupTotalMemberCounts {
-	if o == nil || o.TotalMemberCounts == nil {
+	if o == nil || isNil(o.TotalMemberCounts) {
 		var ret GroupTotalMemberCounts
 		return ret
 	}
@@ -344,15 +344,15 @@ func (o *Group) GetTotalMemberCounts() GroupTotalMemberCounts {
 // GetTotalMemberCountsOk returns a tuple with the TotalMemberCounts field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetTotalMemberCountsOk() (*GroupTotalMemberCounts, bool) {
-	if o == nil || o.TotalMemberCounts == nil {
-		return nil, false
+	if o == nil || isNil(o.TotalMemberCounts) {
+    return nil, false
 	}
 	return o.TotalMemberCounts, true
 }
 
 // HasTotalMemberCounts returns a boolean if a field has been set.
 func (o *Group) HasTotalMemberCounts() bool {
-	if o != nil && o.TotalMemberCounts != nil {
+	if o != nil && !isNil(o.TotalMemberCounts) {
 		return true
 	}
 
@@ -366,34 +366,34 @@ func (o *Group) SetTotalMemberCounts(v GroupTotalMemberCounts) {
 
 func (o Group) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Population != nil {
+	if !isNil(o.Population) {
 		toSerialize["population"] = o.Population
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.UserFilter != nil {
+	if !isNil(o.UserFilter) {
 		toSerialize["userFilter"] = o.UserFilter
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if o.ExternalId != nil {
+	if !isNil(o.ExternalId) {
 		toSerialize["externalId"] = o.ExternalId
 	}
-	if o.CustomData != nil {
+	if !isNil(o.CustomData) {
 		toSerialize["customData"] = o.CustomData
 	}
-	if o.DirectMemberCounts != nil {
+	if !isNil(o.DirectMemberCounts) {
 		toSerialize["directMemberCounts"] = o.DirectMemberCounts
 	}
-	if o.TotalMemberCounts != nil {
+	if !isNil(o.TotalMemberCounts) {
 		toSerialize["totalMemberCounts"] = o.TotalMemberCounts
 	}
 	return json.Marshal(toSerialize)

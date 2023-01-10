@@ -51,7 +51,7 @@ func (o *DeviceAuthenticationPolicyMobileOtpWindow) GetStepSize() DeviceAuthenti
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileOtpWindow) GetStepSizeOk() (*DeviceAuthenticationPolicyMobileOtpWindowStepSize, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.StepSize, true
 }

@@ -19,8 +19,6 @@ import (
 type Application struct {
 	Links map[string]interface{} `json:"_links,omitempty"`
 	AccessControl *ApplicationAccessControl `json:"accessControl,omitempty"`
-	// A boolean that specifies whether the permissions service should assign default roles to the application. This property is set only on the POST request. The property is ignored when included in a PUT request.
-	AssignActorRoles *bool `json:"assignActorRoles,omitempty"`
 	// The time the resource was created.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	// A string that specifies the description of the application.
@@ -28,6 +26,8 @@ type Application struct {
 	// A string that specifies the current enabled state of the application. Options are ENABLED or DISABLED.
 	Enabled bool `json:"enabled"`
 	Environment *ObjectEnvironment `json:"environment,omitempty"`
+	// A boolean to specify whether the application is hidden in the application portal despite the configured group access policy.
+	HiddenFromAppPortal *bool `json:"hiddenFromAppPortal,omitempty"`
 	Icon *ApplicationIcon `json:"icon,omitempty"`
 	// A string that specifies the application ID.
 	Id *string `json:"id,omitempty"`
@@ -36,13 +36,9 @@ type Application struct {
 	// A string that specifies the name of the application. This is a required property.
 	Name string `json:"name"`
 	Protocol EnumApplicationProtocol `json:"protocol"`
-	// An array that specifies the list of labels associated with the application. Options are PING_FED_CONNECTION_INTEGRATION.
-	Tags []EnumApplicationTags `json:"tags,omitempty"`
 	Type EnumApplicationType `json:"type"`
 	// The time the resource was last updated.
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	// A boolean that specifies whether the request query parameter JWT is allowed to be unsigned. If false or null (default), an unsigned request object is not allowed.
-	SupportUnsignedRequestObject *bool `json:"supportUnsignedRequestObject,omitempty"`
 }
 
 // NewApplication instantiates a new Application object
@@ -68,7 +64,7 @@ func NewApplicationWithDefaults() *Application {
 
 // GetLinks returns the Links field value if set, zero value otherwise.
 func (o *Application) GetLinks() map[string]interface{} {
-	if o == nil || o.Links == nil {
+	if o == nil || isNil(o.Links) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -78,15 +74,15 @@ func (o *Application) GetLinks() map[string]interface{} {
 // GetLinksOk returns a tuple with the Links field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetLinksOk() (map[string]interface{}, bool) {
-	if o == nil || o.Links == nil {
-		return nil, false
+	if o == nil || isNil(o.Links) {
+    return map[string]interface{}{}, false
 	}
 	return o.Links, true
 }
 
 // HasLinks returns a boolean if a field has been set.
 func (o *Application) HasLinks() bool {
-	if o != nil && o.Links != nil {
+	if o != nil && !isNil(o.Links) {
 		return true
 	}
 
@@ -100,7 +96,7 @@ func (o *Application) SetLinks(v map[string]interface{}) {
 
 // GetAccessControl returns the AccessControl field value if set, zero value otherwise.
 func (o *Application) GetAccessControl() ApplicationAccessControl {
-	if o == nil || o.AccessControl == nil {
+	if o == nil || isNil(o.AccessControl) {
 		var ret ApplicationAccessControl
 		return ret
 	}
@@ -110,15 +106,15 @@ func (o *Application) GetAccessControl() ApplicationAccessControl {
 // GetAccessControlOk returns a tuple with the AccessControl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetAccessControlOk() (*ApplicationAccessControl, bool) {
-	if o == nil || o.AccessControl == nil {
-		return nil, false
+	if o == nil || isNil(o.AccessControl) {
+    return nil, false
 	}
 	return o.AccessControl, true
 }
 
 // HasAccessControl returns a boolean if a field has been set.
 func (o *Application) HasAccessControl() bool {
-	if o != nil && o.AccessControl != nil {
+	if o != nil && !isNil(o.AccessControl) {
 		return true
 	}
 
@@ -130,41 +126,9 @@ func (o *Application) SetAccessControl(v ApplicationAccessControl) {
 	o.AccessControl = &v
 }
 
-// GetAssignActorRoles returns the AssignActorRoles field value if set, zero value otherwise.
-func (o *Application) GetAssignActorRoles() bool {
-	if o == nil || o.AssignActorRoles == nil {
-		var ret bool
-		return ret
-	}
-	return *o.AssignActorRoles
-}
-
-// GetAssignActorRolesOk returns a tuple with the AssignActorRoles field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Application) GetAssignActorRolesOk() (*bool, bool) {
-	if o == nil || o.AssignActorRoles == nil {
-		return nil, false
-	}
-	return o.AssignActorRoles, true
-}
-
-// HasAssignActorRoles returns a boolean if a field has been set.
-func (o *Application) HasAssignActorRoles() bool {
-	if o != nil && o.AssignActorRoles != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetAssignActorRoles gets a reference to the given bool and assigns it to the AssignActorRoles field.
-func (o *Application) SetAssignActorRoles(v bool) {
-	o.AssignActorRoles = &v
-}
-
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *Application) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -174,15 +138,15 @@ func (o *Application) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *Application) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -196,7 +160,7 @@ func (o *Application) SetCreatedAt(v time.Time) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *Application) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -206,15 +170,15 @@ func (o *Application) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *Application) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -240,7 +204,7 @@ func (o *Application) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *Application) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -252,7 +216,7 @@ func (o *Application) SetEnabled(v bool) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *Application) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -262,15 +226,15 @@ func (o *Application) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *Application) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -282,9 +246,41 @@ func (o *Application) SetEnvironment(v ObjectEnvironment) {
 	o.Environment = &v
 }
 
+// GetHiddenFromAppPortal returns the HiddenFromAppPortal field value if set, zero value otherwise.
+func (o *Application) GetHiddenFromAppPortal() bool {
+	if o == nil || isNil(o.HiddenFromAppPortal) {
+		var ret bool
+		return ret
+	}
+	return *o.HiddenFromAppPortal
+}
+
+// GetHiddenFromAppPortalOk returns a tuple with the HiddenFromAppPortal field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Application) GetHiddenFromAppPortalOk() (*bool, bool) {
+	if o == nil || isNil(o.HiddenFromAppPortal) {
+    return nil, false
+	}
+	return o.HiddenFromAppPortal, true
+}
+
+// HasHiddenFromAppPortal returns a boolean if a field has been set.
+func (o *Application) HasHiddenFromAppPortal() bool {
+	if o != nil && !isNil(o.HiddenFromAppPortal) {
+		return true
+	}
+
+	return false
+}
+
+// SetHiddenFromAppPortal gets a reference to the given bool and assigns it to the HiddenFromAppPortal field.
+func (o *Application) SetHiddenFromAppPortal(v bool) {
+	o.HiddenFromAppPortal = &v
+}
+
 // GetIcon returns the Icon field value if set, zero value otherwise.
 func (o *Application) GetIcon() ApplicationIcon {
-	if o == nil || o.Icon == nil {
+	if o == nil || isNil(o.Icon) {
 		var ret ApplicationIcon
 		return ret
 	}
@@ -294,15 +290,15 @@ func (o *Application) GetIcon() ApplicationIcon {
 // GetIconOk returns a tuple with the Icon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetIconOk() (*ApplicationIcon, bool) {
-	if o == nil || o.Icon == nil {
-		return nil, false
+	if o == nil || isNil(o.Icon) {
+    return nil, false
 	}
 	return o.Icon, true
 }
 
 // HasIcon returns a boolean if a field has been set.
 func (o *Application) HasIcon() bool {
-	if o != nil && o.Icon != nil {
+	if o != nil && !isNil(o.Icon) {
 		return true
 	}
 
@@ -316,7 +312,7 @@ func (o *Application) SetIcon(v ApplicationIcon) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *Application) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -326,15 +322,15 @@ func (o *Application) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *Application) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -348,7 +344,7 @@ func (o *Application) SetId(v string) {
 
 // GetLoginPageUrl returns the LoginPageUrl field value if set, zero value otherwise.
 func (o *Application) GetLoginPageUrl() string {
-	if o == nil || o.LoginPageUrl == nil {
+	if o == nil || isNil(o.LoginPageUrl) {
 		var ret string
 		return ret
 	}
@@ -358,15 +354,15 @@ func (o *Application) GetLoginPageUrl() string {
 // GetLoginPageUrlOk returns a tuple with the LoginPageUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetLoginPageUrlOk() (*string, bool) {
-	if o == nil || o.LoginPageUrl == nil {
-		return nil, false
+	if o == nil || isNil(o.LoginPageUrl) {
+    return nil, false
 	}
 	return o.LoginPageUrl, true
 }
 
 // HasLoginPageUrl returns a boolean if a field has been set.
 func (o *Application) HasLoginPageUrl() bool {
-	if o != nil && o.LoginPageUrl != nil {
+	if o != nil && !isNil(o.LoginPageUrl) {
 		return true
 	}
 
@@ -392,7 +388,7 @@ func (o *Application) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *Application) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -416,7 +412,7 @@ func (o *Application) GetProtocol() EnumApplicationProtocol {
 // and a boolean to check if the value has been set.
 func (o *Application) GetProtocolOk() (*EnumApplicationProtocol, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Protocol, true
 }
@@ -424,38 +420,6 @@ func (o *Application) GetProtocolOk() (*EnumApplicationProtocol, bool) {
 // SetProtocol sets field value
 func (o *Application) SetProtocol(v EnumApplicationProtocol) {
 	o.Protocol = v
-}
-
-// GetTags returns the Tags field value if set, zero value otherwise.
-func (o *Application) GetTags() []EnumApplicationTags {
-	if o == nil || o.Tags == nil {
-		var ret []EnumApplicationTags
-		return ret
-	}
-	return o.Tags
-}
-
-// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Application) GetTagsOk() ([]EnumApplicationTags, bool) {
-	if o == nil || o.Tags == nil {
-		return nil, false
-	}
-	return o.Tags, true
-}
-
-// HasTags returns a boolean if a field has been set.
-func (o *Application) HasTags() bool {
-	if o != nil && o.Tags != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetTags gets a reference to the given []EnumApplicationTags and assigns it to the Tags field.
-func (o *Application) SetTags(v []EnumApplicationTags) {
-	o.Tags = v
 }
 
 // GetType returns the Type field value
@@ -472,7 +436,7 @@ func (o *Application) GetType() EnumApplicationType {
 // and a boolean to check if the value has been set.
 func (o *Application) GetTypeOk() (*EnumApplicationType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -484,7 +448,7 @@ func (o *Application) SetType(v EnumApplicationType) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *Application) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -494,15 +458,15 @@ func (o *Application) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Application) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *Application) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -514,68 +478,36 @@ func (o *Application) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = &v
 }
 
-// GetSupportUnsignedRequestObject returns the SupportUnsignedRequestObject field value if set, zero value otherwise.
-func (o *Application) GetSupportUnsignedRequestObject() bool {
-	if o == nil || o.SupportUnsignedRequestObject == nil {
-		var ret bool
-		return ret
-	}
-	return *o.SupportUnsignedRequestObject
-}
-
-// GetSupportUnsignedRequestObjectOk returns a tuple with the SupportUnsignedRequestObject field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Application) GetSupportUnsignedRequestObjectOk() (*bool, bool) {
-	if o == nil || o.SupportUnsignedRequestObject == nil {
-		return nil, false
-	}
-	return o.SupportUnsignedRequestObject, true
-}
-
-// HasSupportUnsignedRequestObject returns a boolean if a field has been set.
-func (o *Application) HasSupportUnsignedRequestObject() bool {
-	if o != nil && o.SupportUnsignedRequestObject != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetSupportUnsignedRequestObject gets a reference to the given bool and assigns it to the SupportUnsignedRequestObject field.
-func (o *Application) SetSupportUnsignedRequestObject(v bool) {
-	o.SupportUnsignedRequestObject = &v
-}
-
 func (o Application) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Links != nil {
+	if !isNil(o.Links) {
 		toSerialize["_links"] = o.Links
 	}
-	if o.AccessControl != nil {
+	if !isNil(o.AccessControl) {
 		toSerialize["accessControl"] = o.AccessControl
 	}
-	if o.AssignActorRoles != nil {
-		toSerialize["assignActorRoles"] = o.AssignActorRoles
-	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Icon != nil {
+	if !isNil(o.HiddenFromAppPortal) {
+		toSerialize["hiddenFromAppPortal"] = o.HiddenFromAppPortal
+	}
+	if !isNil(o.Icon) {
 		toSerialize["icon"] = o.Icon
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.LoginPageUrl != nil {
+	if !isNil(o.LoginPageUrl) {
 		toSerialize["loginPageUrl"] = o.LoginPageUrl
 	}
 	if true {
@@ -584,17 +516,11 @@ func (o Application) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["protocol"] = o.Protocol
 	}
-	if o.Tags != nil {
-		toSerialize["tags"] = o.Tags
-	}
 	if true {
 		toSerialize["type"] = o.Type
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
-	}
-	if o.SupportUnsignedRequestObject != nil {
-		toSerialize["supportUnsignedRequestObject"] = o.SupportUnsignedRequestObject
 	}
 	return json.Marshal(toSerialize)
 }

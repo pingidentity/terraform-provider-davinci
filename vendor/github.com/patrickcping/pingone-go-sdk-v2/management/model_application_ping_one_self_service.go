@@ -19,8 +19,6 @@ import (
 type ApplicationPingOneSelfService struct {
 	Links map[string]interface{} `json:"_links,omitempty"`
 	AccessControl *ApplicationAccessControl `json:"accessControl,omitempty"`
-	// A boolean that specifies whether the permissions service should assign default roles to the application. This property is set only on the POST request. The property is ignored when included in a PUT request.
-	AssignActorRoles *bool `json:"assignActorRoles,omitempty"`
 	// The time the resource was created.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	// A string that specifies the description of the application.
@@ -28,6 +26,8 @@ type ApplicationPingOneSelfService struct {
 	// A string that specifies the current enabled state of the application. Options are ENABLED or DISABLED.
 	Enabled bool `json:"enabled"`
 	Environment *ObjectEnvironment `json:"environment,omitempty"`
+	// A boolean to specify whether the application is hidden in the application portal despite the configured group access policy.
+	HiddenFromAppPortal *bool `json:"hiddenFromAppPortal,omitempty"`
 	Icon *ApplicationIcon `json:"icon,omitempty"`
 	// A string that specifies the application ID.
 	Id *string `json:"id,omitempty"`
@@ -36,13 +36,9 @@ type ApplicationPingOneSelfService struct {
 	// A string that specifies the name of the application. This is a required property.
 	Name string `json:"name"`
 	Protocol EnumApplicationProtocol `json:"protocol"`
-	// An array that specifies the list of labels associated with the application. Options are PING_FED_CONNECTION_INTEGRATION.
-	Tags []EnumApplicationTags `json:"tags,omitempty"`
 	Type EnumApplicationType `json:"type"`
 	// The time the resource was last updated.
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	// A boolean that specifies whether the request query parameter JWT is allowed to be unsigned. If false or null (default), an unsigned request object is not allowed.
-	SupportUnsignedRequestObject *bool `json:"supportUnsignedRequestObject,omitempty"`
 	PkceEnforcement *EnumApplicationOIDCPKCEOption `json:"pkceEnforcement,omitempty"`
 	TokenEndpointAuthMethod EnumApplicationOIDCTokenAuthMethod `json:"tokenEndpointAuthMethod"`
 	// If `true`, shows the default theme footer on the self service application. Applies only if `applyDefaultTheme` is also `true`.
@@ -76,7 +72,7 @@ func NewApplicationPingOneSelfServiceWithDefaults() *ApplicationPingOneSelfServi
 
 // GetLinks returns the Links field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetLinks() map[string]interface{} {
-	if o == nil || o.Links == nil {
+	if o == nil || isNil(o.Links) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -86,15 +82,15 @@ func (o *ApplicationPingOneSelfService) GetLinks() map[string]interface{} {
 // GetLinksOk returns a tuple with the Links field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetLinksOk() (map[string]interface{}, bool) {
-	if o == nil || o.Links == nil {
-		return nil, false
+	if o == nil || isNil(o.Links) {
+    return map[string]interface{}{}, false
 	}
 	return o.Links, true
 }
 
 // HasLinks returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasLinks() bool {
-	if o != nil && o.Links != nil {
+	if o != nil && !isNil(o.Links) {
 		return true
 	}
 
@@ -108,7 +104,7 @@ func (o *ApplicationPingOneSelfService) SetLinks(v map[string]interface{}) {
 
 // GetAccessControl returns the AccessControl field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetAccessControl() ApplicationAccessControl {
-	if o == nil || o.AccessControl == nil {
+	if o == nil || isNil(o.AccessControl) {
 		var ret ApplicationAccessControl
 		return ret
 	}
@@ -118,15 +114,15 @@ func (o *ApplicationPingOneSelfService) GetAccessControl() ApplicationAccessCont
 // GetAccessControlOk returns a tuple with the AccessControl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetAccessControlOk() (*ApplicationAccessControl, bool) {
-	if o == nil || o.AccessControl == nil {
-		return nil, false
+	if o == nil || isNil(o.AccessControl) {
+    return nil, false
 	}
 	return o.AccessControl, true
 }
 
 // HasAccessControl returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasAccessControl() bool {
-	if o != nil && o.AccessControl != nil {
+	if o != nil && !isNil(o.AccessControl) {
 		return true
 	}
 
@@ -138,41 +134,9 @@ func (o *ApplicationPingOneSelfService) SetAccessControl(v ApplicationAccessCont
 	o.AccessControl = &v
 }
 
-// GetAssignActorRoles returns the AssignActorRoles field value if set, zero value otherwise.
-func (o *ApplicationPingOneSelfService) GetAssignActorRoles() bool {
-	if o == nil || o.AssignActorRoles == nil {
-		var ret bool
-		return ret
-	}
-	return *o.AssignActorRoles
-}
-
-// GetAssignActorRolesOk returns a tuple with the AssignActorRoles field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ApplicationPingOneSelfService) GetAssignActorRolesOk() (*bool, bool) {
-	if o == nil || o.AssignActorRoles == nil {
-		return nil, false
-	}
-	return o.AssignActorRoles, true
-}
-
-// HasAssignActorRoles returns a boolean if a field has been set.
-func (o *ApplicationPingOneSelfService) HasAssignActorRoles() bool {
-	if o != nil && o.AssignActorRoles != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetAssignActorRoles gets a reference to the given bool and assigns it to the AssignActorRoles field.
-func (o *ApplicationPingOneSelfService) SetAssignActorRoles(v bool) {
-	o.AssignActorRoles = &v
-}
-
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -182,15 +146,15 @@ func (o *ApplicationPingOneSelfService) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -204,7 +168,7 @@ func (o *ApplicationPingOneSelfService) SetCreatedAt(v time.Time) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -214,15 +178,15 @@ func (o *ApplicationPingOneSelfService) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -248,7 +212,7 @@ func (o *ApplicationPingOneSelfService) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -260,7 +224,7 @@ func (o *ApplicationPingOneSelfService) SetEnabled(v bool) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -270,15 +234,15 @@ func (o *ApplicationPingOneSelfService) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -290,9 +254,41 @@ func (o *ApplicationPingOneSelfService) SetEnvironment(v ObjectEnvironment) {
 	o.Environment = &v
 }
 
+// GetHiddenFromAppPortal returns the HiddenFromAppPortal field value if set, zero value otherwise.
+func (o *ApplicationPingOneSelfService) GetHiddenFromAppPortal() bool {
+	if o == nil || isNil(o.HiddenFromAppPortal) {
+		var ret bool
+		return ret
+	}
+	return *o.HiddenFromAppPortal
+}
+
+// GetHiddenFromAppPortalOk returns a tuple with the HiddenFromAppPortal field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationPingOneSelfService) GetHiddenFromAppPortalOk() (*bool, bool) {
+	if o == nil || isNil(o.HiddenFromAppPortal) {
+    return nil, false
+	}
+	return o.HiddenFromAppPortal, true
+}
+
+// HasHiddenFromAppPortal returns a boolean if a field has been set.
+func (o *ApplicationPingOneSelfService) HasHiddenFromAppPortal() bool {
+	if o != nil && !isNil(o.HiddenFromAppPortal) {
+		return true
+	}
+
+	return false
+}
+
+// SetHiddenFromAppPortal gets a reference to the given bool and assigns it to the HiddenFromAppPortal field.
+func (o *ApplicationPingOneSelfService) SetHiddenFromAppPortal(v bool) {
+	o.HiddenFromAppPortal = &v
+}
+
 // GetIcon returns the Icon field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetIcon() ApplicationIcon {
-	if o == nil || o.Icon == nil {
+	if o == nil || isNil(o.Icon) {
 		var ret ApplicationIcon
 		return ret
 	}
@@ -302,15 +298,15 @@ func (o *ApplicationPingOneSelfService) GetIcon() ApplicationIcon {
 // GetIconOk returns a tuple with the Icon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetIconOk() (*ApplicationIcon, bool) {
-	if o == nil || o.Icon == nil {
-		return nil, false
+	if o == nil || isNil(o.Icon) {
+    return nil, false
 	}
 	return o.Icon, true
 }
 
 // HasIcon returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasIcon() bool {
-	if o != nil && o.Icon != nil {
+	if o != nil && !isNil(o.Icon) {
 		return true
 	}
 
@@ -324,7 +320,7 @@ func (o *ApplicationPingOneSelfService) SetIcon(v ApplicationIcon) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -334,15 +330,15 @@ func (o *ApplicationPingOneSelfService) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -356,7 +352,7 @@ func (o *ApplicationPingOneSelfService) SetId(v string) {
 
 // GetLoginPageUrl returns the LoginPageUrl field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetLoginPageUrl() string {
-	if o == nil || o.LoginPageUrl == nil {
+	if o == nil || isNil(o.LoginPageUrl) {
 		var ret string
 		return ret
 	}
@@ -366,15 +362,15 @@ func (o *ApplicationPingOneSelfService) GetLoginPageUrl() string {
 // GetLoginPageUrlOk returns a tuple with the LoginPageUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetLoginPageUrlOk() (*string, bool) {
-	if o == nil || o.LoginPageUrl == nil {
-		return nil, false
+	if o == nil || isNil(o.LoginPageUrl) {
+    return nil, false
 	}
 	return o.LoginPageUrl, true
 }
 
 // HasLoginPageUrl returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasLoginPageUrl() bool {
-	if o != nil && o.LoginPageUrl != nil {
+	if o != nil && !isNil(o.LoginPageUrl) {
 		return true
 	}
 
@@ -400,7 +396,7 @@ func (o *ApplicationPingOneSelfService) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -424,7 +420,7 @@ func (o *ApplicationPingOneSelfService) GetProtocol() EnumApplicationProtocol {
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetProtocolOk() (*EnumApplicationProtocol, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Protocol, true
 }
@@ -432,38 +428,6 @@ func (o *ApplicationPingOneSelfService) GetProtocolOk() (*EnumApplicationProtoco
 // SetProtocol sets field value
 func (o *ApplicationPingOneSelfService) SetProtocol(v EnumApplicationProtocol) {
 	o.Protocol = v
-}
-
-// GetTags returns the Tags field value if set, zero value otherwise.
-func (o *ApplicationPingOneSelfService) GetTags() []EnumApplicationTags {
-	if o == nil || o.Tags == nil {
-		var ret []EnumApplicationTags
-		return ret
-	}
-	return o.Tags
-}
-
-// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ApplicationPingOneSelfService) GetTagsOk() ([]EnumApplicationTags, bool) {
-	if o == nil || o.Tags == nil {
-		return nil, false
-	}
-	return o.Tags, true
-}
-
-// HasTags returns a boolean if a field has been set.
-func (o *ApplicationPingOneSelfService) HasTags() bool {
-	if o != nil && o.Tags != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetTags gets a reference to the given []EnumApplicationTags and assigns it to the Tags field.
-func (o *ApplicationPingOneSelfService) SetTags(v []EnumApplicationTags) {
-	o.Tags = v
 }
 
 // GetType returns the Type field value
@@ -480,7 +444,7 @@ func (o *ApplicationPingOneSelfService) GetType() EnumApplicationType {
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetTypeOk() (*EnumApplicationType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -492,7 +456,7 @@ func (o *ApplicationPingOneSelfService) SetType(v EnumApplicationType) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -502,15 +466,15 @@ func (o *ApplicationPingOneSelfService) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -522,41 +486,9 @@ func (o *ApplicationPingOneSelfService) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = &v
 }
 
-// GetSupportUnsignedRequestObject returns the SupportUnsignedRequestObject field value if set, zero value otherwise.
-func (o *ApplicationPingOneSelfService) GetSupportUnsignedRequestObject() bool {
-	if o == nil || o.SupportUnsignedRequestObject == nil {
-		var ret bool
-		return ret
-	}
-	return *o.SupportUnsignedRequestObject
-}
-
-// GetSupportUnsignedRequestObjectOk returns a tuple with the SupportUnsignedRequestObject field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *ApplicationPingOneSelfService) GetSupportUnsignedRequestObjectOk() (*bool, bool) {
-	if o == nil || o.SupportUnsignedRequestObject == nil {
-		return nil, false
-	}
-	return o.SupportUnsignedRequestObject, true
-}
-
-// HasSupportUnsignedRequestObject returns a boolean if a field has been set.
-func (o *ApplicationPingOneSelfService) HasSupportUnsignedRequestObject() bool {
-	if o != nil && o.SupportUnsignedRequestObject != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetSupportUnsignedRequestObject gets a reference to the given bool and assigns it to the SupportUnsignedRequestObject field.
-func (o *ApplicationPingOneSelfService) SetSupportUnsignedRequestObject(v bool) {
-	o.SupportUnsignedRequestObject = &v
-}
-
 // GetPkceEnforcement returns the PkceEnforcement field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetPkceEnforcement() EnumApplicationOIDCPKCEOption {
-	if o == nil || o.PkceEnforcement == nil {
+	if o == nil || isNil(o.PkceEnforcement) {
 		var ret EnumApplicationOIDCPKCEOption
 		return ret
 	}
@@ -566,15 +498,15 @@ func (o *ApplicationPingOneSelfService) GetPkceEnforcement() EnumApplicationOIDC
 // GetPkceEnforcementOk returns a tuple with the PkceEnforcement field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetPkceEnforcementOk() (*EnumApplicationOIDCPKCEOption, bool) {
-	if o == nil || o.PkceEnforcement == nil {
-		return nil, false
+	if o == nil || isNil(o.PkceEnforcement) {
+    return nil, false
 	}
 	return o.PkceEnforcement, true
 }
 
 // HasPkceEnforcement returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasPkceEnforcement() bool {
-	if o != nil && o.PkceEnforcement != nil {
+	if o != nil && !isNil(o.PkceEnforcement) {
 		return true
 	}
 
@@ -600,7 +532,7 @@ func (o *ApplicationPingOneSelfService) GetTokenEndpointAuthMethod() EnumApplica
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetTokenEndpointAuthMethodOk() (*EnumApplicationOIDCTokenAuthMethod, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TokenEndpointAuthMethod, true
 }
@@ -612,7 +544,7 @@ func (o *ApplicationPingOneSelfService) SetTokenEndpointAuthMethod(v EnumApplica
 
 // GetEnableDefaultThemeFooter returns the EnableDefaultThemeFooter field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfService) GetEnableDefaultThemeFooter() bool {
-	if o == nil || o.EnableDefaultThemeFooter == nil {
+	if o == nil || isNil(o.EnableDefaultThemeFooter) {
 		var ret bool
 		return ret
 	}
@@ -622,15 +554,15 @@ func (o *ApplicationPingOneSelfService) GetEnableDefaultThemeFooter() bool {
 // GetEnableDefaultThemeFooterOk returns a tuple with the EnableDefaultThemeFooter field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetEnableDefaultThemeFooterOk() (*bool, bool) {
-	if o == nil || o.EnableDefaultThemeFooter == nil {
-		return nil, false
+	if o == nil || isNil(o.EnableDefaultThemeFooter) {
+    return nil, false
 	}
 	return o.EnableDefaultThemeFooter, true
 }
 
 // HasEnableDefaultThemeFooter returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfService) HasEnableDefaultThemeFooter() bool {
-	if o != nil && o.EnableDefaultThemeFooter != nil {
+	if o != nil && !isNil(o.EnableDefaultThemeFooter) {
 		return true
 	}
 
@@ -656,7 +588,7 @@ func (o *ApplicationPingOneSelfService) GetApplyDefaultTheme() bool {
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfService) GetApplyDefaultThemeOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ApplyDefaultTheme, true
 }
@@ -668,34 +600,34 @@ func (o *ApplicationPingOneSelfService) SetApplyDefaultTheme(v bool) {
 
 func (o ApplicationPingOneSelfService) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Links != nil {
+	if !isNil(o.Links) {
 		toSerialize["_links"] = o.Links
 	}
-	if o.AccessControl != nil {
+	if !isNil(o.AccessControl) {
 		toSerialize["accessControl"] = o.AccessControl
 	}
-	if o.AssignActorRoles != nil {
-		toSerialize["assignActorRoles"] = o.AssignActorRoles
-	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Icon != nil {
+	if !isNil(o.HiddenFromAppPortal) {
+		toSerialize["hiddenFromAppPortal"] = o.HiddenFromAppPortal
+	}
+	if !isNil(o.Icon) {
 		toSerialize["icon"] = o.Icon
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.LoginPageUrl != nil {
+	if !isNil(o.LoginPageUrl) {
 		toSerialize["loginPageUrl"] = o.LoginPageUrl
 	}
 	if true {
@@ -704,25 +636,19 @@ func (o ApplicationPingOneSelfService) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["protocol"] = o.Protocol
 	}
-	if o.Tags != nil {
-		toSerialize["tags"] = o.Tags
-	}
 	if true {
 		toSerialize["type"] = o.Type
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
-	if o.SupportUnsignedRequestObject != nil {
-		toSerialize["supportUnsignedRequestObject"] = o.SupportUnsignedRequestObject
-	}
-	if o.PkceEnforcement != nil {
+	if !isNil(o.PkceEnforcement) {
 		toSerialize["pkceEnforcement"] = o.PkceEnforcement
 	}
 	if true {
 		toSerialize["tokenEndpointAuthMethod"] = o.TokenEndpointAuthMethod
 	}
-	if o.EnableDefaultThemeFooter != nil {
+	if !isNil(o.EnableDefaultThemeFooter) {
 		toSerialize["enableDefaultThemeFooter"] = o.EnableDefaultThemeFooter
 	}
 	if true {

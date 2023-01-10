@@ -41,7 +41,7 @@ func NewPasswordPolicyLockoutWithDefaults() *PasswordPolicyLockout {
 
 // GetDurationSeconds returns the DurationSeconds field value if set, zero value otherwise.
 func (o *PasswordPolicyLockout) GetDurationSeconds() int32 {
-	if o == nil || o.DurationSeconds == nil {
+	if o == nil || isNil(o.DurationSeconds) {
 		var ret int32
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *PasswordPolicyLockout) GetDurationSeconds() int32 {
 // GetDurationSecondsOk returns a tuple with the DurationSeconds field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyLockout) GetDurationSecondsOk() (*int32, bool) {
-	if o == nil || o.DurationSeconds == nil {
-		return nil, false
+	if o == nil || isNil(o.DurationSeconds) {
+    return nil, false
 	}
 	return o.DurationSeconds, true
 }
 
 // HasDurationSeconds returns a boolean if a field has been set.
 func (o *PasswordPolicyLockout) HasDurationSeconds() bool {
-	if o != nil && o.DurationSeconds != nil {
+	if o != nil && !isNil(o.DurationSeconds) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *PasswordPolicyLockout) SetDurationSeconds(v int32) {
 
 // GetFailureCount returns the FailureCount field value if set, zero value otherwise.
 func (o *PasswordPolicyLockout) GetFailureCount() int32 {
-	if o == nil || o.FailureCount == nil {
+	if o == nil || isNil(o.FailureCount) {
 		var ret int32
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *PasswordPolicyLockout) GetFailureCount() int32 {
 // GetFailureCountOk returns a tuple with the FailureCount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyLockout) GetFailureCountOk() (*int32, bool) {
-	if o == nil || o.FailureCount == nil {
-		return nil, false
+	if o == nil || isNil(o.FailureCount) {
+    return nil, false
 	}
 	return o.FailureCount, true
 }
 
 // HasFailureCount returns a boolean if a field has been set.
 func (o *PasswordPolicyLockout) HasFailureCount() bool {
-	if o != nil && o.FailureCount != nil {
+	if o != nil && !isNil(o.FailureCount) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *PasswordPolicyLockout) SetFailureCount(v int32) {
 
 func (o PasswordPolicyLockout) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.DurationSeconds != nil {
+	if !isNil(o.DurationSeconds) {
 		toSerialize["durationSeconds"] = o.DurationSeconds
 	}
-	if o.FailureCount != nil {
+	if !isNil(o.FailureCount) {
 		toSerialize["failureCount"] = o.FailureCount
 	}
 	return json.Marshal(toSerialize)

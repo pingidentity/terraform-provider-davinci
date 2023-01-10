@@ -53,7 +53,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtp) GetLifeTime() DeviceAuthent
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtp) GetLifeTimeOk() (*DeviceAuthenticationPolicyOfflineDeviceOtpLifeTime, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.LifeTime, true
 }
@@ -77,7 +77,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtp) GetFailure() DeviceAuthenti
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtp) GetFailureOk() (*DeviceAuthenticationPolicyOfflineDeviceOtpFailure, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Failure, true
 }

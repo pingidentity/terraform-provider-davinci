@@ -55,7 +55,7 @@ func (o *IdentityProviderClientIDClientSecretAllOf) GetClientId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderClientIDClientSecretAllOf) GetClientIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientId, true
 }
@@ -79,7 +79,7 @@ func (o *IdentityProviderClientIDClientSecretAllOf) GetClientSecret() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderClientIDClientSecretAllOf) GetClientSecretOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientSecret, true
 }

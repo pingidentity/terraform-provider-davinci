@@ -52,7 +52,7 @@ func (o *SignOnPolicyActionMFAAllOfDeviceAuthenticationPolicy) GetId() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOfDeviceAuthenticationPolicy) GetIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Id, true
 }

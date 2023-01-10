@@ -41,7 +41,7 @@ func NewRolePermissionsInnerWithDefaults() *RolePermissionsInner {
 
 // GetClassifier returns the Classifier field value if set, zero value otherwise.
 func (o *RolePermissionsInner) GetClassifier() string {
-	if o == nil || o.Classifier == nil {
+	if o == nil || isNil(o.Classifier) {
 		var ret string
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *RolePermissionsInner) GetClassifier() string {
 // GetClassifierOk returns a tuple with the Classifier field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RolePermissionsInner) GetClassifierOk() (*string, bool) {
-	if o == nil || o.Classifier == nil {
-		return nil, false
+	if o == nil || isNil(o.Classifier) {
+    return nil, false
 	}
 	return o.Classifier, true
 }
 
 // HasClassifier returns a boolean if a field has been set.
 func (o *RolePermissionsInner) HasClassifier() bool {
-	if o != nil && o.Classifier != nil {
+	if o != nil && !isNil(o.Classifier) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *RolePermissionsInner) SetClassifier(v string) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *RolePermissionsInner) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *RolePermissionsInner) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RolePermissionsInner) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *RolePermissionsInner) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *RolePermissionsInner) SetDescription(v string) {
 
 func (o RolePermissionsInner) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Classifier != nil {
+	if !isNil(o.Classifier) {
 		toSerialize["classifier"] = o.Classifier
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	return json.Marshal(toSerialize)

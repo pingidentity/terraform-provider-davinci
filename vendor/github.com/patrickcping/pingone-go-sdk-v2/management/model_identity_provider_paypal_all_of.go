@@ -58,7 +58,7 @@ func (o *IdentityProviderPaypalAllOf) GetClientId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypalAllOf) GetClientIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientId, true
 }
@@ -82,7 +82,7 @@ func (o *IdentityProviderPaypalAllOf) GetClientSecret() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypalAllOf) GetClientSecretOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientSecret, true
 }
@@ -106,7 +106,7 @@ func (o *IdentityProviderPaypalAllOf) GetClientEnvironment() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypalAllOf) GetClientEnvironmentOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientEnvironment, true
 }

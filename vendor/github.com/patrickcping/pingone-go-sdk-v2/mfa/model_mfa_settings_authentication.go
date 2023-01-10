@@ -51,7 +51,7 @@ func (o *MFASettingsAuthentication) GetDeviceSelection() EnumMFASettingsDeviceSe
 // and a boolean to check if the value has been set.
 func (o *MFASettingsAuthentication) GetDeviceSelectionOk() (*EnumMFASettingsDeviceSelection, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.DeviceSelection, true
 }

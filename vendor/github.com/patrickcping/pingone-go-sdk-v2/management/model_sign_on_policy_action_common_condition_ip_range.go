@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionIPRange) GetContains() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionIPRange) GetContainsOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Contains, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionCommonConditionIPRange) GetIpRange() []string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionIPRange) GetIpRangeOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.IpRange, true
 }

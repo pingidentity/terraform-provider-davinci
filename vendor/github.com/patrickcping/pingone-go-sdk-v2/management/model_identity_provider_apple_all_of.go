@@ -61,7 +61,7 @@ func (o *IdentityProviderAppleAllOf) GetClientId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderAppleAllOf) GetClientIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientId, true
 }
@@ -85,7 +85,7 @@ func (o *IdentityProviderAppleAllOf) GetClientSecretSigningKey() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderAppleAllOf) GetClientSecretSigningKeyOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientSecretSigningKey, true
 }
@@ -109,7 +109,7 @@ func (o *IdentityProviderAppleAllOf) GetKeyId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderAppleAllOf) GetKeyIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.KeyId, true
 }
@@ -133,7 +133,7 @@ func (o *IdentityProviderAppleAllOf) GetTeamId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderAppleAllOf) GetTeamIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TeamId, true
 }

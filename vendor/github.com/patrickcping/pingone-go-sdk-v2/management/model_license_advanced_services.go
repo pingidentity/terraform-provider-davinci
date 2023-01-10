@@ -38,7 +38,7 @@ func NewLicenseAdvancedServicesWithDefaults() *LicenseAdvancedServices {
 
 // GetPingId returns the PingId field value if set, zero value otherwise.
 func (o *LicenseAdvancedServices) GetPingId() LicenseAdvancedServicesPingId {
-	if o == nil || o.PingId == nil {
+	if o == nil || isNil(o.PingId) {
 		var ret LicenseAdvancedServicesPingId
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *LicenseAdvancedServices) GetPingId() LicenseAdvancedServicesPingId {
 // GetPingIdOk returns a tuple with the PingId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseAdvancedServices) GetPingIdOk() (*LicenseAdvancedServicesPingId, bool) {
-	if o == nil || o.PingId == nil {
-		return nil, false
+	if o == nil || isNil(o.PingId) {
+    return nil, false
 	}
 	return o.PingId, true
 }
 
 // HasPingId returns a boolean if a field has been set.
 func (o *LicenseAdvancedServices) HasPingId() bool {
-	if o != nil && o.PingId != nil {
+	if o != nil && !isNil(o.PingId) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *LicenseAdvancedServices) SetPingId(v LicenseAdvancedServicesPingId) {
 
 func (o LicenseAdvancedServices) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.PingId != nil {
+	if !isNil(o.PingId) {
 		toSerialize["pingId"] = o.PingId
 	}
 	return json.Marshal(toSerialize)
