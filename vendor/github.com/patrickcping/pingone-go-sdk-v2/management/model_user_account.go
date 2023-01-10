@@ -46,7 +46,7 @@ func NewUserAccountWithDefaults() *UserAccount {
 
 // GetCanAuthenticate returns the CanAuthenticate field value if set, zero value otherwise.
 func (o *UserAccount) GetCanAuthenticate() bool {
-	if o == nil || o.CanAuthenticate == nil {
+	if o == nil || isNil(o.CanAuthenticate) {
 		var ret bool
 		return ret
 	}
@@ -56,15 +56,15 @@ func (o *UserAccount) GetCanAuthenticate() bool {
 // GetCanAuthenticateOk returns a tuple with the CanAuthenticate field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserAccount) GetCanAuthenticateOk() (*bool, bool) {
-	if o == nil || o.CanAuthenticate == nil {
-		return nil, false
+	if o == nil || isNil(o.CanAuthenticate) {
+    return nil, false
 	}
 	return o.CanAuthenticate, true
 }
 
 // HasCanAuthenticate returns a boolean if a field has been set.
 func (o *UserAccount) HasCanAuthenticate() bool {
-	if o != nil && o.CanAuthenticate != nil {
+	if o != nil && !isNil(o.CanAuthenticate) {
 		return true
 	}
 
@@ -78,7 +78,7 @@ func (o *UserAccount) SetCanAuthenticate(v bool) {
 
 // GetLockedAt returns the LockedAt field value if set, zero value otherwise.
 func (o *UserAccount) GetLockedAt() string {
-	if o == nil || o.LockedAt == nil {
+	if o == nil || isNil(o.LockedAt) {
 		var ret string
 		return ret
 	}
@@ -88,15 +88,15 @@ func (o *UserAccount) GetLockedAt() string {
 // GetLockedAtOk returns a tuple with the LockedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserAccount) GetLockedAtOk() (*string, bool) {
-	if o == nil || o.LockedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.LockedAt) {
+    return nil, false
 	}
 	return o.LockedAt, true
 }
 
 // HasLockedAt returns a boolean if a field has been set.
 func (o *UserAccount) HasLockedAt() bool {
-	if o != nil && o.LockedAt != nil {
+	if o != nil && !isNil(o.LockedAt) {
 		return true
 	}
 
@@ -110,7 +110,7 @@ func (o *UserAccount) SetLockedAt(v string) {
 
 // GetSecondsUntilUnlock returns the SecondsUntilUnlock field value if set, zero value otherwise.
 func (o *UserAccount) GetSecondsUntilUnlock() int32 {
-	if o == nil || o.SecondsUntilUnlock == nil {
+	if o == nil || isNil(o.SecondsUntilUnlock) {
 		var ret int32
 		return ret
 	}
@@ -120,15 +120,15 @@ func (o *UserAccount) GetSecondsUntilUnlock() int32 {
 // GetSecondsUntilUnlockOk returns a tuple with the SecondsUntilUnlock field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserAccount) GetSecondsUntilUnlockOk() (*int32, bool) {
-	if o == nil || o.SecondsUntilUnlock == nil {
-		return nil, false
+	if o == nil || isNil(o.SecondsUntilUnlock) {
+    return nil, false
 	}
 	return o.SecondsUntilUnlock, true
 }
 
 // HasSecondsUntilUnlock returns a boolean if a field has been set.
 func (o *UserAccount) HasSecondsUntilUnlock() bool {
-	if o != nil && o.SecondsUntilUnlock != nil {
+	if o != nil && !isNil(o.SecondsUntilUnlock) {
 		return true
 	}
 
@@ -142,7 +142,7 @@ func (o *UserAccount) SetSecondsUntilUnlock(v int32) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *UserAccount) GetStatus() EnumUserStatus {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		var ret EnumUserStatus
 		return ret
 	}
@@ -152,15 +152,15 @@ func (o *UserAccount) GetStatus() EnumUserStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserAccount) GetStatusOk() (*EnumUserStatus, bool) {
-	if o == nil || o.Status == nil {
-		return nil, false
+	if o == nil || isNil(o.Status) {
+    return nil, false
 	}
 	return o.Status, true
 }
 
 // HasStatus returns a boolean if a field has been set.
 func (o *UserAccount) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !isNil(o.Status) {
 		return true
 	}
 
@@ -174,7 +174,7 @@ func (o *UserAccount) SetStatus(v EnumUserStatus) {
 
 // GetUnlockAt returns the UnlockAt field value if set, zero value otherwise.
 func (o *UserAccount) GetUnlockAt() string {
-	if o == nil || o.UnlockAt == nil {
+	if o == nil || isNil(o.UnlockAt) {
 		var ret string
 		return ret
 	}
@@ -184,15 +184,15 @@ func (o *UserAccount) GetUnlockAt() string {
 // GetUnlockAtOk returns a tuple with the UnlockAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserAccount) GetUnlockAtOk() (*string, bool) {
-	if o == nil || o.UnlockAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UnlockAt) {
+    return nil, false
 	}
 	return o.UnlockAt, true
 }
 
 // HasUnlockAt returns a boolean if a field has been set.
 func (o *UserAccount) HasUnlockAt() bool {
-	if o != nil && o.UnlockAt != nil {
+	if o != nil && !isNil(o.UnlockAt) {
 		return true
 	}
 
@@ -206,19 +206,19 @@ func (o *UserAccount) SetUnlockAt(v string) {
 
 func (o UserAccount) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.CanAuthenticate != nil {
+	if !isNil(o.CanAuthenticate) {
 		toSerialize["canAuthenticate"] = o.CanAuthenticate
 	}
-	if o.LockedAt != nil {
+	if !isNil(o.LockedAt) {
 		toSerialize["lockedAt"] = o.LockedAt
 	}
-	if o.SecondsUntilUnlock != nil {
+	if !isNil(o.SecondsUntilUnlock) {
 		toSerialize["secondsUntilUnlock"] = o.SecondsUntilUnlock
 	}
-	if o.Status != nil {
+	if !isNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
-	if o.UnlockAt != nil {
+	if !isNil(o.UnlockAt) {
 		toSerialize["unlockAt"] = o.UnlockAt
 	}
 	return json.Marshal(toSerialize)

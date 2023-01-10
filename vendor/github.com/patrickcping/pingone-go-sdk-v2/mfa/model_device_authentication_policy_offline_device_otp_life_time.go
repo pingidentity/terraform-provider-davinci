@@ -54,7 +54,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtpLifeTime) GetDuration() int32
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtpLifeTime) GetDurationOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Duration, true
 }
@@ -78,7 +78,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtpLifeTime) GetTimeUnit() EnumT
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtpLifeTime) GetTimeUnitOk() (*EnumTimeUnit, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TimeUnit, true
 }

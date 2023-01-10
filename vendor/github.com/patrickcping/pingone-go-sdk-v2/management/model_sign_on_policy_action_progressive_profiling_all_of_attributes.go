@@ -55,7 +55,7 @@ func (o *SignOnPolicyActionProgressiveProfilingAllOfAttributes) GetName() string
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionProgressiveProfilingAllOfAttributes) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -79,7 +79,7 @@ func (o *SignOnPolicyActionProgressiveProfilingAllOfAttributes) GetRequired() bo
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionProgressiveProfilingAllOfAttributes) GetRequiredOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Required, true
 }

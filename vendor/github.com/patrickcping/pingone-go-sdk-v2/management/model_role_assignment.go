@@ -47,7 +47,7 @@ func NewRoleAssignmentWithDefaults() *RoleAssignment {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *RoleAssignment) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -57,15 +57,15 @@ func (o *RoleAssignment) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RoleAssignment) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *RoleAssignment) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -79,7 +79,7 @@ func (o *RoleAssignment) SetEnvironment(v ObjectEnvironment) {
 
 // GetGateway returns the Gateway field value if set, zero value otherwise.
 func (o *RoleAssignment) GetGateway() GatewayInstanceGateway {
-	if o == nil || o.Gateway == nil {
+	if o == nil || isNil(o.Gateway) {
 		var ret GatewayInstanceGateway
 		return ret
 	}
@@ -89,15 +89,15 @@ func (o *RoleAssignment) GetGateway() GatewayInstanceGateway {
 // GetGatewayOk returns a tuple with the Gateway field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RoleAssignment) GetGatewayOk() (*GatewayInstanceGateway, bool) {
-	if o == nil || o.Gateway == nil {
-		return nil, false
+	if o == nil || isNil(o.Gateway) {
+    return nil, false
 	}
 	return o.Gateway, true
 }
 
 // HasGateway returns a boolean if a field has been set.
 func (o *RoleAssignment) HasGateway() bool {
-	if o != nil && o.Gateway != nil {
+	if o != nil && !isNil(o.Gateway) {
 		return true
 	}
 
@@ -111,7 +111,7 @@ func (o *RoleAssignment) SetGateway(v GatewayInstanceGateway) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *RoleAssignment) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -121,15 +121,15 @@ func (o *RoleAssignment) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RoleAssignment) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *RoleAssignment) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -143,7 +143,7 @@ func (o *RoleAssignment) SetId(v string) {
 
 // GetReadOnly returns the ReadOnly field value if set, zero value otherwise.
 func (o *RoleAssignment) GetReadOnly() bool {
-	if o == nil || o.ReadOnly == nil {
+	if o == nil || isNil(o.ReadOnly) {
 		var ret bool
 		return ret
 	}
@@ -153,15 +153,15 @@ func (o *RoleAssignment) GetReadOnly() bool {
 // GetReadOnlyOk returns a tuple with the ReadOnly field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *RoleAssignment) GetReadOnlyOk() (*bool, bool) {
-	if o == nil || o.ReadOnly == nil {
-		return nil, false
+	if o == nil || isNil(o.ReadOnly) {
+    return nil, false
 	}
 	return o.ReadOnly, true
 }
 
 // HasReadOnly returns a boolean if a field has been set.
 func (o *RoleAssignment) HasReadOnly() bool {
-	if o != nil && o.ReadOnly != nil {
+	if o != nil && !isNil(o.ReadOnly) {
 		return true
 	}
 
@@ -187,7 +187,7 @@ func (o *RoleAssignment) GetRole() RoleAssignmentRole {
 // and a boolean to check if the value has been set.
 func (o *RoleAssignment) GetRoleOk() (*RoleAssignmentRole, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Role, true
 }
@@ -211,7 +211,7 @@ func (o *RoleAssignment) GetScope() RoleAssignmentScope {
 // and a boolean to check if the value has been set.
 func (o *RoleAssignment) GetScopeOk() (*RoleAssignmentScope, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Scope, true
 }
@@ -223,16 +223,16 @@ func (o *RoleAssignment) SetScope(v RoleAssignmentScope) {
 
 func (o RoleAssignment) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Gateway != nil {
+	if !isNil(o.Gateway) {
 		toSerialize["gateway"] = o.Gateway
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.ReadOnly != nil {
+	if !isNil(o.ReadOnly) {
 		toSerialize["readOnly"] = o.ReadOnly
 	}
 	if true {

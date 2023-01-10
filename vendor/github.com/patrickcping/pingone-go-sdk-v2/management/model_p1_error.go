@@ -45,7 +45,7 @@ func NewP1ErrorWithDefaults() *P1Error {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *P1Error) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -55,15 +55,15 @@ func (o *P1Error) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *P1Error) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *P1Error) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -77,7 +77,7 @@ func (o *P1Error) SetId(v string) {
 
 // GetCode returns the Code field value if set, zero value otherwise.
 func (o *P1Error) GetCode() string {
-	if o == nil || o.Code == nil {
+	if o == nil || isNil(o.Code) {
 		var ret string
 		return ret
 	}
@@ -87,15 +87,15 @@ func (o *P1Error) GetCode() string {
 // GetCodeOk returns a tuple with the Code field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *P1Error) GetCodeOk() (*string, bool) {
-	if o == nil || o.Code == nil {
-		return nil, false
+	if o == nil || isNil(o.Code) {
+    return nil, false
 	}
 	return o.Code, true
 }
 
 // HasCode returns a boolean if a field has been set.
 func (o *P1Error) HasCode() bool {
-	if o != nil && o.Code != nil {
+	if o != nil && !isNil(o.Code) {
 		return true
 	}
 
@@ -109,7 +109,7 @@ func (o *P1Error) SetCode(v string) {
 
 // GetMessage returns the Message field value if set, zero value otherwise.
 func (o *P1Error) GetMessage() string {
-	if o == nil || o.Message == nil {
+	if o == nil || isNil(o.Message) {
 		var ret string
 		return ret
 	}
@@ -119,15 +119,15 @@ func (o *P1Error) GetMessage() string {
 // GetMessageOk returns a tuple with the Message field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *P1Error) GetMessageOk() (*string, bool) {
-	if o == nil || o.Message == nil {
-		return nil, false
+	if o == nil || isNil(o.Message) {
+    return nil, false
 	}
 	return o.Message, true
 }
 
 // HasMessage returns a boolean if a field has been set.
 func (o *P1Error) HasMessage() bool {
-	if o != nil && o.Message != nil {
+	if o != nil && !isNil(o.Message) {
 		return true
 	}
 
@@ -141,7 +141,7 @@ func (o *P1Error) SetMessage(v string) {
 
 // GetDetails returns the Details field value if set, zero value otherwise.
 func (o *P1Error) GetDetails() []P1ErrorDetailsInner {
-	if o == nil || o.Details == nil {
+	if o == nil || isNil(o.Details) {
 		var ret []P1ErrorDetailsInner
 		return ret
 	}
@@ -151,15 +151,15 @@ func (o *P1Error) GetDetails() []P1ErrorDetailsInner {
 // GetDetailsOk returns a tuple with the Details field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *P1Error) GetDetailsOk() ([]P1ErrorDetailsInner, bool) {
-	if o == nil || o.Details == nil {
-		return nil, false
+	if o == nil || isNil(o.Details) {
+    return nil, false
 	}
 	return o.Details, true
 }
 
 // HasDetails returns a boolean if a field has been set.
 func (o *P1Error) HasDetails() bool {
-	if o != nil && o.Details != nil {
+	if o != nil && !isNil(o.Details) {
 		return true
 	}
 
@@ -173,16 +173,16 @@ func (o *P1Error) SetDetails(v []P1ErrorDetailsInner) {
 
 func (o P1Error) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Code != nil {
+	if !isNil(o.Code) {
 		toSerialize["code"] = o.Code
 	}
-	if o.Message != nil {
+	if !isNil(o.Message) {
 		toSerialize["message"] = o.Message
 	}
-	if o.Details != nil {
+	if !isNil(o.Details) {
 		toSerialize["details"] = o.Details
 	}
 	return json.Marshal(toSerialize)

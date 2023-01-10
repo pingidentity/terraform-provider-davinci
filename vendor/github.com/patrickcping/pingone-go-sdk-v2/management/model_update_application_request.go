@@ -20,6 +20,7 @@ type UpdateApplicationRequest struct {
 	ApplicationPingOnePortal      *ApplicationPingOnePortal
 	ApplicationPingOneSelfService *ApplicationPingOneSelfService
 	ApplicationSAML               *ApplicationSAML
+	ApplicationWSFED              *ApplicationWSFED
 }
 
 // ApplicationExternalLinkAsUpdateApplicationRequest is a convenience function that returns ApplicationExternalLink wrapped in UpdateApplicationRequest
@@ -57,6 +58,13 @@ func ApplicationSAMLAsUpdateApplicationRequest(v *ApplicationSAML) UpdateApplica
 	}
 }
 
+// ApplicationWSFEDAsUpdateApplicationRequest is a convenience function that returns ApplicationWSFED wrapped in UpdateApplicationRequest
+func ApplicationWSFEDAsUpdateApplicationRequest(v *ApplicationWSFED) UpdateApplicationRequest {
+	return UpdateApplicationRequest{
+		ApplicationWSFED: v,
+	}
+}
+
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *UpdateApplicationRequest) UnmarshalJSON(data []byte) error {
 
@@ -68,6 +76,7 @@ func (dst *UpdateApplicationRequest) UnmarshalJSON(data []byte) error {
 
 	dst.ApplicationOIDC = nil
 	dst.ApplicationSAML = nil
+	dst.ApplicationWSFED = nil
 	dst.ApplicationExternalLink = nil
 	dst.ApplicationPingOnePortal = nil
 	dst.ApplicationPingOneSelfService = nil
@@ -92,6 +101,14 @@ func (dst *UpdateApplicationRequest) UnmarshalJSON(data []byte) error {
 		}
 	case ENUMAPPLICATIONPROTOCOL_SAML:
 		if err := json.Unmarshal(data, &dst.ApplicationSAML); err != nil { // simple model
+			return err
+		}
+	case ENUMAPPLICATIONPROTOCOL_WS_FED:
+		if err := json.Unmarshal(data, &dst.ApplicationWSFED); err != nil { // simple model
+			return err
+		}
+	case ENUMAPPLICATIONPROTOCOL_EXTERNAL_LINK:
+		if err := json.Unmarshal(data, &dst.ApplicationExternalLink); err != nil { // simple model
 			return err
 		}
 	default:
@@ -122,6 +139,10 @@ func (src UpdateApplicationRequest) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ApplicationSAML)
 	}
 
+	if src.ApplicationWSFED != nil {
+		return json.Marshal(&src.ApplicationWSFED)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -148,6 +169,10 @@ func (obj *UpdateApplicationRequest) GetActualInstance() interface{} {
 
 	if obj.ApplicationSAML != nil {
 		return obj.ApplicationSAML
+	}
+
+	if obj.ApplicationWSFED != nil {
+		return obj.ApplicationWSFED
 	}
 
 	// all schemas are nil

@@ -38,7 +38,7 @@ func NewSignOnPolicyActionCommonConditionNotWithDefaults() *SignOnPolicyActionCo
 
 // GetNot returns the Not field value if set, zero value otherwise.
 func (o *SignOnPolicyActionCommonConditionNot) GetNot() SignOnPolicyActionCommonConditionAggregate {
-	if o == nil || o.Not == nil {
+	if o == nil || isNil(o.Not) {
 		var ret SignOnPolicyActionCommonConditionAggregate
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *SignOnPolicyActionCommonConditionNot) GetNot() SignOnPolicyActionCommon
 // GetNotOk returns a tuple with the Not field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionNot) GetNotOk() (*SignOnPolicyActionCommonConditionAggregate, bool) {
-	if o == nil || o.Not == nil {
-		return nil, false
+	if o == nil || isNil(o.Not) {
+    return nil, false
 	}
 	return o.Not, true
 }
 
 // HasNot returns a boolean if a field has been set.
 func (o *SignOnPolicyActionCommonConditionNot) HasNot() bool {
-	if o != nil && o.Not != nil {
+	if o != nil && !isNil(o.Not) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *SignOnPolicyActionCommonConditionNot) SetNot(v SignOnPolicyActionCommon
 
 func (o SignOnPolicyActionCommonConditionNot) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Not != nil {
+	if !isNil(o.Not) {
 		toSerialize["not"] = o.Not
 	}
 	return json.Marshal(toSerialize)

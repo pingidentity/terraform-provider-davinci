@@ -58,7 +58,7 @@ func (o *SubscriptionFilterOptions) GetIncludedActionTypes() []string {
 // and a boolean to check if the value has been set.
 func (o *SubscriptionFilterOptions) GetIncludedActionTypesOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.IncludedActionTypes, true
 }
@@ -70,7 +70,7 @@ func (o *SubscriptionFilterOptions) SetIncludedActionTypes(v []string) {
 
 // GetIncludedApplications returns the IncludedApplications field value if set, zero value otherwise.
 func (o *SubscriptionFilterOptions) GetIncludedApplications() []SubscriptionFilterOptionsIncludedApplicationsInner {
-	if o == nil || o.IncludedApplications == nil {
+	if o == nil || isNil(o.IncludedApplications) {
 		var ret []SubscriptionFilterOptionsIncludedApplicationsInner
 		return ret
 	}
@@ -80,15 +80,15 @@ func (o *SubscriptionFilterOptions) GetIncludedApplications() []SubscriptionFilt
 // GetIncludedApplicationsOk returns a tuple with the IncludedApplications field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SubscriptionFilterOptions) GetIncludedApplicationsOk() ([]SubscriptionFilterOptionsIncludedApplicationsInner, bool) {
-	if o == nil || o.IncludedApplications == nil {
-		return nil, false
+	if o == nil || isNil(o.IncludedApplications) {
+    return nil, false
 	}
 	return o.IncludedApplications, true
 }
 
 // HasIncludedApplications returns a boolean if a field has been set.
 func (o *SubscriptionFilterOptions) HasIncludedApplications() bool {
-	if o != nil && o.IncludedApplications != nil {
+	if o != nil && !isNil(o.IncludedApplications) {
 		return true
 	}
 
@@ -102,7 +102,7 @@ func (o *SubscriptionFilterOptions) SetIncludedApplications(v []SubscriptionFilt
 
 // GetIncludedPopulations returns the IncludedPopulations field value if set, zero value otherwise.
 func (o *SubscriptionFilterOptions) GetIncludedPopulations() []SubscriptionFilterOptionsIncludedApplicationsInner {
-	if o == nil || o.IncludedPopulations == nil {
+	if o == nil || isNil(o.IncludedPopulations) {
 		var ret []SubscriptionFilterOptionsIncludedApplicationsInner
 		return ret
 	}
@@ -112,15 +112,15 @@ func (o *SubscriptionFilterOptions) GetIncludedPopulations() []SubscriptionFilte
 // GetIncludedPopulationsOk returns a tuple with the IncludedPopulations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SubscriptionFilterOptions) GetIncludedPopulationsOk() ([]SubscriptionFilterOptionsIncludedApplicationsInner, bool) {
-	if o == nil || o.IncludedPopulations == nil {
-		return nil, false
+	if o == nil || isNil(o.IncludedPopulations) {
+    return nil, false
 	}
 	return o.IncludedPopulations, true
 }
 
 // HasIncludedPopulations returns a boolean if a field has been set.
 func (o *SubscriptionFilterOptions) HasIncludedPopulations() bool {
-	if o != nil && o.IncludedPopulations != nil {
+	if o != nil && !isNil(o.IncludedPopulations) {
 		return true
 	}
 
@@ -134,7 +134,7 @@ func (o *SubscriptionFilterOptions) SetIncludedPopulations(v []SubscriptionFilte
 
 // GetIncludedTags returns the IncludedTags field value if set, zero value otherwise.
 func (o *SubscriptionFilterOptions) GetIncludedTags() []EnumSubscriptionFilterIncludedTags {
-	if o == nil || o.IncludedTags == nil {
+	if o == nil || isNil(o.IncludedTags) {
 		var ret []EnumSubscriptionFilterIncludedTags
 		return ret
 	}
@@ -144,15 +144,15 @@ func (o *SubscriptionFilterOptions) GetIncludedTags() []EnumSubscriptionFilterIn
 // GetIncludedTagsOk returns a tuple with the IncludedTags field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SubscriptionFilterOptions) GetIncludedTagsOk() ([]EnumSubscriptionFilterIncludedTags, bool) {
-	if o == nil || o.IncludedTags == nil {
-		return nil, false
+	if o == nil || isNil(o.IncludedTags) {
+    return nil, false
 	}
 	return o.IncludedTags, true
 }
 
 // HasIncludedTags returns a boolean if a field has been set.
 func (o *SubscriptionFilterOptions) HasIncludedTags() bool {
-	if o != nil && o.IncludedTags != nil {
+	if o != nil && !isNil(o.IncludedTags) {
 		return true
 	}
 
@@ -169,13 +169,13 @@ func (o SubscriptionFilterOptions) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["includedActionTypes"] = o.IncludedActionTypes
 	}
-	if o.IncludedApplications != nil {
+	if !isNil(o.IncludedApplications) {
 		toSerialize["includedApplications"] = o.IncludedApplications
 	}
-	if o.IncludedPopulations != nil {
+	if !isNil(o.IncludedPopulations) {
 		toSerialize["includedPopulations"] = o.IncludedPopulations
 	}
-	if o.IncludedTags != nil {
+	if !isNil(o.IncludedTags) {
 		toSerialize["includedTags"] = o.IncludedTags
 	}
 	return json.Marshal(toSerialize)

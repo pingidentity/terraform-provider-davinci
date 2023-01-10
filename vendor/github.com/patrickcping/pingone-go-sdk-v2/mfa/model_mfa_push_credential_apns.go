@@ -60,7 +60,7 @@ func (o *MFAPushCredentialAPNS) GetType() EnumMFAPushCredentialAttrType {
 // and a boolean to check if the value has been set.
 func (o *MFAPushCredentialAPNS) GetTypeOk() (*EnumMFAPushCredentialAttrType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -84,7 +84,7 @@ func (o *MFAPushCredentialAPNS) GetKey() string {
 // and a boolean to check if the value has been set.
 func (o *MFAPushCredentialAPNS) GetKeyOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Key, true
 }
@@ -108,7 +108,7 @@ func (o *MFAPushCredentialAPNS) GetTeamId() string {
 // and a boolean to check if the value has been set.
 func (o *MFAPushCredentialAPNS) GetTeamIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TeamId, true
 }
@@ -132,7 +132,7 @@ func (o *MFAPushCredentialAPNS) GetToken() string {
 // and a boolean to check if the value has been set.
 func (o *MFAPushCredentialAPNS) GetTokenOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Token, true
 }

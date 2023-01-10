@@ -55,7 +55,7 @@ func NewSignOnPolicyActionMFAAllOfWithDefaults() *SignOnPolicyActionMFAAllOf {
 // GetAuthenticator returns the Authenticator field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetAuthenticator() SignOnPolicyActionMFAAllOfAuthenticator {
-	if o == nil || o.Authenticator == nil {
+	if o == nil || isNil(o.Authenticator) {
 		var ret SignOnPolicyActionMFAAllOfAuthenticator
 		return ret
 	}
@@ -66,15 +66,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetAuthenticator() SignOnPolicyActionMFAAll
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetAuthenticatorOk() (*SignOnPolicyActionMFAAllOfAuthenticator, bool) {
-	if o == nil || o.Authenticator == nil {
-		return nil, false
+	if o == nil || isNil(o.Authenticator) {
+    return nil, false
 	}
 	return o.Authenticator, true
 }
 
 // HasAuthenticator returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasAuthenticator() bool {
-	if o != nil && o.Authenticator != nil {
+	if o != nil && !isNil(o.Authenticator) {
 		return true
 	}
 
@@ -90,7 +90,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetAuthenticator(v SignOnPolicyActionMFAAll
 // GetBoundBiometrics returns the BoundBiometrics field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetBoundBiometrics() SignOnPolicyActionMFAAllOfBoundBiometrics {
-	if o == nil || o.BoundBiometrics == nil {
+	if o == nil || isNil(o.BoundBiometrics) {
 		var ret SignOnPolicyActionMFAAllOfBoundBiometrics
 		return ret
 	}
@@ -101,15 +101,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetBoundBiometrics() SignOnPolicyActionMFAA
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetBoundBiometricsOk() (*SignOnPolicyActionMFAAllOfBoundBiometrics, bool) {
-	if o == nil || o.BoundBiometrics == nil {
-		return nil, false
+	if o == nil || isNil(o.BoundBiometrics) {
+    return nil, false
 	}
 	return o.BoundBiometrics, true
 }
 
 // HasBoundBiometrics returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasBoundBiometrics() bool {
-	if o != nil && o.BoundBiometrics != nil {
+	if o != nil && !isNil(o.BoundBiometrics) {
 		return true
 	}
 
@@ -125,7 +125,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetBoundBiometrics(v SignOnPolicyActionMFAA
 // GetEmail returns the Email field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetEmail() SignOnPolicyActionMFAAllOfEmail {
-	if o == nil || o.Email == nil {
+	if o == nil || isNil(o.Email) {
 		var ret SignOnPolicyActionMFAAllOfEmail
 		return ret
 	}
@@ -136,15 +136,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetEmail() SignOnPolicyActionMFAAllOfEmail 
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetEmailOk() (*SignOnPolicyActionMFAAllOfEmail, bool) {
-	if o == nil || o.Email == nil {
-		return nil, false
+	if o == nil || isNil(o.Email) {
+    return nil, false
 	}
 	return o.Email, true
 }
 
 // HasEmail returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasEmail() bool {
-	if o != nil && o.Email != nil {
+	if o != nil && !isNil(o.Email) {
 		return true
 	}
 
@@ -160,7 +160,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetEmail(v SignOnPolicyActionMFAAllOfEmail)
 // GetSecurityKey returns the SecurityKey field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetSecurityKey() SignOnPolicyActionMFAAllOfSecurityKey {
-	if o == nil || o.SecurityKey == nil {
+	if o == nil || isNil(o.SecurityKey) {
 		var ret SignOnPolicyActionMFAAllOfSecurityKey
 		return ret
 	}
@@ -171,15 +171,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetSecurityKey() SignOnPolicyActionMFAAllOf
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetSecurityKeyOk() (*SignOnPolicyActionMFAAllOfSecurityKey, bool) {
-	if o == nil || o.SecurityKey == nil {
-		return nil, false
+	if o == nil || isNil(o.SecurityKey) {
+    return nil, false
 	}
 	return o.SecurityKey, true
 }
 
 // HasSecurityKey returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasSecurityKey() bool {
-	if o != nil && o.SecurityKey != nil {
+	if o != nil && !isNil(o.SecurityKey) {
 		return true
 	}
 
@@ -195,7 +195,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetSecurityKey(v SignOnPolicyActionMFAAllOf
 // GetSms returns the Sms field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetSms() SignOnPolicyActionMFAAllOfSms {
-	if o == nil || o.Sms == nil {
+	if o == nil || isNil(o.Sms) {
 		var ret SignOnPolicyActionMFAAllOfSms
 		return ret
 	}
@@ -206,15 +206,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetSms() SignOnPolicyActionMFAAllOfSms {
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetSmsOk() (*SignOnPolicyActionMFAAllOfSms, bool) {
-	if o == nil || o.Sms == nil {
-		return nil, false
+	if o == nil || isNil(o.Sms) {
+    return nil, false
 	}
 	return o.Sms, true
 }
 
 // HasSms returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasSms() bool {
-	if o != nil && o.Sms != nil {
+	if o != nil && !isNil(o.Sms) {
 		return true
 	}
 
@@ -230,7 +230,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetSms(v SignOnPolicyActionMFAAllOfSms) {
 // GetVoice returns the Voice field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetVoice() SignOnPolicyActionMFAAllOfVoice {
-	if o == nil || o.Voice == nil {
+	if o == nil || isNil(o.Voice) {
 		var ret SignOnPolicyActionMFAAllOfVoice
 		return ret
 	}
@@ -241,15 +241,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetVoice() SignOnPolicyActionMFAAllOfVoice 
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetVoiceOk() (*SignOnPolicyActionMFAAllOfVoice, bool) {
-	if o == nil || o.Voice == nil {
-		return nil, false
+	if o == nil || isNil(o.Voice) {
+    return nil, false
 	}
 	return o.Voice, true
 }
 
 // HasVoice returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasVoice() bool {
-	if o != nil && o.Voice != nil {
+	if o != nil && !isNil(o.Voice) {
 		return true
 	}
 
@@ -265,7 +265,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetVoice(v SignOnPolicyActionMFAAllOfVoice)
 // GetApplications returns the Applications field value if set, zero value otherwise.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetApplications() []SignOnPolicyActionMFAAllOfApplications {
-	if o == nil || o.Applications == nil {
+	if o == nil || isNil(o.Applications) {
 		var ret []SignOnPolicyActionMFAAllOfApplications
 		return ret
 	}
@@ -276,15 +276,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetApplications() []SignOnPolicyActionMFAAl
 // and a boolean to check if the value has been set.
 // Deprecated
 func (o *SignOnPolicyActionMFAAllOf) GetApplicationsOk() ([]SignOnPolicyActionMFAAllOfApplications, bool) {
-	if o == nil || o.Applications == nil {
-		return nil, false
+	if o == nil || isNil(o.Applications) {
+    return nil, false
 	}
 	return o.Applications, true
 }
 
 // HasApplications returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasApplications() bool {
-	if o != nil && o.Applications != nil {
+	if o != nil && !isNil(o.Applications) {
 		return true
 	}
 
@@ -299,7 +299,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetApplications(v []SignOnPolicyActionMFAAl
 
 // GetDeviceAuthenticationPolicy returns the DeviceAuthenticationPolicy field value if set, zero value otherwise.
 func (o *SignOnPolicyActionMFAAllOf) GetDeviceAuthenticationPolicy() SignOnPolicyActionMFAAllOfDeviceAuthenticationPolicy {
-	if o == nil || o.DeviceAuthenticationPolicy == nil {
+	if o == nil || isNil(o.DeviceAuthenticationPolicy) {
 		var ret SignOnPolicyActionMFAAllOfDeviceAuthenticationPolicy
 		return ret
 	}
@@ -309,15 +309,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetDeviceAuthenticationPolicy() SignOnPolic
 // GetDeviceAuthenticationPolicyOk returns a tuple with the DeviceAuthenticationPolicy field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOf) GetDeviceAuthenticationPolicyOk() (*SignOnPolicyActionMFAAllOfDeviceAuthenticationPolicy, bool) {
-	if o == nil || o.DeviceAuthenticationPolicy == nil {
-		return nil, false
+	if o == nil || isNil(o.DeviceAuthenticationPolicy) {
+    return nil, false
 	}
 	return o.DeviceAuthenticationPolicy, true
 }
 
 // HasDeviceAuthenticationPolicy returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasDeviceAuthenticationPolicy() bool {
-	if o != nil && o.DeviceAuthenticationPolicy != nil {
+	if o != nil && !isNil(o.DeviceAuthenticationPolicy) {
 		return true
 	}
 
@@ -331,7 +331,7 @@ func (o *SignOnPolicyActionMFAAllOf) SetDeviceAuthenticationPolicy(v SignOnPolic
 
 // GetNoDevicesMode returns the NoDevicesMode field value if set, zero value otherwise.
 func (o *SignOnPolicyActionMFAAllOf) GetNoDevicesMode() EnumSignOnPolicyNoDeviceMode {
-	if o == nil || o.NoDevicesMode == nil {
+	if o == nil || isNil(o.NoDevicesMode) {
 		var ret EnumSignOnPolicyNoDeviceMode
 		return ret
 	}
@@ -341,15 +341,15 @@ func (o *SignOnPolicyActionMFAAllOf) GetNoDevicesMode() EnumSignOnPolicyNoDevice
 // GetNoDevicesModeOk returns a tuple with the NoDevicesMode field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOf) GetNoDevicesModeOk() (*EnumSignOnPolicyNoDeviceMode, bool) {
-	if o == nil || o.NoDevicesMode == nil {
-		return nil, false
+	if o == nil || isNil(o.NoDevicesMode) {
+    return nil, false
 	}
 	return o.NoDevicesMode, true
 }
 
 // HasNoDevicesMode returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOf) HasNoDevicesMode() bool {
-	if o != nil && o.NoDevicesMode != nil {
+	if o != nil && !isNil(o.NoDevicesMode) {
 		return true
 	}
 
@@ -363,31 +363,31 @@ func (o *SignOnPolicyActionMFAAllOf) SetNoDevicesMode(v EnumSignOnPolicyNoDevice
 
 func (o SignOnPolicyActionMFAAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Authenticator != nil {
+	if !isNil(o.Authenticator) {
 		toSerialize["authenticator"] = o.Authenticator
 	}
-	if o.BoundBiometrics != nil {
+	if !isNil(o.BoundBiometrics) {
 		toSerialize["boundBiometrics"] = o.BoundBiometrics
 	}
-	if o.Email != nil {
+	if !isNil(o.Email) {
 		toSerialize["email"] = o.Email
 	}
-	if o.SecurityKey != nil {
+	if !isNil(o.SecurityKey) {
 		toSerialize["securityKey"] = o.SecurityKey
 	}
-	if o.Sms != nil {
+	if !isNil(o.Sms) {
 		toSerialize["sms"] = o.Sms
 	}
-	if o.Voice != nil {
+	if !isNil(o.Voice) {
 		toSerialize["voice"] = o.Voice
 	}
-	if o.Applications != nil {
+	if !isNil(o.Applications) {
 		toSerialize["applications"] = o.Applications
 	}
-	if o.DeviceAuthenticationPolicy != nil {
+	if !isNil(o.DeviceAuthenticationPolicy) {
 		toSerialize["deviceAuthenticationPolicy"] = o.DeviceAuthenticationPolicy
 	}
-	if o.NoDevicesMode != nil {
+	if !isNil(o.NoDevicesMode) {
 		toSerialize["noDevicesMode"] = o.NoDevicesMode
 	}
 	return json.Marshal(toSerialize)

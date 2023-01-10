@@ -66,7 +66,7 @@ func NewDeviceAuthenticationPolicyWithDefaults() *DeviceAuthenticationPolicy {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicy) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -76,15 +76,15 @@ func (o *DeviceAuthenticationPolicy) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicy) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -98,7 +98,7 @@ func (o *DeviceAuthenticationPolicy) SetEnvironment(v ObjectEnvironment) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicy) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -108,15 +108,15 @@ func (o *DeviceAuthenticationPolicy) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicy) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -142,7 +142,7 @@ func (o *DeviceAuthenticationPolicy) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -166,7 +166,7 @@ func (o *DeviceAuthenticationPolicy) GetSms() DeviceAuthenticationPolicyOfflineD
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetSmsOk() (*DeviceAuthenticationPolicyOfflineDevice, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Sms, true
 }
@@ -190,7 +190,7 @@ func (o *DeviceAuthenticationPolicy) GetVoice() DeviceAuthenticationPolicyOfflin
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetVoiceOk() (*DeviceAuthenticationPolicyOfflineDevice, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Voice, true
 }
@@ -214,7 +214,7 @@ func (o *DeviceAuthenticationPolicy) GetEmail() DeviceAuthenticationPolicyOfflin
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetEmailOk() (*DeviceAuthenticationPolicyOfflineDevice, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Email, true
 }
@@ -238,7 +238,7 @@ func (o *DeviceAuthenticationPolicy) GetMobile() DeviceAuthenticationPolicyMobil
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetMobileOk() (*DeviceAuthenticationPolicyMobile, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Mobile, true
 }
@@ -262,7 +262,7 @@ func (o *DeviceAuthenticationPolicy) GetTotp() DeviceAuthenticationPolicyTotp {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetTotpOk() (*DeviceAuthenticationPolicyTotp, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Totp, true
 }
@@ -286,7 +286,7 @@ func (o *DeviceAuthenticationPolicy) GetSecurityKey() DeviceAuthenticationPolicy
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetSecurityKeyOk() (*DeviceAuthenticationPolicyFIDODevice, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SecurityKey, true
 }
@@ -310,7 +310,7 @@ func (o *DeviceAuthenticationPolicy) GetPlatform() DeviceAuthenticationPolicyFID
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetPlatformOk() (*DeviceAuthenticationPolicyFIDODevice, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Platform, true
 }
@@ -334,7 +334,7 @@ func (o *DeviceAuthenticationPolicy) GetDefault() bool {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetDefaultOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Default, true
 }
@@ -360,7 +360,7 @@ func (o *DeviceAuthenticationPolicy) GetForSignOnPolicy() bool {
 // Deprecated
 func (o *DeviceAuthenticationPolicy) GetForSignOnPolicyOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ForSignOnPolicy, true
 }
@@ -373,7 +373,7 @@ func (o *DeviceAuthenticationPolicy) SetForSignOnPolicy(v bool) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicy) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -383,15 +383,15 @@ func (o *DeviceAuthenticationPolicy) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicy) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicy) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -405,10 +405,10 @@ func (o *DeviceAuthenticationPolicy) SetUpdatedAt(v time.Time) {
 
 func (o DeviceAuthenticationPolicy) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
@@ -441,7 +441,7 @@ func (o DeviceAuthenticationPolicy) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["forSignOnPolicy"] = o.ForSignOnPolicy
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	return json.Marshal(toSerialize)

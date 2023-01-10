@@ -55,7 +55,7 @@ func (o *ApplicationAccessControlGroup) GetType() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationAccessControlGroup) GetTypeOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -79,7 +79,7 @@ func (o *ApplicationAccessControlGroup) GetGroups() []ApplicationAccessControlGr
 // and a boolean to check if the value has been set.
 func (o *ApplicationAccessControlGroup) GetGroupsOk() ([]ApplicationAccessControlGroupGroupsInner, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.Groups, true
 }

@@ -55,7 +55,7 @@ func (o *SignOnPolicyActionCommonConditionGreater) GetGreater() int32 {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionGreater) GetGreaterOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Greater, true
 }
@@ -79,7 +79,7 @@ func (o *SignOnPolicyActionCommonConditionGreater) GetSecondsSince() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionGreater) GetSecondsSinceOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SecondsSince, true
 }

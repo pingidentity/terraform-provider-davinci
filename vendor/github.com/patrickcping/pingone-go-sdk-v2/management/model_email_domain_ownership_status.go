@@ -41,7 +41,7 @@ func NewEmailDomainOwnershipStatusWithDefaults() *EmailDomainOwnershipStatus {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *EmailDomainOwnershipStatus) GetType() string {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret string
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *EmailDomainOwnershipStatus) GetType() string {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainOwnershipStatus) GetTypeOk() (*string, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *EmailDomainOwnershipStatus) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *EmailDomainOwnershipStatus) SetType(v string) {
 
 // GetRegions returns the Regions field value if set, zero value otherwise.
 func (o *EmailDomainOwnershipStatus) GetRegions() []EmailDomainOwnershipStatusRegionsInner {
-	if o == nil || o.Regions == nil {
+	if o == nil || isNil(o.Regions) {
 		var ret []EmailDomainOwnershipStatusRegionsInner
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *EmailDomainOwnershipStatus) GetRegions() []EmailDomainOwnershipStatusRe
 // GetRegionsOk returns a tuple with the Regions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainOwnershipStatus) GetRegionsOk() ([]EmailDomainOwnershipStatusRegionsInner, bool) {
-	if o == nil || o.Regions == nil {
-		return nil, false
+	if o == nil || isNil(o.Regions) {
+    return nil, false
 	}
 	return o.Regions, true
 }
 
 // HasRegions returns a boolean if a field has been set.
 func (o *EmailDomainOwnershipStatus) HasRegions() bool {
-	if o != nil && o.Regions != nil {
+	if o != nil && !isNil(o.Regions) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *EmailDomainOwnershipStatus) SetRegions(v []EmailDomainOwnershipStatusRe
 
 func (o EmailDomainOwnershipStatus) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
-	if o.Regions != nil {
+	if !isNil(o.Regions) {
 		toSerialize["regions"] = o.Regions
 	}
 	return json.Marshal(toSerialize)

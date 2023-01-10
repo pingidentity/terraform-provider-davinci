@@ -51,7 +51,7 @@ func (o *ApplicationSAMLAllOfSpVerification) GetCertificates() []ApplicationSAML
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOfSpVerification) GetCertificatesOk() ([]ApplicationSAMLAllOfSpVerificationCertificates, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.Certificates, true
 }

@@ -51,7 +51,7 @@ func (o *APIServerAuthorizationServer) GetResource() APIServerAuthorizationServe
 // and a boolean to check if the value has been set.
 func (o *APIServerAuthorizationServer) GetResourceOk() (*APIServerAuthorizationServerResource, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Resource, true
 }

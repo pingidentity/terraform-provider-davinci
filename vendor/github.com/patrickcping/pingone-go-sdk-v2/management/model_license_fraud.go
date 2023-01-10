@@ -39,7 +39,7 @@ func NewLicenseFraudWithDefaults() *LicenseFraud {
 
 // GetAllowBotMaliciousDeviceDetection returns the AllowBotMaliciousDeviceDetection field value if set, zero value otherwise.
 func (o *LicenseFraud) GetAllowBotMaliciousDeviceDetection() bool {
-	if o == nil || o.AllowBotMaliciousDeviceDetection == nil {
+	if o == nil || isNil(o.AllowBotMaliciousDeviceDetection) {
 		var ret bool
 		return ret
 	}
@@ -49,15 +49,15 @@ func (o *LicenseFraud) GetAllowBotMaliciousDeviceDetection() bool {
 // GetAllowBotMaliciousDeviceDetectionOk returns a tuple with the AllowBotMaliciousDeviceDetection field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseFraud) GetAllowBotMaliciousDeviceDetectionOk() (*bool, bool) {
-	if o == nil || o.AllowBotMaliciousDeviceDetection == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowBotMaliciousDeviceDetection) {
+    return nil, false
 	}
 	return o.AllowBotMaliciousDeviceDetection, true
 }
 
 // HasAllowBotMaliciousDeviceDetection returns a boolean if a field has been set.
 func (o *LicenseFraud) HasAllowBotMaliciousDeviceDetection() bool {
-	if o != nil && o.AllowBotMaliciousDeviceDetection != nil {
+	if o != nil && !isNil(o.AllowBotMaliciousDeviceDetection) {
 		return true
 	}
 
@@ -71,7 +71,7 @@ func (o *LicenseFraud) SetAllowBotMaliciousDeviceDetection(v bool) {
 
 // GetAllowAccountProtection returns the AllowAccountProtection field value if set, zero value otherwise.
 func (o *LicenseFraud) GetAllowAccountProtection() bool {
-	if o == nil || o.AllowAccountProtection == nil {
+	if o == nil || isNil(o.AllowAccountProtection) {
 		var ret bool
 		return ret
 	}
@@ -81,15 +81,15 @@ func (o *LicenseFraud) GetAllowAccountProtection() bool {
 // GetAllowAccountProtectionOk returns a tuple with the AllowAccountProtection field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseFraud) GetAllowAccountProtectionOk() (*bool, bool) {
-	if o == nil || o.AllowAccountProtection == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowAccountProtection) {
+    return nil, false
 	}
 	return o.AllowAccountProtection, true
 }
 
 // HasAllowAccountProtection returns a boolean if a field has been set.
 func (o *LicenseFraud) HasAllowAccountProtection() bool {
-	if o != nil && o.AllowAccountProtection != nil {
+	if o != nil && !isNil(o.AllowAccountProtection) {
 		return true
 	}
 
@@ -103,10 +103,10 @@ func (o *LicenseFraud) SetAllowAccountProtection(v bool) {
 
 func (o LicenseFraud) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowBotMaliciousDeviceDetection != nil {
+	if !isNil(o.AllowBotMaliciousDeviceDetection) {
 		toSerialize["allowBotMaliciousDeviceDetection"] = o.AllowBotMaliciousDeviceDetection
 	}
-	if o.AllowAccountProtection != nil {
+	if !isNil(o.AllowAccountProtection) {
 		toSerialize["allowAccountProtection"] = o.AllowAccountProtection
 	}
 	return json.Marshal(toSerialize)

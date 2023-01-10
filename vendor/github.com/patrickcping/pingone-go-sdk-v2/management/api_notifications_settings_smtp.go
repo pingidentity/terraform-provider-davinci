@@ -23,25 +23,25 @@ import (
 // NotificationsSettingsSMTPApiService NotificationsSettingsSMTPApi service
 type NotificationsSettingsSMTPApiService service
 
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetRequest struct {
+type ApiReadEmailNotificationsSettingsRequest struct {
 	ctx context.Context
 	ApiService *NotificationsSettingsSMTPApiService
 	environmentID string
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetExecute(r)
+func (r ApiReadEmailNotificationsSettingsRequest) Execute() (*NotificationsSettingsEmailDeliverySettings, *http.Response, error) {
+	return r.ApiService.ReadEmailNotificationsSettingsExecute(r)
 }
 
 /*
-V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGet READ Notifications Settings (SMTP)
+ReadEmailNotificationsSettings READ Email Notifications Settings
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param environmentID
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetRequest
+ @return ApiReadEmailNotificationsSettingsRequest
 */
-func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGet(ctx context.Context, environmentID string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetRequest{
+func (a *NotificationsSettingsSMTPApiService) ReadEmailNotificationsSettings(ctx context.Context, environmentID string) ApiReadEmailNotificationsSettingsRequest {
+	return ApiReadEmailNotificationsSettingsRequest{
 		ApiService: a,
 		ctx: ctx,
 		environmentID: environmentID,
@@ -49,16 +49,18 @@ func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotific
 }
 
 // Execute executes the request
-func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGetRequest) (*http.Response, error) {
+//  @return NotificationsSettingsEmailDeliverySettings
+func (a *NotificationsSettingsSMTPApiService) ReadEmailNotificationsSettingsExecute(r ApiReadEmailNotificationsSettingsRequest) (*NotificationsSettingsEmailDeliverySettings, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
+		localVarReturnValue  *NotificationsSettingsEmailDeliverySettings
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationsSettingsSMTPApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsGet")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationsSettingsSMTPApiService.ReadEmailNotificationsSettings")
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/emailDeliverySettings"
@@ -87,19 +89,19 @@ func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotific
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -112,92 +114,107 @@ func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotific
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest struct {
+type ApiUpdateEmailNotificationsSettingsRequest struct {
 	ctx context.Context
 	ApiService *NotificationsSettingsSMTPApiService
 	environmentID string
 	body *map[string]interface{}
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest) Body(body map[string]interface{}) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest {
+func (r ApiUpdateEmailNotificationsSettingsRequest) Body(body map[string]interface{}) ApiUpdateEmailNotificationsSettingsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutExecute(r)
+func (r ApiUpdateEmailNotificationsSettingsRequest) Execute() (*NotificationsSettingsEmailDeliverySettings, *http.Response, error) {
+	return r.ApiService.UpdateEmailNotificationsSettingsExecute(r)
 }
 
 /*
-V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPut UPDATE Notifications Settings (SMTP)
+UpdateEmailNotificationsSettings UPDATE Email Notifications Settings
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param environmentID
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest
+ @return ApiUpdateEmailNotificationsSettingsRequest
 */
-func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPut(ctx context.Context, environmentID string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest{
+func (a *NotificationsSettingsSMTPApiService) UpdateEmailNotificationsSettings(ctx context.Context, environmentID string) ApiUpdateEmailNotificationsSettingsRequest {
+	return ApiUpdateEmailNotificationsSettingsRequest{
 		ApiService: a,
 		ctx: ctx,
 		environmentID: environmentID,
@@ -205,16 +222,18 @@ func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotific
 }
 
 // Execute executes the request
-func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPutRequest) (*http.Response, error) {
+//  @return NotificationsSettingsEmailDeliverySettings
+func (a *NotificationsSettingsSMTPApiService) UpdateEmailNotificationsSettingsExecute(r ApiUpdateEmailNotificationsSettingsRequest) (*NotificationsSettingsEmailDeliverySettings, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
+		localVarReturnValue  *NotificationsSettingsEmailDeliverySettings
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationsSettingsSMTPApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsPut")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "NotificationsSettingsSMTPApiService.UpdateEmailNotificationsSettings")
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/emailDeliverySettings"
@@ -245,19 +264,19 @@ func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotific
 	localVarPostBody = r.body
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -270,63 +289,78 @@ func (a *NotificationsSettingsSMTPApiService) V1EnvironmentsEnvironmentIDNotific
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }

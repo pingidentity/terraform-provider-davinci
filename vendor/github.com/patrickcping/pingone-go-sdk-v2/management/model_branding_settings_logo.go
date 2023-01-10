@@ -55,7 +55,7 @@ func (o *BrandingSettingsLogo) GetHref() string {
 // and a boolean to check if the value has been set.
 func (o *BrandingSettingsLogo) GetHrefOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Href, true
 }
@@ -79,7 +79,7 @@ func (o *BrandingSettingsLogo) GetId() string {
 // and a boolean to check if the value has been set.
 func (o *BrandingSettingsLogo) GetIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Id, true
 }

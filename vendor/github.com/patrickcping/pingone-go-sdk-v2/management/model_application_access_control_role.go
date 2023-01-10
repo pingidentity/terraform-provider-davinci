@@ -51,7 +51,7 @@ func (o *ApplicationAccessControlRole) GetType() EnumApplicationAccessControlTyp
 // and a boolean to check if the value has been set.
 func (o *ApplicationAccessControlRole) GetTypeOk() (*EnumApplicationAccessControlType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }

@@ -54,7 +54,7 @@ func (o *MFASettingsLockout) GetFailureCount() int32 {
 // and a boolean to check if the value has been set.
 func (o *MFASettingsLockout) GetFailureCountOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.FailureCount, true
 }
@@ -66,7 +66,7 @@ func (o *MFASettingsLockout) SetFailureCount(v int32) {
 
 // GetDurationSeconds returns the DurationSeconds field value if set, zero value otherwise.
 func (o *MFASettingsLockout) GetDurationSeconds() int32 {
-	if o == nil || o.DurationSeconds == nil {
+	if o == nil || isNil(o.DurationSeconds) {
 		var ret int32
 		return ret
 	}
@@ -76,15 +76,15 @@ func (o *MFASettingsLockout) GetDurationSeconds() int32 {
 // GetDurationSecondsOk returns a tuple with the DurationSeconds field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *MFASettingsLockout) GetDurationSecondsOk() (*int32, bool) {
-	if o == nil || o.DurationSeconds == nil {
-		return nil, false
+	if o == nil || isNil(o.DurationSeconds) {
+    return nil, false
 	}
 	return o.DurationSeconds, true
 }
 
 // HasDurationSeconds returns a boolean if a field has been set.
 func (o *MFASettingsLockout) HasDurationSeconds() bool {
-	if o != nil && o.DurationSeconds != nil {
+	if o != nil && !isNil(o.DurationSeconds) {
 		return true
 	}
 
@@ -101,7 +101,7 @@ func (o MFASettingsLockout) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["failureCount"] = o.FailureCount
 	}
-	if o.DurationSeconds != nil {
+	if !isNil(o.DurationSeconds) {
 		toSerialize["durationSeconds"] = o.DurationSeconds
 	}
 	return json.Marshal(toSerialize)

@@ -52,7 +52,7 @@ func (o *BrandingThemeDefault) GetDefault() bool {
 // and a boolean to check if the value has been set.
 func (o *BrandingThemeDefault) GetDefaultOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Default, true
 }

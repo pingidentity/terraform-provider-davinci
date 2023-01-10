@@ -52,7 +52,7 @@ func (o *BillOfMaterialsProductsInnerConsole) GetHref() string {
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInnerConsole) GetHrefOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Href, true
 }

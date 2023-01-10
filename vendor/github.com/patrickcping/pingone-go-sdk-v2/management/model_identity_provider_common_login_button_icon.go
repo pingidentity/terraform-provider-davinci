@@ -41,7 +41,7 @@ func NewIdentityProviderCommonLoginButtonIconWithDefaults() *IdentityProviderCom
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *IdentityProviderCommonLoginButtonIcon) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *IdentityProviderCommonLoginButtonIcon) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderCommonLoginButtonIcon) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *IdentityProviderCommonLoginButtonIcon) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *IdentityProviderCommonLoginButtonIcon) SetId(v string) {
 
 // GetHref returns the Href field value if set, zero value otherwise.
 func (o *IdentityProviderCommonLoginButtonIcon) GetHref() string {
-	if o == nil || o.Href == nil {
+	if o == nil || isNil(o.Href) {
 		var ret string
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *IdentityProviderCommonLoginButtonIcon) GetHref() string {
 // GetHrefOk returns a tuple with the Href field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderCommonLoginButtonIcon) GetHrefOk() (*string, bool) {
-	if o == nil || o.Href == nil {
-		return nil, false
+	if o == nil || isNil(o.Href) {
+    return nil, false
 	}
 	return o.Href, true
 }
 
 // HasHref returns a boolean if a field has been set.
 func (o *IdentityProviderCommonLoginButtonIcon) HasHref() bool {
-	if o != nil && o.Href != nil {
+	if o != nil && !isNil(o.Href) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *IdentityProviderCommonLoginButtonIcon) SetHref(v string) {
 
 func (o IdentityProviderCommonLoginButtonIcon) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Href != nil {
+	if !isNil(o.Href) {
 		toSerialize["href"] = o.Href
 	}
 	return json.Marshal(toSerialize)

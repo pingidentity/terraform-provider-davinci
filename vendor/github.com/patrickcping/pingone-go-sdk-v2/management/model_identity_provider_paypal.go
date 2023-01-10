@@ -67,7 +67,7 @@ func NewIdentityProviderPaypalWithDefaults() *IdentityProviderPaypal {
 
 // GetLinks returns the Links field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetLinks() map[string]interface{} {
-	if o == nil || o.Links == nil {
+	if o == nil || isNil(o.Links) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -77,15 +77,15 @@ func (o *IdentityProviderPaypal) GetLinks() map[string]interface{} {
 // GetLinksOk returns a tuple with the Links field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetLinksOk() (map[string]interface{}, bool) {
-	if o == nil || o.Links == nil {
-		return nil, false
+	if o == nil || isNil(o.Links) {
+    return map[string]interface{}{}, false
 	}
 	return o.Links, true
 }
 
 // HasLinks returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasLinks() bool {
-	if o != nil && o.Links != nil {
+	if o != nil && !isNil(o.Links) {
 		return true
 	}
 
@@ -99,7 +99,7 @@ func (o *IdentityProviderPaypal) SetLinks(v map[string]interface{}) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -109,15 +109,15 @@ func (o *IdentityProviderPaypal) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -143,7 +143,7 @@ func (o *IdentityProviderPaypal) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -155,7 +155,7 @@ func (o *IdentityProviderPaypal) SetEnabled(v bool) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -165,15 +165,15 @@ func (o *IdentityProviderPaypal) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -187,7 +187,7 @@ func (o *IdentityProviderPaypal) SetEnvironment(v ObjectEnvironment) {
 
 // GetIcon returns the Icon field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetIcon() IdentityProviderCommonIcon {
-	if o == nil || o.Icon == nil {
+	if o == nil || isNil(o.Icon) {
 		var ret IdentityProviderCommonIcon
 		return ret
 	}
@@ -197,15 +197,15 @@ func (o *IdentityProviderPaypal) GetIcon() IdentityProviderCommonIcon {
 // GetIconOk returns a tuple with the Icon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetIconOk() (*IdentityProviderCommonIcon, bool) {
-	if o == nil || o.Icon == nil {
-		return nil, false
+	if o == nil || isNil(o.Icon) {
+    return nil, false
 	}
 	return o.Icon, true
 }
 
 // HasIcon returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasIcon() bool {
-	if o != nil && o.Icon != nil {
+	if o != nil && !isNil(o.Icon) {
 		return true
 	}
 
@@ -219,7 +219,7 @@ func (o *IdentityProviderPaypal) SetIcon(v IdentityProviderCommonIcon) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -229,15 +229,15 @@ func (o *IdentityProviderPaypal) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -251,7 +251,7 @@ func (o *IdentityProviderPaypal) SetId(v string) {
 
 // GetLoginButtonIcon returns the LoginButtonIcon field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetLoginButtonIcon() IdentityProviderCommonLoginButtonIcon {
-	if o == nil || o.LoginButtonIcon == nil {
+	if o == nil || isNil(o.LoginButtonIcon) {
 		var ret IdentityProviderCommonLoginButtonIcon
 		return ret
 	}
@@ -261,15 +261,15 @@ func (o *IdentityProviderPaypal) GetLoginButtonIcon() IdentityProviderCommonLogi
 // GetLoginButtonIconOk returns a tuple with the LoginButtonIcon field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetLoginButtonIconOk() (*IdentityProviderCommonLoginButtonIcon, bool) {
-	if o == nil || o.LoginButtonIcon == nil {
-		return nil, false
+	if o == nil || isNil(o.LoginButtonIcon) {
+    return nil, false
 	}
 	return o.LoginButtonIcon, true
 }
 
 // HasLoginButtonIcon returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasLoginButtonIcon() bool {
-	if o != nil && o.LoginButtonIcon != nil {
+	if o != nil && !isNil(o.LoginButtonIcon) {
 		return true
 	}
 
@@ -295,7 +295,7 @@ func (o *IdentityProviderPaypal) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -307,7 +307,7 @@ func (o *IdentityProviderPaypal) SetName(v string) {
 
 // GetRegistration returns the Registration field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetRegistration() IdentityProviderCommonRegistration {
-	if o == nil || o.Registration == nil {
+	if o == nil || isNil(o.Registration) {
 		var ret IdentityProviderCommonRegistration
 		return ret
 	}
@@ -317,15 +317,15 @@ func (o *IdentityProviderPaypal) GetRegistration() IdentityProviderCommonRegistr
 // GetRegistrationOk returns a tuple with the Registration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetRegistrationOk() (*IdentityProviderCommonRegistration, bool) {
-	if o == nil || o.Registration == nil {
-		return nil, false
+	if o == nil || isNil(o.Registration) {
+    return nil, false
 	}
 	return o.Registration, true
 }
 
 // HasRegistration returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasRegistration() bool {
-	if o != nil && o.Registration != nil {
+	if o != nil && !isNil(o.Registration) {
 		return true
 	}
 
@@ -351,7 +351,7 @@ func (o *IdentityProviderPaypal) GetType() EnumIdentityProviderExt {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetTypeOk() (*EnumIdentityProviderExt, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -363,7 +363,7 @@ func (o *IdentityProviderPaypal) SetType(v EnumIdentityProviderExt) {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetCreatedAt() string {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret string
 		return ret
 	}
@@ -373,15 +373,15 @@ func (o *IdentityProviderPaypal) GetCreatedAt() string {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetCreatedAtOk() (*string, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -395,7 +395,7 @@ func (o *IdentityProviderPaypal) SetCreatedAt(v string) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *IdentityProviderPaypal) GetUpdatedAt() string {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret string
 		return ret
 	}
@@ -405,15 +405,15 @@ func (o *IdentityProviderPaypal) GetUpdatedAt() string {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetUpdatedAtOk() (*string, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *IdentityProviderPaypal) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -439,7 +439,7 @@ func (o *IdentityProviderPaypal) GetClientId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetClientIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientId, true
 }
@@ -463,7 +463,7 @@ func (o *IdentityProviderPaypal) GetClientSecret() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetClientSecretOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientSecret, true
 }
@@ -487,7 +487,7 @@ func (o *IdentityProviderPaypal) GetClientEnvironment() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderPaypal) GetClientEnvironmentOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ClientEnvironment, true
 }
@@ -499,40 +499,40 @@ func (o *IdentityProviderPaypal) SetClientEnvironment(v string) {
 
 func (o IdentityProviderPaypal) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Links != nil {
+	if !isNil(o.Links) {
 		toSerialize["_links"] = o.Links
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Icon != nil {
+	if !isNil(o.Icon) {
 		toSerialize["icon"] = o.Icon
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.LoginButtonIcon != nil {
+	if !isNil(o.LoginButtonIcon) {
 		toSerialize["loginButtonIcon"] = o.LoginButtonIcon
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.Registration != nil {
+	if !isNil(o.Registration) {
 		toSerialize["registration"] = o.Registration
 	}
 	if true {
 		toSerialize["type"] = o.Type
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	if true {

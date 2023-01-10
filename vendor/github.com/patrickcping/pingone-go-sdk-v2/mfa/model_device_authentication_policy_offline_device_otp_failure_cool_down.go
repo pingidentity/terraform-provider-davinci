@@ -54,7 +54,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailureCoolDown) GetDuration(
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailureCoolDown) GetDurationOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Duration, true
 }
@@ -78,7 +78,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailureCoolDown) GetTimeUnit(
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailureCoolDown) GetTimeUnitOk() (*EnumTimeUnit, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TimeUnit, true
 }

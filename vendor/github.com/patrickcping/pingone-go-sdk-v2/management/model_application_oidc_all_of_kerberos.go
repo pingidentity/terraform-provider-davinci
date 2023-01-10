@@ -51,7 +51,7 @@ func (o *ApplicationOIDCAllOfKerberos) GetKey() ApplicationOIDCAllOfKerberosKey 
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfKerberos) GetKeyOk() (*ApplicationOIDCAllOfKerberosKey, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Key, true
 }

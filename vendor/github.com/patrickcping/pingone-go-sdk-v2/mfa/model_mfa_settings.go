@@ -46,7 +46,7 @@ func NewMFASettingsWithDefaults() *MFASettings {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *MFASettings) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -56,15 +56,15 @@ func (o *MFASettings) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *MFASettings) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *MFASettings) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -90,7 +90,7 @@ func (o *MFASettings) GetAuthentication() MFASettingsAuthentication {
 // and a boolean to check if the value has been set.
 func (o *MFASettings) GetAuthenticationOk() (*MFASettingsAuthentication, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Authentication, true
 }
@@ -102,7 +102,7 @@ func (o *MFASettings) SetAuthentication(v MFASettingsAuthentication) {
 
 // GetLockout returns the Lockout field value if set, zero value otherwise.
 func (o *MFASettings) GetLockout() MFASettingsLockout {
-	if o == nil || o.Lockout == nil {
+	if o == nil || isNil(o.Lockout) {
 		var ret MFASettingsLockout
 		return ret
 	}
@@ -112,15 +112,15 @@ func (o *MFASettings) GetLockout() MFASettingsLockout {
 // GetLockoutOk returns a tuple with the Lockout field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *MFASettings) GetLockoutOk() (*MFASettingsLockout, bool) {
-	if o == nil || o.Lockout == nil {
-		return nil, false
+	if o == nil || isNil(o.Lockout) {
+    return nil, false
 	}
 	return o.Lockout, true
 }
 
 // HasLockout returns a boolean if a field has been set.
 func (o *MFASettings) HasLockout() bool {
-	if o != nil && o.Lockout != nil {
+	if o != nil && !isNil(o.Lockout) {
 		return true
 	}
 
@@ -146,7 +146,7 @@ func (o *MFASettings) GetPairing() MFASettingsPairing {
 // and a boolean to check if the value has been set.
 func (o *MFASettings) GetPairingOk() (*MFASettingsPairing, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Pairing, true
 }
@@ -158,7 +158,7 @@ func (o *MFASettings) SetPairing(v MFASettingsPairing) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *MFASettings) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -168,15 +168,15 @@ func (o *MFASettings) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *MFASettings) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *MFASettings) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -190,19 +190,19 @@ func (o *MFASettings) SetUpdatedAt(v time.Time) {
 
 func (o MFASettings) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
 	if true {
 		toSerialize["authentication"] = o.Authentication
 	}
-	if o.Lockout != nil {
+	if !isNil(o.Lockout) {
 		toSerialize["lockout"] = o.Lockout
 	}
 	if true {
 		toSerialize["pairing"] = o.Pairing
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	return json.Marshal(toSerialize)

@@ -40,7 +40,7 @@ func NewUserIdentityProviderWithDefaults() *UserIdentityProvider {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *UserIdentityProvider) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *UserIdentityProvider) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserIdentityProvider) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *UserIdentityProvider) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -72,7 +72,7 @@ func (o *UserIdentityProvider) SetId(v string) {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *UserIdentityProvider) GetType() EnumIdentityProvider {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret EnumIdentityProvider
 		return ret
 	}
@@ -82,15 +82,15 @@ func (o *UserIdentityProvider) GetType() EnumIdentityProvider {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserIdentityProvider) GetTypeOk() (*EnumIdentityProvider, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *UserIdentityProvider) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -104,10 +104,10 @@ func (o *UserIdentityProvider) SetType(v EnumIdentityProvider) {
 
 func (o UserIdentityProvider) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
 	return json.Marshal(toSerialize)

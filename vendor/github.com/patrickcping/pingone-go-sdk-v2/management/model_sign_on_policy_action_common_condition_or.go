@@ -38,7 +38,7 @@ func NewSignOnPolicyActionCommonConditionOrWithDefaults() *SignOnPolicyActionCom
 
 // GetOr returns the Or field value if set, zero value otherwise.
 func (o *SignOnPolicyActionCommonConditionOr) GetOr() []SignOnPolicyActionCommonConditionOrOrInner {
-	if o == nil || o.Or == nil {
+	if o == nil || isNil(o.Or) {
 		var ret []SignOnPolicyActionCommonConditionOrOrInner
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *SignOnPolicyActionCommonConditionOr) GetOr() []SignOnPolicyActionCommon
 // GetOrOk returns a tuple with the Or field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionOr) GetOrOk() ([]SignOnPolicyActionCommonConditionOrOrInner, bool) {
-	if o == nil || o.Or == nil {
-		return nil, false
+	if o == nil || isNil(o.Or) {
+    return nil, false
 	}
 	return o.Or, true
 }
 
 // HasOr returns a boolean if a field has been set.
 func (o *SignOnPolicyActionCommonConditionOr) HasOr() bool {
-	if o != nil && o.Or != nil {
+	if o != nil && !isNil(o.Or) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *SignOnPolicyActionCommonConditionOr) SetOr(v []SignOnPolicyActionCommon
 
 func (o SignOnPolicyActionCommonConditionOr) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Or != nil {
+	if !isNil(o.Or) {
 		toSerialize["or"] = o.Or
 	}
 	return json.Marshal(toSerialize)

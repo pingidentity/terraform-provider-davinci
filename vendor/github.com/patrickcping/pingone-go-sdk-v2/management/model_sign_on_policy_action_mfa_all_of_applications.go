@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionMFAAllOfApplications) GetId() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOfApplications) GetIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Id, true
 }
@@ -65,7 +65,7 @@ func (o *SignOnPolicyActionMFAAllOfApplications) SetId(v string) {
 
 // GetAutoEnrollment returns the AutoEnrollment field value if set, zero value otherwise.
 func (o *SignOnPolicyActionMFAAllOfApplications) GetAutoEnrollment() SignOnPolicyActionMFAAllOfAutoEnrollment {
-	if o == nil || o.AutoEnrollment == nil {
+	if o == nil || isNil(o.AutoEnrollment) {
 		var ret SignOnPolicyActionMFAAllOfAutoEnrollment
 		return ret
 	}
@@ -75,15 +75,15 @@ func (o *SignOnPolicyActionMFAAllOfApplications) GetAutoEnrollment() SignOnPolic
 // GetAutoEnrollmentOk returns a tuple with the AutoEnrollment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOfApplications) GetAutoEnrollmentOk() (*SignOnPolicyActionMFAAllOfAutoEnrollment, bool) {
-	if o == nil || o.AutoEnrollment == nil {
-		return nil, false
+	if o == nil || isNil(o.AutoEnrollment) {
+    return nil, false
 	}
 	return o.AutoEnrollment, true
 }
 
 // HasAutoEnrollment returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOfApplications) HasAutoEnrollment() bool {
-	if o != nil && o.AutoEnrollment != nil {
+	if o != nil && !isNil(o.AutoEnrollment) {
 		return true
 	}
 
@@ -97,7 +97,7 @@ func (o *SignOnPolicyActionMFAAllOfApplications) SetAutoEnrollment(v SignOnPolic
 
 // GetDeviceAuthorization returns the DeviceAuthorization field value if set, zero value otherwise.
 func (o *SignOnPolicyActionMFAAllOfApplications) GetDeviceAuthorization() SignOnPolicyActionMFAAllOfDeviceAuthorization {
-	if o == nil || o.DeviceAuthorization == nil {
+	if o == nil || isNil(o.DeviceAuthorization) {
 		var ret SignOnPolicyActionMFAAllOfDeviceAuthorization
 		return ret
 	}
@@ -107,15 +107,15 @@ func (o *SignOnPolicyActionMFAAllOfApplications) GetDeviceAuthorization() SignOn
 // GetDeviceAuthorizationOk returns a tuple with the DeviceAuthorization field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOfApplications) GetDeviceAuthorizationOk() (*SignOnPolicyActionMFAAllOfDeviceAuthorization, bool) {
-	if o == nil || o.DeviceAuthorization == nil {
-		return nil, false
+	if o == nil || isNil(o.DeviceAuthorization) {
+    return nil, false
 	}
 	return o.DeviceAuthorization, true
 }
 
 // HasDeviceAuthorization returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOfApplications) HasDeviceAuthorization() bool {
-	if o != nil && o.DeviceAuthorization != nil {
+	if o != nil && !isNil(o.DeviceAuthorization) {
 		return true
 	}
 
@@ -132,10 +132,10 @@ func (o SignOnPolicyActionMFAAllOfApplications) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["id"] = o.Id
 	}
-	if o.AutoEnrollment != nil {
+	if !isNil(o.AutoEnrollment) {
 		toSerialize["autoEnrollment"] = o.AutoEnrollment
 	}
-	if o.DeviceAuthorization != nil {
+	if !isNil(o.DeviceAuthorization) {
 		toSerialize["deviceAuthorization"] = o.DeviceAuthorization
 	}
 	return json.Marshal(toSerialize)

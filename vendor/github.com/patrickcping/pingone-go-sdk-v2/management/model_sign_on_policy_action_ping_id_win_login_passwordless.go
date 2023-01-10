@@ -52,7 +52,7 @@ func NewSignOnPolicyActionPingIDWinLoginPasswordlessWithDefaults() *SignOnPolicy
 
 // GetLinks returns the Links field value if set, zero value otherwise.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetLinks() map[string]interface{} {
-	if o == nil || o.Links == nil {
+	if o == nil || isNil(o.Links) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -62,15 +62,15 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetLinks() map[string]int
 // GetLinksOk returns a tuple with the Links field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetLinksOk() (map[string]interface{}, bool) {
-	if o == nil || o.Links == nil {
-		return nil, false
+	if o == nil || isNil(o.Links) {
+    return map[string]interface{}{}, false
 	}
 	return o.Links, true
 }
 
 // HasLinks returns a boolean if a field has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) HasLinks() bool {
-	if o != nil && o.Links != nil {
+	if o != nil && !isNil(o.Links) {
 		return true
 	}
 
@@ -84,7 +84,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) SetLinks(v map[string]int
 
 // GetCondition returns the Condition field value if set, zero value otherwise.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetCondition() SignOnPolicyActionCommonConditionOrOrInner {
-	if o == nil || o.Condition == nil {
+	if o == nil || isNil(o.Condition) {
 		var ret SignOnPolicyActionCommonConditionOrOrInner
 		return ret
 	}
@@ -94,15 +94,15 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetCondition() SignOnPoli
 // GetConditionOk returns a tuple with the Condition field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetConditionOk() (*SignOnPolicyActionCommonConditionOrOrInner, bool) {
-	if o == nil || o.Condition == nil {
-		return nil, false
+	if o == nil || isNil(o.Condition) {
+    return nil, false
 	}
 	return o.Condition, true
 }
 
 // HasCondition returns a boolean if a field has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) HasCondition() bool {
-	if o != nil && o.Condition != nil {
+	if o != nil && !isNil(o.Condition) {
 		return true
 	}
 
@@ -116,7 +116,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) SetCondition(v SignOnPoli
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -126,15 +126,15 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetEnvironment() ObjectEn
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -148,7 +148,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) SetEnvironment(v ObjectEn
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -158,15 +158,15 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -192,7 +192,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetPriority() int32 {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetPriorityOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Priority, true
 }
@@ -204,7 +204,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) SetPriority(v int32) {
 
 // GetSignOnPolicy returns the SignOnPolicy field value if set, zero value otherwise.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetSignOnPolicy() SignOnPolicyActionCommonSignOnPolicy {
-	if o == nil || o.SignOnPolicy == nil {
+	if o == nil || isNil(o.SignOnPolicy) {
 		var ret SignOnPolicyActionCommonSignOnPolicy
 		return ret
 	}
@@ -214,15 +214,15 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetSignOnPolicy() SignOnP
 // GetSignOnPolicyOk returns a tuple with the SignOnPolicy field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetSignOnPolicyOk() (*SignOnPolicyActionCommonSignOnPolicy, bool) {
-	if o == nil || o.SignOnPolicy == nil {
-		return nil, false
+	if o == nil || isNil(o.SignOnPolicy) {
+    return nil, false
 	}
 	return o.SignOnPolicy, true
 }
 
 // HasSignOnPolicy returns a boolean if a field has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) HasSignOnPolicy() bool {
-	if o != nil && o.SignOnPolicy != nil {
+	if o != nil && !isNil(o.SignOnPolicy) {
 		return true
 	}
 
@@ -248,7 +248,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetType() EnumSignOnPolic
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetTypeOk() (*EnumSignOnPolicyType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -272,7 +272,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetUniqueUserAttribute() 
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetUniqueUserAttributeOk() (*SignOnPolicyActionPingIDWinLoginPasswordlessAllOfUniqueUserAttribute, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.UniqueUserAttribute, true
 }
@@ -296,7 +296,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetOfflineMode() SignOnPo
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordless) GetOfflineModeOk() (*SignOnPolicyActionPingIDWinLoginPasswordlessAllOfOfflineMode, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.OfflineMode, true
 }
@@ -308,22 +308,22 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordless) SetOfflineMode(v SignOnPo
 
 func (o SignOnPolicyActionPingIDWinLoginPasswordless) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Links != nil {
+	if !isNil(o.Links) {
 		toSerialize["_links"] = o.Links
 	}
-	if o.Condition != nil {
+	if !isNil(o.Condition) {
 		toSerialize["condition"] = o.Condition
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
 		toSerialize["priority"] = o.Priority
 	}
-	if o.SignOnPolicy != nil {
+	if !isNil(o.SignOnPolicy) {
 		toSerialize["signOnPolicy"] = o.SignOnPolicy
 	}
 	if true {

@@ -220,16 +220,16 @@ github.com/mitchellh/reflectwalk
 # github.com/oklog/run v1.0.0
 ## explicit
 github.com/oklog/run
-# github.com/patrickcping/pingone-go-sdk-v2 v0.5.0
+# github.com/patrickcping/pingone-go-sdk-v2 v0.5.1
 ## explicit; go 1.18
 github.com/patrickcping/pingone-go-sdk-v2/pingone/model
-# github.com/patrickcping/pingone-go-sdk-v2/authorize v0.1.0
+# github.com/patrickcping/pingone-go-sdk-v2/authorize v0.1.1
 ## explicit; go 1.13
 github.com/patrickcping/pingone-go-sdk-v2/authorize
-# github.com/patrickcping/pingone-go-sdk-v2/management v0.12.0
+# github.com/patrickcping/pingone-go-sdk-v2/management v0.13.0
 ## explicit; go 1.13
 github.com/patrickcping/pingone-go-sdk-v2/management
-# github.com/patrickcping/pingone-go-sdk-v2/mfa v0.7.0
+# github.com/patrickcping/pingone-go-sdk-v2/mfa v0.7.1
 ## explicit; go 1.13
 github.com/patrickcping/pingone-go-sdk-v2/mfa
 # github.com/posener/complete v1.2.3
@@ -297,7 +297,7 @@ golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 ## explicit; go 1.18
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
-# golang.org/x/net v0.1.0
+# golang.org/x/net v0.5.0
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
@@ -307,15 +307,15 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/oauth2 v0.1.0
+# golang.org/x/oauth2 v0.4.0
 ## explicit; go 1.17
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.1.0
+# golang.org/x/sys v0.4.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
-# golang.org/x/text v0.4.0
+# golang.org/x/text v0.6.0
 ## explicit; go 1.17
 golang.org/x/text/cases
 golang.org/x/text/internal

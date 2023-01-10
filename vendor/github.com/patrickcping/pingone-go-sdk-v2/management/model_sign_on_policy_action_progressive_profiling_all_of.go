@@ -60,7 +60,7 @@ func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetAttributes() []SignOnPo
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetAttributesOk() ([]SignOnPolicyActionProgressiveProfilingAllOfAttributes, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.Attributes, true
 }
@@ -84,7 +84,7 @@ func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetPreventMultiplePromptsP
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetPreventMultiplePromptsPerFlowOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PreventMultiplePromptsPerFlow, true
 }
@@ -108,7 +108,7 @@ func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetPromptIntervalSeconds()
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetPromptIntervalSecondsOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PromptIntervalSeconds, true
 }
@@ -132,7 +132,7 @@ func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetPromptText() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionProgressiveProfilingAllOf) GetPromptTextOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PromptText, true
 }

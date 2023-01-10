@@ -16,6 +16,10 @@ import (
 
 // ApplicationOIDCAllOf struct for ApplicationOIDCAllOf
 type ApplicationOIDCAllOf struct {
+	// A boolean to specify whether wildcards are allowed in redirect URIs. For more information, see [Wildcards in Redirect URIs](https://docs.pingidentity.com/csh?context=p1_c_wildcard_redirect_uri).
+	AllowWildcardInRedirectUris *bool `json:"allowWildcardInRedirectUris,omitempty"`
+	// A boolean that specifies whether the permissions service should assign default roles to the application. This property is set only on the POST request. The property is ignored when included in a PUT request.
+	AssignActorRoles *bool `json:"assignActorRoles,omitempty"`
 	Mobile *ApplicationOIDCAllOfMobile `json:"mobile,omitempty"`
 	// A string that specifies the bundle associated with the application, for push notifications in native apps. The value of the bundleId property is unique per environment, and once defined, is immutable.
 	BundleId *string `json:"bundleId,omitempty"`
@@ -26,17 +30,27 @@ type ApplicationOIDCAllOf struct {
 	GrantTypes []EnumApplicationOIDCGrantType `json:"grantTypes"`
 	// A string that specifies the custom home page URL for the application.
 	HomePageUrl *string `json:"homePageUrl,omitempty"`
+	// A string that specifies the URI to use for third-parties to begin the sign-on process for the application. If specified, PingOne redirects users to this URI to initiate SSO to PingOne. The application is responsible for implementing the relevant OIDC flow when the initiate login URI is requested. This property is required if you want the application to appear in the PingOne Application Portal. See the OIDC specification section of [Initiating Login from a Third Party](https://openid.net/specs/openid-connect-core-1_0.html#ThirdPartyInitiatedLogin) for more information.
+	InitiateLoginUri *string `json:"initiateLoginUri,omitempty"`
 	PkceEnforcement *EnumApplicationOIDCPKCEOption `json:"pkceEnforcement,omitempty"`
 	// A string that specifies the URLs that the browser can be redirected to after logout.
 	PostLogoutRedirectUris []string `json:"postLogoutRedirectUris,omitempty"`
 	// A string that specifies the callback URI for the authentication response.
 	RedirectUris []string `json:"redirectUris,omitempty"`
-	// An integer that specifies the lifetime in seconds of the refresh token. If a value is not provided, the default value is 2592000, or 30 days. Valid values are between 60 and 2147483647. If the refreshTokenRollingDuration property is specified for the application, then this property must be less than or equal to the value of refreshTokenRollingDuration. After this property is set, the value cannot be nullified. This value is used to generate the value for the exp claim when minting a new refresh token.
+	// An integer that specifies the lifetime in seconds of the refresh token. If a value is not provided, the default value is 2592000, or 30 days. Valid values are between 60 and 2147483647. If the `refreshTokenRollingDuration` property is specified for the application, then this property must be less than or equal to the value of `refreshTokenRollingDuration`. After this property is set, the value cannot be nullified. This value is used to generate the value for the exp claim when minting a new refresh token.
 	RefreshTokenDuration *int32 `json:"refreshTokenDuration,omitempty"`
 	// An integer that specifies the number of seconds a refresh token can be exchanged before re-authentication is required. If a value is not provided, the refresh token is valid forever. Valid values are between 60 and 2147483647. After this property is set, the value cannot be nullified. This value is used to generate the value for the exp claim when minting a new refresh token.
 	RefreshTokenRollingDuration *int32 `json:"refreshTokenRollingDuration,omitempty"`
+	// The number of seconds that a refresh token may be reused after having been exchanged for a new set of tokens. This is useful in the case of network errors on the client. Valid values are between 0 and 86400 seconds. Null is treated the same as 0.
+	RefreshTokenRollingGracePeriodDuration *int32 `json:"refreshTokenRollingGracePeriodDuration,omitempty"`
 	// A string that specifies the code or token type returned by an authorization request. Options are TOKEN, ID_TOKEN, and CODE. Note that CODE cannot be used in an authorization request with TOKEN or ID_TOKEN because PingOne does not currently support OIDC hybrid flows.
 	ResponseTypes []EnumApplicationOIDCResponseType `json:"responseTypes,omitempty"`
+	// A boolean that specifies whether the [request query](https://openid.net/specs/openid-connect-core-1_0.html#RequestObject) parameter JWT is allowed to be unsigned. If false or null (default), an unsigned request object is not allowed.
+	SupportUnsignedRequestObject *bool `json:"supportUnsignedRequestObject,omitempty"`
+	// An array that specifies the list of labels associated with the application. Options are `PING_FED_CONNECTION_INTEGRATION`.  Only applicable for creating worker applications.
+	Tags []EnumApplicationTags `json:"tags,omitempty"`
+	// The URI for the application. If specified, PingOne will redirect application users to this URI after a user is authenticated. In the PingOne admin console, this becomes the value of the `target_link_uri` parameter used for the Initiate Single Sign-On URL field.
+	TargetLinkUri *string `json:"targetLinkUri,omitempty"`
 	TokenEndpointAuthMethod EnumApplicationOIDCTokenAuthMethod `json:"tokenEndpointAuthMethod"`
 }
 
@@ -47,6 +61,8 @@ type ApplicationOIDCAllOf struct {
 func NewApplicationOIDCAllOf(grantTypes []EnumApplicationOIDCGrantType, tokenEndpointAuthMethod EnumApplicationOIDCTokenAuthMethod) *ApplicationOIDCAllOf {
 	this := ApplicationOIDCAllOf{}
 	this.GrantTypes = grantTypes
+	var refreshTokenDuration int32 = 2592000
+	this.RefreshTokenDuration = &refreshTokenDuration
 	this.TokenEndpointAuthMethod = tokenEndpointAuthMethod
 	return &this
 }
@@ -56,12 +72,78 @@ func NewApplicationOIDCAllOf(grantTypes []EnumApplicationOIDCGrantType, tokenEnd
 // but it doesn't guarantee that properties required by API are set
 func NewApplicationOIDCAllOfWithDefaults() *ApplicationOIDCAllOf {
 	this := ApplicationOIDCAllOf{}
+	var refreshTokenDuration int32 = 2592000
+	this.RefreshTokenDuration = &refreshTokenDuration
 	return &this
+}
+
+// GetAllowWildcardInRedirectUris returns the AllowWildcardInRedirectUris field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetAllowWildcardInRedirectUris() bool {
+	if o == nil || isNil(o.AllowWildcardInRedirectUris) {
+		var ret bool
+		return ret
+	}
+	return *o.AllowWildcardInRedirectUris
+}
+
+// GetAllowWildcardInRedirectUrisOk returns a tuple with the AllowWildcardInRedirectUris field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetAllowWildcardInRedirectUrisOk() (*bool, bool) {
+	if o == nil || isNil(o.AllowWildcardInRedirectUris) {
+    return nil, false
+	}
+	return o.AllowWildcardInRedirectUris, true
+}
+
+// HasAllowWildcardInRedirectUris returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasAllowWildcardInRedirectUris() bool {
+	if o != nil && !isNil(o.AllowWildcardInRedirectUris) {
+		return true
+	}
+
+	return false
+}
+
+// SetAllowWildcardInRedirectUris gets a reference to the given bool and assigns it to the AllowWildcardInRedirectUris field.
+func (o *ApplicationOIDCAllOf) SetAllowWildcardInRedirectUris(v bool) {
+	o.AllowWildcardInRedirectUris = &v
+}
+
+// GetAssignActorRoles returns the AssignActorRoles field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetAssignActorRoles() bool {
+	if o == nil || isNil(o.AssignActorRoles) {
+		var ret bool
+		return ret
+	}
+	return *o.AssignActorRoles
+}
+
+// GetAssignActorRolesOk returns a tuple with the AssignActorRoles field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetAssignActorRolesOk() (*bool, bool) {
+	if o == nil || isNil(o.AssignActorRoles) {
+    return nil, false
+	}
+	return o.AssignActorRoles, true
+}
+
+// HasAssignActorRoles returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasAssignActorRoles() bool {
+	if o != nil && !isNil(o.AssignActorRoles) {
+		return true
+	}
+
+	return false
+}
+
+// SetAssignActorRoles gets a reference to the given bool and assigns it to the AssignActorRoles field.
+func (o *ApplicationOIDCAllOf) SetAssignActorRoles(v bool) {
+	o.AssignActorRoles = &v
 }
 
 // GetMobile returns the Mobile field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetMobile() ApplicationOIDCAllOfMobile {
-	if o == nil || o.Mobile == nil {
+	if o == nil || isNil(o.Mobile) {
 		var ret ApplicationOIDCAllOfMobile
 		return ret
 	}
@@ -71,15 +153,15 @@ func (o *ApplicationOIDCAllOf) GetMobile() ApplicationOIDCAllOfMobile {
 // GetMobileOk returns a tuple with the Mobile field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetMobileOk() (*ApplicationOIDCAllOfMobile, bool) {
-	if o == nil || o.Mobile == nil {
-		return nil, false
+	if o == nil || isNil(o.Mobile) {
+    return nil, false
 	}
 	return o.Mobile, true
 }
 
 // HasMobile returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasMobile() bool {
-	if o != nil && o.Mobile != nil {
+	if o != nil && !isNil(o.Mobile) {
 		return true
 	}
 
@@ -93,7 +175,7 @@ func (o *ApplicationOIDCAllOf) SetMobile(v ApplicationOIDCAllOfMobile) {
 
 // GetBundleId returns the BundleId field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetBundleId() string {
-	if o == nil || o.BundleId == nil {
+	if o == nil || isNil(o.BundleId) {
 		var ret string
 		return ret
 	}
@@ -103,15 +185,15 @@ func (o *ApplicationOIDCAllOf) GetBundleId() string {
 // GetBundleIdOk returns a tuple with the BundleId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetBundleIdOk() (*string, bool) {
-	if o == nil || o.BundleId == nil {
-		return nil, false
+	if o == nil || isNil(o.BundleId) {
+    return nil, false
 	}
 	return o.BundleId, true
 }
 
 // HasBundleId returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasBundleId() bool {
-	if o != nil && o.BundleId != nil {
+	if o != nil && !isNil(o.BundleId) {
 		return true
 	}
 
@@ -125,7 +207,7 @@ func (o *ApplicationOIDCAllOf) SetBundleId(v string) {
 
 // GetPackageName returns the PackageName field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetPackageName() string {
-	if o == nil || o.PackageName == nil {
+	if o == nil || isNil(o.PackageName) {
 		var ret string
 		return ret
 	}
@@ -135,15 +217,15 @@ func (o *ApplicationOIDCAllOf) GetPackageName() string {
 // GetPackageNameOk returns a tuple with the PackageName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetPackageNameOk() (*string, bool) {
-	if o == nil || o.PackageName == nil {
-		return nil, false
+	if o == nil || isNil(o.PackageName) {
+    return nil, false
 	}
 	return o.PackageName, true
 }
 
 // HasPackageName returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasPackageName() bool {
-	if o != nil && o.PackageName != nil {
+	if o != nil && !isNil(o.PackageName) {
 		return true
 	}
 
@@ -157,7 +239,7 @@ func (o *ApplicationOIDCAllOf) SetPackageName(v string) {
 
 // GetKerberos returns the Kerberos field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetKerberos() ApplicationOIDCAllOfKerberos {
-	if o == nil || o.Kerberos == nil {
+	if o == nil || isNil(o.Kerberos) {
 		var ret ApplicationOIDCAllOfKerberos
 		return ret
 	}
@@ -167,15 +249,15 @@ func (o *ApplicationOIDCAllOf) GetKerberos() ApplicationOIDCAllOfKerberos {
 // GetKerberosOk returns a tuple with the Kerberos field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetKerberosOk() (*ApplicationOIDCAllOfKerberos, bool) {
-	if o == nil || o.Kerberos == nil {
-		return nil, false
+	if o == nil || isNil(o.Kerberos) {
+    return nil, false
 	}
 	return o.Kerberos, true
 }
 
 // HasKerberos returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasKerberos() bool {
-	if o != nil && o.Kerberos != nil {
+	if o != nil && !isNil(o.Kerberos) {
 		return true
 	}
 
@@ -201,7 +283,7 @@ func (o *ApplicationOIDCAllOf) GetGrantTypes() []EnumApplicationOIDCGrantType {
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetGrantTypesOk() ([]EnumApplicationOIDCGrantType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.GrantTypes, true
 }
@@ -213,7 +295,7 @@ func (o *ApplicationOIDCAllOf) SetGrantTypes(v []EnumApplicationOIDCGrantType) {
 
 // GetHomePageUrl returns the HomePageUrl field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetHomePageUrl() string {
-	if o == nil || o.HomePageUrl == nil {
+	if o == nil || isNil(o.HomePageUrl) {
 		var ret string
 		return ret
 	}
@@ -223,15 +305,15 @@ func (o *ApplicationOIDCAllOf) GetHomePageUrl() string {
 // GetHomePageUrlOk returns a tuple with the HomePageUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetHomePageUrlOk() (*string, bool) {
-	if o == nil || o.HomePageUrl == nil {
-		return nil, false
+	if o == nil || isNil(o.HomePageUrl) {
+    return nil, false
 	}
 	return o.HomePageUrl, true
 }
 
 // HasHomePageUrl returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasHomePageUrl() bool {
-	if o != nil && o.HomePageUrl != nil {
+	if o != nil && !isNil(o.HomePageUrl) {
 		return true
 	}
 
@@ -243,9 +325,41 @@ func (o *ApplicationOIDCAllOf) SetHomePageUrl(v string) {
 	o.HomePageUrl = &v
 }
 
+// GetInitiateLoginUri returns the InitiateLoginUri field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetInitiateLoginUri() string {
+	if o == nil || isNil(o.InitiateLoginUri) {
+		var ret string
+		return ret
+	}
+	return *o.InitiateLoginUri
+}
+
+// GetInitiateLoginUriOk returns a tuple with the InitiateLoginUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetInitiateLoginUriOk() (*string, bool) {
+	if o == nil || isNil(o.InitiateLoginUri) {
+    return nil, false
+	}
+	return o.InitiateLoginUri, true
+}
+
+// HasInitiateLoginUri returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasInitiateLoginUri() bool {
+	if o != nil && !isNil(o.InitiateLoginUri) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitiateLoginUri gets a reference to the given string and assigns it to the InitiateLoginUri field.
+func (o *ApplicationOIDCAllOf) SetInitiateLoginUri(v string) {
+	o.InitiateLoginUri = &v
+}
+
 // GetPkceEnforcement returns the PkceEnforcement field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetPkceEnforcement() EnumApplicationOIDCPKCEOption {
-	if o == nil || o.PkceEnforcement == nil {
+	if o == nil || isNil(o.PkceEnforcement) {
 		var ret EnumApplicationOIDCPKCEOption
 		return ret
 	}
@@ -255,15 +369,15 @@ func (o *ApplicationOIDCAllOf) GetPkceEnforcement() EnumApplicationOIDCPKCEOptio
 // GetPkceEnforcementOk returns a tuple with the PkceEnforcement field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetPkceEnforcementOk() (*EnumApplicationOIDCPKCEOption, bool) {
-	if o == nil || o.PkceEnforcement == nil {
-		return nil, false
+	if o == nil || isNil(o.PkceEnforcement) {
+    return nil, false
 	}
 	return o.PkceEnforcement, true
 }
 
 // HasPkceEnforcement returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasPkceEnforcement() bool {
-	if o != nil && o.PkceEnforcement != nil {
+	if o != nil && !isNil(o.PkceEnforcement) {
 		return true
 	}
 
@@ -277,7 +391,7 @@ func (o *ApplicationOIDCAllOf) SetPkceEnforcement(v EnumApplicationOIDCPKCEOptio
 
 // GetPostLogoutRedirectUris returns the PostLogoutRedirectUris field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetPostLogoutRedirectUris() []string {
-	if o == nil || o.PostLogoutRedirectUris == nil {
+	if o == nil || isNil(o.PostLogoutRedirectUris) {
 		var ret []string
 		return ret
 	}
@@ -287,15 +401,15 @@ func (o *ApplicationOIDCAllOf) GetPostLogoutRedirectUris() []string {
 // GetPostLogoutRedirectUrisOk returns a tuple with the PostLogoutRedirectUris field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetPostLogoutRedirectUrisOk() ([]string, bool) {
-	if o == nil || o.PostLogoutRedirectUris == nil {
-		return nil, false
+	if o == nil || isNil(o.PostLogoutRedirectUris) {
+    return nil, false
 	}
 	return o.PostLogoutRedirectUris, true
 }
 
 // HasPostLogoutRedirectUris returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasPostLogoutRedirectUris() bool {
-	if o != nil && o.PostLogoutRedirectUris != nil {
+	if o != nil && !isNil(o.PostLogoutRedirectUris) {
 		return true
 	}
 
@@ -309,7 +423,7 @@ func (o *ApplicationOIDCAllOf) SetPostLogoutRedirectUris(v []string) {
 
 // GetRedirectUris returns the RedirectUris field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetRedirectUris() []string {
-	if o == nil || o.RedirectUris == nil {
+	if o == nil || isNil(o.RedirectUris) {
 		var ret []string
 		return ret
 	}
@@ -319,15 +433,15 @@ func (o *ApplicationOIDCAllOf) GetRedirectUris() []string {
 // GetRedirectUrisOk returns a tuple with the RedirectUris field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetRedirectUrisOk() ([]string, bool) {
-	if o == nil || o.RedirectUris == nil {
-		return nil, false
+	if o == nil || isNil(o.RedirectUris) {
+    return nil, false
 	}
 	return o.RedirectUris, true
 }
 
 // HasRedirectUris returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasRedirectUris() bool {
-	if o != nil && o.RedirectUris != nil {
+	if o != nil && !isNil(o.RedirectUris) {
 		return true
 	}
 
@@ -341,7 +455,7 @@ func (o *ApplicationOIDCAllOf) SetRedirectUris(v []string) {
 
 // GetRefreshTokenDuration returns the RefreshTokenDuration field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetRefreshTokenDuration() int32 {
-	if o == nil || o.RefreshTokenDuration == nil {
+	if o == nil || isNil(o.RefreshTokenDuration) {
 		var ret int32
 		return ret
 	}
@@ -351,15 +465,15 @@ func (o *ApplicationOIDCAllOf) GetRefreshTokenDuration() int32 {
 // GetRefreshTokenDurationOk returns a tuple with the RefreshTokenDuration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetRefreshTokenDurationOk() (*int32, bool) {
-	if o == nil || o.RefreshTokenDuration == nil {
-		return nil, false
+	if o == nil || isNil(o.RefreshTokenDuration) {
+    return nil, false
 	}
 	return o.RefreshTokenDuration, true
 }
 
 // HasRefreshTokenDuration returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasRefreshTokenDuration() bool {
-	if o != nil && o.RefreshTokenDuration != nil {
+	if o != nil && !isNil(o.RefreshTokenDuration) {
 		return true
 	}
 
@@ -373,7 +487,7 @@ func (o *ApplicationOIDCAllOf) SetRefreshTokenDuration(v int32) {
 
 // GetRefreshTokenRollingDuration returns the RefreshTokenRollingDuration field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetRefreshTokenRollingDuration() int32 {
-	if o == nil || o.RefreshTokenRollingDuration == nil {
+	if o == nil || isNil(o.RefreshTokenRollingDuration) {
 		var ret int32
 		return ret
 	}
@@ -383,15 +497,15 @@ func (o *ApplicationOIDCAllOf) GetRefreshTokenRollingDuration() int32 {
 // GetRefreshTokenRollingDurationOk returns a tuple with the RefreshTokenRollingDuration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetRefreshTokenRollingDurationOk() (*int32, bool) {
-	if o == nil || o.RefreshTokenRollingDuration == nil {
-		return nil, false
+	if o == nil || isNil(o.RefreshTokenRollingDuration) {
+    return nil, false
 	}
 	return o.RefreshTokenRollingDuration, true
 }
 
 // HasRefreshTokenRollingDuration returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasRefreshTokenRollingDuration() bool {
-	if o != nil && o.RefreshTokenRollingDuration != nil {
+	if o != nil && !isNil(o.RefreshTokenRollingDuration) {
 		return true
 	}
 
@@ -403,9 +517,41 @@ func (o *ApplicationOIDCAllOf) SetRefreshTokenRollingDuration(v int32) {
 	o.RefreshTokenRollingDuration = &v
 }
 
+// GetRefreshTokenRollingGracePeriodDuration returns the RefreshTokenRollingGracePeriodDuration field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetRefreshTokenRollingGracePeriodDuration() int32 {
+	if o == nil || isNil(o.RefreshTokenRollingGracePeriodDuration) {
+		var ret int32
+		return ret
+	}
+	return *o.RefreshTokenRollingGracePeriodDuration
+}
+
+// GetRefreshTokenRollingGracePeriodDurationOk returns a tuple with the RefreshTokenRollingGracePeriodDuration field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetRefreshTokenRollingGracePeriodDurationOk() (*int32, bool) {
+	if o == nil || isNil(o.RefreshTokenRollingGracePeriodDuration) {
+    return nil, false
+	}
+	return o.RefreshTokenRollingGracePeriodDuration, true
+}
+
+// HasRefreshTokenRollingGracePeriodDuration returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasRefreshTokenRollingGracePeriodDuration() bool {
+	if o != nil && !isNil(o.RefreshTokenRollingGracePeriodDuration) {
+		return true
+	}
+
+	return false
+}
+
+// SetRefreshTokenRollingGracePeriodDuration gets a reference to the given int32 and assigns it to the RefreshTokenRollingGracePeriodDuration field.
+func (o *ApplicationOIDCAllOf) SetRefreshTokenRollingGracePeriodDuration(v int32) {
+	o.RefreshTokenRollingGracePeriodDuration = &v
+}
+
 // GetResponseTypes returns the ResponseTypes field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOf) GetResponseTypes() []EnumApplicationOIDCResponseType {
-	if o == nil || o.ResponseTypes == nil {
+	if o == nil || isNil(o.ResponseTypes) {
 		var ret []EnumApplicationOIDCResponseType
 		return ret
 	}
@@ -415,15 +561,15 @@ func (o *ApplicationOIDCAllOf) GetResponseTypes() []EnumApplicationOIDCResponseT
 // GetResponseTypesOk returns a tuple with the ResponseTypes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetResponseTypesOk() ([]EnumApplicationOIDCResponseType, bool) {
-	if o == nil || o.ResponseTypes == nil {
-		return nil, false
+	if o == nil || isNil(o.ResponseTypes) {
+    return nil, false
 	}
 	return o.ResponseTypes, true
 }
 
 // HasResponseTypes returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOf) HasResponseTypes() bool {
-	if o != nil && o.ResponseTypes != nil {
+	if o != nil && !isNil(o.ResponseTypes) {
 		return true
 	}
 
@@ -433,6 +579,102 @@ func (o *ApplicationOIDCAllOf) HasResponseTypes() bool {
 // SetResponseTypes gets a reference to the given []EnumApplicationOIDCResponseType and assigns it to the ResponseTypes field.
 func (o *ApplicationOIDCAllOf) SetResponseTypes(v []EnumApplicationOIDCResponseType) {
 	o.ResponseTypes = v
+}
+
+// GetSupportUnsignedRequestObject returns the SupportUnsignedRequestObject field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetSupportUnsignedRequestObject() bool {
+	if o == nil || isNil(o.SupportUnsignedRequestObject) {
+		var ret bool
+		return ret
+	}
+	return *o.SupportUnsignedRequestObject
+}
+
+// GetSupportUnsignedRequestObjectOk returns a tuple with the SupportUnsignedRequestObject field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetSupportUnsignedRequestObjectOk() (*bool, bool) {
+	if o == nil || isNil(o.SupportUnsignedRequestObject) {
+    return nil, false
+	}
+	return o.SupportUnsignedRequestObject, true
+}
+
+// HasSupportUnsignedRequestObject returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasSupportUnsignedRequestObject() bool {
+	if o != nil && !isNil(o.SupportUnsignedRequestObject) {
+		return true
+	}
+
+	return false
+}
+
+// SetSupportUnsignedRequestObject gets a reference to the given bool and assigns it to the SupportUnsignedRequestObject field.
+func (o *ApplicationOIDCAllOf) SetSupportUnsignedRequestObject(v bool) {
+	o.SupportUnsignedRequestObject = &v
+}
+
+// GetTags returns the Tags field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetTags() []EnumApplicationTags {
+	if o == nil || isNil(o.Tags) {
+		var ret []EnumApplicationTags
+		return ret
+	}
+	return o.Tags
+}
+
+// GetTagsOk returns a tuple with the Tags field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetTagsOk() ([]EnumApplicationTags, bool) {
+	if o == nil || isNil(o.Tags) {
+    return nil, false
+	}
+	return o.Tags, true
+}
+
+// HasTags returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasTags() bool {
+	if o != nil && !isNil(o.Tags) {
+		return true
+	}
+
+	return false
+}
+
+// SetTags gets a reference to the given []EnumApplicationTags and assigns it to the Tags field.
+func (o *ApplicationOIDCAllOf) SetTags(v []EnumApplicationTags) {
+	o.Tags = v
+}
+
+// GetTargetLinkUri returns the TargetLinkUri field value if set, zero value otherwise.
+func (o *ApplicationOIDCAllOf) GetTargetLinkUri() string {
+	if o == nil || isNil(o.TargetLinkUri) {
+		var ret string
+		return ret
+	}
+	return *o.TargetLinkUri
+}
+
+// GetTargetLinkUriOk returns a tuple with the TargetLinkUri field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationOIDCAllOf) GetTargetLinkUriOk() (*string, bool) {
+	if o == nil || isNil(o.TargetLinkUri) {
+    return nil, false
+	}
+	return o.TargetLinkUri, true
+}
+
+// HasTargetLinkUri returns a boolean if a field has been set.
+func (o *ApplicationOIDCAllOf) HasTargetLinkUri() bool {
+	if o != nil && !isNil(o.TargetLinkUri) {
+		return true
+	}
+
+	return false
+}
+
+// SetTargetLinkUri gets a reference to the given string and assigns it to the TargetLinkUri field.
+func (o *ApplicationOIDCAllOf) SetTargetLinkUri(v string) {
+	o.TargetLinkUri = &v
 }
 
 // GetTokenEndpointAuthMethod returns the TokenEndpointAuthMethod field value
@@ -449,7 +691,7 @@ func (o *ApplicationOIDCAllOf) GetTokenEndpointAuthMethod() EnumApplicationOIDCT
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOf) GetTokenEndpointAuthMethodOk() (*EnumApplicationOIDCTokenAuthMethod, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TokenEndpointAuthMethod, true
 }
@@ -461,41 +703,62 @@ func (o *ApplicationOIDCAllOf) SetTokenEndpointAuthMethod(v EnumApplicationOIDCT
 
 func (o ApplicationOIDCAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Mobile != nil {
+	if !isNil(o.AllowWildcardInRedirectUris) {
+		toSerialize["allowWildcardInRedirectUris"] = o.AllowWildcardInRedirectUris
+	}
+	if !isNil(o.AssignActorRoles) {
+		toSerialize["assignActorRoles"] = o.AssignActorRoles
+	}
+	if !isNil(o.Mobile) {
 		toSerialize["mobile"] = o.Mobile
 	}
-	if o.BundleId != nil {
+	if !isNil(o.BundleId) {
 		toSerialize["bundleId"] = o.BundleId
 	}
-	if o.PackageName != nil {
+	if !isNil(o.PackageName) {
 		toSerialize["packageName"] = o.PackageName
 	}
-	if o.Kerberos != nil {
+	if !isNil(o.Kerberos) {
 		toSerialize["kerberos"] = o.Kerberos
 	}
 	if true {
 		toSerialize["grantTypes"] = o.GrantTypes
 	}
-	if o.HomePageUrl != nil {
+	if !isNil(o.HomePageUrl) {
 		toSerialize["homePageUrl"] = o.HomePageUrl
 	}
-	if o.PkceEnforcement != nil {
+	if !isNil(o.InitiateLoginUri) {
+		toSerialize["initiateLoginUri"] = o.InitiateLoginUri
+	}
+	if !isNil(o.PkceEnforcement) {
 		toSerialize["pkceEnforcement"] = o.PkceEnforcement
 	}
-	if o.PostLogoutRedirectUris != nil {
+	if !isNil(o.PostLogoutRedirectUris) {
 		toSerialize["postLogoutRedirectUris"] = o.PostLogoutRedirectUris
 	}
-	if o.RedirectUris != nil {
+	if !isNil(o.RedirectUris) {
 		toSerialize["redirectUris"] = o.RedirectUris
 	}
-	if o.RefreshTokenDuration != nil {
+	if !isNil(o.RefreshTokenDuration) {
 		toSerialize["refreshTokenDuration"] = o.RefreshTokenDuration
 	}
-	if o.RefreshTokenRollingDuration != nil {
+	if !isNil(o.RefreshTokenRollingDuration) {
 		toSerialize["refreshTokenRollingDuration"] = o.RefreshTokenRollingDuration
 	}
-	if o.ResponseTypes != nil {
+	if !isNil(o.RefreshTokenRollingGracePeriodDuration) {
+		toSerialize["refreshTokenRollingGracePeriodDuration"] = o.RefreshTokenRollingGracePeriodDuration
+	}
+	if !isNil(o.ResponseTypes) {
 		toSerialize["responseTypes"] = o.ResponseTypes
+	}
+	if !isNil(o.SupportUnsignedRequestObject) {
+		toSerialize["supportUnsignedRequestObject"] = o.SupportUnsignedRequestObject
+	}
+	if !isNil(o.Tags) {
+		toSerialize["tags"] = o.Tags
+	}
+	if !isNil(o.TargetLinkUri) {
+		toSerialize["targetLinkUri"] = o.TargetLinkUri
 	}
 	if true {
 		toSerialize["tokenEndpointAuthMethod"] = o.TokenEndpointAuthMethod

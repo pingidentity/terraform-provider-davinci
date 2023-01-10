@@ -20,6 +20,7 @@ type ReadOneApplication200Response struct {
 	ApplicationPingOnePortal      *ApplicationPingOnePortal
 	ApplicationPingOneSelfService *ApplicationPingOneSelfService
 	ApplicationSAML               *ApplicationSAML
+	ApplicationWSFED              *ApplicationWSFED
 }
 
 // ApplicationExternalLinkAsReadOneApplication200Response is a convenience function that returns ApplicationExternalLink wrapped in ReadOneApplication200Response
@@ -57,6 +58,13 @@ func ApplicationSAMLAsReadOneApplication200Response(v *ApplicationSAML) ReadOneA
 	}
 }
 
+// ApplicationWSFEDAsReadOneApplication200Response is a convenience function that returns ApplicationWSFED wrapped in ReadOneApplication200Response
+func ApplicationWSFEDAsReadOneApplication200Response(v *ApplicationWSFED) ReadOneApplication200Response {
+	return ReadOneApplication200Response{
+		ApplicationWSFED: v,
+	}
+}
+
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ReadOneApplication200Response) UnmarshalJSON(data []byte) error {
 	var common Application
@@ -67,6 +75,7 @@ func (dst *ReadOneApplication200Response) UnmarshalJSON(data []byte) error {
 
 	dst.ApplicationOIDC = nil
 	dst.ApplicationSAML = nil
+	dst.ApplicationWSFED = nil
 	dst.ApplicationExternalLink = nil
 	dst.ApplicationPingOnePortal = nil
 	dst.ApplicationPingOneSelfService = nil
@@ -92,6 +101,10 @@ func (dst *ReadOneApplication200Response) UnmarshalJSON(data []byte) error {
 		}
 	case ENUMAPPLICATIONPROTOCOL_SAML:
 		if err := json.Unmarshal(data, &dst.ApplicationSAML); err != nil { // simple model
+			return err
+		}
+	case ENUMAPPLICATIONPROTOCOL_WS_FED:
+		if err := json.Unmarshal(data, &dst.ApplicationWSFED); err != nil { // simple model
 			return err
 		}
 	case ENUMAPPLICATIONPROTOCOL_EXTERNAL_LINK:
@@ -126,6 +139,10 @@ func (src ReadOneApplication200Response) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ApplicationSAML)
 	}
 
+	if src.ApplicationWSFED != nil {
+		return json.Marshal(&src.ApplicationWSFED)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -152,6 +169,10 @@ func (obj *ReadOneApplication200Response) GetActualInstance() interface{} {
 
 	if obj.ApplicationSAML != nil {
 		return obj.ApplicationSAML
+	}
+
+	if obj.ApplicationWSFED != nil {
+		return obj.ApplicationWSFED
 	}
 
 	// all schemas are nil

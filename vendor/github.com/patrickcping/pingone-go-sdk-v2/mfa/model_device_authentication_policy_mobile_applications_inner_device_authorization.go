@@ -53,7 +53,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) G
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -65,7 +65,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) S
 
 // GetExtraVerification returns the ExtraVerification field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) GetExtraVerification() EnumMFADevicePolicyMobileExtraVerification {
-	if o == nil || o.ExtraVerification == nil {
+	if o == nil || isNil(o.ExtraVerification) {
 		var ret EnumMFADevicePolicyMobileExtraVerification
 		return ret
 	}
@@ -75,15 +75,15 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) G
 // GetExtraVerificationOk returns a tuple with the ExtraVerification field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) GetExtraVerificationOk() (*EnumMFADevicePolicyMobileExtraVerification, bool) {
-	if o == nil || o.ExtraVerification == nil {
-		return nil, false
+	if o == nil || isNil(o.ExtraVerification) {
+    return nil, false
 	}
 	return o.ExtraVerification, true
 }
 
 // HasExtraVerification returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) HasExtraVerification() bool {
-	if o != nil && o.ExtraVerification != nil {
+	if o != nil && !isNil(o.ExtraVerification) {
 		return true
 	}
 
@@ -100,7 +100,7 @@ func (o DeviceAuthenticationPolicyMobileApplicationsInnerDeviceAuthorization) Ma
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.ExtraVerification != nil {
+	if !isNil(o.ExtraVerification) {
 		toSerialize["extraVerification"] = o.ExtraVerification
 	}
 	return json.Marshal(toSerialize)

@@ -47,7 +47,7 @@ func NewCustomDomainWithDefaults() *CustomDomain {
 
 // GetCertificate returns the Certificate field value if set, zero value otherwise.
 func (o *CustomDomain) GetCertificate() CustomDomainCertificate {
-	if o == nil || o.Certificate == nil {
+	if o == nil || isNil(o.Certificate) {
 		var ret CustomDomainCertificate
 		return ret
 	}
@@ -57,15 +57,15 @@ func (o *CustomDomain) GetCertificate() CustomDomainCertificate {
 // GetCertificateOk returns a tuple with the Certificate field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomain) GetCertificateOk() (*CustomDomainCertificate, bool) {
-	if o == nil || o.Certificate == nil {
-		return nil, false
+	if o == nil || isNil(o.Certificate) {
+    return nil, false
 	}
 	return o.Certificate, true
 }
 
 // HasCertificate returns a boolean if a field has been set.
 func (o *CustomDomain) HasCertificate() bool {
-	if o != nil && o.Certificate != nil {
+	if o != nil && !isNil(o.Certificate) {
 		return true
 	}
 
@@ -79,7 +79,7 @@ func (o *CustomDomain) SetCertificate(v CustomDomainCertificate) {
 
 // GetCanonicalName returns the CanonicalName field value if set, zero value otherwise.
 func (o *CustomDomain) GetCanonicalName() string {
-	if o == nil || o.CanonicalName == nil {
+	if o == nil || isNil(o.CanonicalName) {
 		var ret string
 		return ret
 	}
@@ -89,15 +89,15 @@ func (o *CustomDomain) GetCanonicalName() string {
 // GetCanonicalNameOk returns a tuple with the CanonicalName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomain) GetCanonicalNameOk() (*string, bool) {
-	if o == nil || o.CanonicalName == nil {
-		return nil, false
+	if o == nil || isNil(o.CanonicalName) {
+    return nil, false
 	}
 	return o.CanonicalName, true
 }
 
 // HasCanonicalName returns a boolean if a field has been set.
 func (o *CustomDomain) HasCanonicalName() bool {
-	if o != nil && o.CanonicalName != nil {
+	if o != nil && !isNil(o.CanonicalName) {
 		return true
 	}
 
@@ -123,7 +123,7 @@ func (o *CustomDomain) GetDomainName() string {
 // and a boolean to check if the value has been set.
 func (o *CustomDomain) GetDomainNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.DomainName, true
 }
@@ -135,7 +135,7 @@ func (o *CustomDomain) SetDomainName(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *CustomDomain) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -145,15 +145,15 @@ func (o *CustomDomain) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomain) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *CustomDomain) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -167,7 +167,7 @@ func (o *CustomDomain) SetEnvironment(v ObjectEnvironment) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *CustomDomain) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -177,15 +177,15 @@ func (o *CustomDomain) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomain) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *CustomDomain) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -199,7 +199,7 @@ func (o *CustomDomain) SetId(v string) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *CustomDomain) GetStatus() EnumCustomDomainStatus {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		var ret EnumCustomDomainStatus
 		return ret
 	}
@@ -209,15 +209,15 @@ func (o *CustomDomain) GetStatus() EnumCustomDomainStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomain) GetStatusOk() (*EnumCustomDomainStatus, bool) {
-	if o == nil || o.Status == nil {
-		return nil, false
+	if o == nil || isNil(o.Status) {
+    return nil, false
 	}
 	return o.Status, true
 }
 
 // HasStatus returns a boolean if a field has been set.
 func (o *CustomDomain) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !isNil(o.Status) {
 		return true
 	}
 
@@ -231,22 +231,22 @@ func (o *CustomDomain) SetStatus(v EnumCustomDomainStatus) {
 
 func (o CustomDomain) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Certificate != nil {
+	if !isNil(o.Certificate) {
 		toSerialize["certificate"] = o.Certificate
 	}
-	if o.CanonicalName != nil {
+	if !isNil(o.CanonicalName) {
 		toSerialize["canonicalName"] = o.CanonicalName
 	}
 	if true {
 		toSerialize["domainName"] = o.DomainName
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Status != nil {
+	if !isNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
 	return json.Marshal(toSerialize)

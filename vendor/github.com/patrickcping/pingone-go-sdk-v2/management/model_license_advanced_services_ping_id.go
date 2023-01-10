@@ -39,7 +39,7 @@ func NewLicenseAdvancedServicesPingIdWithDefaults() *LicenseAdvancedServicesPing
 
 // GetIncluded returns the Included field value if set, zero value otherwise.
 func (o *LicenseAdvancedServicesPingId) GetIncluded() bool {
-	if o == nil || o.Included == nil {
+	if o == nil || isNil(o.Included) {
 		var ret bool
 		return ret
 	}
@@ -49,15 +49,15 @@ func (o *LicenseAdvancedServicesPingId) GetIncluded() bool {
 // GetIncludedOk returns a tuple with the Included field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseAdvancedServicesPingId) GetIncludedOk() (*bool, bool) {
-	if o == nil || o.Included == nil {
-		return nil, false
+	if o == nil || isNil(o.Included) {
+    return nil, false
 	}
 	return o.Included, true
 }
 
 // HasIncluded returns a boolean if a field has been set.
 func (o *LicenseAdvancedServicesPingId) HasIncluded() bool {
-	if o != nil && o.Included != nil {
+	if o != nil && !isNil(o.Included) {
 		return true
 	}
 
@@ -71,7 +71,7 @@ func (o *LicenseAdvancedServicesPingId) SetIncluded(v bool) {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *LicenseAdvancedServicesPingId) GetType() string {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret string
 		return ret
 	}
@@ -81,15 +81,15 @@ func (o *LicenseAdvancedServicesPingId) GetType() string {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseAdvancedServicesPingId) GetTypeOk() (*string, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *LicenseAdvancedServicesPingId) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -103,10 +103,10 @@ func (o *LicenseAdvancedServicesPingId) SetType(v string) {
 
 func (o LicenseAdvancedServicesPingId) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Included != nil {
+	if !isNil(o.Included) {
 		toSerialize["included"] = o.Included
 	}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
 	return json.Marshal(toSerialize)

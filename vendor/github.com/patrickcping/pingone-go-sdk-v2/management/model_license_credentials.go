@@ -38,7 +38,7 @@ func NewLicenseCredentialsWithDefaults() *LicenseCredentials {
 
 // GetAllowCredentials returns the AllowCredentials field value if set, zero value otherwise.
 func (o *LicenseCredentials) GetAllowCredentials() bool {
-	if o == nil || o.AllowCredentials == nil {
+	if o == nil || isNil(o.AllowCredentials) {
 		var ret bool
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *LicenseCredentials) GetAllowCredentials() bool {
 // GetAllowCredentialsOk returns a tuple with the AllowCredentials field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseCredentials) GetAllowCredentialsOk() (*bool, bool) {
-	if o == nil || o.AllowCredentials == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowCredentials) {
+    return nil, false
 	}
 	return o.AllowCredentials, true
 }
 
 // HasAllowCredentials returns a boolean if a field has been set.
 func (o *LicenseCredentials) HasAllowCredentials() bool {
-	if o != nil && o.AllowCredentials != nil {
+	if o != nil && !isNil(o.AllowCredentials) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *LicenseCredentials) SetAllowCredentials(v bool) {
 
 func (o LicenseCredentials) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowCredentials != nil {
+	if !isNil(o.AllowCredentials) {
 		toSerialize["allowCredentials"] = o.AllowCredentials
 	}
 	return json.Marshal(toSerialize)

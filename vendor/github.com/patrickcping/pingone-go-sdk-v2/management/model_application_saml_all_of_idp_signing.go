@@ -53,7 +53,7 @@ func (o *ApplicationSAMLAllOfIdpSigning) GetKey() ApplicationSAMLAllOfIdpSigning
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOfIdpSigning) GetKeyOk() (*ApplicationSAMLAllOfIdpSigningKey, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Key, true
 }
@@ -65,7 +65,7 @@ func (o *ApplicationSAMLAllOfIdpSigning) SetKey(v ApplicationSAMLAllOfIdpSigning
 
 // GetAlgorithm returns the Algorithm field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOfIdpSigning) GetAlgorithm() string {
-	if o == nil || o.Algorithm == nil {
+	if o == nil || isNil(o.Algorithm) {
 		var ret string
 		return ret
 	}
@@ -75,15 +75,15 @@ func (o *ApplicationSAMLAllOfIdpSigning) GetAlgorithm() string {
 // GetAlgorithmOk returns a tuple with the Algorithm field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOfIdpSigning) GetAlgorithmOk() (*string, bool) {
-	if o == nil || o.Algorithm == nil {
-		return nil, false
+	if o == nil || isNil(o.Algorithm) {
+    return nil, false
 	}
 	return o.Algorithm, true
 }
 
 // HasAlgorithm returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOfIdpSigning) HasAlgorithm() bool {
-	if o != nil && o.Algorithm != nil {
+	if o != nil && !isNil(o.Algorithm) {
 		return true
 	}
 
@@ -100,7 +100,7 @@ func (o ApplicationSAMLAllOfIdpSigning) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["key"] = o.Key
 	}
-	if o.Algorithm != nil {
+	if !isNil(o.Algorithm) {
 		toSerialize["algorithm"] = o.Algorithm
 	}
 	return json.Marshal(toSerialize)

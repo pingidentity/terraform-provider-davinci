@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordlessAllOf) GetUniqueUserAttribu
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordlessAllOf) GetUniqueUserAttributeOk() (*SignOnPolicyActionPingIDWinLoginPasswordlessAllOfUniqueUserAttribute, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.UniqueUserAttribute, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionPingIDWinLoginPasswordlessAllOf) GetOfflineMode() Sig
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionPingIDWinLoginPasswordlessAllOf) GetOfflineModeOk() (*SignOnPolicyActionPingIDWinLoginPasswordlessAllOfOfflineMode, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.OfflineMode, true
 }

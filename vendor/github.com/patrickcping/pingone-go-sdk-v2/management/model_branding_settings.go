@@ -43,7 +43,7 @@ func NewBrandingSettingsWithDefaults() *BrandingSettings {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *BrandingSettings) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -53,15 +53,15 @@ func (o *BrandingSettings) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BrandingSettings) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *BrandingSettings) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -75,7 +75,7 @@ func (o *BrandingSettings) SetId(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *BrandingSettings) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -85,15 +85,15 @@ func (o *BrandingSettings) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BrandingSettings) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *BrandingSettings) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -107,7 +107,7 @@ func (o *BrandingSettings) SetEnvironment(v ObjectEnvironment) {
 
 // GetCompanyName returns the CompanyName field value if set, zero value otherwise.
 func (o *BrandingSettings) GetCompanyName() string {
-	if o == nil || o.CompanyName == nil {
+	if o == nil || isNil(o.CompanyName) {
 		var ret string
 		return ret
 	}
@@ -117,15 +117,15 @@ func (o *BrandingSettings) GetCompanyName() string {
 // GetCompanyNameOk returns a tuple with the CompanyName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BrandingSettings) GetCompanyNameOk() (*string, bool) {
-	if o == nil || o.CompanyName == nil {
-		return nil, false
+	if o == nil || isNil(o.CompanyName) {
+    return nil, false
 	}
 	return o.CompanyName, true
 }
 
 // HasCompanyName returns a boolean if a field has been set.
 func (o *BrandingSettings) HasCompanyName() bool {
-	if o != nil && o.CompanyName != nil {
+	if o != nil && !isNil(o.CompanyName) {
 		return true
 	}
 
@@ -139,7 +139,7 @@ func (o *BrandingSettings) SetCompanyName(v string) {
 
 // GetLogo returns the Logo field value if set, zero value otherwise.
 func (o *BrandingSettings) GetLogo() BrandingSettingsLogo {
-	if o == nil || o.Logo == nil {
+	if o == nil || isNil(o.Logo) {
 		var ret BrandingSettingsLogo
 		return ret
 	}
@@ -149,15 +149,15 @@ func (o *BrandingSettings) GetLogo() BrandingSettingsLogo {
 // GetLogoOk returns a tuple with the Logo field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BrandingSettings) GetLogoOk() (*BrandingSettingsLogo, bool) {
-	if o == nil || o.Logo == nil {
-		return nil, false
+	if o == nil || isNil(o.Logo) {
+    return nil, false
 	}
 	return o.Logo, true
 }
 
 // HasLogo returns a boolean if a field has been set.
 func (o *BrandingSettings) HasLogo() bool {
-	if o != nil && o.Logo != nil {
+	if o != nil && !isNil(o.Logo) {
 		return true
 	}
 
@@ -171,16 +171,16 @@ func (o *BrandingSettings) SetLogo(v BrandingSettingsLogo) {
 
 func (o BrandingSettings) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.CompanyName != nil {
+	if !isNil(o.CompanyName) {
 		toSerialize["companyName"] = o.CompanyName
 	}
-	if o.Logo != nil {
+	if !isNil(o.Logo) {
 		toSerialize["logo"] = o.Logo
 	}
 	return json.Marshal(toSerialize)

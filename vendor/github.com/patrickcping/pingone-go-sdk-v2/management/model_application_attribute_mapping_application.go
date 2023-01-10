@@ -39,7 +39,7 @@ func NewApplicationAttributeMappingApplicationWithDefaults() *ApplicationAttribu
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *ApplicationAttributeMappingApplication) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -49,15 +49,15 @@ func (o *ApplicationAttributeMappingApplication) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMappingApplication) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *ApplicationAttributeMappingApplication) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -71,7 +71,7 @@ func (o *ApplicationAttributeMappingApplication) SetId(v string) {
 
 func (o ApplicationAttributeMappingApplication) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	return json.Marshal(toSerialize)

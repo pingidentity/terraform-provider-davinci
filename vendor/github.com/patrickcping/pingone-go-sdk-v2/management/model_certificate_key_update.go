@@ -56,7 +56,7 @@ func (o *CertificateKeyUpdate) GetDefault() bool {
 // and a boolean to check if the value has been set.
 func (o *CertificateKeyUpdate) GetDefaultOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Default, true
 }
@@ -80,7 +80,7 @@ func (o *CertificateKeyUpdate) GetUsageType() EnumCertificateKeyUsageType {
 // and a boolean to check if the value has been set.
 func (o *CertificateKeyUpdate) GetUsageTypeOk() (*EnumCertificateKeyUsageType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.UsageType, true
 }
@@ -92,7 +92,7 @@ func (o *CertificateKeyUpdate) SetUsageType(v EnumCertificateKeyUsageType) {
 
 // GetIssuerDN returns the IssuerDN field value if set, zero value otherwise.
 func (o *CertificateKeyUpdate) GetIssuerDN() string {
-	if o == nil || o.IssuerDN == nil {
+	if o == nil || isNil(o.IssuerDN) {
 		var ret string
 		return ret
 	}
@@ -102,15 +102,15 @@ func (o *CertificateKeyUpdate) GetIssuerDN() string {
 // GetIssuerDNOk returns a tuple with the IssuerDN field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CertificateKeyUpdate) GetIssuerDNOk() (*string, bool) {
-	if o == nil || o.IssuerDN == nil {
-		return nil, false
+	if o == nil || isNil(o.IssuerDN) {
+    return nil, false
 	}
 	return o.IssuerDN, true
 }
 
 // HasIssuerDN returns a boolean if a field has been set.
 func (o *CertificateKeyUpdate) HasIssuerDN() bool {
-	if o != nil && o.IssuerDN != nil {
+	if o != nil && !isNil(o.IssuerDN) {
 		return true
 	}
 
@@ -130,7 +130,7 @@ func (o CertificateKeyUpdate) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["usageType"] = o.UsageType
 	}
-	if o.IssuerDN != nil {
+	if !isNil(o.IssuerDN) {
 		toSerialize["issuerDN"] = o.IssuerDN
 	}
 	return json.Marshal(toSerialize)

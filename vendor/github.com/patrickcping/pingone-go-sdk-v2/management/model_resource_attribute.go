@@ -52,7 +52,7 @@ func NewResourceAttributeWithDefaults() *ResourceAttribute {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *ResourceAttribute) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -62,15 +62,15 @@ func (o *ResourceAttribute) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *ResourceAttribute) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -96,7 +96,7 @@ func (o *ResourceAttribute) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -108,7 +108,7 @@ func (o *ResourceAttribute) SetName(v string) {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *ResourceAttribute) GetType() EnumResourceAttributeType {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret EnumResourceAttributeType
 		return ret
 	}
@@ -118,15 +118,15 @@ func (o *ResourceAttribute) GetType() EnumResourceAttributeType {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetTypeOk() (*EnumResourceAttributeType, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *ResourceAttribute) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -152,7 +152,7 @@ func (o *ResourceAttribute) GetValue() string {
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetValueOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Value, true
 }
@@ -164,7 +164,7 @@ func (o *ResourceAttribute) SetValue(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *ResourceAttribute) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -174,15 +174,15 @@ func (o *ResourceAttribute) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *ResourceAttribute) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -196,7 +196,7 @@ func (o *ResourceAttribute) SetEnvironment(v ObjectEnvironment) {
 
 // GetResource returns the Resource field value if set, zero value otherwise.
 func (o *ResourceAttribute) GetResource() IdentityProviderAttributeIdentityProvider {
-	if o == nil || o.Resource == nil {
+	if o == nil || isNil(o.Resource) {
 		var ret IdentityProviderAttributeIdentityProvider
 		return ret
 	}
@@ -206,15 +206,15 @@ func (o *ResourceAttribute) GetResource() IdentityProviderAttributeIdentityProvi
 // GetResourceOk returns a tuple with the Resource field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetResourceOk() (*IdentityProviderAttributeIdentityProvider, bool) {
-	if o == nil || o.Resource == nil {
-		return nil, false
+	if o == nil || isNil(o.Resource) {
+    return nil, false
 	}
 	return o.Resource, true
 }
 
 // HasResource returns a boolean if a field has been set.
 func (o *ResourceAttribute) HasResource() bool {
-	if o != nil && o.Resource != nil {
+	if o != nil && !isNil(o.Resource) {
 		return true
 	}
 
@@ -228,7 +228,7 @@ func (o *ResourceAttribute) SetResource(v IdentityProviderAttributeIdentityProvi
 
 // GetIdToken returns the IdToken field value if set, zero value otherwise.
 func (o *ResourceAttribute) GetIdToken() bool {
-	if o == nil || o.IdToken == nil {
+	if o == nil || isNil(o.IdToken) {
 		var ret bool
 		return ret
 	}
@@ -238,15 +238,15 @@ func (o *ResourceAttribute) GetIdToken() bool {
 // GetIdTokenOk returns a tuple with the IdToken field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetIdTokenOk() (*bool, bool) {
-	if o == nil || o.IdToken == nil {
-		return nil, false
+	if o == nil || isNil(o.IdToken) {
+    return nil, false
 	}
 	return o.IdToken, true
 }
 
 // HasIdToken returns a boolean if a field has been set.
 func (o *ResourceAttribute) HasIdToken() bool {
-	if o != nil && o.IdToken != nil {
+	if o != nil && !isNil(o.IdToken) {
 		return true
 	}
 
@@ -260,7 +260,7 @@ func (o *ResourceAttribute) SetIdToken(v bool) {
 
 // GetUserInfo returns the UserInfo field value if set, zero value otherwise.
 func (o *ResourceAttribute) GetUserInfo() bool {
-	if o == nil || o.UserInfo == nil {
+	if o == nil || isNil(o.UserInfo) {
 		var ret bool
 		return ret
 	}
@@ -270,15 +270,15 @@ func (o *ResourceAttribute) GetUserInfo() bool {
 // GetUserInfoOk returns a tuple with the UserInfo field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceAttribute) GetUserInfoOk() (*bool, bool) {
-	if o == nil || o.UserInfo == nil {
-		return nil, false
+	if o == nil || isNil(o.UserInfo) {
+    return nil, false
 	}
 	return o.UserInfo, true
 }
 
 // HasUserInfo returns a boolean if a field has been set.
 func (o *ResourceAttribute) HasUserInfo() bool {
-	if o != nil && o.UserInfo != nil {
+	if o != nil && !isNil(o.UserInfo) {
 		return true
 	}
 
@@ -292,28 +292,28 @@ func (o *ResourceAttribute) SetUserInfo(v bool) {
 
 func (o ResourceAttribute) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
 	if true {
 		toSerialize["value"] = o.Value
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Resource != nil {
+	if !isNil(o.Resource) {
 		toSerialize["resource"] = o.Resource
 	}
-	if o.IdToken != nil {
+	if !isNil(o.IdToken) {
 		toSerialize["idToken"] = o.IdToken
 	}
-	if o.UserInfo != nil {
+	if !isNil(o.UserInfo) {
 		toSerialize["userInfo"] = o.UserInfo
 	}
 	return json.Marshal(toSerialize)

@@ -74,7 +74,7 @@ func init() {
 		{
 			APICode:     management.ENUMPRODUCTTYPE_ONE_FRAUD,
 			ProductCode: "Fraud",
-			Selectable:  true,
+			Selectable:  false,
 		},
 		{
 			APICode:     management.ENUMPRODUCTTYPE_ID,

@@ -53,7 +53,7 @@ func NewGatewayLDAPAllOfUserTypesWithDefaults() *GatewayLDAPAllOfUserTypes {
 
 // GetAllowPasswordChanges returns the AllowPasswordChanges field value if set, zero value otherwise.
 func (o *GatewayLDAPAllOfUserTypes) GetAllowPasswordChanges() bool {
-	if o == nil || o.AllowPasswordChanges == nil {
+	if o == nil || isNil(o.AllowPasswordChanges) {
 		var ret bool
 		return ret
 	}
@@ -63,15 +63,15 @@ func (o *GatewayLDAPAllOfUserTypes) GetAllowPasswordChanges() bool {
 // GetAllowPasswordChangesOk returns a tuple with the AllowPasswordChanges field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetAllowPasswordChangesOk() (*bool, bool) {
-	if o == nil || o.AllowPasswordChanges == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowPasswordChanges) {
+    return nil, false
 	}
 	return o.AllowPasswordChanges, true
 }
 
 // HasAllowPasswordChanges returns a boolean if a field has been set.
 func (o *GatewayLDAPAllOfUserTypes) HasAllowPasswordChanges() bool {
-	if o != nil && o.AllowPasswordChanges != nil {
+	if o != nil && !isNil(o.AllowPasswordChanges) {
 		return true
 	}
 
@@ -85,7 +85,7 @@ func (o *GatewayLDAPAllOfUserTypes) SetAllowPasswordChanges(v bool) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *GatewayLDAPAllOfUserTypes) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -95,15 +95,15 @@ func (o *GatewayLDAPAllOfUserTypes) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *GatewayLDAPAllOfUserTypes) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -129,7 +129,7 @@ func (o *GatewayLDAPAllOfUserTypes) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -141,7 +141,7 @@ func (o *GatewayLDAPAllOfUserTypes) SetName(v string) {
 
 // GetNewUserLookup returns the NewUserLookup field value if set, zero value otherwise.
 func (o *GatewayLDAPAllOfUserTypes) GetNewUserLookup() GatewayLDAPAllOfNewUserLookup {
-	if o == nil || o.NewUserLookup == nil {
+	if o == nil || isNil(o.NewUserLookup) {
 		var ret GatewayLDAPAllOfNewUserLookup
 		return ret
 	}
@@ -151,15 +151,15 @@ func (o *GatewayLDAPAllOfUserTypes) GetNewUserLookup() GatewayLDAPAllOfNewUserLo
 // GetNewUserLookupOk returns a tuple with the NewUserLookup field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetNewUserLookupOk() (*GatewayLDAPAllOfNewUserLookup, bool) {
-	if o == nil || o.NewUserLookup == nil {
-		return nil, false
+	if o == nil || isNil(o.NewUserLookup) {
+    return nil, false
 	}
 	return o.NewUserLookup, true
 }
 
 // HasNewUserLookup returns a boolean if a field has been set.
 func (o *GatewayLDAPAllOfUserTypes) HasNewUserLookup() bool {
-	if o != nil && o.NewUserLookup != nil {
+	if o != nil && !isNil(o.NewUserLookup) {
 		return true
 	}
 
@@ -185,7 +185,7 @@ func (o *GatewayLDAPAllOfUserTypes) GetOrderedCorrelationAttributes() []string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetOrderedCorrelationAttributesOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.OrderedCorrelationAttributes, true
 }
@@ -209,7 +209,7 @@ func (o *GatewayLDAPAllOfUserTypes) GetPasswordAuthority() EnumGatewayPasswordAu
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetPasswordAuthorityOk() (*EnumGatewayPasswordAuthority, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PasswordAuthority, true
 }
@@ -233,7 +233,7 @@ func (o *GatewayLDAPAllOfUserTypes) GetSearchBaseDn() string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfUserTypes) GetSearchBaseDnOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SearchBaseDn, true
 }
@@ -245,16 +245,16 @@ func (o *GatewayLDAPAllOfUserTypes) SetSearchBaseDn(v string) {
 
 func (o GatewayLDAPAllOfUserTypes) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowPasswordChanges != nil {
+	if !isNil(o.AllowPasswordChanges) {
 		toSerialize["allowPasswordChanges"] = o.AllowPasswordChanges
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.NewUserLookup != nil {
+	if !isNil(o.NewUserLookup) {
 		toSerialize["newUserLookup"] = o.NewUserLookup
 	}
 	if true {

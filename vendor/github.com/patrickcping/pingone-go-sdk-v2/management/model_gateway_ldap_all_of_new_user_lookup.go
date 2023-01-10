@@ -57,7 +57,7 @@ func (o *GatewayLDAPAllOfNewUserLookup) GetAttributeMappings() []GatewayLDAPAllO
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfNewUserLookup) GetAttributeMappingsOk() ([]GatewayLDAPAllOfNewUserLookupAttributeMappings, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.AttributeMappings, true
 }
@@ -81,7 +81,7 @@ func (o *GatewayLDAPAllOfNewUserLookup) GetLdapFilterPattern() string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfNewUserLookup) GetLdapFilterPatternOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.LdapFilterPattern, true
 }
@@ -105,7 +105,7 @@ func (o *GatewayLDAPAllOfNewUserLookup) GetPopulation() GatewayLDAPAllOfNewUserL
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfNewUserLookup) GetPopulationOk() (*GatewayLDAPAllOfNewUserLookupPopulation, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Population, true
 }

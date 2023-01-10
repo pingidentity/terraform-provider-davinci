@@ -46,7 +46,7 @@ func NewGatewayCredentialWithDefaults() *GatewayCredential {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *GatewayCredential) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -56,15 +56,15 @@ func (o *GatewayCredential) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayCredential) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *GatewayCredential) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -78,7 +78,7 @@ func (o *GatewayCredential) SetId(v string) {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *GatewayCredential) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -88,15 +88,15 @@ func (o *GatewayCredential) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayCredential) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *GatewayCredential) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -110,7 +110,7 @@ func (o *GatewayCredential) SetCreatedAt(v time.Time) {
 
 // GetLastUsedAt returns the LastUsedAt field value if set, zero value otherwise.
 func (o *GatewayCredential) GetLastUsedAt() time.Time {
-	if o == nil || o.LastUsedAt == nil {
+	if o == nil || isNil(o.LastUsedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -120,15 +120,15 @@ func (o *GatewayCredential) GetLastUsedAt() time.Time {
 // GetLastUsedAtOk returns a tuple with the LastUsedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayCredential) GetLastUsedAtOk() (*time.Time, bool) {
-	if o == nil || o.LastUsedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.LastUsedAt) {
+    return nil, false
 	}
 	return o.LastUsedAt, true
 }
 
 // HasLastUsedAt returns a boolean if a field has been set.
 func (o *GatewayCredential) HasLastUsedAt() bool {
-	if o != nil && o.LastUsedAt != nil {
+	if o != nil && !isNil(o.LastUsedAt) {
 		return true
 	}
 
@@ -142,7 +142,7 @@ func (o *GatewayCredential) SetLastUsedAt(v time.Time) {
 
 // GetCredential returns the Credential field value if set, zero value otherwise.
 func (o *GatewayCredential) GetCredential() string {
-	if o == nil || o.Credential == nil {
+	if o == nil || isNil(o.Credential) {
 		var ret string
 		return ret
 	}
@@ -152,15 +152,15 @@ func (o *GatewayCredential) GetCredential() string {
 // GetCredentialOk returns a tuple with the Credential field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *GatewayCredential) GetCredentialOk() (*string, bool) {
-	if o == nil || o.Credential == nil {
-		return nil, false
+	if o == nil || isNil(o.Credential) {
+    return nil, false
 	}
 	return o.Credential, true
 }
 
 // HasCredential returns a boolean if a field has been set.
 func (o *GatewayCredential) HasCredential() bool {
-	if o != nil && o.Credential != nil {
+	if o != nil && !isNil(o.Credential) {
 		return true
 	}
 
@@ -174,16 +174,16 @@ func (o *GatewayCredential) SetCredential(v string) {
 
 func (o GatewayCredential) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.LastUsedAt != nil {
+	if !isNil(o.LastUsedAt) {
 		toSerialize["lastUsedAt"] = o.LastUsedAt
 	}
-	if o.Credential != nil {
+	if !isNil(o.Credential) {
 		toSerialize["credential"] = o.Credential
 	}
 	return json.Marshal(toSerialize)

@@ -28,6 +28,7 @@ git_push.sh
 CHANGELOG.md
 GNUmakefile
 .version
+test/*
 
 docs/Certificate.md
 docs/PasswordPolicyMinCharacters.md

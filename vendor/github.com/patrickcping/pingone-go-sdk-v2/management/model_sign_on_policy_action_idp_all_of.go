@@ -44,7 +44,7 @@ func NewSignOnPolicyActionIDPAllOfWithDefaults() *SignOnPolicyActionIDPAllOf {
 
 // GetAcrValues returns the AcrValues field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDPAllOf) GetAcrValues() string {
-	if o == nil || o.AcrValues == nil {
+	if o == nil || isNil(o.AcrValues) {
 		var ret string
 		return ret
 	}
@@ -54,15 +54,15 @@ func (o *SignOnPolicyActionIDPAllOf) GetAcrValues() string {
 // GetAcrValuesOk returns a tuple with the AcrValues field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOf) GetAcrValuesOk() (*string, bool) {
-	if o == nil || o.AcrValues == nil {
-		return nil, false
+	if o == nil || isNil(o.AcrValues) {
+    return nil, false
 	}
 	return o.AcrValues, true
 }
 
 // HasAcrValues returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDPAllOf) HasAcrValues() bool {
-	if o != nil && o.AcrValues != nil {
+	if o != nil && !isNil(o.AcrValues) {
 		return true
 	}
 
@@ -88,7 +88,7 @@ func (o *SignOnPolicyActionIDPAllOf) GetIdentityProvider() SignOnPolicyActionIDP
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOf) GetIdentityProviderOk() (*SignOnPolicyActionIDPAllOfIdentityProvider, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.IdentityProvider, true
 }
@@ -100,7 +100,7 @@ func (o *SignOnPolicyActionIDPAllOf) SetIdentityProvider(v SignOnPolicyActionIDP
 
 // GetPassUserContext returns the PassUserContext field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDPAllOf) GetPassUserContext() bool {
-	if o == nil || o.PassUserContext == nil {
+	if o == nil || isNil(o.PassUserContext) {
 		var ret bool
 		return ret
 	}
@@ -110,15 +110,15 @@ func (o *SignOnPolicyActionIDPAllOf) GetPassUserContext() bool {
 // GetPassUserContextOk returns a tuple with the PassUserContext field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOf) GetPassUserContextOk() (*bool, bool) {
-	if o == nil || o.PassUserContext == nil {
-		return nil, false
+	if o == nil || isNil(o.PassUserContext) {
+    return nil, false
 	}
 	return o.PassUserContext, true
 }
 
 // HasPassUserContext returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDPAllOf) HasPassUserContext() bool {
-	if o != nil && o.PassUserContext != nil {
+	if o != nil && !isNil(o.PassUserContext) {
 		return true
 	}
 
@@ -132,7 +132,7 @@ func (o *SignOnPolicyActionIDPAllOf) SetPassUserContext(v bool) {
 
 // GetRegistration returns the Registration field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDPAllOf) GetRegistration() SignOnPolicyActionIDPAllOfRegistration {
-	if o == nil || o.Registration == nil {
+	if o == nil || isNil(o.Registration) {
 		var ret SignOnPolicyActionIDPAllOfRegistration
 		return ret
 	}
@@ -142,15 +142,15 @@ func (o *SignOnPolicyActionIDPAllOf) GetRegistration() SignOnPolicyActionIDPAllO
 // GetRegistrationOk returns a tuple with the Registration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOf) GetRegistrationOk() (*SignOnPolicyActionIDPAllOfRegistration, bool) {
-	if o == nil || o.Registration == nil {
-		return nil, false
+	if o == nil || isNil(o.Registration) {
+    return nil, false
 	}
 	return o.Registration, true
 }
 
 // HasRegistration returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDPAllOf) HasRegistration() bool {
-	if o != nil && o.Registration != nil {
+	if o != nil && !isNil(o.Registration) {
 		return true
 	}
 
@@ -164,16 +164,16 @@ func (o *SignOnPolicyActionIDPAllOf) SetRegistration(v SignOnPolicyActionIDPAllO
 
 func (o SignOnPolicyActionIDPAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AcrValues != nil {
+	if !isNil(o.AcrValues) {
 		toSerialize["acrValues"] = o.AcrValues
 	}
 	if true {
 		toSerialize["identityProvider"] = o.IdentityProvider
 	}
-	if o.PassUserContext != nil {
+	if !isNil(o.PassUserContext) {
 		toSerialize["passUserContext"] = o.PassUserContext
 	}
-	if o.Registration != nil {
+	if !isNil(o.Registration) {
 		toSerialize["registration"] = o.Registration
 	}
 	return json.Marshal(toSerialize)

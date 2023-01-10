@@ -54,7 +54,7 @@ func (o *RoleAssignmentScope) GetId() string {
 // and a boolean to check if the value has been set.
 func (o *RoleAssignmentScope) GetIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Id, true
 }
@@ -78,7 +78,7 @@ func (o *RoleAssignmentScope) GetType() EnumRoleAssignmentScopeType {
 // and a boolean to check if the value has been set.
 func (o *RoleAssignmentScope) GetTypeOk() (*EnumRoleAssignmentScopeType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }

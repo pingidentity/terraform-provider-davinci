@@ -54,7 +54,7 @@ func (o *MFAPushCredential) GetType() EnumMFAPushCredentialAttrType {
 // and a boolean to check if the value has been set.
 func (o *MFAPushCredential) GetTypeOk() (*EnumMFAPushCredentialAttrType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -78,7 +78,7 @@ func (o *MFAPushCredential) GetKey() string {
 // and a boolean to check if the value has been set.
 func (o *MFAPushCredential) GetKeyOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Key, true
 }

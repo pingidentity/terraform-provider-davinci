@@ -58,7 +58,7 @@ func (o *ApplicationOIDCAllOfMobilePasscodeRefreshDuration) GetDuration() int32 
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobilePasscodeRefreshDuration) GetDurationOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Duration, true
 }
@@ -82,7 +82,7 @@ func (o *ApplicationOIDCAllOfMobilePasscodeRefreshDuration) GetTimeUnit() EnumPa
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobilePasscodeRefreshDuration) GetTimeUnitOk() (*EnumPasscodeRefreshTimeUnit, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TimeUnit, true
 }

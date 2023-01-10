@@ -43,7 +43,7 @@ func NewDecisionEndpointRecentDecisionsWithDefaults() *DecisionEndpointRecentDec
 
 // GetHref returns the Href field value if set, zero value otherwise.
 func (o *DecisionEndpointRecentDecisions) GetHref() string {
-	if o == nil || o.Href == nil {
+	if o == nil || isNil(o.Href) {
 		var ret string
 		return ret
 	}
@@ -53,15 +53,15 @@ func (o *DecisionEndpointRecentDecisions) GetHref() string {
 // GetHrefOk returns a tuple with the Href field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DecisionEndpointRecentDecisions) GetHrefOk() (*string, bool) {
-	if o == nil || o.Href == nil {
-		return nil, false
+	if o == nil || isNil(o.Href) {
+    return nil, false
 	}
 	return o.Href, true
 }
 
 // HasHref returns a boolean if a field has been set.
 func (o *DecisionEndpointRecentDecisions) HasHref() bool {
-	if o != nil && o.Href != nil {
+	if o != nil && !isNil(o.Href) {
 		return true
 	}
 
@@ -75,7 +75,7 @@ func (o *DecisionEndpointRecentDecisions) SetHref(v string) {
 
 // GetTitle returns the Title field value if set, zero value otherwise.
 func (o *DecisionEndpointRecentDecisions) GetTitle() string {
-	if o == nil || o.Title == nil {
+	if o == nil || isNil(o.Title) {
 		var ret string
 		return ret
 	}
@@ -85,15 +85,15 @@ func (o *DecisionEndpointRecentDecisions) GetTitle() string {
 // GetTitleOk returns a tuple with the Title field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DecisionEndpointRecentDecisions) GetTitleOk() (*string, bool) {
-	if o == nil || o.Title == nil {
-		return nil, false
+	if o == nil || isNil(o.Title) {
+    return nil, false
 	}
 	return o.Title, true
 }
 
 // HasTitle returns a boolean if a field has been set.
 func (o *DecisionEndpointRecentDecisions) HasTitle() bool {
-	if o != nil && o.Title != nil {
+	if o != nil && !isNil(o.Title) {
 		return true
 	}
 
@@ -107,7 +107,7 @@ func (o *DecisionEndpointRecentDecisions) SetTitle(v string) {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *DecisionEndpointRecentDecisions) GetType() string {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret string
 		return ret
 	}
@@ -117,15 +117,15 @@ func (o *DecisionEndpointRecentDecisions) GetType() string {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DecisionEndpointRecentDecisions) GetTypeOk() (*string, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *DecisionEndpointRecentDecisions) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -139,13 +139,13 @@ func (o *DecisionEndpointRecentDecisions) SetType(v string) {
 
 func (o DecisionEndpointRecentDecisions) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Href != nil {
+	if !isNil(o.Href) {
 		toSerialize["href"] = o.Href
 	}
-	if o.Title != nil {
+	if !isNil(o.Title) {
 		toSerialize["title"] = o.Title
 	}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
 	return json.Marshal(toSerialize)

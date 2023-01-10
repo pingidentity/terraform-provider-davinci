@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionAnonymousNetwork) GetAnonymousNetwork(
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionAnonymousNetwork) GetAnonymousNetworkOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.AnonymousNetwork, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionCommonConditionAnonymousNetwork) GetValid() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionAnonymousNetwork) GetValidOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Valid, true
 }

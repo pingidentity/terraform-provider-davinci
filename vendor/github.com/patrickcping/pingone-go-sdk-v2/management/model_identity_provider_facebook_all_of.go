@@ -55,7 +55,7 @@ func (o *IdentityProviderFacebookAllOf) GetAppId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderFacebookAllOf) GetAppIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.AppId, true
 }
@@ -79,7 +79,7 @@ func (o *IdentityProviderFacebookAllOf) GetAppSecret() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderFacebookAllOf) GetAppSecretOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.AppSecret, true
 }

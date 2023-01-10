@@ -55,7 +55,7 @@ func NewApplicationAttributeMappingWithDefaults() *ApplicationAttributeMapping {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *ApplicationAttributeMapping) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -65,15 +65,15 @@ func (o *ApplicationAttributeMapping) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *ApplicationAttributeMapping) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -87,7 +87,7 @@ func (o *ApplicationAttributeMapping) SetId(v string) {
 
 // GetApplication returns the Application field value if set, zero value otherwise.
 func (o *ApplicationAttributeMapping) GetApplication() ApplicationAttributeMappingApplication {
-	if o == nil || o.Application == nil {
+	if o == nil || isNil(o.Application) {
 		var ret ApplicationAttributeMappingApplication
 		return ret
 	}
@@ -97,15 +97,15 @@ func (o *ApplicationAttributeMapping) GetApplication() ApplicationAttributeMappi
 // GetApplicationOk returns a tuple with the Application field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetApplicationOk() (*ApplicationAttributeMappingApplication, bool) {
-	if o == nil || o.Application == nil {
-		return nil, false
+	if o == nil || isNil(o.Application) {
+    return nil, false
 	}
 	return o.Application, true
 }
 
 // HasApplication returns a boolean if a field has been set.
 func (o *ApplicationAttributeMapping) HasApplication() bool {
-	if o != nil && o.Application != nil {
+	if o != nil && !isNil(o.Application) {
 		return true
 	}
 
@@ -119,7 +119,7 @@ func (o *ApplicationAttributeMapping) SetApplication(v ApplicationAttributeMappi
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *ApplicationAttributeMapping) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -129,15 +129,15 @@ func (o *ApplicationAttributeMapping) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *ApplicationAttributeMapping) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -151,7 +151,7 @@ func (o *ApplicationAttributeMapping) SetCreatedAt(v time.Time) {
 
 // GetMappingType returns the MappingType field value if set, zero value otherwise.
 func (o *ApplicationAttributeMapping) GetMappingType() EnumAttributeMappingType {
-	if o == nil || o.MappingType == nil {
+	if o == nil || isNil(o.MappingType) {
 		var ret EnumAttributeMappingType
 		return ret
 	}
@@ -161,15 +161,15 @@ func (o *ApplicationAttributeMapping) GetMappingType() EnumAttributeMappingType 
 // GetMappingTypeOk returns a tuple with the MappingType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetMappingTypeOk() (*EnumAttributeMappingType, bool) {
-	if o == nil || o.MappingType == nil {
-		return nil, false
+	if o == nil || isNil(o.MappingType) {
+    return nil, false
 	}
 	return o.MappingType, true
 }
 
 // HasMappingType returns a boolean if a field has been set.
 func (o *ApplicationAttributeMapping) HasMappingType() bool {
-	if o != nil && o.MappingType != nil {
+	if o != nil && !isNil(o.MappingType) {
 		return true
 	}
 
@@ -195,7 +195,7 @@ func (o *ApplicationAttributeMapping) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -219,7 +219,7 @@ func (o *ApplicationAttributeMapping) GetRequired() bool {
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetRequiredOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Required, true
 }
@@ -231,7 +231,7 @@ func (o *ApplicationAttributeMapping) SetRequired(v bool) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *ApplicationAttributeMapping) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -241,15 +241,15 @@ func (o *ApplicationAttributeMapping) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *ApplicationAttributeMapping) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -275,7 +275,7 @@ func (o *ApplicationAttributeMapping) GetValue() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationAttributeMapping) GetValueOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Value, true
 }
@@ -287,16 +287,16 @@ func (o *ApplicationAttributeMapping) SetValue(v string) {
 
 func (o ApplicationAttributeMapping) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Application != nil {
+	if !isNil(o.Application) {
 		toSerialize["application"] = o.Application
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.MappingType != nil {
+	if !isNil(o.MappingType) {
 		toSerialize["mappingType"] = o.MappingType
 	}
 	if true {
@@ -305,7 +305,7 @@ func (o ApplicationAttributeMapping) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["required"] = o.Required
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	if true {

@@ -41,7 +41,7 @@ func NewApplicationOIDCAllOfMobileIntegrityDetectionWithDefaults() *ApplicationO
 
 // GetExcludedPlatforms returns the ExcludedPlatforms field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetExcludedPlatforms() []EnumMobileIntegrityDetectionPlatform {
-	if o == nil || o.ExcludedPlatforms == nil {
+	if o == nil || isNil(o.ExcludedPlatforms) {
 		var ret []EnumMobileIntegrityDetectionPlatform
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetExcludedPlatforms() []
 // GetExcludedPlatformsOk returns a tuple with the ExcludedPlatforms field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetExcludedPlatformsOk() ([]EnumMobileIntegrityDetectionPlatform, bool) {
-	if o == nil || o.ExcludedPlatforms == nil {
-		return nil, false
+	if o == nil || isNil(o.ExcludedPlatforms) {
+    return nil, false
 	}
 	return o.ExcludedPlatforms, true
 }
 
 // HasExcludedPlatforms returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) HasExcludedPlatforms() bool {
-	if o != nil && o.ExcludedPlatforms != nil {
+	if o != nil && !isNil(o.ExcludedPlatforms) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *ApplicationOIDCAllOfMobileIntegrityDetection) SetExcludedPlatforms(v []
 
 // GetMode returns the Mode field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetMode() EnumEnabledStatus {
-	if o == nil || o.Mode == nil {
+	if o == nil || isNil(o.Mode) {
 		var ret EnumEnabledStatus
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetMode() EnumEnabledStat
 // GetModeOk returns a tuple with the Mode field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetModeOk() (*EnumEnabledStatus, bool) {
-	if o == nil || o.Mode == nil {
-		return nil, false
+	if o == nil || isNil(o.Mode) {
+    return nil, false
 	}
 	return o.Mode, true
 }
 
 // HasMode returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) HasMode() bool {
-	if o != nil && o.Mode != nil {
+	if o != nil && !isNil(o.Mode) {
 		return true
 	}
 
@@ -105,7 +105,7 @@ func (o *ApplicationOIDCAllOfMobileIntegrityDetection) SetMode(v EnumEnabledStat
 
 // GetCacheDuration returns the CacheDuration field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetCacheDuration() ApplicationOIDCAllOfMobileIntegrityDetectionCacheDuration {
-	if o == nil || o.CacheDuration == nil {
+	if o == nil || isNil(o.CacheDuration) {
 		var ret ApplicationOIDCAllOfMobileIntegrityDetectionCacheDuration
 		return ret
 	}
@@ -115,15 +115,15 @@ func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetCacheDuration() Applic
 // GetCacheDurationOk returns a tuple with the CacheDuration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) GetCacheDurationOk() (*ApplicationOIDCAllOfMobileIntegrityDetectionCacheDuration, bool) {
-	if o == nil || o.CacheDuration == nil {
-		return nil, false
+	if o == nil || isNil(o.CacheDuration) {
+    return nil, false
 	}
 	return o.CacheDuration, true
 }
 
 // HasCacheDuration returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobileIntegrityDetection) HasCacheDuration() bool {
-	if o != nil && o.CacheDuration != nil {
+	if o != nil && !isNil(o.CacheDuration) {
 		return true
 	}
 
@@ -137,13 +137,13 @@ func (o *ApplicationOIDCAllOfMobileIntegrityDetection) SetCacheDuration(v Applic
 
 func (o ApplicationOIDCAllOfMobileIntegrityDetection) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ExcludedPlatforms != nil {
+	if !isNil(o.ExcludedPlatforms) {
 		toSerialize["excludedPlatforms"] = o.ExcludedPlatforms
 	}
-	if o.Mode != nil {
+	if !isNil(o.Mode) {
 		toSerialize["mode"] = o.Mode
 	}
-	if o.CacheDuration != nil {
+	if !isNil(o.CacheDuration) {
 		toSerialize["cacheDuration"] = o.CacheDuration
 	}
 	return json.Marshal(toSerialize)

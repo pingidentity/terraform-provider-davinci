@@ -28,6 +28,7 @@ git_push.sh
 CHANGELOG.md
 GNUmakefile
 .version
+test/*
 
 model_create_mfa_push_credential_201_response.go
 model_create_mfa_push_credential_request.go

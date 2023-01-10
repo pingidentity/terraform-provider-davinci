@@ -41,7 +41,7 @@ func NewUserLastSignOnWithDefaults() *UserLastSignOn {
 
 // GetAt returns the At field value if set, zero value otherwise.
 func (o *UserLastSignOn) GetAt() string {
-	if o == nil || o.At == nil {
+	if o == nil || isNil(o.At) {
 		var ret string
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *UserLastSignOn) GetAt() string {
 // GetAtOk returns a tuple with the At field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserLastSignOn) GetAtOk() (*string, bool) {
-	if o == nil || o.At == nil {
-		return nil, false
+	if o == nil || isNil(o.At) {
+    return nil, false
 	}
 	return o.At, true
 }
 
 // HasAt returns a boolean if a field has been set.
 func (o *UserLastSignOn) HasAt() bool {
-	if o != nil && o.At != nil {
+	if o != nil && !isNil(o.At) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *UserLastSignOn) SetAt(v string) {
 
 // GetRemoteIp returns the RemoteIp field value if set, zero value otherwise.
 func (o *UserLastSignOn) GetRemoteIp() string {
-	if o == nil || o.RemoteIp == nil {
+	if o == nil || isNil(o.RemoteIp) {
 		var ret string
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *UserLastSignOn) GetRemoteIp() string {
 // GetRemoteIpOk returns a tuple with the RemoteIp field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserLastSignOn) GetRemoteIpOk() (*string, bool) {
-	if o == nil || o.RemoteIp == nil {
-		return nil, false
+	if o == nil || isNil(o.RemoteIp) {
+    return nil, false
 	}
 	return o.RemoteIp, true
 }
 
 // HasRemoteIp returns a boolean if a field has been set.
 func (o *UserLastSignOn) HasRemoteIp() bool {
-	if o != nil && o.RemoteIp != nil {
+	if o != nil && !isNil(o.RemoteIp) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *UserLastSignOn) SetRemoteIp(v string) {
 
 func (o UserLastSignOn) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.At != nil {
+	if !isNil(o.At) {
 		toSerialize["at"] = o.At
 	}
-	if o.RemoteIp != nil {
+	if !isNil(o.RemoteIp) {
 		toSerialize["remoteIp"] = o.RemoteIp
 	}
 	return json.Marshal(toSerialize)

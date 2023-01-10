@@ -57,7 +57,7 @@ func (o *CustomDomainCertificateRequest) GetCertificate() string {
 // and a boolean to check if the value has been set.
 func (o *CustomDomainCertificateRequest) GetCertificateOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Certificate, true
 }
@@ -69,7 +69,7 @@ func (o *CustomDomainCertificateRequest) SetCertificate(v string) {
 
 // GetIntermediateCertificates returns the IntermediateCertificates field value if set, zero value otherwise.
 func (o *CustomDomainCertificateRequest) GetIntermediateCertificates() string {
-	if o == nil || o.IntermediateCertificates == nil {
+	if o == nil || isNil(o.IntermediateCertificates) {
 		var ret string
 		return ret
 	}
@@ -79,15 +79,15 @@ func (o *CustomDomainCertificateRequest) GetIntermediateCertificates() string {
 // GetIntermediateCertificatesOk returns a tuple with the IntermediateCertificates field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomainCertificateRequest) GetIntermediateCertificatesOk() (*string, bool) {
-	if o == nil || o.IntermediateCertificates == nil {
-		return nil, false
+	if o == nil || isNil(o.IntermediateCertificates) {
+    return nil, false
 	}
 	return o.IntermediateCertificates, true
 }
 
 // HasIntermediateCertificates returns a boolean if a field has been set.
 func (o *CustomDomainCertificateRequest) HasIntermediateCertificates() bool {
-	if o != nil && o.IntermediateCertificates != nil {
+	if o != nil && !isNil(o.IntermediateCertificates) {
 		return true
 	}
 
@@ -113,7 +113,7 @@ func (o *CustomDomainCertificateRequest) GetPrivateKey() string {
 // and a boolean to check if the value has been set.
 func (o *CustomDomainCertificateRequest) GetPrivateKeyOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PrivateKey, true
 }
@@ -128,7 +128,7 @@ func (o CustomDomainCertificateRequest) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["certificate"] = o.Certificate
 	}
-	if o.IntermediateCertificates != nil {
+	if !isNil(o.IntermediateCertificates) {
 		toSerialize["intermediateCertificates"] = o.IntermediateCertificates
 	}
 	if true {

@@ -46,7 +46,7 @@ func NewRoleWithDefaults() *Role {
 
 // GetApplicableTo returns the ApplicableTo field value if set, zero value otherwise.
 func (o *Role) GetApplicableTo() []string {
-	if o == nil || o.ApplicableTo == nil {
+	if o == nil || isNil(o.ApplicableTo) {
 		var ret []string
 		return ret
 	}
@@ -56,15 +56,15 @@ func (o *Role) GetApplicableTo() []string {
 // GetApplicableToOk returns a tuple with the ApplicableTo field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Role) GetApplicableToOk() ([]string, bool) {
-	if o == nil || o.ApplicableTo == nil {
-		return nil, false
+	if o == nil || isNil(o.ApplicableTo) {
+    return nil, false
 	}
 	return o.ApplicableTo, true
 }
 
 // HasApplicableTo returns a boolean if a field has been set.
 func (o *Role) HasApplicableTo() bool {
-	if o != nil && o.ApplicableTo != nil {
+	if o != nil && !isNil(o.ApplicableTo) {
 		return true
 	}
 
@@ -78,7 +78,7 @@ func (o *Role) SetApplicableTo(v []string) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *Role) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -88,15 +88,15 @@ func (o *Role) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Role) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *Role) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -110,7 +110,7 @@ func (o *Role) SetDescription(v string) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *Role) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -120,15 +120,15 @@ func (o *Role) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Role) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *Role) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -142,7 +142,7 @@ func (o *Role) SetId(v string) {
 
 // GetName returns the Name field value if set, zero value otherwise.
 func (o *Role) GetName() EnumRoleName {
-	if o == nil || o.Name == nil {
+	if o == nil || isNil(o.Name) {
 		var ret EnumRoleName
 		return ret
 	}
@@ -152,15 +152,15 @@ func (o *Role) GetName() EnumRoleName {
 // GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Role) GetNameOk() (*EnumRoleName, bool) {
-	if o == nil || o.Name == nil {
-		return nil, false
+	if o == nil || isNil(o.Name) {
+    return nil, false
 	}
 	return o.Name, true
 }
 
 // HasName returns a boolean if a field has been set.
 func (o *Role) HasName() bool {
-	if o != nil && o.Name != nil {
+	if o != nil && !isNil(o.Name) {
 		return true
 	}
 
@@ -174,7 +174,7 @@ func (o *Role) SetName(v EnumRoleName) {
 
 // GetPermissions returns the Permissions field value if set, zero value otherwise.
 func (o *Role) GetPermissions() []RolePermissionsInner {
-	if o == nil || o.Permissions == nil {
+	if o == nil || isNil(o.Permissions) {
 		var ret []RolePermissionsInner
 		return ret
 	}
@@ -184,15 +184,15 @@ func (o *Role) GetPermissions() []RolePermissionsInner {
 // GetPermissionsOk returns a tuple with the Permissions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Role) GetPermissionsOk() ([]RolePermissionsInner, bool) {
-	if o == nil || o.Permissions == nil {
-		return nil, false
+	if o == nil || isNil(o.Permissions) {
+    return nil, false
 	}
 	return o.Permissions, true
 }
 
 // HasPermissions returns a boolean if a field has been set.
 func (o *Role) HasPermissions() bool {
-	if o != nil && o.Permissions != nil {
+	if o != nil && !isNil(o.Permissions) {
 		return true
 	}
 
@@ -206,19 +206,19 @@ func (o *Role) SetPermissions(v []RolePermissionsInner) {
 
 func (o Role) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ApplicableTo != nil {
+	if !isNil(o.ApplicableTo) {
 		toSerialize["applicableTo"] = o.ApplicableTo
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Name != nil {
+	if !isNil(o.Name) {
 		toSerialize["name"] = o.Name
 	}
-	if o.Permissions != nil {
+	if !isNil(o.Permissions) {
 		toSerialize["permissions"] = o.Permissions
 	}
 	return json.Marshal(toSerialize)

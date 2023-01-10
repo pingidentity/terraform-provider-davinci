@@ -43,7 +43,7 @@ func NewPasswordPolicyMinCharactersWithDefaults() *PasswordPolicyMinCharacters {
 
 // GetABCDEFGHIJKLMNOPQRSTUVWXYZ returns the ABCDEFGHIJKLMNOPQRSTUVWXYZ field value if set, zero value otherwise.
 func (o *PasswordPolicyMinCharacters) GetABCDEFGHIJKLMNOPQRSTUVWXYZ() int32 {
-	if o == nil || o.ABCDEFGHIJKLMNOPQRSTUVWXYZ == nil {
+	if o == nil || isNil(o.ABCDEFGHIJKLMNOPQRSTUVWXYZ) {
 		var ret int32
 		return ret
 	}
@@ -53,7 +53,7 @@ func (o *PasswordPolicyMinCharacters) GetABCDEFGHIJKLMNOPQRSTUVWXYZ() int32 {
 // GetABCDEFGHIJKLMNOPQRSTUVWXYZOk returns a tuple with the ABCDEFGHIJKLMNOPQRSTUVWXYZ field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyMinCharacters) GetABCDEFGHIJKLMNOPQRSTUVWXYZOk() (*int32, bool) {
-	if o == nil || o.ABCDEFGHIJKLMNOPQRSTUVWXYZ == nil {
+	if o == nil || isNil(o.ABCDEFGHIJKLMNOPQRSTUVWXYZ) {
 		return nil, false
 	}
 	return o.ABCDEFGHIJKLMNOPQRSTUVWXYZ, true
@@ -61,7 +61,7 @@ func (o *PasswordPolicyMinCharacters) GetABCDEFGHIJKLMNOPQRSTUVWXYZOk() (*int32,
 
 // HasABCDEFGHIJKLMNOPQRSTUVWXYZ returns a boolean if a field has been set.
 func (o *PasswordPolicyMinCharacters) HasABCDEFGHIJKLMNOPQRSTUVWXYZ() bool {
-	if o != nil && o.ABCDEFGHIJKLMNOPQRSTUVWXYZ != nil {
+	if o != nil && !isNil(o.ABCDEFGHIJKLMNOPQRSTUVWXYZ) {
 		return true
 	}
 
@@ -75,7 +75,7 @@ func (o *PasswordPolicyMinCharacters) SetABCDEFGHIJKLMNOPQRSTUVWXYZ(v int32) {
 
 // GetAbcdefghijklmnopqrstuvwxyz returns the Abcdefghijklmnopqrstuvwxyz field value if set, zero value otherwise.
 func (o *PasswordPolicyMinCharacters) GetAbcdefghijklmnopqrstuvwxyz() int32 {
-	if o == nil || o.Abcdefghijklmnopqrstuvwxyz == nil {
+	if o == nil || isNil(o.Abcdefghijklmnopqrstuvwxyz) {
 		var ret int32
 		return ret
 	}
@@ -85,7 +85,7 @@ func (o *PasswordPolicyMinCharacters) GetAbcdefghijklmnopqrstuvwxyz() int32 {
 // GetAbcdefghijklmnopqrstuvwxyzOk returns a tuple with the Abcdefghijklmnopqrstuvwxyz field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyMinCharacters) GetAbcdefghijklmnopqrstuvwxyzOk() (*int32, bool) {
-	if o == nil || o.Abcdefghijklmnopqrstuvwxyz == nil {
+	if o == nil || isNil(o.Abcdefghijklmnopqrstuvwxyz) {
 		return nil, false
 	}
 	return o.Abcdefghijklmnopqrstuvwxyz, true
@@ -93,7 +93,7 @@ func (o *PasswordPolicyMinCharacters) GetAbcdefghijklmnopqrstuvwxyzOk() (*int32,
 
 // HasAbcdefghijklmnopqrstuvwxyz returns a boolean if a field has been set.
 func (o *PasswordPolicyMinCharacters) HasAbcdefghijklmnopqrstuvwxyz() bool {
-	if o != nil && o.Abcdefghijklmnopqrstuvwxyz != nil {
+	if o != nil && !isNil(o.Abcdefghijklmnopqrstuvwxyz) {
 		return true
 	}
 
@@ -107,7 +107,7 @@ func (o *PasswordPolicyMinCharacters) SetAbcdefghijklmnopqrstuvwxyz(v int32) {
 
 // GetVar0123456789 returns the Var0123456789 field value if set, zero value otherwise.
 func (o *PasswordPolicyMinCharacters) GetVar0123456789() int32 {
-	if o == nil || o.Var0123456789 == nil {
+	if o == nil || isNil(o.Var0123456789) {
 		var ret int32
 		return ret
 	}
@@ -117,7 +117,7 @@ func (o *PasswordPolicyMinCharacters) GetVar0123456789() int32 {
 // GetVar0123456789Ok returns a tuple with the Var0123456789 field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyMinCharacters) GetVar0123456789Ok() (*int32, bool) {
-	if o == nil || o.Var0123456789 == nil {
+	if o == nil || isNil(o.Var0123456789) {
 		return nil, false
 	}
 	return o.Var0123456789, true
@@ -125,7 +125,7 @@ func (o *PasswordPolicyMinCharacters) GetVar0123456789Ok() (*int32, bool) {
 
 // HasVar0123456789 returns a boolean if a field has been set.
 func (o *PasswordPolicyMinCharacters) HasVar0123456789() bool {
-	if o != nil && o.Var0123456789 != nil {
+	if o != nil && !isNil(o.Var0123456789) {
 		return true
 	}
 
@@ -149,7 +149,7 @@ func (o *PasswordPolicyMinCharacters) GetSpecialChar() int32 {
 // GetSpecialCharOk returns a tuple with the SpecialChar field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyMinCharacters) GetSpecialCharOk() (*int32, bool) {
-	if o == nil || o.SpecialChar == nil {
+	if o == nil || isNil(o.SpecialChar) {
 		return nil, false
 	}
 	return o.SpecialChar, true
@@ -157,7 +157,7 @@ func (o *PasswordPolicyMinCharacters) GetSpecialCharOk() (*int32, bool) {
 
 // HasSpecialChar returns a boolean if a field has been set.
 func (o *PasswordPolicyMinCharacters) HasSpecialChar() bool {
-	if o != nil && o.SpecialChar != nil {
+	if o != nil && !isNil(o.SpecialChar) {
 		return true
 	}
 
@@ -171,16 +171,16 @@ func (o *PasswordPolicyMinCharacters) SetSpecialChar(v int32) {
 
 func (o PasswordPolicyMinCharacters) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ABCDEFGHIJKLMNOPQRSTUVWXYZ != nil {
+	if !isNil(o.ABCDEFGHIJKLMNOPQRSTUVWXYZ) {
 		toSerialize["ABCDEFGHIJKLMNOPQRSTUVWXYZ"] = o.ABCDEFGHIJKLMNOPQRSTUVWXYZ
 	}
-	if o.Abcdefghijklmnopqrstuvwxyz != nil {
+	if !isNil(o.Abcdefghijklmnopqrstuvwxyz) {
 		toSerialize["abcdefghijklmnopqrstuvwxyz"] = o.Abcdefghijklmnopqrstuvwxyz
 	}
-	if o.Var0123456789 != nil {
+	if !isNil(o.Var0123456789) {
 		toSerialize["0123456789"] = o.Var0123456789
 	}
-	if o.SpecialChar != nil {
+	if !isNil(o.SpecialChar) {
 		toSerialize["~!@#$%^&*()-_=+[]{}|;:,.<>/?"] = o.SpecialChar
 	}
 	return json.Marshal(toSerialize)

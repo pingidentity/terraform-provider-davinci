@@ -45,7 +45,7 @@ func NewApplicationOIDCAllOfMobileWithDefaults() *ApplicationOIDCAllOfMobile {
 
 // GetBundleId returns the BundleId field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobile) GetBundleId() string {
-	if o == nil || o.BundleId == nil {
+	if o == nil || isNil(o.BundleId) {
 		var ret string
 		return ret
 	}
@@ -55,15 +55,15 @@ func (o *ApplicationOIDCAllOfMobile) GetBundleId() string {
 // GetBundleIdOk returns a tuple with the BundleId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobile) GetBundleIdOk() (*string, bool) {
-	if o == nil || o.BundleId == nil {
-		return nil, false
+	if o == nil || isNil(o.BundleId) {
+    return nil, false
 	}
 	return o.BundleId, true
 }
 
 // HasBundleId returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobile) HasBundleId() bool {
-	if o != nil && o.BundleId != nil {
+	if o != nil && !isNil(o.BundleId) {
 		return true
 	}
 
@@ -77,7 +77,7 @@ func (o *ApplicationOIDCAllOfMobile) SetBundleId(v string) {
 
 // GetPackageName returns the PackageName field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobile) GetPackageName() string {
-	if o == nil || o.PackageName == nil {
+	if o == nil || isNil(o.PackageName) {
 		var ret string
 		return ret
 	}
@@ -87,15 +87,15 @@ func (o *ApplicationOIDCAllOfMobile) GetPackageName() string {
 // GetPackageNameOk returns a tuple with the PackageName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobile) GetPackageNameOk() (*string, bool) {
-	if o == nil || o.PackageName == nil {
-		return nil, false
+	if o == nil || isNil(o.PackageName) {
+    return nil, false
 	}
 	return o.PackageName, true
 }
 
 // HasPackageName returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobile) HasPackageName() bool {
-	if o != nil && o.PackageName != nil {
+	if o != nil && !isNil(o.PackageName) {
 		return true
 	}
 
@@ -109,7 +109,7 @@ func (o *ApplicationOIDCAllOfMobile) SetPackageName(v string) {
 
 // GetPasscodeRefreshDuration returns the PasscodeRefreshDuration field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobile) GetPasscodeRefreshDuration() ApplicationOIDCAllOfMobilePasscodeRefreshDuration {
-	if o == nil || o.PasscodeRefreshDuration == nil {
+	if o == nil || isNil(o.PasscodeRefreshDuration) {
 		var ret ApplicationOIDCAllOfMobilePasscodeRefreshDuration
 		return ret
 	}
@@ -119,15 +119,15 @@ func (o *ApplicationOIDCAllOfMobile) GetPasscodeRefreshDuration() ApplicationOID
 // GetPasscodeRefreshDurationOk returns a tuple with the PasscodeRefreshDuration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobile) GetPasscodeRefreshDurationOk() (*ApplicationOIDCAllOfMobilePasscodeRefreshDuration, bool) {
-	if o == nil || o.PasscodeRefreshDuration == nil {
-		return nil, false
+	if o == nil || isNil(o.PasscodeRefreshDuration) {
+    return nil, false
 	}
 	return o.PasscodeRefreshDuration, true
 }
 
 // HasPasscodeRefreshDuration returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobile) HasPasscodeRefreshDuration() bool {
-	if o != nil && o.PasscodeRefreshDuration != nil {
+	if o != nil && !isNil(o.PasscodeRefreshDuration) {
 		return true
 	}
 
@@ -141,7 +141,7 @@ func (o *ApplicationOIDCAllOfMobile) SetPasscodeRefreshDuration(v ApplicationOID
 
 // GetIntegrityDetection returns the IntegrityDetection field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobile) GetIntegrityDetection() ApplicationOIDCAllOfMobileIntegrityDetection {
-	if o == nil || o.IntegrityDetection == nil {
+	if o == nil || isNil(o.IntegrityDetection) {
 		var ret ApplicationOIDCAllOfMobileIntegrityDetection
 		return ret
 	}
@@ -151,15 +151,15 @@ func (o *ApplicationOIDCAllOfMobile) GetIntegrityDetection() ApplicationOIDCAllO
 // GetIntegrityDetectionOk returns a tuple with the IntegrityDetection field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobile) GetIntegrityDetectionOk() (*ApplicationOIDCAllOfMobileIntegrityDetection, bool) {
-	if o == nil || o.IntegrityDetection == nil {
-		return nil, false
+	if o == nil || isNil(o.IntegrityDetection) {
+    return nil, false
 	}
 	return o.IntegrityDetection, true
 }
 
 // HasIntegrityDetection returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobile) HasIntegrityDetection() bool {
-	if o != nil && o.IntegrityDetection != nil {
+	if o != nil && !isNil(o.IntegrityDetection) {
 		return true
 	}
 
@@ -173,7 +173,7 @@ func (o *ApplicationOIDCAllOfMobile) SetIntegrityDetection(v ApplicationOIDCAllO
 
 // GetUriPrefix returns the UriPrefix field value if set, zero value otherwise.
 func (o *ApplicationOIDCAllOfMobile) GetUriPrefix() string {
-	if o == nil || o.UriPrefix == nil {
+	if o == nil || isNil(o.UriPrefix) {
 		var ret string
 		return ret
 	}
@@ -183,15 +183,15 @@ func (o *ApplicationOIDCAllOfMobile) GetUriPrefix() string {
 // GetUriPrefixOk returns a tuple with the UriPrefix field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationOIDCAllOfMobile) GetUriPrefixOk() (*string, bool) {
-	if o == nil || o.UriPrefix == nil {
-		return nil, false
+	if o == nil || isNil(o.UriPrefix) {
+    return nil, false
 	}
 	return o.UriPrefix, true
 }
 
 // HasUriPrefix returns a boolean if a field has been set.
 func (o *ApplicationOIDCAllOfMobile) HasUriPrefix() bool {
-	if o != nil && o.UriPrefix != nil {
+	if o != nil && !isNil(o.UriPrefix) {
 		return true
 	}
 
@@ -205,19 +205,19 @@ func (o *ApplicationOIDCAllOfMobile) SetUriPrefix(v string) {
 
 func (o ApplicationOIDCAllOfMobile) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.BundleId != nil {
+	if !isNil(o.BundleId) {
 		toSerialize["bundleId"] = o.BundleId
 	}
-	if o.PackageName != nil {
+	if !isNil(o.PackageName) {
 		toSerialize["packageName"] = o.PackageName
 	}
-	if o.PasscodeRefreshDuration != nil {
+	if !isNil(o.PasscodeRefreshDuration) {
 		toSerialize["passcodeRefreshDuration"] = o.PasscodeRefreshDuration
 	}
-	if o.IntegrityDetection != nil {
+	if !isNil(o.IntegrityDetection) {
 		toSerialize["integrityDetection"] = o.IntegrityDetection
 	}
-	if o.UriPrefix != nil {
+	if !isNil(o.UriPrefix) {
 		toSerialize["uriPrefix"] = o.UriPrefix
 	}
 	return json.Marshal(toSerialize)

@@ -40,7 +40,7 @@ func NewCustomDomainCertificateWithDefaults() *CustomDomainCertificate {
 
 // GetExpiresAt returns the ExpiresAt field value if set, zero value otherwise.
 func (o *CustomDomainCertificate) GetExpiresAt() time.Time {
-	if o == nil || o.ExpiresAt == nil {
+	if o == nil || isNil(o.ExpiresAt) {
 		var ret time.Time
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *CustomDomainCertificate) GetExpiresAt() time.Time {
 // GetExpiresAtOk returns a tuple with the ExpiresAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *CustomDomainCertificate) GetExpiresAtOk() (*time.Time, bool) {
-	if o == nil || o.ExpiresAt == nil {
-		return nil, false
+	if o == nil || isNil(o.ExpiresAt) {
+    return nil, false
 	}
 	return o.ExpiresAt, true
 }
 
 // HasExpiresAt returns a boolean if a field has been set.
 func (o *CustomDomainCertificate) HasExpiresAt() bool {
-	if o != nil && o.ExpiresAt != nil {
+	if o != nil && !isNil(o.ExpiresAt) {
 		return true
 	}
 
@@ -72,7 +72,7 @@ func (o *CustomDomainCertificate) SetExpiresAt(v time.Time) {
 
 func (o CustomDomainCertificate) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ExpiresAt != nil {
+	if !isNil(o.ExpiresAt) {
 		toSerialize["expiresAt"] = o.ExpiresAt
 	}
 	return json.Marshal(toSerialize)

@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionIDFirstAllOfDiscoveryRules) GetCondition() SignOnPoli
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOfDiscoveryRules) GetConditionOk() (*SignOnPolicyActionIDFirstAllOfCondition, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Condition, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionIDFirstAllOfDiscoveryRules) GetIdentityProvider() Sig
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOfDiscoveryRules) GetIdentityProviderOk() (*SignOnPolicyActionIDFirstAllOfIdentityProvider, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.IdentityProvider, true
 }

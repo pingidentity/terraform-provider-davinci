@@ -55,7 +55,7 @@ func (o *BillOfMaterialsProductsInnerBookmarksInner) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInnerBookmarksInner) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -79,7 +79,7 @@ func (o *BillOfMaterialsProductsInnerBookmarksInner) GetHref() string {
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInnerBookmarksInner) GetHrefOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Href, true
 }

@@ -51,7 +51,7 @@ func (o *DeviceAuthenticationPolicyTotpOtp) GetFailure() DeviceAuthenticationPol
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyTotpOtp) GetFailureOk() (*DeviceAuthenticationPolicyOfflineDeviceOtpFailure, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Failure, true
 }

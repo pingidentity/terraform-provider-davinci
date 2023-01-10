@@ -44,7 +44,7 @@ func NewEmailDomainSPFStatusWithDefaults() *EmailDomainSPFStatus {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *EmailDomainSPFStatus) GetType() string {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret string
 		return ret
 	}
@@ -54,15 +54,15 @@ func (o *EmailDomainSPFStatus) GetType() string {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainSPFStatus) GetTypeOk() (*string, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *EmailDomainSPFStatus) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -76,7 +76,7 @@ func (o *EmailDomainSPFStatus) SetType(v string) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *EmailDomainSPFStatus) GetStatus() EnumEmailDomainStatus {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		var ret EnumEmailDomainStatus
 		return ret
 	}
@@ -86,15 +86,15 @@ func (o *EmailDomainSPFStatus) GetStatus() EnumEmailDomainStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainSPFStatus) GetStatusOk() (*EnumEmailDomainStatus, bool) {
-	if o == nil || o.Status == nil {
-		return nil, false
+	if o == nil || isNil(o.Status) {
+    return nil, false
 	}
 	return o.Status, true
 }
 
 // HasStatus returns a boolean if a field has been set.
 func (o *EmailDomainSPFStatus) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !isNil(o.Status) {
 		return true
 	}
 
@@ -108,7 +108,7 @@ func (o *EmailDomainSPFStatus) SetStatus(v EnumEmailDomainStatus) {
 
 // GetKey returns the Key field value if set, zero value otherwise.
 func (o *EmailDomainSPFStatus) GetKey() string {
-	if o == nil || o.Key == nil {
+	if o == nil || isNil(o.Key) {
 		var ret string
 		return ret
 	}
@@ -118,15 +118,15 @@ func (o *EmailDomainSPFStatus) GetKey() string {
 // GetKeyOk returns a tuple with the Key field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainSPFStatus) GetKeyOk() (*string, bool) {
-	if o == nil || o.Key == nil {
-		return nil, false
+	if o == nil || isNil(o.Key) {
+    return nil, false
 	}
 	return o.Key, true
 }
 
 // HasKey returns a boolean if a field has been set.
 func (o *EmailDomainSPFStatus) HasKey() bool {
-	if o != nil && o.Key != nil {
+	if o != nil && !isNil(o.Key) {
 		return true
 	}
 
@@ -140,7 +140,7 @@ func (o *EmailDomainSPFStatus) SetKey(v string) {
 
 // GetValue returns the Value field value if set, zero value otherwise.
 func (o *EmailDomainSPFStatus) GetValue() string {
-	if o == nil || o.Value == nil {
+	if o == nil || isNil(o.Value) {
 		var ret string
 		return ret
 	}
@@ -150,15 +150,15 @@ func (o *EmailDomainSPFStatus) GetValue() string {
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainSPFStatus) GetValueOk() (*string, bool) {
-	if o == nil || o.Value == nil {
-		return nil, false
+	if o == nil || isNil(o.Value) {
+    return nil, false
 	}
 	return o.Value, true
 }
 
 // HasValue returns a boolean if a field has been set.
 func (o *EmailDomainSPFStatus) HasValue() bool {
-	if o != nil && o.Value != nil {
+	if o != nil && !isNil(o.Value) {
 		return true
 	}
 
@@ -172,16 +172,16 @@ func (o *EmailDomainSPFStatus) SetValue(v string) {
 
 func (o EmailDomainSPFStatus) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
-	if o.Status != nil {
+	if !isNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
-	if o.Key != nil {
+	if !isNil(o.Key) {
 		toSerialize["key"] = o.Key
 	}
-	if o.Value != nil {
+	if !isNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
 	return json.Marshal(toSerialize)

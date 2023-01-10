@@ -55,7 +55,7 @@ func (o *GatewayLDAPAllOfNewUserLookupAttributeMappings) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfNewUserLookupAttributeMappings) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -79,7 +79,7 @@ func (o *GatewayLDAPAllOfNewUserLookupAttributeMappings) GetValue() string {
 // and a boolean to check if the value has been set.
 func (o *GatewayLDAPAllOfNewUserLookupAttributeMappings) GetValueOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Value, true
 }

@@ -54,7 +54,7 @@ func (o *DeviceAuthenticationPolicyTotp) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyTotp) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -78,7 +78,7 @@ func (o *DeviceAuthenticationPolicyTotp) GetOtp() DeviceAuthenticationPolicyTotp
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyTotp) GetOtpOk() (*DeviceAuthenticationPolicyTotpOtp, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Otp, true
 }

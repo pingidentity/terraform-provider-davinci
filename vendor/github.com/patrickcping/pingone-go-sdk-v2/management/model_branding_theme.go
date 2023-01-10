@@ -59,7 +59,7 @@ func (o *BrandingTheme) GetConfiguration() BrandingThemeConfiguration {
 // and a boolean to check if the value has been set.
 func (o *BrandingTheme) GetConfigurationOk() (*BrandingThemeConfiguration, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Configuration, true
 }
@@ -83,7 +83,7 @@ func (o *BrandingTheme) GetDefault() bool {
 // and a boolean to check if the value has been set.
 func (o *BrandingTheme) GetDefaultOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Default, true
 }
@@ -95,7 +95,7 @@ func (o *BrandingTheme) SetDefault(v bool) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *BrandingTheme) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -105,15 +105,15 @@ func (o *BrandingTheme) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BrandingTheme) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *BrandingTheme) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -127,7 +127,7 @@ func (o *BrandingTheme) SetEnvironment(v ObjectEnvironment) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *BrandingTheme) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -137,15 +137,15 @@ func (o *BrandingTheme) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BrandingTheme) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *BrandingTheme) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -171,7 +171,7 @@ func (o *BrandingTheme) GetTemplate() EnumBrandingThemeTemplate {
 // and a boolean to check if the value has been set.
 func (o *BrandingTheme) GetTemplateOk() (*EnumBrandingThemeTemplate, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Template, true
 }
@@ -189,10 +189,10 @@ func (o BrandingTheme) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["default"] = o.Default
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {

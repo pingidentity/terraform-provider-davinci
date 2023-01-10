@@ -49,7 +49,7 @@ func NewApplicationResourceGrantWithDefaults() *ApplicationResourceGrant {
 
 // GetApplication returns the Application field value if set, zero value otherwise.
 func (o *ApplicationResourceGrant) GetApplication() ApplicationResourceGrantApplication {
-	if o == nil || o.Application == nil {
+	if o == nil || isNil(o.Application) {
 		var ret ApplicationResourceGrantApplication
 		return ret
 	}
@@ -59,15 +59,15 @@ func (o *ApplicationResourceGrant) GetApplication() ApplicationResourceGrantAppl
 // GetApplicationOk returns a tuple with the Application field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationResourceGrant) GetApplicationOk() (*ApplicationResourceGrantApplication, bool) {
-	if o == nil || o.Application == nil {
-		return nil, false
+	if o == nil || isNil(o.Application) {
+    return nil, false
 	}
 	return o.Application, true
 }
 
 // HasApplication returns a boolean if a field has been set.
 func (o *ApplicationResourceGrant) HasApplication() bool {
-	if o != nil && o.Application != nil {
+	if o != nil && !isNil(o.Application) {
 		return true
 	}
 
@@ -81,7 +81,7 @@ func (o *ApplicationResourceGrant) SetApplication(v ApplicationResourceGrantAppl
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *ApplicationResourceGrant) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -91,15 +91,15 @@ func (o *ApplicationResourceGrant) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationResourceGrant) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *ApplicationResourceGrant) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -113,7 +113,7 @@ func (o *ApplicationResourceGrant) SetCreatedAt(v time.Time) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *ApplicationResourceGrant) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -123,15 +123,15 @@ func (o *ApplicationResourceGrant) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationResourceGrant) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *ApplicationResourceGrant) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -157,7 +157,7 @@ func (o *ApplicationResourceGrant) GetResource() ApplicationResourceGrantResourc
 // and a boolean to check if the value has been set.
 func (o *ApplicationResourceGrant) GetResourceOk() (*ApplicationResourceGrantResource, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Resource, true
 }
@@ -181,7 +181,7 @@ func (o *ApplicationResourceGrant) GetScopes() []ApplicationResourceGrantScopesI
 // and a boolean to check if the value has been set.
 func (o *ApplicationResourceGrant) GetScopesOk() ([]ApplicationResourceGrantScopesInner, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.Scopes, true
 }
@@ -193,7 +193,7 @@ func (o *ApplicationResourceGrant) SetScopes(v []ApplicationResourceGrantScopesI
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *ApplicationResourceGrant) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -203,15 +203,15 @@ func (o *ApplicationResourceGrant) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationResourceGrant) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *ApplicationResourceGrant) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -225,13 +225,13 @@ func (o *ApplicationResourceGrant) SetUpdatedAt(v time.Time) {
 
 func (o ApplicationResourceGrant) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Application != nil {
+	if !isNil(o.Application) {
 		toSerialize["application"] = o.Application
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
@@ -240,7 +240,7 @@ func (o ApplicationResourceGrant) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["scopes"] = o.Scopes
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	return json.Marshal(toSerialize)

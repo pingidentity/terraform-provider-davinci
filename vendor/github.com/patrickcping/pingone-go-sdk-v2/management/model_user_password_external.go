@@ -38,7 +38,7 @@ func NewUserPasswordExternalWithDefaults() *UserPasswordExternal {
 
 // GetGateway returns the Gateway field value if set, zero value otherwise.
 func (o *UserPasswordExternal) GetGateway() UserPasswordExternalGateway {
-	if o == nil || o.Gateway == nil {
+	if o == nil || isNil(o.Gateway) {
 		var ret UserPasswordExternalGateway
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *UserPasswordExternal) GetGateway() UserPasswordExternalGateway {
 // GetGatewayOk returns a tuple with the Gateway field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPasswordExternal) GetGatewayOk() (*UserPasswordExternalGateway, bool) {
-	if o == nil || o.Gateway == nil {
-		return nil, false
+	if o == nil || isNil(o.Gateway) {
+    return nil, false
 	}
 	return o.Gateway, true
 }
 
 // HasGateway returns a boolean if a field has been set.
 func (o *UserPasswordExternal) HasGateway() bool {
-	if o != nil && o.Gateway != nil {
+	if o != nil && !isNil(o.Gateway) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *UserPasswordExternal) SetGateway(v UserPasswordExternalGateway) {
 
 func (o UserPasswordExternal) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Gateway != nil {
+	if !isNil(o.Gateway) {
 		toSerialize["gateway"] = o.Gateway
 	}
 	return json.Marshal(toSerialize)
