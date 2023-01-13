@@ -28,7 +28,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 		if envId == c.CompanyID {
 			return nil
 		}
-		timeout := 40
+		timeout := 100
 		for i := 0; i <= timeout; {
 			apps, err := c.ReadApplications(&envId, nil)
 			if err != nil {
@@ -56,6 +56,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 				if len(apps) == 0 {
 					tflog.Warn(ctx, "Waiting for bootstrap to complete... ")
 				}
+				i = i + 5
 				time.Sleep(5 * time.Second)
 			}
 			c.CompanyID = envId

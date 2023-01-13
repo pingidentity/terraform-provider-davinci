@@ -65,13 +65,6 @@ func ResourceFlow() *schema.Resource {
 							Required:    true,
 							Description: "Connection Name to match when updating flow_json connectionId.",
 						},
-						//TODO implement subflow version
-						// "subflow_version": {
-						// 	Type:        schema.TypeString,
-						// 	Optional: true,
-						// 	Computed: true,
-						// 	Description: "Subflow Version to use",
-						// },
 					},
 				},
 			},
@@ -91,6 +84,33 @@ func ResourceFlow() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Subflow Name to match when updating flow_json subflowId.",
+						},
+						//TODO implement subflow version
+						// "subflow_version": {
+						// 	Type:        schema.TypeString,
+						// 	Optional: true,
+						// 	Computed: true,
+						// 	Description: "Subflow Version to use",
+						// },
+					},
+				},
+			},
+			"variables": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Computed:    true,
+				Description: "Dependent variables of this flow. Required to ensure mapping if flow_json contains variables. flow_json variableId will be updated to variable_id by matching variable_name.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"variable_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Variable ID that will be used when flow is imported.",
+						},
+						"variable_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Variable Name to match when updating flow_json variableId.",
 						},
 						//TODO implement subflow version
 						// "subflow_version": {
