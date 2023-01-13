@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionIDFirstAllOfCondition) GetContains() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOfCondition) GetContainsOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Contains, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionIDFirstAllOfCondition) GetValue() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOfCondition) GetValueOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Value, true
 }

@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionGeovelocityValid) GetPreviousSuccessfu
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionGeovelocityValid) GetPreviousSuccessfulAuthenticationIpOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PreviousSuccessfulAuthenticationIp, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionCommonConditionGeovelocityValid) GetPreviousSuccessfu
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionGeovelocityValid) GetPreviousSuccessfulAuthenticationTimeOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PreviousSuccessfulAuthenticationTime, true
 }

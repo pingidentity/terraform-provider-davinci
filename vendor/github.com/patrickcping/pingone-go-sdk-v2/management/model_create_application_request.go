@@ -18,6 +18,7 @@ type CreateApplicationRequest struct {
 	ApplicationExternalLink *ApplicationExternalLink
 	ApplicationOIDC         *ApplicationOIDC
 	ApplicationSAML         *ApplicationSAML
+	ApplicationWSFED        *ApplicationWSFED
 }
 
 // ApplicationExternalLinkAsCreateApplicationRequest is a convenience function that returns ApplicationExternalLink wrapped in CreateApplicationRequest
@@ -41,6 +42,13 @@ func ApplicationSAMLAsCreateApplicationRequest(v *ApplicationSAML) CreateApplica
 	}
 }
 
+// ApplicationWSFEDAsCreateApplicationRequest is a convenience function that returns ApplicationWSFED wrapped in CreateApplicationRequest
+func ApplicationWSFEDAsCreateApplicationRequest(v *ApplicationWSFED) CreateApplicationRequest {
+	return CreateApplicationRequest{
+		ApplicationWSFED: v,
+	}
+}
+
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *CreateApplicationRequest) UnmarshalJSON(data []byte) error {
 
@@ -52,6 +60,7 @@ func (dst *CreateApplicationRequest) UnmarshalJSON(data []byte) error {
 
 	dst.ApplicationOIDC = nil
 	dst.ApplicationSAML = nil
+	dst.ApplicationWSFED = nil
 	dst.ApplicationExternalLink = nil
 
 	switch common.GetProtocol() {
@@ -61,6 +70,10 @@ func (dst *CreateApplicationRequest) UnmarshalJSON(data []byte) error {
 		}
 	case ENUMAPPLICATIONPROTOCOL_SAML:
 		if err := json.Unmarshal(data, &dst.ApplicationSAML); err != nil { // simple model
+			return err
+		}
+	case ENUMAPPLICATIONPROTOCOL_WS_FED:
+		if err := json.Unmarshal(data, &dst.ApplicationWSFED); err != nil { // simple model
 			return err
 		}
 	case ENUMAPPLICATIONPROTOCOL_EXTERNAL_LINK:
@@ -87,6 +100,10 @@ func (src CreateApplicationRequest) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.ApplicationSAML)
 	}
 
+	if src.ApplicationWSFED != nil {
+		return json.Marshal(&src.ApplicationWSFED)
+	}
+
 	return nil, nil // no data in oneOf schemas
 }
 
@@ -105,6 +122,10 @@ func (obj *CreateApplicationRequest) GetActualInstance() interface{} {
 
 	if obj.ApplicationSAML != nil {
 		return obj.ApplicationSAML
+	}
+
+	if obj.ApplicationWSFED != nil {
+		return obj.ApplicationWSFED
 	}
 
 	// all schemas are nil

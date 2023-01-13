@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionAgreementAllOf) GetAgreement() SignOnPolicyActionAgre
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionAgreementAllOf) GetAgreementOk() (*SignOnPolicyActionAgreementAllOfAgreement, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Agreement, true
 }
@@ -65,7 +65,7 @@ func (o *SignOnPolicyActionAgreementAllOf) SetAgreement(v SignOnPolicyActionAgre
 
 // GetDisableDeclineOption returns the DisableDeclineOption field value if set, zero value otherwise.
 func (o *SignOnPolicyActionAgreementAllOf) GetDisableDeclineOption() bool {
-	if o == nil || o.DisableDeclineOption == nil {
+	if o == nil || isNil(o.DisableDeclineOption) {
 		var ret bool
 		return ret
 	}
@@ -75,15 +75,15 @@ func (o *SignOnPolicyActionAgreementAllOf) GetDisableDeclineOption() bool {
 // GetDisableDeclineOptionOk returns a tuple with the DisableDeclineOption field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionAgreementAllOf) GetDisableDeclineOptionOk() (*bool, bool) {
-	if o == nil || o.DisableDeclineOption == nil {
-		return nil, false
+	if o == nil || isNil(o.DisableDeclineOption) {
+    return nil, false
 	}
 	return o.DisableDeclineOption, true
 }
 
 // HasDisableDeclineOption returns a boolean if a field has been set.
 func (o *SignOnPolicyActionAgreementAllOf) HasDisableDeclineOption() bool {
-	if o != nil && o.DisableDeclineOption != nil {
+	if o != nil && !isNil(o.DisableDeclineOption) {
 		return true
 	}
 
@@ -100,7 +100,7 @@ func (o SignOnPolicyActionAgreementAllOf) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["agreement"] = o.Agreement
 	}
-	if o.DisableDeclineOption != nil {
+	if !isNil(o.DisableDeclineOption) {
 		toSerialize["disableDeclineOption"] = o.DisableDeclineOption
 	}
 	return json.Marshal(toSerialize)

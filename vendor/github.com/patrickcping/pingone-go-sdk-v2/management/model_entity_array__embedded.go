@@ -22,6 +22,7 @@ type EntityArrayEmbedded struct {
 	Attributes []EntityArrayEmbeddedAttributesInner `json:"attributes,omitempty"`
 	Applications []ReadOneApplication200Response `json:"applications,omitempty"`
 	Certificates []Certificate `json:"certificates,omitempty"`
+	Contents []TemplateContent `json:"contents,omitempty"`
 	Credentials []GatewayCredential `json:"credentials,omitempty"`
 	CustomDomains []CustomDomain `json:"customDomains,omitempty"`
 	EmailDomains []EmailDomain `json:"emailDomains,omitempty"`
@@ -35,6 +36,7 @@ type EntityArrayEmbedded struct {
 	Keys []Certificate `json:"keys,omitempty"`
 	Languages []EntityArrayEmbeddedLanguagesInner `json:"languages,omitempty"`
 	Licenses []License `json:"licenses,omitempty"`
+	NotificationsPolicies []NotificationsPolicy `json:"notificationsPolicies,omitempty"`
 	Organizations []Organization `json:"organizations,omitempty"`
 	PasswordPolicies []PasswordPolicy `json:"passwordPolicies,omitempty"`
 	Populations []Population `json:"populations,omitempty"`
@@ -44,6 +46,7 @@ type EntityArrayEmbedded struct {
 	SignOnPolicies []SignOnPolicy `json:"signOnPolicies,omitempty"`
 	SignOnPolicyAssignments []SignOnPolicyAssignment `json:"signOnPolicyAssignments,omitempty"`
 	Subscriptions []Subscription `json:"subscriptions,omitempty"`
+	Templates []Template `json:"templates,omitempty"`
 	Themes []BrandingTheme `json:"themes,omitempty"`
 	TrustedEmails []EmailDomainTrustedEmail `json:"trustedEmails,omitempty"`
 	RoleAssignments []RoleAssignment `json:"roleAssignments,omitempty"`
@@ -71,7 +74,7 @@ func NewEntityArrayEmbeddedWithDefaults() *EntityArrayEmbedded {
 
 // GetActions returns the Actions field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetActions() []SignOnPolicyAction {
-	if o == nil || o.Actions == nil {
+	if o == nil || isNil(o.Actions) {
 		var ret []SignOnPolicyAction
 		return ret
 	}
@@ -81,15 +84,15 @@ func (o *EntityArrayEmbedded) GetActions() []SignOnPolicyAction {
 // GetActionsOk returns a tuple with the Actions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetActionsOk() ([]SignOnPolicyAction, bool) {
-	if o == nil || o.Actions == nil {
-		return nil, false
+	if o == nil || isNil(o.Actions) {
+    return nil, false
 	}
 	return o.Actions, true
 }
 
 // HasActions returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasActions() bool {
-	if o != nil && o.Actions != nil {
+	if o != nil && !isNil(o.Actions) {
 		return true
 	}
 
@@ -103,7 +106,7 @@ func (o *EntityArrayEmbedded) SetActions(v []SignOnPolicyAction) {
 
 // GetAgreements returns the Agreements field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetAgreements() []Agreement {
-	if o == nil || o.Agreements == nil {
+	if o == nil || isNil(o.Agreements) {
 		var ret []Agreement
 		return ret
 	}
@@ -113,15 +116,15 @@ func (o *EntityArrayEmbedded) GetAgreements() []Agreement {
 // GetAgreementsOk returns a tuple with the Agreements field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetAgreementsOk() ([]Agreement, bool) {
-	if o == nil || o.Agreements == nil {
-		return nil, false
+	if o == nil || isNil(o.Agreements) {
+    return nil, false
 	}
 	return o.Agreements, true
 }
 
 // HasAgreements returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasAgreements() bool {
-	if o != nil && o.Agreements != nil {
+	if o != nil && !isNil(o.Agreements) {
 		return true
 	}
 
@@ -135,7 +138,7 @@ func (o *EntityArrayEmbedded) SetAgreements(v []Agreement) {
 
 // GetAlertChannels returns the AlertChannels field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetAlertChannels() []AlertChannel {
-	if o == nil || o.AlertChannels == nil {
+	if o == nil || isNil(o.AlertChannels) {
 		var ret []AlertChannel
 		return ret
 	}
@@ -145,15 +148,15 @@ func (o *EntityArrayEmbedded) GetAlertChannels() []AlertChannel {
 // GetAlertChannelsOk returns a tuple with the AlertChannels field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetAlertChannelsOk() ([]AlertChannel, bool) {
-	if o == nil || o.AlertChannels == nil {
-		return nil, false
+	if o == nil || isNil(o.AlertChannels) {
+    return nil, false
 	}
 	return o.AlertChannels, true
 }
 
 // HasAlertChannels returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasAlertChannels() bool {
-	if o != nil && o.AlertChannels != nil {
+	if o != nil && !isNil(o.AlertChannels) {
 		return true
 	}
 
@@ -167,7 +170,7 @@ func (o *EntityArrayEmbedded) SetAlertChannels(v []AlertChannel) {
 
 // GetAttributes returns the Attributes field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetAttributes() []EntityArrayEmbeddedAttributesInner {
-	if o == nil || o.Attributes == nil {
+	if o == nil || isNil(o.Attributes) {
 		var ret []EntityArrayEmbeddedAttributesInner
 		return ret
 	}
@@ -177,15 +180,15 @@ func (o *EntityArrayEmbedded) GetAttributes() []EntityArrayEmbeddedAttributesInn
 // GetAttributesOk returns a tuple with the Attributes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetAttributesOk() ([]EntityArrayEmbeddedAttributesInner, bool) {
-	if o == nil || o.Attributes == nil {
-		return nil, false
+	if o == nil || isNil(o.Attributes) {
+    return nil, false
 	}
 	return o.Attributes, true
 }
 
 // HasAttributes returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasAttributes() bool {
-	if o != nil && o.Attributes != nil {
+	if o != nil && !isNil(o.Attributes) {
 		return true
 	}
 
@@ -199,7 +202,7 @@ func (o *EntityArrayEmbedded) SetAttributes(v []EntityArrayEmbeddedAttributesInn
 
 // GetApplications returns the Applications field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetApplications() []ReadOneApplication200Response {
-	if o == nil || o.Applications == nil {
+	if o == nil || isNil(o.Applications) {
 		var ret []ReadOneApplication200Response
 		return ret
 	}
@@ -209,15 +212,15 @@ func (o *EntityArrayEmbedded) GetApplications() []ReadOneApplication200Response 
 // GetApplicationsOk returns a tuple with the Applications field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetApplicationsOk() ([]ReadOneApplication200Response, bool) {
-	if o == nil || o.Applications == nil {
-		return nil, false
+	if o == nil || isNil(o.Applications) {
+    return nil, false
 	}
 	return o.Applications, true
 }
 
 // HasApplications returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasApplications() bool {
-	if o != nil && o.Applications != nil {
+	if o != nil && !isNil(o.Applications) {
 		return true
 	}
 
@@ -231,7 +234,7 @@ func (o *EntityArrayEmbedded) SetApplications(v []ReadOneApplication200Response)
 
 // GetCertificates returns the Certificates field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetCertificates() []Certificate {
-	if o == nil || o.Certificates == nil {
+	if o == nil || isNil(o.Certificates) {
 		var ret []Certificate
 		return ret
 	}
@@ -241,15 +244,15 @@ func (o *EntityArrayEmbedded) GetCertificates() []Certificate {
 // GetCertificatesOk returns a tuple with the Certificates field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetCertificatesOk() ([]Certificate, bool) {
-	if o == nil || o.Certificates == nil {
-		return nil, false
+	if o == nil || isNil(o.Certificates) {
+    return nil, false
 	}
 	return o.Certificates, true
 }
 
 // HasCertificates returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasCertificates() bool {
-	if o != nil && o.Certificates != nil {
+	if o != nil && !isNil(o.Certificates) {
 		return true
 	}
 
@@ -261,9 +264,41 @@ func (o *EntityArrayEmbedded) SetCertificates(v []Certificate) {
 	o.Certificates = v
 }
 
+// GetContents returns the Contents field value if set, zero value otherwise.
+func (o *EntityArrayEmbedded) GetContents() []TemplateContent {
+	if o == nil || isNil(o.Contents) {
+		var ret []TemplateContent
+		return ret
+	}
+	return o.Contents
+}
+
+// GetContentsOk returns a tuple with the Contents field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EntityArrayEmbedded) GetContentsOk() ([]TemplateContent, bool) {
+	if o == nil || isNil(o.Contents) {
+    return nil, false
+	}
+	return o.Contents, true
+}
+
+// HasContents returns a boolean if a field has been set.
+func (o *EntityArrayEmbedded) HasContents() bool {
+	if o != nil && !isNil(o.Contents) {
+		return true
+	}
+
+	return false
+}
+
+// SetContents gets a reference to the given []TemplateContent and assigns it to the Contents field.
+func (o *EntityArrayEmbedded) SetContents(v []TemplateContent) {
+	o.Contents = v
+}
+
 // GetCredentials returns the Credentials field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetCredentials() []GatewayCredential {
-	if o == nil || o.Credentials == nil {
+	if o == nil || isNil(o.Credentials) {
 		var ret []GatewayCredential
 		return ret
 	}
@@ -273,15 +308,15 @@ func (o *EntityArrayEmbedded) GetCredentials() []GatewayCredential {
 // GetCredentialsOk returns a tuple with the Credentials field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetCredentialsOk() ([]GatewayCredential, bool) {
-	if o == nil || o.Credentials == nil {
-		return nil, false
+	if o == nil || isNil(o.Credentials) {
+    return nil, false
 	}
 	return o.Credentials, true
 }
 
 // HasCredentials returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasCredentials() bool {
-	if o != nil && o.Credentials != nil {
+	if o != nil && !isNil(o.Credentials) {
 		return true
 	}
 
@@ -295,7 +330,7 @@ func (o *EntityArrayEmbedded) SetCredentials(v []GatewayCredential) {
 
 // GetCustomDomains returns the CustomDomains field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetCustomDomains() []CustomDomain {
-	if o == nil || o.CustomDomains == nil {
+	if o == nil || isNil(o.CustomDomains) {
 		var ret []CustomDomain
 		return ret
 	}
@@ -305,15 +340,15 @@ func (o *EntityArrayEmbedded) GetCustomDomains() []CustomDomain {
 // GetCustomDomainsOk returns a tuple with the CustomDomains field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetCustomDomainsOk() ([]CustomDomain, bool) {
-	if o == nil || o.CustomDomains == nil {
-		return nil, false
+	if o == nil || isNil(o.CustomDomains) {
+    return nil, false
 	}
 	return o.CustomDomains, true
 }
 
 // HasCustomDomains returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasCustomDomains() bool {
-	if o != nil && o.CustomDomains != nil {
+	if o != nil && !isNil(o.CustomDomains) {
 		return true
 	}
 
@@ -327,7 +362,7 @@ func (o *EntityArrayEmbedded) SetCustomDomains(v []CustomDomain) {
 
 // GetEmailDomains returns the EmailDomains field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetEmailDomains() []EmailDomain {
-	if o == nil || o.EmailDomains == nil {
+	if o == nil || isNil(o.EmailDomains) {
 		var ret []EmailDomain
 		return ret
 	}
@@ -337,15 +372,15 @@ func (o *EntityArrayEmbedded) GetEmailDomains() []EmailDomain {
 // GetEmailDomainsOk returns a tuple with the EmailDomains field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetEmailDomainsOk() ([]EmailDomain, bool) {
-	if o == nil || o.EmailDomains == nil {
-		return nil, false
+	if o == nil || isNil(o.EmailDomains) {
+    return nil, false
 	}
 	return o.EmailDomains, true
 }
 
 // HasEmailDomains returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasEmailDomains() bool {
-	if o != nil && o.EmailDomains != nil {
+	if o != nil && !isNil(o.EmailDomains) {
 		return true
 	}
 
@@ -359,7 +394,7 @@ func (o *EntityArrayEmbedded) SetEmailDomains(v []EmailDomain) {
 
 // GetEnvironments returns the Environments field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetEnvironments() []Environment {
-	if o == nil || o.Environments == nil {
+	if o == nil || isNil(o.Environments) {
 		var ret []Environment
 		return ret
 	}
@@ -369,15 +404,15 @@ func (o *EntityArrayEmbedded) GetEnvironments() []Environment {
 // GetEnvironmentsOk returns a tuple with the Environments field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetEnvironmentsOk() ([]Environment, bool) {
-	if o == nil || o.Environments == nil {
-		return nil, false
+	if o == nil || isNil(o.Environments) {
+    return nil, false
 	}
 	return o.Environments, true
 }
 
 // HasEnvironments returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasEnvironments() bool {
-	if o != nil && o.Environments != nil {
+	if o != nil && !isNil(o.Environments) {
 		return true
 	}
 
@@ -391,7 +426,7 @@ func (o *EntityArrayEmbedded) SetEnvironments(v []Environment) {
 
 // GetGatewayInstances returns the GatewayInstances field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetGatewayInstances() []GatewayInstance {
-	if o == nil || o.GatewayInstances == nil {
+	if o == nil || isNil(o.GatewayInstances) {
 		var ret []GatewayInstance
 		return ret
 	}
@@ -401,15 +436,15 @@ func (o *EntityArrayEmbedded) GetGatewayInstances() []GatewayInstance {
 // GetGatewayInstancesOk returns a tuple with the GatewayInstances field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetGatewayInstancesOk() ([]GatewayInstance, bool) {
-	if o == nil || o.GatewayInstances == nil {
-		return nil, false
+	if o == nil || isNil(o.GatewayInstances) {
+    return nil, false
 	}
 	return o.GatewayInstances, true
 }
 
 // HasGatewayInstances returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasGatewayInstances() bool {
-	if o != nil && o.GatewayInstances != nil {
+	if o != nil && !isNil(o.GatewayInstances) {
 		return true
 	}
 
@@ -423,7 +458,7 @@ func (o *EntityArrayEmbedded) SetGatewayInstances(v []GatewayInstance) {
 
 // GetGateways returns the Gateways field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetGateways() []EntityArrayEmbeddedGatewaysInner {
-	if o == nil || o.Gateways == nil {
+	if o == nil || isNil(o.Gateways) {
 		var ret []EntityArrayEmbeddedGatewaysInner
 		return ret
 	}
@@ -433,15 +468,15 @@ func (o *EntityArrayEmbedded) GetGateways() []EntityArrayEmbeddedGatewaysInner {
 // GetGatewaysOk returns a tuple with the Gateways field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetGatewaysOk() ([]EntityArrayEmbeddedGatewaysInner, bool) {
-	if o == nil || o.Gateways == nil {
-		return nil, false
+	if o == nil || isNil(o.Gateways) {
+    return nil, false
 	}
 	return o.Gateways, true
 }
 
 // HasGateways returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasGateways() bool {
-	if o != nil && o.Gateways != nil {
+	if o != nil && !isNil(o.Gateways) {
 		return true
 	}
 
@@ -455,7 +490,7 @@ func (o *EntityArrayEmbedded) SetGateways(v []EntityArrayEmbeddedGatewaysInner) 
 
 // GetGrants returns the Grants field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetGrants() []ApplicationResourceGrant {
-	if o == nil || o.Grants == nil {
+	if o == nil || isNil(o.Grants) {
 		var ret []ApplicationResourceGrant
 		return ret
 	}
@@ -465,15 +500,15 @@ func (o *EntityArrayEmbedded) GetGrants() []ApplicationResourceGrant {
 // GetGrantsOk returns a tuple with the Grants field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetGrantsOk() ([]ApplicationResourceGrant, bool) {
-	if o == nil || o.Grants == nil {
-		return nil, false
+	if o == nil || isNil(o.Grants) {
+    return nil, false
 	}
 	return o.Grants, true
 }
 
 // HasGrants returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasGrants() bool {
-	if o != nil && o.Grants != nil {
+	if o != nil && !isNil(o.Grants) {
 		return true
 	}
 
@@ -487,7 +522,7 @@ func (o *EntityArrayEmbedded) SetGrants(v []ApplicationResourceGrant) {
 
 // GetGroups returns the Groups field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetGroups() []Group {
-	if o == nil || o.Groups == nil {
+	if o == nil || isNil(o.Groups) {
 		var ret []Group
 		return ret
 	}
@@ -497,15 +532,15 @@ func (o *EntityArrayEmbedded) GetGroups() []Group {
 // GetGroupsOk returns a tuple with the Groups field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetGroupsOk() ([]Group, bool) {
-	if o == nil || o.Groups == nil {
-		return nil, false
+	if o == nil || isNil(o.Groups) {
+    return nil, false
 	}
 	return o.Groups, true
 }
 
 // HasGroups returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasGroups() bool {
-	if o != nil && o.Groups != nil {
+	if o != nil && !isNil(o.Groups) {
 		return true
 	}
 
@@ -519,7 +554,7 @@ func (o *EntityArrayEmbedded) SetGroups(v []Group) {
 
 // GetGroupMemberships returns the GroupMemberships field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetGroupMemberships() []GroupMembership {
-	if o == nil || o.GroupMemberships == nil {
+	if o == nil || isNil(o.GroupMemberships) {
 		var ret []GroupMembership
 		return ret
 	}
@@ -529,15 +564,15 @@ func (o *EntityArrayEmbedded) GetGroupMemberships() []GroupMembership {
 // GetGroupMembershipsOk returns a tuple with the GroupMemberships field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetGroupMembershipsOk() ([]GroupMembership, bool) {
-	if o == nil || o.GroupMemberships == nil {
-		return nil, false
+	if o == nil || isNil(o.GroupMemberships) {
+    return nil, false
 	}
 	return o.GroupMemberships, true
 }
 
 // HasGroupMemberships returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasGroupMemberships() bool {
-	if o != nil && o.GroupMemberships != nil {
+	if o != nil && !isNil(o.GroupMemberships) {
 		return true
 	}
 
@@ -551,7 +586,7 @@ func (o *EntityArrayEmbedded) SetGroupMemberships(v []GroupMembership) {
 
 // GetIdentityProviders returns the IdentityProviders field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetIdentityProviders() []IdentityProvider {
-	if o == nil || o.IdentityProviders == nil {
+	if o == nil || isNil(o.IdentityProviders) {
 		var ret []IdentityProvider
 		return ret
 	}
@@ -561,15 +596,15 @@ func (o *EntityArrayEmbedded) GetIdentityProviders() []IdentityProvider {
 // GetIdentityProvidersOk returns a tuple with the IdentityProviders field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetIdentityProvidersOk() ([]IdentityProvider, bool) {
-	if o == nil || o.IdentityProviders == nil {
-		return nil, false
+	if o == nil || isNil(o.IdentityProviders) {
+    return nil, false
 	}
 	return o.IdentityProviders, true
 }
 
 // HasIdentityProviders returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasIdentityProviders() bool {
-	if o != nil && o.IdentityProviders != nil {
+	if o != nil && !isNil(o.IdentityProviders) {
 		return true
 	}
 
@@ -583,7 +618,7 @@ func (o *EntityArrayEmbedded) SetIdentityProviders(v []IdentityProvider) {
 
 // GetKeys returns the Keys field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetKeys() []Certificate {
-	if o == nil || o.Keys == nil {
+	if o == nil || isNil(o.Keys) {
 		var ret []Certificate
 		return ret
 	}
@@ -593,15 +628,15 @@ func (o *EntityArrayEmbedded) GetKeys() []Certificate {
 // GetKeysOk returns a tuple with the Keys field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetKeysOk() ([]Certificate, bool) {
-	if o == nil || o.Keys == nil {
-		return nil, false
+	if o == nil || isNil(o.Keys) {
+    return nil, false
 	}
 	return o.Keys, true
 }
 
 // HasKeys returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasKeys() bool {
-	if o != nil && o.Keys != nil {
+	if o != nil && !isNil(o.Keys) {
 		return true
 	}
 
@@ -615,7 +650,7 @@ func (o *EntityArrayEmbedded) SetKeys(v []Certificate) {
 
 // GetLanguages returns the Languages field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetLanguages() []EntityArrayEmbeddedLanguagesInner {
-	if o == nil || o.Languages == nil {
+	if o == nil || isNil(o.Languages) {
 		var ret []EntityArrayEmbeddedLanguagesInner
 		return ret
 	}
@@ -625,15 +660,15 @@ func (o *EntityArrayEmbedded) GetLanguages() []EntityArrayEmbeddedLanguagesInner
 // GetLanguagesOk returns a tuple with the Languages field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetLanguagesOk() ([]EntityArrayEmbeddedLanguagesInner, bool) {
-	if o == nil || o.Languages == nil {
-		return nil, false
+	if o == nil || isNil(o.Languages) {
+    return nil, false
 	}
 	return o.Languages, true
 }
 
 // HasLanguages returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasLanguages() bool {
-	if o != nil && o.Languages != nil {
+	if o != nil && !isNil(o.Languages) {
 		return true
 	}
 
@@ -647,7 +682,7 @@ func (o *EntityArrayEmbedded) SetLanguages(v []EntityArrayEmbeddedLanguagesInner
 
 // GetLicenses returns the Licenses field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetLicenses() []License {
-	if o == nil || o.Licenses == nil {
+	if o == nil || isNil(o.Licenses) {
 		var ret []License
 		return ret
 	}
@@ -657,15 +692,15 @@ func (o *EntityArrayEmbedded) GetLicenses() []License {
 // GetLicensesOk returns a tuple with the Licenses field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetLicensesOk() ([]License, bool) {
-	if o == nil || o.Licenses == nil {
-		return nil, false
+	if o == nil || isNil(o.Licenses) {
+    return nil, false
 	}
 	return o.Licenses, true
 }
 
 // HasLicenses returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasLicenses() bool {
-	if o != nil && o.Licenses != nil {
+	if o != nil && !isNil(o.Licenses) {
 		return true
 	}
 
@@ -677,9 +712,41 @@ func (o *EntityArrayEmbedded) SetLicenses(v []License) {
 	o.Licenses = v
 }
 
+// GetNotificationsPolicies returns the NotificationsPolicies field value if set, zero value otherwise.
+func (o *EntityArrayEmbedded) GetNotificationsPolicies() []NotificationsPolicy {
+	if o == nil || isNil(o.NotificationsPolicies) {
+		var ret []NotificationsPolicy
+		return ret
+	}
+	return o.NotificationsPolicies
+}
+
+// GetNotificationsPoliciesOk returns a tuple with the NotificationsPolicies field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EntityArrayEmbedded) GetNotificationsPoliciesOk() ([]NotificationsPolicy, bool) {
+	if o == nil || isNil(o.NotificationsPolicies) {
+    return nil, false
+	}
+	return o.NotificationsPolicies, true
+}
+
+// HasNotificationsPolicies returns a boolean if a field has been set.
+func (o *EntityArrayEmbedded) HasNotificationsPolicies() bool {
+	if o != nil && !isNil(o.NotificationsPolicies) {
+		return true
+	}
+
+	return false
+}
+
+// SetNotificationsPolicies gets a reference to the given []NotificationsPolicy and assigns it to the NotificationsPolicies field.
+func (o *EntityArrayEmbedded) SetNotificationsPolicies(v []NotificationsPolicy) {
+	o.NotificationsPolicies = v
+}
+
 // GetOrganizations returns the Organizations field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetOrganizations() []Organization {
-	if o == nil || o.Organizations == nil {
+	if o == nil || isNil(o.Organizations) {
 		var ret []Organization
 		return ret
 	}
@@ -689,15 +756,15 @@ func (o *EntityArrayEmbedded) GetOrganizations() []Organization {
 // GetOrganizationsOk returns a tuple with the Organizations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetOrganizationsOk() ([]Organization, bool) {
-	if o == nil || o.Organizations == nil {
-		return nil, false
+	if o == nil || isNil(o.Organizations) {
+    return nil, false
 	}
 	return o.Organizations, true
 }
 
 // HasOrganizations returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasOrganizations() bool {
-	if o != nil && o.Organizations != nil {
+	if o != nil && !isNil(o.Organizations) {
 		return true
 	}
 
@@ -711,7 +778,7 @@ func (o *EntityArrayEmbedded) SetOrganizations(v []Organization) {
 
 // GetPasswordPolicies returns the PasswordPolicies field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetPasswordPolicies() []PasswordPolicy {
-	if o == nil || o.PasswordPolicies == nil {
+	if o == nil || isNil(o.PasswordPolicies) {
 		var ret []PasswordPolicy
 		return ret
 	}
@@ -721,15 +788,15 @@ func (o *EntityArrayEmbedded) GetPasswordPolicies() []PasswordPolicy {
 // GetPasswordPoliciesOk returns a tuple with the PasswordPolicies field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetPasswordPoliciesOk() ([]PasswordPolicy, bool) {
-	if o == nil || o.PasswordPolicies == nil {
-		return nil, false
+	if o == nil || isNil(o.PasswordPolicies) {
+    return nil, false
 	}
 	return o.PasswordPolicies, true
 }
 
 // HasPasswordPolicies returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasPasswordPolicies() bool {
-	if o != nil && o.PasswordPolicies != nil {
+	if o != nil && !isNil(o.PasswordPolicies) {
 		return true
 	}
 
@@ -743,7 +810,7 @@ func (o *EntityArrayEmbedded) SetPasswordPolicies(v []PasswordPolicy) {
 
 // GetPopulations returns the Populations field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetPopulations() []Population {
-	if o == nil || o.Populations == nil {
+	if o == nil || isNil(o.Populations) {
 		var ret []Population
 		return ret
 	}
@@ -753,15 +820,15 @@ func (o *EntityArrayEmbedded) GetPopulations() []Population {
 // GetPopulationsOk returns a tuple with the Populations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetPopulationsOk() ([]Population, bool) {
-	if o == nil || o.Populations == nil {
-		return nil, false
+	if o == nil || isNil(o.Populations) {
+    return nil, false
 	}
 	return o.Populations, true
 }
 
 // HasPopulations returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasPopulations() bool {
-	if o != nil && o.Populations != nil {
+	if o != nil && !isNil(o.Populations) {
 		return true
 	}
 
@@ -775,7 +842,7 @@ func (o *EntityArrayEmbedded) SetPopulations(v []Population) {
 
 // GetResources returns the Resources field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetResources() []Resource {
-	if o == nil || o.Resources == nil {
+	if o == nil || isNil(o.Resources) {
 		var ret []Resource
 		return ret
 	}
@@ -785,15 +852,15 @@ func (o *EntityArrayEmbedded) GetResources() []Resource {
 // GetResourcesOk returns a tuple with the Resources field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetResourcesOk() ([]Resource, bool) {
-	if o == nil || o.Resources == nil {
-		return nil, false
+	if o == nil || isNil(o.Resources) {
+    return nil, false
 	}
 	return o.Resources, true
 }
 
 // HasResources returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasResources() bool {
-	if o != nil && o.Resources != nil {
+	if o != nil && !isNil(o.Resources) {
 		return true
 	}
 
@@ -807,7 +874,7 @@ func (o *EntityArrayEmbedded) SetResources(v []Resource) {
 
 // GetRevisions returns the Revisions field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetRevisions() []AgreementLanguageRevision {
-	if o == nil || o.Revisions == nil {
+	if o == nil || isNil(o.Revisions) {
 		var ret []AgreementLanguageRevision
 		return ret
 	}
@@ -817,15 +884,15 @@ func (o *EntityArrayEmbedded) GetRevisions() []AgreementLanguageRevision {
 // GetRevisionsOk returns a tuple with the Revisions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetRevisionsOk() ([]AgreementLanguageRevision, bool) {
-	if o == nil || o.Revisions == nil {
-		return nil, false
+	if o == nil || isNil(o.Revisions) {
+    return nil, false
 	}
 	return o.Revisions, true
 }
 
 // HasRevisions returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasRevisions() bool {
-	if o != nil && o.Revisions != nil {
+	if o != nil && !isNil(o.Revisions) {
 		return true
 	}
 
@@ -839,7 +906,7 @@ func (o *EntityArrayEmbedded) SetRevisions(v []AgreementLanguageRevision) {
 
 // GetScopes returns the Scopes field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetScopes() []ResourceScope {
-	if o == nil || o.Scopes == nil {
+	if o == nil || isNil(o.Scopes) {
 		var ret []ResourceScope
 		return ret
 	}
@@ -849,15 +916,15 @@ func (o *EntityArrayEmbedded) GetScopes() []ResourceScope {
 // GetScopesOk returns a tuple with the Scopes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetScopesOk() ([]ResourceScope, bool) {
-	if o == nil || o.Scopes == nil {
-		return nil, false
+	if o == nil || isNil(o.Scopes) {
+    return nil, false
 	}
 	return o.Scopes, true
 }
 
 // HasScopes returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasScopes() bool {
-	if o != nil && o.Scopes != nil {
+	if o != nil && !isNil(o.Scopes) {
 		return true
 	}
 
@@ -871,7 +938,7 @@ func (o *EntityArrayEmbedded) SetScopes(v []ResourceScope) {
 
 // GetSignOnPolicies returns the SignOnPolicies field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetSignOnPolicies() []SignOnPolicy {
-	if o == nil || o.SignOnPolicies == nil {
+	if o == nil || isNil(o.SignOnPolicies) {
 		var ret []SignOnPolicy
 		return ret
 	}
@@ -881,15 +948,15 @@ func (o *EntityArrayEmbedded) GetSignOnPolicies() []SignOnPolicy {
 // GetSignOnPoliciesOk returns a tuple with the SignOnPolicies field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetSignOnPoliciesOk() ([]SignOnPolicy, bool) {
-	if o == nil || o.SignOnPolicies == nil {
-		return nil, false
+	if o == nil || isNil(o.SignOnPolicies) {
+    return nil, false
 	}
 	return o.SignOnPolicies, true
 }
 
 // HasSignOnPolicies returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasSignOnPolicies() bool {
-	if o != nil && o.SignOnPolicies != nil {
+	if o != nil && !isNil(o.SignOnPolicies) {
 		return true
 	}
 
@@ -903,7 +970,7 @@ func (o *EntityArrayEmbedded) SetSignOnPolicies(v []SignOnPolicy) {
 
 // GetSignOnPolicyAssignments returns the SignOnPolicyAssignments field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetSignOnPolicyAssignments() []SignOnPolicyAssignment {
-	if o == nil || o.SignOnPolicyAssignments == nil {
+	if o == nil || isNil(o.SignOnPolicyAssignments) {
 		var ret []SignOnPolicyAssignment
 		return ret
 	}
@@ -913,15 +980,15 @@ func (o *EntityArrayEmbedded) GetSignOnPolicyAssignments() []SignOnPolicyAssignm
 // GetSignOnPolicyAssignmentsOk returns a tuple with the SignOnPolicyAssignments field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetSignOnPolicyAssignmentsOk() ([]SignOnPolicyAssignment, bool) {
-	if o == nil || o.SignOnPolicyAssignments == nil {
-		return nil, false
+	if o == nil || isNil(o.SignOnPolicyAssignments) {
+    return nil, false
 	}
 	return o.SignOnPolicyAssignments, true
 }
 
 // HasSignOnPolicyAssignments returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasSignOnPolicyAssignments() bool {
-	if o != nil && o.SignOnPolicyAssignments != nil {
+	if o != nil && !isNil(o.SignOnPolicyAssignments) {
 		return true
 	}
 
@@ -935,7 +1002,7 @@ func (o *EntityArrayEmbedded) SetSignOnPolicyAssignments(v []SignOnPolicyAssignm
 
 // GetSubscriptions returns the Subscriptions field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetSubscriptions() []Subscription {
-	if o == nil || o.Subscriptions == nil {
+	if o == nil || isNil(o.Subscriptions) {
 		var ret []Subscription
 		return ret
 	}
@@ -945,15 +1012,15 @@ func (o *EntityArrayEmbedded) GetSubscriptions() []Subscription {
 // GetSubscriptionsOk returns a tuple with the Subscriptions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetSubscriptionsOk() ([]Subscription, bool) {
-	if o == nil || o.Subscriptions == nil {
-		return nil, false
+	if o == nil || isNil(o.Subscriptions) {
+    return nil, false
 	}
 	return o.Subscriptions, true
 }
 
 // HasSubscriptions returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasSubscriptions() bool {
-	if o != nil && o.Subscriptions != nil {
+	if o != nil && !isNil(o.Subscriptions) {
 		return true
 	}
 
@@ -965,9 +1032,41 @@ func (o *EntityArrayEmbedded) SetSubscriptions(v []Subscription) {
 	o.Subscriptions = v
 }
 
+// GetTemplates returns the Templates field value if set, zero value otherwise.
+func (o *EntityArrayEmbedded) GetTemplates() []Template {
+	if o == nil || isNil(o.Templates) {
+		var ret []Template
+		return ret
+	}
+	return o.Templates
+}
+
+// GetTemplatesOk returns a tuple with the Templates field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EntityArrayEmbedded) GetTemplatesOk() ([]Template, bool) {
+	if o == nil || isNil(o.Templates) {
+    return nil, false
+	}
+	return o.Templates, true
+}
+
+// HasTemplates returns a boolean if a field has been set.
+func (o *EntityArrayEmbedded) HasTemplates() bool {
+	if o != nil && !isNil(o.Templates) {
+		return true
+	}
+
+	return false
+}
+
+// SetTemplates gets a reference to the given []Template and assigns it to the Templates field.
+func (o *EntityArrayEmbedded) SetTemplates(v []Template) {
+	o.Templates = v
+}
+
 // GetThemes returns the Themes field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetThemes() []BrandingTheme {
-	if o == nil || o.Themes == nil {
+	if o == nil || isNil(o.Themes) {
 		var ret []BrandingTheme
 		return ret
 	}
@@ -977,15 +1076,15 @@ func (o *EntityArrayEmbedded) GetThemes() []BrandingTheme {
 // GetThemesOk returns a tuple with the Themes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetThemesOk() ([]BrandingTheme, bool) {
-	if o == nil || o.Themes == nil {
-		return nil, false
+	if o == nil || isNil(o.Themes) {
+    return nil, false
 	}
 	return o.Themes, true
 }
 
 // HasThemes returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasThemes() bool {
-	if o != nil && o.Themes != nil {
+	if o != nil && !isNil(o.Themes) {
 		return true
 	}
 
@@ -999,7 +1098,7 @@ func (o *EntityArrayEmbedded) SetThemes(v []BrandingTheme) {
 
 // GetTrustedEmails returns the TrustedEmails field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetTrustedEmails() []EmailDomainTrustedEmail {
-	if o == nil || o.TrustedEmails == nil {
+	if o == nil || isNil(o.TrustedEmails) {
 		var ret []EmailDomainTrustedEmail
 		return ret
 	}
@@ -1009,15 +1108,15 @@ func (o *EntityArrayEmbedded) GetTrustedEmails() []EmailDomainTrustedEmail {
 // GetTrustedEmailsOk returns a tuple with the TrustedEmails field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetTrustedEmailsOk() ([]EmailDomainTrustedEmail, bool) {
-	if o == nil || o.TrustedEmails == nil {
-		return nil, false
+	if o == nil || isNil(o.TrustedEmails) {
+    return nil, false
 	}
 	return o.TrustedEmails, true
 }
 
 // HasTrustedEmails returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasTrustedEmails() bool {
-	if o != nil && o.TrustedEmails != nil {
+	if o != nil && !isNil(o.TrustedEmails) {
 		return true
 	}
 
@@ -1031,7 +1130,7 @@ func (o *EntityArrayEmbedded) SetTrustedEmails(v []EmailDomainTrustedEmail) {
 
 // GetRoleAssignments returns the RoleAssignments field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetRoleAssignments() []RoleAssignment {
-	if o == nil || o.RoleAssignments == nil {
+	if o == nil || isNil(o.RoleAssignments) {
 		var ret []RoleAssignment
 		return ret
 	}
@@ -1041,15 +1140,15 @@ func (o *EntityArrayEmbedded) GetRoleAssignments() []RoleAssignment {
 // GetRoleAssignmentsOk returns a tuple with the RoleAssignments field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetRoleAssignmentsOk() ([]RoleAssignment, bool) {
-	if o == nil || o.RoleAssignments == nil {
-		return nil, false
+	if o == nil || isNil(o.RoleAssignments) {
+    return nil, false
 	}
 	return o.RoleAssignments, true
 }
 
 // HasRoleAssignments returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasRoleAssignments() bool {
-	if o != nil && o.RoleAssignments != nil {
+	if o != nil && !isNil(o.RoleAssignments) {
 		return true
 	}
 
@@ -1063,7 +1162,7 @@ func (o *EntityArrayEmbedded) SetRoleAssignments(v []RoleAssignment) {
 
 // GetRoles returns the Roles field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetRoles() []Role {
-	if o == nil || o.Roles == nil {
+	if o == nil || isNil(o.Roles) {
 		var ret []Role
 		return ret
 	}
@@ -1073,15 +1172,15 @@ func (o *EntityArrayEmbedded) GetRoles() []Role {
 // GetRolesOk returns a tuple with the Roles field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetRolesOk() ([]Role, bool) {
-	if o == nil || o.Roles == nil {
-		return nil, false
+	if o == nil || isNil(o.Roles) {
+    return nil, false
 	}
 	return o.Roles, true
 }
 
 // HasRoles returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasRoles() bool {
-	if o != nil && o.Roles != nil {
+	if o != nil && !isNil(o.Roles) {
 		return true
 	}
 
@@ -1095,7 +1194,7 @@ func (o *EntityArrayEmbedded) SetRoles(v []Role) {
 
 // GetSchemas returns the Schemas field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetSchemas() []Schema {
-	if o == nil || o.Schemas == nil {
+	if o == nil || isNil(o.Schemas) {
 		var ret []Schema
 		return ret
 	}
@@ -1105,15 +1204,15 @@ func (o *EntityArrayEmbedded) GetSchemas() []Schema {
 // GetSchemasOk returns a tuple with the Schemas field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetSchemasOk() ([]Schema, bool) {
-	if o == nil || o.Schemas == nil {
-		return nil, false
+	if o == nil || isNil(o.Schemas) {
+    return nil, false
 	}
 	return o.Schemas, true
 }
 
 // HasSchemas returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasSchemas() bool {
-	if o != nil && o.Schemas != nil {
+	if o != nil && !isNil(o.Schemas) {
 		return true
 	}
 
@@ -1127,7 +1226,7 @@ func (o *EntityArrayEmbedded) SetSchemas(v []Schema) {
 
 // GetUsers returns the Users field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetUsers() []User {
-	if o == nil || o.Users == nil {
+	if o == nil || isNil(o.Users) {
 		var ret []User
 		return ret
 	}
@@ -1137,15 +1236,15 @@ func (o *EntityArrayEmbedded) GetUsers() []User {
 // GetUsersOk returns a tuple with the Users field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetUsersOk() ([]User, bool) {
-	if o == nil || o.Users == nil {
-		return nil, false
+	if o == nil || isNil(o.Users) {
+    return nil, false
 	}
 	return o.Users, true
 }
 
 // HasUsers returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasUsers() bool {
-	if o != nil && o.Users != nil {
+	if o != nil && !isNil(o.Users) {
 		return true
 	}
 
@@ -1159,106 +1258,115 @@ func (o *EntityArrayEmbedded) SetUsers(v []User) {
 
 func (o EntityArrayEmbedded) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Actions != nil {
+	if !isNil(o.Actions) {
 		toSerialize["actions"] = o.Actions
 	}
-	if o.Agreements != nil {
+	if !isNil(o.Agreements) {
 		toSerialize["agreements"] = o.Agreements
 	}
-	if o.AlertChannels != nil {
+	if !isNil(o.AlertChannels) {
 		toSerialize["alertChannels"] = o.AlertChannels
 	}
-	if o.Attributes != nil {
+	if !isNil(o.Attributes) {
 		toSerialize["attributes"] = o.Attributes
 	}
-	if o.Applications != nil {
+	if !isNil(o.Applications) {
 		toSerialize["applications"] = o.Applications
 	}
-	if o.Certificates != nil {
+	if !isNil(o.Certificates) {
 		toSerialize["certificates"] = o.Certificates
 	}
-	if o.Credentials != nil {
+	if !isNil(o.Contents) {
+		toSerialize["contents"] = o.Contents
+	}
+	if !isNil(o.Credentials) {
 		toSerialize["credentials"] = o.Credentials
 	}
-	if o.CustomDomains != nil {
+	if !isNil(o.CustomDomains) {
 		toSerialize["customDomains"] = o.CustomDomains
 	}
-	if o.EmailDomains != nil {
+	if !isNil(o.EmailDomains) {
 		toSerialize["emailDomains"] = o.EmailDomains
 	}
-	if o.Environments != nil {
+	if !isNil(o.Environments) {
 		toSerialize["environments"] = o.Environments
 	}
-	if o.GatewayInstances != nil {
+	if !isNil(o.GatewayInstances) {
 		toSerialize["gatewayInstances"] = o.GatewayInstances
 	}
-	if o.Gateways != nil {
+	if !isNil(o.Gateways) {
 		toSerialize["gateways"] = o.Gateways
 	}
-	if o.Grants != nil {
+	if !isNil(o.Grants) {
 		toSerialize["grants"] = o.Grants
 	}
-	if o.Groups != nil {
+	if !isNil(o.Groups) {
 		toSerialize["groups"] = o.Groups
 	}
-	if o.GroupMemberships != nil {
+	if !isNil(o.GroupMemberships) {
 		toSerialize["groupMemberships"] = o.GroupMemberships
 	}
-	if o.IdentityProviders != nil {
+	if !isNil(o.IdentityProviders) {
 		toSerialize["identityProviders"] = o.IdentityProviders
 	}
-	if o.Keys != nil {
+	if !isNil(o.Keys) {
 		toSerialize["keys"] = o.Keys
 	}
-	if o.Languages != nil {
+	if !isNil(o.Languages) {
 		toSerialize["languages"] = o.Languages
 	}
-	if o.Licenses != nil {
+	if !isNil(o.Licenses) {
 		toSerialize["licenses"] = o.Licenses
 	}
-	if o.Organizations != nil {
+	if !isNil(o.NotificationsPolicies) {
+		toSerialize["notificationsPolicies"] = o.NotificationsPolicies
+	}
+	if !isNil(o.Organizations) {
 		toSerialize["organizations"] = o.Organizations
 	}
-	if o.PasswordPolicies != nil {
+	if !isNil(o.PasswordPolicies) {
 		toSerialize["passwordPolicies"] = o.PasswordPolicies
 	}
-	if o.Populations != nil {
+	if !isNil(o.Populations) {
 		toSerialize["populations"] = o.Populations
 	}
-	if o.Resources != nil {
+	if !isNil(o.Resources) {
 		toSerialize["resources"] = o.Resources
 	}
-	if o.Revisions != nil {
+	if !isNil(o.Revisions) {
 		toSerialize["revisions"] = o.Revisions
 	}
-	if o.Scopes != nil {
+	if !isNil(o.Scopes) {
 		toSerialize["scopes"] = o.Scopes
 	}
-	if o.SignOnPolicies != nil {
+	if !isNil(o.SignOnPolicies) {
 		toSerialize["signOnPolicies"] = o.SignOnPolicies
 	}
-	if o.SignOnPolicyAssignments != nil {
+	if !isNil(o.SignOnPolicyAssignments) {
 		toSerialize["signOnPolicyAssignments"] = o.SignOnPolicyAssignments
 	}
-	if o.Subscriptions != nil {
+	if !isNil(o.Subscriptions) {
 		toSerialize["subscriptions"] = o.Subscriptions
 	}
-	if o.Themes != nil {
+	if !isNil(o.Templates) {
+		toSerialize["templates"] = o.Templates
+	}
+	if !isNil(o.Themes) {
 		toSerialize["themes"] = o.Themes
 	}
-	if o.TrustedEmails != nil {
+	if !isNil(o.TrustedEmails) {
 		toSerialize["trustedEmails"] = o.TrustedEmails
 	}
-	if o.RoleAssignments != nil {
+	if !isNil(o.RoleAssignments) {
 		toSerialize["roleAssignments"] = o.RoleAssignments
 	}
-	if o.Roles != nil {
+	if !isNil(o.Roles) {
 		toSerialize["roles"] = o.Roles
 	}
-	if o.Schemas != nil {
+	if !isNil(o.Schemas) {
 		toSerialize["schemas"] = o.Schemas
 	}
-	if o.Users != nil {
+	if !isNil(o.Users) {
 		toSerialize["users"] = o.Users
 	}
 	return json.Marshal(toSerialize)

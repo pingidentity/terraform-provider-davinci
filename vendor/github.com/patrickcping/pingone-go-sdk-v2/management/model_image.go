@@ -43,7 +43,7 @@ func NewImageWithDefaults() *Image {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *Image) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -53,15 +53,15 @@ func (o *Image) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Image) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *Image) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -75,7 +75,7 @@ func (o *Image) SetId(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *Image) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -85,15 +85,15 @@ func (o *Image) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Image) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *Image) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -107,7 +107,7 @@ func (o *Image) SetEnvironment(v ObjectEnvironment) {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *Image) GetCreatedAt() string {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret string
 		return ret
 	}
@@ -117,15 +117,15 @@ func (o *Image) GetCreatedAt() string {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Image) GetCreatedAtOk() (*string, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *Image) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -139,7 +139,7 @@ func (o *Image) SetCreatedAt(v string) {
 
 // GetTargets returns the Targets field value if set, zero value otherwise.
 func (o *Image) GetTargets() ImageTargets {
-	if o == nil || o.Targets == nil {
+	if o == nil || isNil(o.Targets) {
 		var ret ImageTargets
 		return ret
 	}
@@ -149,15 +149,15 @@ func (o *Image) GetTargets() ImageTargets {
 // GetTargetsOk returns a tuple with the Targets field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Image) GetTargetsOk() (*ImageTargets, bool) {
-	if o == nil || o.Targets == nil {
-		return nil, false
+	if o == nil || isNil(o.Targets) {
+    return nil, false
 	}
 	return o.Targets, true
 }
 
 // HasTargets returns a boolean if a field has been set.
 func (o *Image) HasTargets() bool {
-	if o != nil && o.Targets != nil {
+	if o != nil && !isNil(o.Targets) {
 		return true
 	}
 
@@ -171,16 +171,16 @@ func (o *Image) SetTargets(v ImageTargets) {
 
 func (o Image) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.Targets != nil {
+	if !isNil(o.Targets) {
 		toSerialize["targets"] = o.Targets
 	}
 	return json.Marshal(toSerialize)

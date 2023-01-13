@@ -43,7 +43,7 @@ func NewEmailDomainWithDefaults() *EmailDomain {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *EmailDomain) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -53,15 +53,15 @@ func (o *EmailDomain) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomain) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *EmailDomain) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -87,7 +87,7 @@ func (o *EmailDomain) GetDomainName() string {
 // and a boolean to check if the value has been set.
 func (o *EmailDomain) GetDomainNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.DomainName, true
 }
@@ -99,7 +99,7 @@ func (o *EmailDomain) SetDomainName(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *EmailDomain) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -109,15 +109,15 @@ func (o *EmailDomain) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomain) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *EmailDomain) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -131,13 +131,13 @@ func (o *EmailDomain) SetEnvironment(v ObjectEnvironment) {
 
 func (o EmailDomain) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
 		toSerialize["domainName"] = o.DomainName
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
 	return json.Marshal(toSerialize)

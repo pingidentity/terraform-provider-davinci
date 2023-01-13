@@ -47,7 +47,7 @@ func NewBillOfMaterialsProductsInnerWithDefaults() *BillOfMaterialsProductsInner
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *BillOfMaterialsProductsInner) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -57,15 +57,15 @@ func (o *BillOfMaterialsProductsInner) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInner) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *BillOfMaterialsProductsInner) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -91,7 +91,7 @@ func (o *BillOfMaterialsProductsInner) GetType() EnumProductType {
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInner) GetTypeOk() (*EnumProductType, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Type, true
 }
@@ -103,7 +103,7 @@ func (o *BillOfMaterialsProductsInner) SetType(v EnumProductType) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *BillOfMaterialsProductsInner) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -113,15 +113,15 @@ func (o *BillOfMaterialsProductsInner) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInner) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *BillOfMaterialsProductsInner) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -135,7 +135,7 @@ func (o *BillOfMaterialsProductsInner) SetDescription(v string) {
 
 // GetConsole returns the Console field value if set, zero value otherwise.
 func (o *BillOfMaterialsProductsInner) GetConsole() BillOfMaterialsProductsInnerConsole {
-	if o == nil || o.Console == nil {
+	if o == nil || isNil(o.Console) {
 		var ret BillOfMaterialsProductsInnerConsole
 		return ret
 	}
@@ -145,15 +145,15 @@ func (o *BillOfMaterialsProductsInner) GetConsole() BillOfMaterialsProductsInner
 // GetConsoleOk returns a tuple with the Console field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInner) GetConsoleOk() (*BillOfMaterialsProductsInnerConsole, bool) {
-	if o == nil || o.Console == nil {
-		return nil, false
+	if o == nil || isNil(o.Console) {
+    return nil, false
 	}
 	return o.Console, true
 }
 
 // HasConsole returns a boolean if a field has been set.
 func (o *BillOfMaterialsProductsInner) HasConsole() bool {
-	if o != nil && o.Console != nil {
+	if o != nil && !isNil(o.Console) {
 		return true
 	}
 
@@ -167,7 +167,7 @@ func (o *BillOfMaterialsProductsInner) SetConsole(v BillOfMaterialsProductsInner
 
 // GetDeployment returns the Deployment field value if set, zero value otherwise.
 func (o *BillOfMaterialsProductsInner) GetDeployment() BillOfMaterialsProductsInnerDeployment {
-	if o == nil || o.Deployment == nil {
+	if o == nil || isNil(o.Deployment) {
 		var ret BillOfMaterialsProductsInnerDeployment
 		return ret
 	}
@@ -177,15 +177,15 @@ func (o *BillOfMaterialsProductsInner) GetDeployment() BillOfMaterialsProductsIn
 // GetDeploymentOk returns a tuple with the Deployment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInner) GetDeploymentOk() (*BillOfMaterialsProductsInnerDeployment, bool) {
-	if o == nil || o.Deployment == nil {
-		return nil, false
+	if o == nil || isNil(o.Deployment) {
+    return nil, false
 	}
 	return o.Deployment, true
 }
 
 // HasDeployment returns a boolean if a field has been set.
 func (o *BillOfMaterialsProductsInner) HasDeployment() bool {
-	if o != nil && o.Deployment != nil {
+	if o != nil && !isNil(o.Deployment) {
 		return true
 	}
 
@@ -199,7 +199,7 @@ func (o *BillOfMaterialsProductsInner) SetDeployment(v BillOfMaterialsProductsIn
 
 // GetBookmarks returns the Bookmarks field value if set, zero value otherwise.
 func (o *BillOfMaterialsProductsInner) GetBookmarks() []BillOfMaterialsProductsInnerBookmarksInner {
-	if o == nil || o.Bookmarks == nil {
+	if o == nil || isNil(o.Bookmarks) {
 		var ret []BillOfMaterialsProductsInnerBookmarksInner
 		return ret
 	}
@@ -209,15 +209,15 @@ func (o *BillOfMaterialsProductsInner) GetBookmarks() []BillOfMaterialsProductsI
 // GetBookmarksOk returns a tuple with the Bookmarks field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *BillOfMaterialsProductsInner) GetBookmarksOk() ([]BillOfMaterialsProductsInnerBookmarksInner, bool) {
-	if o == nil || o.Bookmarks == nil {
-		return nil, false
+	if o == nil || isNil(o.Bookmarks) {
+    return nil, false
 	}
 	return o.Bookmarks, true
 }
 
 // HasBookmarks returns a boolean if a field has been set.
 func (o *BillOfMaterialsProductsInner) HasBookmarks() bool {
-	if o != nil && o.Bookmarks != nil {
+	if o != nil && !isNil(o.Bookmarks) {
 		return true
 	}
 
@@ -231,22 +231,22 @@ func (o *BillOfMaterialsProductsInner) SetBookmarks(v []BillOfMaterialsProductsI
 
 func (o BillOfMaterialsProductsInner) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
 		toSerialize["type"] = o.Type
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if o.Console != nil {
+	if !isNil(o.Console) {
 		toSerialize["console"] = o.Console
 	}
-	if o.Deployment != nil {
+	if !isNil(o.Deployment) {
 		toSerialize["deployment"] = o.Deployment
 	}
-	if o.Bookmarks != nil {
+	if !isNil(o.Bookmarks) {
 		toSerialize["bookmarks"] = o.Bookmarks
 	}
 	return json.Marshal(toSerialize)

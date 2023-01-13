@@ -39,7 +39,7 @@ func NewUserPhotoWithDefaults() *UserPhoto {
 
 // GetHref returns the Href field value if set, zero value otherwise.
 func (o *UserPhoto) GetHref() string {
-	if o == nil || o.Href == nil {
+	if o == nil || isNil(o.Href) {
 		var ret string
 		return ret
 	}
@@ -49,15 +49,15 @@ func (o *UserPhoto) GetHref() string {
 // GetHrefOk returns a tuple with the Href field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPhoto) GetHrefOk() (*string, bool) {
-	if o == nil || o.Href == nil {
-		return nil, false
+	if o == nil || isNil(o.Href) {
+    return nil, false
 	}
 	return o.Href, true
 }
 
 // HasHref returns a boolean if a field has been set.
 func (o *UserPhoto) HasHref() bool {
-	if o != nil && o.Href != nil {
+	if o != nil && !isNil(o.Href) {
 		return true
 	}
 
@@ -71,7 +71,7 @@ func (o *UserPhoto) SetHref(v string) {
 
 func (o UserPhoto) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Href != nil {
+	if !isNil(o.Href) {
 		toSerialize["href"] = o.Href
 	}
 	return json.Marshal(toSerialize)

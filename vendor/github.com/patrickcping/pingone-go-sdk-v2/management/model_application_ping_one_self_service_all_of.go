@@ -42,7 +42,7 @@ func NewApplicationPingOneSelfServiceAllOfWithDefaults() *ApplicationPingOneSelf
 
 // GetEnableDefaultThemeFooter returns the EnableDefaultThemeFooter field value if set, zero value otherwise.
 func (o *ApplicationPingOneSelfServiceAllOf) GetEnableDefaultThemeFooter() bool {
-	if o == nil || o.EnableDefaultThemeFooter == nil {
+	if o == nil || isNil(o.EnableDefaultThemeFooter) {
 		var ret bool
 		return ret
 	}
@@ -52,15 +52,15 @@ func (o *ApplicationPingOneSelfServiceAllOf) GetEnableDefaultThemeFooter() bool 
 // GetEnableDefaultThemeFooterOk returns a tuple with the EnableDefaultThemeFooter field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfServiceAllOf) GetEnableDefaultThemeFooterOk() (*bool, bool) {
-	if o == nil || o.EnableDefaultThemeFooter == nil {
-		return nil, false
+	if o == nil || isNil(o.EnableDefaultThemeFooter) {
+    return nil, false
 	}
 	return o.EnableDefaultThemeFooter, true
 }
 
 // HasEnableDefaultThemeFooter returns a boolean if a field has been set.
 func (o *ApplicationPingOneSelfServiceAllOf) HasEnableDefaultThemeFooter() bool {
-	if o != nil && o.EnableDefaultThemeFooter != nil {
+	if o != nil && !isNil(o.EnableDefaultThemeFooter) {
 		return true
 	}
 
@@ -86,7 +86,7 @@ func (o *ApplicationPingOneSelfServiceAllOf) GetApplyDefaultTheme() bool {
 // and a boolean to check if the value has been set.
 func (o *ApplicationPingOneSelfServiceAllOf) GetApplyDefaultThemeOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ApplyDefaultTheme, true
 }
@@ -98,7 +98,7 @@ func (o *ApplicationPingOneSelfServiceAllOf) SetApplyDefaultTheme(v bool) {
 
 func (o ApplicationPingOneSelfServiceAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.EnableDefaultThemeFooter != nil {
+	if !isNil(o.EnableDefaultThemeFooter) {
 		toSerialize["enableDefaultThemeFooter"] = o.EnableDefaultThemeFooter
 	}
 	if true {

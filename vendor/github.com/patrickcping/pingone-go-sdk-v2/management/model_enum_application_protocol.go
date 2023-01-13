@@ -22,6 +22,7 @@ type EnumApplicationProtocol string
 const (
 	ENUMAPPLICATIONPROTOCOL_OPENID_CONNECT EnumApplicationProtocol = "OPENID_CONNECT"
 	ENUMAPPLICATIONPROTOCOL_SAML EnumApplicationProtocol = "SAML"
+	ENUMAPPLICATIONPROTOCOL_WS_FED EnumApplicationProtocol = "WS-FED"
 	ENUMAPPLICATIONPROTOCOL_EXTERNAL_LINK EnumApplicationProtocol = "EXTERNAL_LINK"
 )
 
@@ -29,6 +30,7 @@ const (
 var AllowedEnumApplicationProtocolEnumValues = []EnumApplicationProtocol{
 	"OPENID_CONNECT",
 	"SAML",
+	"WS-FED",
 	"EXTERNAL_LINK",
 }
 

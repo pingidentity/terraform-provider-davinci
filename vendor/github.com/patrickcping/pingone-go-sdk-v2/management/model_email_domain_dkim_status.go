@@ -41,7 +41,7 @@ func NewEmailDomainDKIMStatusWithDefaults() *EmailDomainDKIMStatus {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *EmailDomainDKIMStatus) GetType() string {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret string
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *EmailDomainDKIMStatus) GetType() string {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainDKIMStatus) GetTypeOk() (*string, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *EmailDomainDKIMStatus) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *EmailDomainDKIMStatus) SetType(v string) {
 
 // GetRegions returns the Regions field value if set, zero value otherwise.
 func (o *EmailDomainDKIMStatus) GetRegions() []EmailDomainDKIMStatusRegionsInner {
-	if o == nil || o.Regions == nil {
+	if o == nil || isNil(o.Regions) {
 		var ret []EmailDomainDKIMStatusRegionsInner
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *EmailDomainDKIMStatus) GetRegions() []EmailDomainDKIMStatusRegionsInner
 // GetRegionsOk returns a tuple with the Regions field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainDKIMStatus) GetRegionsOk() ([]EmailDomainDKIMStatusRegionsInner, bool) {
-	if o == nil || o.Regions == nil {
-		return nil, false
+	if o == nil || isNil(o.Regions) {
+    return nil, false
 	}
 	return o.Regions, true
 }
 
 // HasRegions returns a boolean if a field has been set.
 func (o *EmailDomainDKIMStatus) HasRegions() bool {
-	if o != nil && o.Regions != nil {
+	if o != nil && !isNil(o.Regions) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *EmailDomainDKIMStatus) SetRegions(v []EmailDomainDKIMStatusRegionsInner
 
 func (o EmailDomainDKIMStatus) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
-	if o.Regions != nil {
+	if !isNil(o.Regions) {
 		toSerialize["regions"] = o.Regions
 	}
 	return json.Marshal(toSerialize)

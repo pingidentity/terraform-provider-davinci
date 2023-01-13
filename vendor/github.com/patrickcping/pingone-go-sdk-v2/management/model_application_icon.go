@@ -53,7 +53,7 @@ func (o *ApplicationIcon) GetId() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationIcon) GetIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Id, true
 }
@@ -77,7 +77,7 @@ func (o *ApplicationIcon) GetHref() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationIcon) GetHrefOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Href, true
 }

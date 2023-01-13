@@ -96,7 +96,7 @@ func (o *Certificate) SetAlgorithm(v EnumCertificateKeyAlgorithm) {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *Certificate) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -106,7 +106,7 @@ func (o *Certificate) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		return nil, false
 	}
 	return o.CreatedAt, true
@@ -114,7 +114,7 @@ func (o *Certificate) GetCreatedAtOk() (*time.Time, bool) {
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *Certificate) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -128,7 +128,7 @@ func (o *Certificate) SetCreatedAt(v time.Time) {
 
 // GetDefault returns the Default field value if set, zero value otherwise.
 func (o *Certificate) GetDefault() bool {
-	if o == nil || o.Default == nil {
+	if o == nil || isNil(o.Default) {
 		var ret bool
 		return ret
 	}
@@ -138,7 +138,7 @@ func (o *Certificate) GetDefault() bool {
 // GetDefaultOk returns a tuple with the Default field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetDefaultOk() (*bool, bool) {
-	if o == nil || o.Default == nil {
+	if o == nil || isNil(o.Default) {
 		return nil, false
 	}
 	return o.Default, true
@@ -146,7 +146,7 @@ func (o *Certificate) GetDefaultOk() (*bool, bool) {
 
 // HasDefault returns a boolean if a field has been set.
 func (o *Certificate) HasDefault() bool {
-	if o != nil && o.Default != nil {
+	if o != nil && !isNil(o.Default) {
 		return true
 	}
 
@@ -160,7 +160,7 @@ func (o *Certificate) SetDefault(v bool) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *Certificate) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -170,7 +170,7 @@ func (o *Certificate) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		return nil, false
 	}
 	return o.Environment, true
@@ -178,7 +178,7 @@ func (o *Certificate) GetEnvironmentOk() (*ObjectEnvironment, bool) {
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *Certificate) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -192,7 +192,7 @@ func (o *Certificate) SetEnvironment(v ObjectEnvironment) {
 
 // GetExpiresAt returns the ExpiresAt field value if set, zero value otherwise.
 func (o *Certificate) GetExpiresAt() time.Time {
-	if o == nil || o.ExpiresAt == nil {
+	if o == nil || isNil(o.ExpiresAt) {
 		var ret time.Time
 		return ret
 	}
@@ -202,7 +202,7 @@ func (o *Certificate) GetExpiresAt() time.Time {
 // GetExpiresAtOk returns a tuple with the ExpiresAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetExpiresAtOk() (*time.Time, bool) {
-	if o == nil || o.ExpiresAt == nil {
+	if o == nil || isNil(o.ExpiresAt) {
 		return nil, false
 	}
 	return o.ExpiresAt, true
@@ -210,7 +210,7 @@ func (o *Certificate) GetExpiresAtOk() (*time.Time, bool) {
 
 // HasExpiresAt returns a boolean if a field has been set.
 func (o *Certificate) HasExpiresAt() bool {
-	if o != nil && o.ExpiresAt != nil {
+	if o != nil && !isNil(o.ExpiresAt) {
 		return true
 	}
 
@@ -224,7 +224,7 @@ func (o *Certificate) SetExpiresAt(v time.Time) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *Certificate) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -234,7 +234,7 @@ func (o *Certificate) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		return nil, false
 	}
 	return o.Id, true
@@ -242,7 +242,7 @@ func (o *Certificate) GetIdOk() (*string, bool) {
 
 // HasId returns a boolean if a field has been set.
 func (o *Certificate) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -256,7 +256,7 @@ func (o *Certificate) SetId(v string) {
 
 // GetIssuerDN returns the IssuerDN field value if set, zero value otherwise.
 func (o *Certificate) GetIssuerDN() string {
-	if o == nil || o.IssuerDN == nil {
+	if o == nil || isNil(o.IssuerDN) {
 		var ret string
 		return ret
 	}
@@ -266,7 +266,7 @@ func (o *Certificate) GetIssuerDN() string {
 // GetIssuerDNOk returns a tuple with the IssuerDN field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetIssuerDNOk() (*string, bool) {
-	if o == nil || o.IssuerDN == nil {
+	if o == nil || isNil(o.IssuerDN) {
 		return nil, false
 	}
 	return o.IssuerDN, true
@@ -274,7 +274,7 @@ func (o *Certificate) GetIssuerDNOk() (*string, bool) {
 
 // HasIssuerDN returns a boolean if a field has been set.
 func (o *Certificate) HasIssuerDN() bool {
-	if o != nil && o.IssuerDN != nil {
+	if o != nil && !isNil(o.IssuerDN) {
 		return true
 	}
 
@@ -336,7 +336,7 @@ func (o *Certificate) SetName(v string) {
 
 // GetOrganization returns the Organization field value if set, zero value otherwise.
 func (o *Certificate) GetOrganization() ObjectOrganization {
-	if o == nil || o.Organization == nil {
+	if o == nil || isNil(o.Organization) {
 		var ret ObjectOrganization
 		return ret
 	}
@@ -346,7 +346,7 @@ func (o *Certificate) GetOrganization() ObjectOrganization {
 // GetOrganizationOk returns a tuple with the Organization field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetOrganizationOk() (*ObjectOrganization, bool) {
-	if o == nil || o.Organization == nil {
+	if o == nil || isNil(o.Organization) {
 		return nil, false
 	}
 	return o.Organization, true
@@ -354,7 +354,7 @@ func (o *Certificate) GetOrganizationOk() (*ObjectOrganization, bool) {
 
 // HasOrganization returns a boolean if a field has been set.
 func (o *Certificate) HasOrganization() bool {
-	if o != nil && o.Organization != nil {
+	if o != nil && !isNil(o.Organization) {
 		return true
 	}
 
@@ -368,7 +368,7 @@ func (o *Certificate) SetOrganization(v ObjectOrganization) {
 
 // GetSerialNumber returns the SerialNumber field value if set, zero value otherwise.
 func (o *Certificate) GetSerialNumber() big.Int {
-	if o == nil || o.SerialNumber == nil {
+	if o == nil || isNil(o.SerialNumber) {
 		var ret big.Int
 		return ret
 	}
@@ -378,7 +378,7 @@ func (o *Certificate) GetSerialNumber() big.Int {
 // GetSerialNumberOk returns a tuple with the SerialNumber field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetSerialNumberOk() (*big.Int, bool) {
-	if o == nil || o.SerialNumber == nil {
+	if o == nil || isNil(o.SerialNumber) {
 		return nil, false
 	}
 	return o.SerialNumber, true
@@ -386,7 +386,7 @@ func (o *Certificate) GetSerialNumberOk() (*big.Int, bool) {
 
 // HasSerialNumber returns a boolean if a field has been set.
 func (o *Certificate) HasSerialNumber() bool {
-	if o != nil && o.SerialNumber != nil {
+	if o != nil && !isNil(o.SerialNumber) {
 		return true
 	}
 
@@ -424,7 +424,7 @@ func (o *Certificate) SetSignatureAlgorithm(v EnumCertificateKeySignagureAlgorit
 
 // GetStartsAt returns the StartsAt field value if set, zero value otherwise.
 func (o *Certificate) GetStartsAt() time.Time {
-	if o == nil || o.StartsAt == nil {
+	if o == nil || isNil(o.StartsAt) {
 		var ret time.Time
 		return ret
 	}
@@ -434,7 +434,7 @@ func (o *Certificate) GetStartsAt() time.Time {
 // GetStartsAtOk returns a tuple with the StartsAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetStartsAtOk() (*time.Time, bool) {
-	if o == nil || o.StartsAt == nil {
+	if o == nil || isNil(o.StartsAt) {
 		return nil, false
 	}
 	return o.StartsAt, true
@@ -442,7 +442,7 @@ func (o *Certificate) GetStartsAtOk() (*time.Time, bool) {
 
 // HasStartsAt returns a boolean if a field has been set.
 func (o *Certificate) HasStartsAt() bool {
-	if o != nil && o.StartsAt != nil {
+	if o != nil && !isNil(o.StartsAt) {
 		return true
 	}
 
@@ -456,7 +456,7 @@ func (o *Certificate) SetStartsAt(v time.Time) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *Certificate) GetStatus() EnumCertificateKeyStatus {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		var ret EnumCertificateKeyStatus
 		return ret
 	}
@@ -466,7 +466,7 @@ func (o *Certificate) GetStatus() EnumCertificateKeyStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Certificate) GetStatusOk() (*EnumCertificateKeyStatus, bool) {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		return nil, false
 	}
 	return o.Status, true
@@ -474,7 +474,7 @@ func (o *Certificate) GetStatusOk() (*EnumCertificateKeyStatus, bool) {
 
 // HasStatus returns a boolean if a field has been set.
 func (o *Certificate) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !isNil(o.Status) {
 		return true
 	}
 
@@ -563,22 +563,22 @@ func (o Certificate) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["algorithm"] = o.Algorithm
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.Default != nil {
+	if !isNil(o.Default) {
 		toSerialize["default"] = o.Default
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.ExpiresAt != nil {
+	if !isNil(o.ExpiresAt) {
 		toSerialize["expiresAt"] = o.ExpiresAt
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.IssuerDN != nil {
+	if !isNil(o.IssuerDN) {
 		toSerialize["issuerDN"] = o.IssuerDN
 	}
 	if true {
@@ -587,19 +587,19 @@ func (o Certificate) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.Organization != nil {
+	if !isNil(o.Organization) {
 		toSerialize["organization"] = o.Organization
 	}
-	if o.SerialNumber != nil {
+	if !isNil(o.SerialNumber) {
 		toSerialize["serialNumber"] = o.SerialNumber
 	}
 	if true {
 		toSerialize["signatureAlgorithm"] = o.SignatureAlgorithm
 	}
-	if o.StartsAt != nil {
+	if !isNil(o.StartsAt) {
 		toSerialize["startsAt"] = o.StartsAt
 	}
-	if o.Status != nil {
+	if !isNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
 	if true {

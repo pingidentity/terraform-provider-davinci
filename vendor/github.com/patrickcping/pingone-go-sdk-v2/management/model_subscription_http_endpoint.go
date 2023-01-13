@@ -54,7 +54,7 @@ func (o *SubscriptionHttpEndpoint) GetUrl() string {
 // and a boolean to check if the value has been set.
 func (o *SubscriptionHttpEndpoint) GetUrlOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Url, true
 }
@@ -66,7 +66,7 @@ func (o *SubscriptionHttpEndpoint) SetUrl(v string) {
 
 // GetHeaders returns the Headers field value if set, zero value otherwise.
 func (o *SubscriptionHttpEndpoint) GetHeaders() map[string]interface{} {
-	if o == nil || o.Headers == nil {
+	if o == nil || isNil(o.Headers) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -76,15 +76,15 @@ func (o *SubscriptionHttpEndpoint) GetHeaders() map[string]interface{} {
 // GetHeadersOk returns a tuple with the Headers field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SubscriptionHttpEndpoint) GetHeadersOk() (map[string]interface{}, bool) {
-	if o == nil || o.Headers == nil {
-		return nil, false
+	if o == nil || isNil(o.Headers) {
+    return map[string]interface{}{}, false
 	}
 	return o.Headers, true
 }
 
 // HasHeaders returns a boolean if a field has been set.
 func (o *SubscriptionHttpEndpoint) HasHeaders() bool {
-	if o != nil && o.Headers != nil {
+	if o != nil && !isNil(o.Headers) {
 		return true
 	}
 
@@ -101,7 +101,7 @@ func (o SubscriptionHttpEndpoint) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["url"] = o.Url
 	}
-	if o.Headers != nil {
+	if !isNil(o.Headers) {
 		toSerialize["headers"] = o.Headers
 	}
 	return json.Marshal(toSerialize)

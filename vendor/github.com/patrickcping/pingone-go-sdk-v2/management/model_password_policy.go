@@ -86,7 +86,7 @@ func NewPasswordPolicyWithDefaults() *PasswordPolicy {
 
 // GetBypassPolicy returns the BypassPolicy field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetBypassPolicy() bool {
-	if o == nil || o.BypassPolicy == nil {
+	if o == nil || isNil(o.BypassPolicy) {
 		var ret bool
 		return ret
 	}
@@ -96,15 +96,15 @@ func (o *PasswordPolicy) GetBypassPolicy() bool {
 // GetBypassPolicyOk returns a tuple with the BypassPolicy field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetBypassPolicyOk() (*bool, bool) {
-	if o == nil || o.BypassPolicy == nil {
-		return nil, false
+	if o == nil || isNil(o.BypassPolicy) {
+    return nil, false
 	}
 	return o.BypassPolicy, true
 }
 
 // HasBypassPolicy returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasBypassPolicy() bool {
-	if o != nil && o.BypassPolicy != nil {
+	if o != nil && !isNil(o.BypassPolicy) {
 		return true
 	}
 
@@ -118,7 +118,7 @@ func (o *PasswordPolicy) SetBypassPolicy(v bool) {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetCreatedAt() string {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret string
 		return ret
 	}
@@ -128,15 +128,15 @@ func (o *PasswordPolicy) GetCreatedAt() string {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetCreatedAtOk() (*string, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -150,7 +150,7 @@ func (o *PasswordPolicy) SetCreatedAt(v string) {
 
 // GetCurrentPassword returns the CurrentPassword field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetCurrentPassword() string {
-	if o == nil || o.CurrentPassword == nil {
+	if o == nil || isNil(o.CurrentPassword) {
 		var ret string
 		return ret
 	}
@@ -160,15 +160,15 @@ func (o *PasswordPolicy) GetCurrentPassword() string {
 // GetCurrentPasswordOk returns a tuple with the CurrentPassword field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetCurrentPasswordOk() (*string, bool) {
-	if o == nil || o.CurrentPassword == nil {
-		return nil, false
+	if o == nil || isNil(o.CurrentPassword) {
+    return nil, false
 	}
 	return o.CurrentPassword, true
 }
 
 // HasCurrentPassword returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasCurrentPassword() bool {
-	if o != nil && o.CurrentPassword != nil {
+	if o != nil && !isNil(o.CurrentPassword) {
 		return true
 	}
 
@@ -182,7 +182,7 @@ func (o *PasswordPolicy) SetCurrentPassword(v string) {
 
 // GetDefault returns the Default field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetDefault() bool {
-	if o == nil || o.Default == nil {
+	if o == nil || isNil(o.Default) {
 		var ret bool
 		return ret
 	}
@@ -192,15 +192,15 @@ func (o *PasswordPolicy) GetDefault() bool {
 // GetDefaultOk returns a tuple with the Default field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetDefaultOk() (*bool, bool) {
-	if o == nil || o.Default == nil {
-		return nil, false
+	if o == nil || isNil(o.Default) {
+    return nil, false
 	}
 	return o.Default, true
 }
 
 // HasDefault returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasDefault() bool {
-	if o != nil && o.Default != nil {
+	if o != nil && !isNil(o.Default) {
 		return true
 	}
 
@@ -214,7 +214,7 @@ func (o *PasswordPolicy) SetDefault(v bool) {
 
 // GetDescription returns the Description field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetDescription() string {
-	if o == nil || o.Description == nil {
+	if o == nil || isNil(o.Description) {
 		var ret string
 		return ret
 	}
@@ -224,15 +224,15 @@ func (o *PasswordPolicy) GetDescription() string {
 // GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetDescriptionOk() (*string, bool) {
-	if o == nil || o.Description == nil {
-		return nil, false
+	if o == nil || isNil(o.Description) {
+    return nil, false
 	}
 	return o.Description, true
 }
 
 // HasDescription returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasDescription() bool {
-	if o != nil && o.Description != nil {
+	if o != nil && !isNil(o.Description) {
 		return true
 	}
 
@@ -246,7 +246,7 @@ func (o *PasswordPolicy) SetDescription(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -256,15 +256,15 @@ func (o *PasswordPolicy) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -290,7 +290,7 @@ func (o *PasswordPolicy) GetExcludesCommonlyUsed() bool {
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetExcludesCommonlyUsedOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ExcludesCommonlyUsed, true
 }
@@ -314,7 +314,7 @@ func (o *PasswordPolicy) GetExcludesProfileData() bool {
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetExcludesProfileDataOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.ExcludesProfileData, true
 }
@@ -326,7 +326,7 @@ func (o *PasswordPolicy) SetExcludesProfileData(v bool) {
 
 // GetHistory returns the History field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetHistory() PasswordPolicyHistory {
-	if o == nil || o.History == nil {
+	if o == nil || isNil(o.History) {
 		var ret PasswordPolicyHistory
 		return ret
 	}
@@ -336,15 +336,15 @@ func (o *PasswordPolicy) GetHistory() PasswordPolicyHistory {
 // GetHistoryOk returns a tuple with the History field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetHistoryOk() (*PasswordPolicyHistory, bool) {
-	if o == nil || o.History == nil {
-		return nil, false
+	if o == nil || isNil(o.History) {
+    return nil, false
 	}
 	return o.History, true
 }
 
 // HasHistory returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasHistory() bool {
-	if o != nil && o.History != nil {
+	if o != nil && !isNil(o.History) {
 		return true
 	}
 
@@ -358,7 +358,7 @@ func (o *PasswordPolicy) SetHistory(v PasswordPolicyHistory) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -368,15 +368,15 @@ func (o *PasswordPolicy) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -390,7 +390,7 @@ func (o *PasswordPolicy) SetId(v string) {
 
 // GetLength returns the Length field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetLength() PasswordPolicyLength {
-	if o == nil || o.Length == nil {
+	if o == nil || isNil(o.Length) {
 		var ret PasswordPolicyLength
 		return ret
 	}
@@ -400,15 +400,15 @@ func (o *PasswordPolicy) GetLength() PasswordPolicyLength {
 // GetLengthOk returns a tuple with the Length field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetLengthOk() (*PasswordPolicyLength, bool) {
-	if o == nil || o.Length == nil {
-		return nil, false
+	if o == nil || isNil(o.Length) {
+    return nil, false
 	}
 	return o.Length, true
 }
 
 // HasLength returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasLength() bool {
-	if o != nil && o.Length != nil {
+	if o != nil && !isNil(o.Length) {
 		return true
 	}
 
@@ -422,7 +422,7 @@ func (o *PasswordPolicy) SetLength(v PasswordPolicyLength) {
 
 // GetLockout returns the Lockout field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetLockout() PasswordPolicyLockout {
-	if o == nil || o.Lockout == nil {
+	if o == nil || isNil(o.Lockout) {
 		var ret PasswordPolicyLockout
 		return ret
 	}
@@ -432,15 +432,15 @@ func (o *PasswordPolicy) GetLockout() PasswordPolicyLockout {
 // GetLockoutOk returns a tuple with the Lockout field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetLockoutOk() (*PasswordPolicyLockout, bool) {
-	if o == nil || o.Lockout == nil {
-		return nil, false
+	if o == nil || isNil(o.Lockout) {
+    return nil, false
 	}
 	return o.Lockout, true
 }
 
 // HasLockout returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasLockout() bool {
-	if o != nil && o.Lockout != nil {
+	if o != nil && !isNil(o.Lockout) {
 		return true
 	}
 
@@ -454,7 +454,7 @@ func (o *PasswordPolicy) SetLockout(v PasswordPolicyLockout) {
 
 // GetMaxAgeDays returns the MaxAgeDays field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetMaxAgeDays() int32 {
-	if o == nil || o.MaxAgeDays == nil {
+	if o == nil || isNil(o.MaxAgeDays) {
 		var ret int32
 		return ret
 	}
@@ -464,15 +464,15 @@ func (o *PasswordPolicy) GetMaxAgeDays() int32 {
 // GetMaxAgeDaysOk returns a tuple with the MaxAgeDays field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetMaxAgeDaysOk() (*int32, bool) {
-	if o == nil || o.MaxAgeDays == nil {
-		return nil, false
+	if o == nil || isNil(o.MaxAgeDays) {
+    return nil, false
 	}
 	return o.MaxAgeDays, true
 }
 
 // HasMaxAgeDays returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasMaxAgeDays() bool {
-	if o != nil && o.MaxAgeDays != nil {
+	if o != nil && !isNil(o.MaxAgeDays) {
 		return true
 	}
 
@@ -486,7 +486,7 @@ func (o *PasswordPolicy) SetMaxAgeDays(v int32) {
 
 // GetMaxRepeatedCharacters returns the MaxRepeatedCharacters field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetMaxRepeatedCharacters() int32 {
-	if o == nil || o.MaxRepeatedCharacters == nil {
+	if o == nil || isNil(o.MaxRepeatedCharacters) {
 		var ret int32
 		return ret
 	}
@@ -496,15 +496,15 @@ func (o *PasswordPolicy) GetMaxRepeatedCharacters() int32 {
 // GetMaxRepeatedCharactersOk returns a tuple with the MaxRepeatedCharacters field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetMaxRepeatedCharactersOk() (*int32, bool) {
-	if o == nil || o.MaxRepeatedCharacters == nil {
-		return nil, false
+	if o == nil || isNil(o.MaxRepeatedCharacters) {
+    return nil, false
 	}
 	return o.MaxRepeatedCharacters, true
 }
 
 // HasMaxRepeatedCharacters returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasMaxRepeatedCharacters() bool {
-	if o != nil && o.MaxRepeatedCharacters != nil {
+	if o != nil && !isNil(o.MaxRepeatedCharacters) {
 		return true
 	}
 
@@ -518,7 +518,7 @@ func (o *PasswordPolicy) SetMaxRepeatedCharacters(v int32) {
 
 // GetMinAgeDays returns the MinAgeDays field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetMinAgeDays() int32 {
-	if o == nil || o.MinAgeDays == nil {
+	if o == nil || isNil(o.MinAgeDays) {
 		var ret int32
 		return ret
 	}
@@ -528,15 +528,15 @@ func (o *PasswordPolicy) GetMinAgeDays() int32 {
 // GetMinAgeDaysOk returns a tuple with the MinAgeDays field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetMinAgeDaysOk() (*int32, bool) {
-	if o == nil || o.MinAgeDays == nil {
-		return nil, false
+	if o == nil || isNil(o.MinAgeDays) {
+    return nil, false
 	}
 	return o.MinAgeDays, true
 }
 
 // HasMinAgeDays returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasMinAgeDays() bool {
-	if o != nil && o.MinAgeDays != nil {
+	if o != nil && !isNil(o.MinAgeDays) {
 		return true
 	}
 
@@ -550,7 +550,7 @@ func (o *PasswordPolicy) SetMinAgeDays(v int32) {
 
 // GetMinCharacters returns the MinCharacters field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetMinCharacters() PasswordPolicyMinCharacters {
-	if o == nil || o.MinCharacters == nil {
+	if o == nil || isNil(o.MinCharacters) {
 		var ret PasswordPolicyMinCharacters
 		return ret
 	}
@@ -560,15 +560,15 @@ func (o *PasswordPolicy) GetMinCharacters() PasswordPolicyMinCharacters {
 // GetMinCharactersOk returns a tuple with the MinCharacters field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetMinCharactersOk() (*PasswordPolicyMinCharacters, bool) {
-	if o == nil || o.MinCharacters == nil {
-		return nil, false
+	if o == nil || isNil(o.MinCharacters) {
+    return nil, false
 	}
 	return o.MinCharacters, true
 }
 
 // HasMinCharacters returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasMinCharacters() bool {
-	if o != nil && o.MinCharacters != nil {
+	if o != nil && !isNil(o.MinCharacters) {
 		return true
 	}
 
@@ -582,7 +582,7 @@ func (o *PasswordPolicy) SetMinCharacters(v PasswordPolicyMinCharacters) {
 
 // GetMinComplexity returns the MinComplexity field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetMinComplexity() int32 {
-	if o == nil || o.MinComplexity == nil {
+	if o == nil || isNil(o.MinComplexity) {
 		var ret int32
 		return ret
 	}
@@ -592,15 +592,15 @@ func (o *PasswordPolicy) GetMinComplexity() int32 {
 // GetMinComplexityOk returns a tuple with the MinComplexity field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetMinComplexityOk() (*int32, bool) {
-	if o == nil || o.MinComplexity == nil {
-		return nil, false
+	if o == nil || isNil(o.MinComplexity) {
+    return nil, false
 	}
 	return o.MinComplexity, true
 }
 
 // HasMinComplexity returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasMinComplexity() bool {
-	if o != nil && o.MinComplexity != nil {
+	if o != nil && !isNil(o.MinComplexity) {
 		return true
 	}
 
@@ -614,7 +614,7 @@ func (o *PasswordPolicy) SetMinComplexity(v int32) {
 
 // GetMinUniqueCharacters returns the MinUniqueCharacters field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetMinUniqueCharacters() int32 {
-	if o == nil || o.MinUniqueCharacters == nil {
+	if o == nil || isNil(o.MinUniqueCharacters) {
 		var ret int32
 		return ret
 	}
@@ -624,15 +624,15 @@ func (o *PasswordPolicy) GetMinUniqueCharacters() int32 {
 // GetMinUniqueCharactersOk returns a tuple with the MinUniqueCharacters field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetMinUniqueCharactersOk() (*int32, bool) {
-	if o == nil || o.MinUniqueCharacters == nil {
-		return nil, false
+	if o == nil || isNil(o.MinUniqueCharacters) {
+    return nil, false
 	}
 	return o.MinUniqueCharacters, true
 }
 
 // HasMinUniqueCharacters returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasMinUniqueCharacters() bool {
-	if o != nil && o.MinUniqueCharacters != nil {
+	if o != nil && !isNil(o.MinUniqueCharacters) {
 		return true
 	}
 
@@ -658,7 +658,7 @@ func (o *PasswordPolicy) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -670,7 +670,7 @@ func (o *PasswordPolicy) SetName(v string) {
 
 // GetNewPassword returns the NewPassword field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetNewPassword() string {
-	if o == nil || o.NewPassword == nil {
+	if o == nil || isNil(o.NewPassword) {
 		var ret string
 		return ret
 	}
@@ -680,15 +680,15 @@ func (o *PasswordPolicy) GetNewPassword() string {
 // GetNewPasswordOk returns a tuple with the NewPassword field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetNewPasswordOk() (*string, bool) {
-	if o == nil || o.NewPassword == nil {
-		return nil, false
+	if o == nil || isNil(o.NewPassword) {
+    return nil, false
 	}
 	return o.NewPassword, true
 }
 
 // HasNewPassword returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasNewPassword() bool {
-	if o != nil && o.NewPassword != nil {
+	if o != nil && !isNil(o.NewPassword) {
 		return true
 	}
 
@@ -714,7 +714,7 @@ func (o *PasswordPolicy) GetNotSimilarToCurrent() bool {
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetNotSimilarToCurrentOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.NotSimilarToCurrent, true
 }
@@ -726,7 +726,7 @@ func (o *PasswordPolicy) SetNotSimilarToCurrent(v bool) {
 
 // GetPopulationCount returns the PopulationCount field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetPopulationCount() int32 {
-	if o == nil || o.PopulationCount == nil {
+	if o == nil || isNil(o.PopulationCount) {
 		var ret int32
 		return ret
 	}
@@ -736,15 +736,15 @@ func (o *PasswordPolicy) GetPopulationCount() int32 {
 // GetPopulationCountOk returns a tuple with the PopulationCount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetPopulationCountOk() (*int32, bool) {
-	if o == nil || o.PopulationCount == nil {
-		return nil, false
+	if o == nil || isNil(o.PopulationCount) {
+    return nil, false
 	}
 	return o.PopulationCount, true
 }
 
 // HasPopulationCount returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasPopulationCount() bool {
-	if o != nil && o.PopulationCount != nil {
+	if o != nil && !isNil(o.PopulationCount) {
 		return true
 	}
 
@@ -758,7 +758,7 @@ func (o *PasswordPolicy) SetPopulationCount(v int32) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *PasswordPolicy) GetUpdatedAt() string {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret string
 		return ret
 	}
@@ -768,15 +768,15 @@ func (o *PasswordPolicy) GetUpdatedAt() string {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicy) GetUpdatedAtOk() (*string, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *PasswordPolicy) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -790,22 +790,22 @@ func (o *PasswordPolicy) SetUpdatedAt(v string) {
 
 func (o PasswordPolicy) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.BypassPolicy != nil {
+	if !isNil(o.BypassPolicy) {
 		toSerialize["bypassPolicy"] = o.BypassPolicy
 	}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.CurrentPassword != nil {
+	if !isNil(o.CurrentPassword) {
 		toSerialize["currentPassword"] = o.CurrentPassword
 	}
-	if o.Default != nil {
+	if !isNil(o.Default) {
 		toSerialize["default"] = o.Default
 	}
-	if o.Description != nil {
+	if !isNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
 	if true {
@@ -814,49 +814,49 @@ func (o PasswordPolicy) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["excludesProfileData"] = o.ExcludesProfileData
 	}
-	if o.History != nil {
+	if !isNil(o.History) {
 		toSerialize["history"] = o.History
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Length != nil {
+	if !isNil(o.Length) {
 		toSerialize["length"] = o.Length
 	}
-	if o.Lockout != nil {
+	if !isNil(o.Lockout) {
 		toSerialize["lockout"] = o.Lockout
 	}
-	if o.MaxAgeDays != nil {
+	if !isNil(o.MaxAgeDays) {
 		toSerialize["maxAgeDays"] = o.MaxAgeDays
 	}
-	if o.MaxRepeatedCharacters != nil {
+	if !isNil(o.MaxRepeatedCharacters) {
 		toSerialize["maxRepeatedCharacters"] = o.MaxRepeatedCharacters
 	}
-	if o.MinAgeDays != nil {
+	if !isNil(o.MinAgeDays) {
 		toSerialize["minAgeDays"] = o.MinAgeDays
 	}
-	if o.MinCharacters != nil {
+	if !isNil(o.MinCharacters) {
 		toSerialize["minCharacters"] = o.MinCharacters
 	}
-	if o.MinComplexity != nil {
+	if !isNil(o.MinComplexity) {
 		toSerialize["minComplexity"] = o.MinComplexity
 	}
-	if o.MinUniqueCharacters != nil {
+	if !isNil(o.MinUniqueCharacters) {
 		toSerialize["minUniqueCharacters"] = o.MinUniqueCharacters
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.NewPassword != nil {
+	if !isNil(o.NewPassword) {
 		toSerialize["newPassword"] = o.NewPassword
 	}
 	if true {
 		toSerialize["notSimilarToCurrent"] = o.NotSimilarToCurrent
 	}
-	if o.PopulationCount != nil {
+	if !isNil(o.PopulationCount) {
 		toSerialize["populationCount"] = o.PopulationCount
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	return json.Marshal(toSerialize)

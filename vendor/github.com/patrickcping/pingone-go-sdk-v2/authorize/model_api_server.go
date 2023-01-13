@@ -61,7 +61,7 @@ func (o *APIServer) GetAuthorizationServer() APIServerAuthorizationServer {
 // and a boolean to check if the value has been set.
 func (o *APIServer) GetAuthorizationServerOk() (*APIServerAuthorizationServer, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.AuthorizationServer, true
 }
@@ -85,7 +85,7 @@ func (o *APIServer) GetBaseURLs() []string {
 // and a boolean to check if the value has been set.
 func (o *APIServer) GetBaseURLsOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.BaseURLs, true
 }
@@ -97,7 +97,7 @@ func (o *APIServer) SetBaseURLs(v []string) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *APIServer) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -107,15 +107,15 @@ func (o *APIServer) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *APIServer) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *APIServer) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -141,7 +141,7 @@ func (o *APIServer) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *APIServer) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -153,7 +153,7 @@ func (o *APIServer) SetName(v string) {
 
 // GetOperations returns the Operations field value if set, zero value otherwise.
 func (o *APIServer) GetOperations() map[string]interface{} {
-	if o == nil || o.Operations == nil {
+	if o == nil || isNil(o.Operations) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -163,15 +163,15 @@ func (o *APIServer) GetOperations() map[string]interface{} {
 // GetOperationsOk returns a tuple with the Operations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *APIServer) GetOperationsOk() (map[string]interface{}, bool) {
-	if o == nil || o.Operations == nil {
-		return nil, false
+	if o == nil || isNil(o.Operations) {
+    return map[string]interface{}{}, false
 	}
 	return o.Operations, true
 }
 
 // HasOperations returns a boolean if a field has been set.
 func (o *APIServer) HasOperations() bool {
-	if o != nil && o.Operations != nil {
+	if o != nil && !isNil(o.Operations) {
 		return true
 	}
 
@@ -191,13 +191,13 @@ func (o APIServer) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["baseURLs"] = o.BaseURLs
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.Operations != nil {
+	if !isNil(o.Operations) {
 		toSerialize["operations"] = o.Operations
 	}
 	return json.Marshal(toSerialize)

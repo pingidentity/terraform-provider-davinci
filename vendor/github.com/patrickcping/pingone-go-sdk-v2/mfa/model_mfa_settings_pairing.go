@@ -56,7 +56,7 @@ func (o *MFASettingsPairing) GetMaxAllowedDevices() int32 {
 // and a boolean to check if the value has been set.
 func (o *MFASettingsPairing) GetMaxAllowedDevicesOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.MaxAllowedDevices, true
 }
@@ -80,7 +80,7 @@ func (o *MFASettingsPairing) GetPairingKeyFormat() EnumMFASettingsPairingKeyForm
 // and a boolean to check if the value has been set.
 func (o *MFASettingsPairing) GetPairingKeyFormatOk() (*EnumMFASettingsPairingKeyFormat, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.PairingKeyFormat, true
 }

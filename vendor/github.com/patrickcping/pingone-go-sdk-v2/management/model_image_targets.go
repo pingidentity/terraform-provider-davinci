@@ -38,7 +38,7 @@ func NewImageTargetsWithDefaults() *ImageTargets {
 
 // GetOriginal returns the Original field value if set, zero value otherwise.
 func (o *ImageTargets) GetOriginal() ImageTargetsOriginal {
-	if o == nil || o.Original == nil {
+	if o == nil || isNil(o.Original) {
 		var ret ImageTargetsOriginal
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *ImageTargets) GetOriginal() ImageTargetsOriginal {
 // GetOriginalOk returns a tuple with the Original field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImageTargets) GetOriginalOk() (*ImageTargetsOriginal, bool) {
-	if o == nil || o.Original == nil {
-		return nil, false
+	if o == nil || isNil(o.Original) {
+    return nil, false
 	}
 	return o.Original, true
 }
 
 // HasOriginal returns a boolean if a field has been set.
 func (o *ImageTargets) HasOriginal() bool {
-	if o != nil && o.Original != nil {
+	if o != nil && !isNil(o.Original) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *ImageTargets) SetOriginal(v ImageTargetsOriginal) {
 
 func (o ImageTargets) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Original != nil {
+	if !isNil(o.Original) {
 		toSerialize["original"] = o.Original
 	}
 	return json.Marshal(toSerialize)

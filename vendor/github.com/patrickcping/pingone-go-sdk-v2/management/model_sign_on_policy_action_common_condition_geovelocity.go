@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionGeovelocity) GetGeoVelocity() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionGeovelocity) GetGeoVelocityOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.GeoVelocity, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionCommonConditionGeovelocity) GetValid() SignOnPolicyAc
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionGeovelocity) GetValidOk() (*SignOnPolicyActionCommonConditionGeovelocityValid, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Valid, true
 }

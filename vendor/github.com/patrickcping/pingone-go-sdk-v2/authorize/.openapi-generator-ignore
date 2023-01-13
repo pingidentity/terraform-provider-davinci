@@ -28,3 +28,4 @@ git_push.sh
 CHANGELOG.md
 GNUmakefile
 .version
+test/*

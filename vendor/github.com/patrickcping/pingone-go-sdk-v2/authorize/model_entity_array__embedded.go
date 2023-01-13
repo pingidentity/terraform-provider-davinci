@@ -39,7 +39,7 @@ func NewEntityArrayEmbeddedWithDefaults() *EntityArrayEmbedded {
 
 // GetDecisionEndpoints returns the DecisionEndpoints field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetDecisionEndpoints() []DecisionEndpoint {
-	if o == nil || o.DecisionEndpoints == nil {
+	if o == nil || isNil(o.DecisionEndpoints) {
 		var ret []DecisionEndpoint
 		return ret
 	}
@@ -49,15 +49,15 @@ func (o *EntityArrayEmbedded) GetDecisionEndpoints() []DecisionEndpoint {
 // GetDecisionEndpointsOk returns a tuple with the DecisionEndpoints field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetDecisionEndpointsOk() ([]DecisionEndpoint, bool) {
-	if o == nil || o.DecisionEndpoints == nil {
-		return nil, false
+	if o == nil || isNil(o.DecisionEndpoints) {
+    return nil, false
 	}
 	return o.DecisionEndpoints, true
 }
 
 // HasDecisionEndpoints returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasDecisionEndpoints() bool {
-	if o != nil && o.DecisionEndpoints != nil {
+	if o != nil && !isNil(o.DecisionEndpoints) {
 		return true
 	}
 
@@ -71,7 +71,7 @@ func (o *EntityArrayEmbedded) SetDecisionEndpoints(v []DecisionEndpoint) {
 
 // GetApiServers returns the ApiServers field value if set, zero value otherwise.
 func (o *EntityArrayEmbedded) GetApiServers() []APIServer {
-	if o == nil || o.ApiServers == nil {
+	if o == nil || isNil(o.ApiServers) {
 		var ret []APIServer
 		return ret
 	}
@@ -81,15 +81,15 @@ func (o *EntityArrayEmbedded) GetApiServers() []APIServer {
 // GetApiServersOk returns a tuple with the ApiServers field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArrayEmbedded) GetApiServersOk() ([]APIServer, bool) {
-	if o == nil || o.ApiServers == nil {
-		return nil, false
+	if o == nil || isNil(o.ApiServers) {
+    return nil, false
 	}
 	return o.ApiServers, true
 }
 
 // HasApiServers returns a boolean if a field has been set.
 func (o *EntityArrayEmbedded) HasApiServers() bool {
-	if o != nil && o.ApiServers != nil {
+	if o != nil && !isNil(o.ApiServers) {
 		return true
 	}
 
@@ -103,10 +103,10 @@ func (o *EntityArrayEmbedded) SetApiServers(v []APIServer) {
 
 func (o EntityArrayEmbedded) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.DecisionEndpoints != nil {
+	if !isNil(o.DecisionEndpoints) {
 		toSerialize["decisionEndpoints"] = o.DecisionEndpoints
 	}
-	if o.ApiServers != nil {
+	if !isNil(o.ApiServers) {
 		toSerialize["apiServers"] = o.ApiServers
 	}
 	return json.Marshal(toSerialize)

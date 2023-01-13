@@ -40,7 +40,7 @@ func NewEntityArrayWithDefaults() *EntityArray {
 
 // GetEmbedded returns the Embedded field value if set, zero value otherwise.
 func (o *EntityArray) GetEmbedded() EntityArrayEmbedded {
-	if o == nil || o.Embedded == nil {
+	if o == nil || isNil(o.Embedded) {
 		var ret EntityArrayEmbedded
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *EntityArray) GetEmbedded() EntityArrayEmbedded {
 // GetEmbeddedOk returns a tuple with the Embedded field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArray) GetEmbeddedOk() (*EntityArrayEmbedded, bool) {
-	if o == nil || o.Embedded == nil {
-		return nil, false
+	if o == nil || isNil(o.Embedded) {
+    return nil, false
 	}
 	return o.Embedded, true
 }
 
 // HasEmbedded returns a boolean if a field has been set.
 func (o *EntityArray) HasEmbedded() bool {
-	if o != nil && o.Embedded != nil {
+	if o != nil && !isNil(o.Embedded) {
 		return true
 	}
 
@@ -72,7 +72,7 @@ func (o *EntityArray) SetEmbedded(v EntityArrayEmbedded) {
 
 // GetCount returns the Count field value if set, zero value otherwise.
 func (o *EntityArray) GetCount() float32 {
-	if o == nil || o.Count == nil {
+	if o == nil || isNil(o.Count) {
 		var ret float32
 		return ret
 	}
@@ -82,15 +82,15 @@ func (o *EntityArray) GetCount() float32 {
 // GetCountOk returns a tuple with the Count field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArray) GetCountOk() (*float32, bool) {
-	if o == nil || o.Count == nil {
-		return nil, false
+	if o == nil || isNil(o.Count) {
+    return nil, false
 	}
 	return o.Count, true
 }
 
 // HasCount returns a boolean if a field has been set.
 func (o *EntityArray) HasCount() bool {
-	if o != nil && o.Count != nil {
+	if o != nil && !isNil(o.Count) {
 		return true
 	}
 
@@ -104,7 +104,7 @@ func (o *EntityArray) SetCount(v float32) {
 
 // GetSize returns the Size field value if set, zero value otherwise.
 func (o *EntityArray) GetSize() float32 {
-	if o == nil || o.Size == nil {
+	if o == nil || isNil(o.Size) {
 		var ret float32
 		return ret
 	}
@@ -114,15 +114,15 @@ func (o *EntityArray) GetSize() float32 {
 // GetSizeOk returns a tuple with the Size field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EntityArray) GetSizeOk() (*float32, bool) {
-	if o == nil || o.Size == nil {
-		return nil, false
+	if o == nil || isNil(o.Size) {
+    return nil, false
 	}
 	return o.Size, true
 }
 
 // HasSize returns a boolean if a field has been set.
 func (o *EntityArray) HasSize() bool {
-	if o != nil && o.Size != nil {
+	if o != nil && !isNil(o.Size) {
 		return true
 	}
 
@@ -136,13 +136,13 @@ func (o *EntityArray) SetSize(v float32) {
 
 func (o EntityArray) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Embedded != nil {
+	if !isNil(o.Embedded) {
 		toSerialize["_embedded"] = o.Embedded
 	}
-	if o.Count != nil {
+	if !isNil(o.Count) {
 		toSerialize["count"] = o.Count
 	}
-	if o.Size != nil {
+	if !isNil(o.Size) {
 		toSerialize["size"] = o.Size
 	}
 	return json.Marshal(toSerialize)

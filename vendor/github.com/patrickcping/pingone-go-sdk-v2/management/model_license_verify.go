@@ -45,7 +45,7 @@ func NewLicenseVerifyWithDefaults() *LicenseVerify {
 
 // GetAllowPushNotifications returns the AllowPushNotifications field value if set, zero value otherwise.
 func (o *LicenseVerify) GetAllowPushNotifications() bool {
-	if o == nil || o.AllowPushNotifications == nil {
+	if o == nil || isNil(o.AllowPushNotifications) {
 		var ret bool
 		return ret
 	}
@@ -55,15 +55,15 @@ func (o *LicenseVerify) GetAllowPushNotifications() bool {
 // GetAllowPushNotificationsOk returns a tuple with the AllowPushNotifications field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseVerify) GetAllowPushNotificationsOk() (*bool, bool) {
-	if o == nil || o.AllowPushNotifications == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowPushNotifications) {
+    return nil, false
 	}
 	return o.AllowPushNotifications, true
 }
 
 // HasAllowPushNotifications returns a boolean if a field has been set.
 func (o *LicenseVerify) HasAllowPushNotifications() bool {
-	if o != nil && o.AllowPushNotifications != nil {
+	if o != nil && !isNil(o.AllowPushNotifications) {
 		return true
 	}
 
@@ -77,7 +77,7 @@ func (o *LicenseVerify) SetAllowPushNotifications(v bool) {
 
 // GetAllowDocumentMatch returns the AllowDocumentMatch field value if set, zero value otherwise.
 func (o *LicenseVerify) GetAllowDocumentMatch() bool {
-	if o == nil || o.AllowDocumentMatch == nil {
+	if o == nil || isNil(o.AllowDocumentMatch) {
 		var ret bool
 		return ret
 	}
@@ -87,15 +87,15 @@ func (o *LicenseVerify) GetAllowDocumentMatch() bool {
 // GetAllowDocumentMatchOk returns a tuple with the AllowDocumentMatch field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseVerify) GetAllowDocumentMatchOk() (*bool, bool) {
-	if o == nil || o.AllowDocumentMatch == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowDocumentMatch) {
+    return nil, false
 	}
 	return o.AllowDocumentMatch, true
 }
 
 // HasAllowDocumentMatch returns a boolean if a field has been set.
 func (o *LicenseVerify) HasAllowDocumentMatch() bool {
-	if o != nil && o.AllowDocumentMatch != nil {
+	if o != nil && !isNil(o.AllowDocumentMatch) {
 		return true
 	}
 
@@ -109,7 +109,7 @@ func (o *LicenseVerify) SetAllowDocumentMatch(v bool) {
 
 // GetAllowFaceMatch returns the AllowFaceMatch field value if set, zero value otherwise.
 func (o *LicenseVerify) GetAllowFaceMatch() bool {
-	if o == nil || o.AllowFaceMatch == nil {
+	if o == nil || isNil(o.AllowFaceMatch) {
 		var ret bool
 		return ret
 	}
@@ -119,15 +119,15 @@ func (o *LicenseVerify) GetAllowFaceMatch() bool {
 // GetAllowFaceMatchOk returns a tuple with the AllowFaceMatch field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseVerify) GetAllowFaceMatchOk() (*bool, bool) {
-	if o == nil || o.AllowFaceMatch == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowFaceMatch) {
+    return nil, false
 	}
 	return o.AllowFaceMatch, true
 }
 
 // HasAllowFaceMatch returns a boolean if a field has been set.
 func (o *LicenseVerify) HasAllowFaceMatch() bool {
-	if o != nil && o.AllowFaceMatch != nil {
+	if o != nil && !isNil(o.AllowFaceMatch) {
 		return true
 	}
 
@@ -141,7 +141,7 @@ func (o *LicenseVerify) SetAllowFaceMatch(v bool) {
 
 // GetAllowManualIdInspection returns the AllowManualIdInspection field value if set, zero value otherwise.
 func (o *LicenseVerify) GetAllowManualIdInspection() bool {
-	if o == nil || o.AllowManualIdInspection == nil {
+	if o == nil || isNil(o.AllowManualIdInspection) {
 		var ret bool
 		return ret
 	}
@@ -151,15 +151,15 @@ func (o *LicenseVerify) GetAllowManualIdInspection() bool {
 // GetAllowManualIdInspectionOk returns a tuple with the AllowManualIdInspection field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseVerify) GetAllowManualIdInspectionOk() (*bool, bool) {
-	if o == nil || o.AllowManualIdInspection == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowManualIdInspection) {
+    return nil, false
 	}
 	return o.AllowManualIdInspection, true
 }
 
 // HasAllowManualIdInspection returns a boolean if a field has been set.
 func (o *LicenseVerify) HasAllowManualIdInspection() bool {
-	if o != nil && o.AllowManualIdInspection != nil {
+	if o != nil && !isNil(o.AllowManualIdInspection) {
 		return true
 	}
 
@@ -173,16 +173,16 @@ func (o *LicenseVerify) SetAllowManualIdInspection(v bool) {
 
 func (o LicenseVerify) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowPushNotifications != nil {
+	if !isNil(o.AllowPushNotifications) {
 		toSerialize["allowPushNotifications"] = o.AllowPushNotifications
 	}
-	if o.AllowDocumentMatch != nil {
+	if !isNil(o.AllowDocumentMatch) {
 		toSerialize["allowDocumentMatch"] = o.AllowDocumentMatch
 	}
-	if o.AllowFaceMatch != nil {
+	if !isNil(o.AllowFaceMatch) {
 		toSerialize["allowFaceMatch"] = o.AllowFaceMatch
 	}
-	if o.AllowManualIdInspection != nil {
+	if !isNil(o.AllowManualIdInspection) {
 		toSerialize["allowManualIdInspection"] = o.AllowManualIdInspection
 	}
 	return json.Marshal(toSerialize)

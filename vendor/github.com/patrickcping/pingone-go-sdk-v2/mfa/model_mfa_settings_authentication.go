@@ -16,6 +16,7 @@ import (
 
 // MFASettingsAuthentication An object that contains the device selection settings.
 type MFASettingsAuthentication struct {
+	// Deprecated
 	DeviceSelection EnumMFASettingsDeviceSelection `json:"deviceSelection"`
 }
 
@@ -38,6 +39,7 @@ func NewMFASettingsAuthenticationWithDefaults() *MFASettingsAuthentication {
 }
 
 // GetDeviceSelection returns the DeviceSelection field value
+// Deprecated
 func (o *MFASettingsAuthentication) GetDeviceSelection() EnumMFASettingsDeviceSelection {
 	if o == nil {
 		var ret EnumMFASettingsDeviceSelection
@@ -49,14 +51,16 @@ func (o *MFASettingsAuthentication) GetDeviceSelection() EnumMFASettingsDeviceSe
 
 // GetDeviceSelectionOk returns a tuple with the DeviceSelection field value
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *MFASettingsAuthentication) GetDeviceSelectionOk() (*EnumMFASettingsDeviceSelection, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.DeviceSelection, true
 }
 
 // SetDeviceSelection sets field value
+// Deprecated
 func (o *MFASettingsAuthentication) SetDeviceSelection(v EnumMFASettingsDeviceSelection) {
 	o.DeviceSelection = v
 }

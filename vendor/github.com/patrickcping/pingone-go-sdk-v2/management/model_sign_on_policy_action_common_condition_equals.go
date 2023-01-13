@@ -17,14 +17,14 @@ import (
 // SignOnPolicyActionCommonConditionEquals struct for SignOnPolicyActionCommonConditionEquals
 type SignOnPolicyActionCommonConditionEquals struct {
 	Value string `json:"value"`
-	Equals string `json:"equals"`
+	Equals SignOnPolicyActionCommonConditionEqualsEquals `json:"equals"`
 }
 
 // NewSignOnPolicyActionCommonConditionEquals instantiates a new SignOnPolicyActionCommonConditionEquals object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSignOnPolicyActionCommonConditionEquals(value string, equals string) *SignOnPolicyActionCommonConditionEquals {
+func NewSignOnPolicyActionCommonConditionEquals(value string, equals SignOnPolicyActionCommonConditionEqualsEquals) *SignOnPolicyActionCommonConditionEquals {
 	this := SignOnPolicyActionCommonConditionEquals{}
 	this.Value = value
 	this.Equals = equals
@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionEquals) GetValue() string {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionEquals) GetValueOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Value, true
 }
@@ -64,9 +64,9 @@ func (o *SignOnPolicyActionCommonConditionEquals) SetValue(v string) {
 }
 
 // GetEquals returns the Equals field value
-func (o *SignOnPolicyActionCommonConditionEquals) GetEquals() string {
+func (o *SignOnPolicyActionCommonConditionEquals) GetEquals() SignOnPolicyActionCommonConditionEqualsEquals {
 	if o == nil {
-		var ret string
+		var ret SignOnPolicyActionCommonConditionEqualsEquals
 		return ret
 	}
 
@@ -75,15 +75,15 @@ func (o *SignOnPolicyActionCommonConditionEquals) GetEquals() string {
 
 // GetEqualsOk returns a tuple with the Equals field value
 // and a boolean to check if the value has been set.
-func (o *SignOnPolicyActionCommonConditionEquals) GetEqualsOk() (*string, bool) {
+func (o *SignOnPolicyActionCommonConditionEquals) GetEqualsOk() (*SignOnPolicyActionCommonConditionEqualsEquals, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Equals, true
 }
 
 // SetEquals sets field value
-func (o *SignOnPolicyActionCommonConditionEquals) SetEquals(v string) {
+func (o *SignOnPolicyActionCommonConditionEquals) SetEquals(v SignOnPolicyActionCommonConditionEqualsEquals) {
 	o.Equals = v
 }
 

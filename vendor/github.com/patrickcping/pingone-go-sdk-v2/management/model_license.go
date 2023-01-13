@@ -67,7 +67,7 @@ func NewLicenseWithDefaults() *License {
 
 // GetAdvancedServices returns the AdvancedServices field value if set, zero value otherwise.
 func (o *License) GetAdvancedServices() LicenseAdvancedServices {
-	if o == nil || o.AdvancedServices == nil {
+	if o == nil || isNil(o.AdvancedServices) {
 		var ret LicenseAdvancedServices
 		return ret
 	}
@@ -77,15 +77,15 @@ func (o *License) GetAdvancedServices() LicenseAdvancedServices {
 // GetAdvancedServicesOk returns a tuple with the AdvancedServices field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetAdvancedServicesOk() (*LicenseAdvancedServices, bool) {
-	if o == nil || o.AdvancedServices == nil {
-		return nil, false
+	if o == nil || isNil(o.AdvancedServices) {
+    return nil, false
 	}
 	return o.AdvancedServices, true
 }
 
 // HasAdvancedServices returns a boolean if a field has been set.
 func (o *License) HasAdvancedServices() bool {
-	if o != nil && o.AdvancedServices != nil {
+	if o != nil && !isNil(o.AdvancedServices) {
 		return true
 	}
 
@@ -99,7 +99,7 @@ func (o *License) SetAdvancedServices(v LicenseAdvancedServices) {
 
 // GetAssignedEnvironmentsCount returns the AssignedEnvironmentsCount field value if set, zero value otherwise.
 func (o *License) GetAssignedEnvironmentsCount() int32 {
-	if o == nil || o.AssignedEnvironmentsCount == nil {
+	if o == nil || isNil(o.AssignedEnvironmentsCount) {
 		var ret int32
 		return ret
 	}
@@ -109,15 +109,15 @@ func (o *License) GetAssignedEnvironmentsCount() int32 {
 // GetAssignedEnvironmentsCountOk returns a tuple with the AssignedEnvironmentsCount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetAssignedEnvironmentsCountOk() (*int32, bool) {
-	if o == nil || o.AssignedEnvironmentsCount == nil {
-		return nil, false
+	if o == nil || isNil(o.AssignedEnvironmentsCount) {
+    return nil, false
 	}
 	return o.AssignedEnvironmentsCount, true
 }
 
 // HasAssignedEnvironmentsCount returns a boolean if a field has been set.
 func (o *License) HasAssignedEnvironmentsCount() bool {
-	if o != nil && o.AssignedEnvironmentsCount != nil {
+	if o != nil && !isNil(o.AssignedEnvironmentsCount) {
 		return true
 	}
 
@@ -131,7 +131,7 @@ func (o *License) SetAssignedEnvironmentsCount(v int32) {
 
 // GetAuthorize returns the Authorize field value if set, zero value otherwise.
 func (o *License) GetAuthorize() LicenseAuthorize {
-	if o == nil || o.Authorize == nil {
+	if o == nil || isNil(o.Authorize) {
 		var ret LicenseAuthorize
 		return ret
 	}
@@ -141,15 +141,15 @@ func (o *License) GetAuthorize() LicenseAuthorize {
 // GetAuthorizeOk returns a tuple with the Authorize field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetAuthorizeOk() (*LicenseAuthorize, bool) {
-	if o == nil || o.Authorize == nil {
-		return nil, false
+	if o == nil || isNil(o.Authorize) {
+    return nil, false
 	}
 	return o.Authorize, true
 }
 
 // HasAuthorize returns a boolean if a field has been set.
 func (o *License) HasAuthorize() bool {
-	if o != nil && o.Authorize != nil {
+	if o != nil && !isNil(o.Authorize) {
 		return true
 	}
 
@@ -163,7 +163,7 @@ func (o *License) SetAuthorize(v LicenseAuthorize) {
 
 // GetBeginsAt returns the BeginsAt field value if set, zero value otherwise.
 func (o *License) GetBeginsAt() string {
-	if o == nil || o.BeginsAt == nil {
+	if o == nil || isNil(o.BeginsAt) {
 		var ret string
 		return ret
 	}
@@ -173,15 +173,15 @@ func (o *License) GetBeginsAt() string {
 // GetBeginsAtOk returns a tuple with the BeginsAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetBeginsAtOk() (*string, bool) {
-	if o == nil || o.BeginsAt == nil {
-		return nil, false
+	if o == nil || isNil(o.BeginsAt) {
+    return nil, false
 	}
 	return o.BeginsAt, true
 }
 
 // HasBeginsAt returns a boolean if a field has been set.
 func (o *License) HasBeginsAt() bool {
-	if o != nil && o.BeginsAt != nil {
+	if o != nil && !isNil(o.BeginsAt) {
 		return true
 	}
 
@@ -195,7 +195,7 @@ func (o *License) SetBeginsAt(v string) {
 
 // GetCredentials returns the Credentials field value if set, zero value otherwise.
 func (o *License) GetCredentials() LicenseCredentials {
-	if o == nil || o.Credentials == nil {
+	if o == nil || isNil(o.Credentials) {
 		var ret LicenseCredentials
 		return ret
 	}
@@ -205,15 +205,15 @@ func (o *License) GetCredentials() LicenseCredentials {
 // GetCredentialsOk returns a tuple with the Credentials field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetCredentialsOk() (*LicenseCredentials, bool) {
-	if o == nil || o.Credentials == nil {
-		return nil, false
+	if o == nil || isNil(o.Credentials) {
+    return nil, false
 	}
 	return o.Credentials, true
 }
 
 // HasCredentials returns a boolean if a field has been set.
 func (o *License) HasCredentials() bool {
-	if o != nil && o.Credentials != nil {
+	if o != nil && !isNil(o.Credentials) {
 		return true
 	}
 
@@ -227,7 +227,7 @@ func (o *License) SetCredentials(v LicenseCredentials) {
 
 // GetEnvironments returns the Environments field value if set, zero value otherwise.
 func (o *License) GetEnvironments() LicenseEnvironments {
-	if o == nil || o.Environments == nil {
+	if o == nil || isNil(o.Environments) {
 		var ret LicenseEnvironments
 		return ret
 	}
@@ -237,15 +237,15 @@ func (o *License) GetEnvironments() LicenseEnvironments {
 // GetEnvironmentsOk returns a tuple with the Environments field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetEnvironmentsOk() (*LicenseEnvironments, bool) {
-	if o == nil || o.Environments == nil {
-		return nil, false
+	if o == nil || isNil(o.Environments) {
+    return nil, false
 	}
 	return o.Environments, true
 }
 
 // HasEnvironments returns a boolean if a field has been set.
 func (o *License) HasEnvironments() bool {
-	if o != nil && o.Environments != nil {
+	if o != nil && !isNil(o.Environments) {
 		return true
 	}
 
@@ -259,7 +259,7 @@ func (o *License) SetEnvironments(v LicenseEnvironments) {
 
 // GetExpiresAt returns the ExpiresAt field value if set, zero value otherwise.
 func (o *License) GetExpiresAt() string {
-	if o == nil || o.ExpiresAt == nil {
+	if o == nil || isNil(o.ExpiresAt) {
 		var ret string
 		return ret
 	}
@@ -269,15 +269,15 @@ func (o *License) GetExpiresAt() string {
 // GetExpiresAtOk returns a tuple with the ExpiresAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetExpiresAtOk() (*string, bool) {
-	if o == nil || o.ExpiresAt == nil {
-		return nil, false
+	if o == nil || isNil(o.ExpiresAt) {
+    return nil, false
 	}
 	return o.ExpiresAt, true
 }
 
 // HasExpiresAt returns a boolean if a field has been set.
 func (o *License) HasExpiresAt() bool {
-	if o != nil && o.ExpiresAt != nil {
+	if o != nil && !isNil(o.ExpiresAt) {
 		return true
 	}
 
@@ -291,7 +291,7 @@ func (o *License) SetExpiresAt(v string) {
 
 // GetFraud returns the Fraud field value if set, zero value otherwise.
 func (o *License) GetFraud() LicenseFraud {
-	if o == nil || o.Fraud == nil {
+	if o == nil || isNil(o.Fraud) {
 		var ret LicenseFraud
 		return ret
 	}
@@ -301,15 +301,15 @@ func (o *License) GetFraud() LicenseFraud {
 // GetFraudOk returns a tuple with the Fraud field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetFraudOk() (*LicenseFraud, bool) {
-	if o == nil || o.Fraud == nil {
-		return nil, false
+	if o == nil || isNil(o.Fraud) {
+    return nil, false
 	}
 	return o.Fraud, true
 }
 
 // HasFraud returns a boolean if a field has been set.
 func (o *License) HasFraud() bool {
-	if o != nil && o.Fraud != nil {
+	if o != nil && !isNil(o.Fraud) {
 		return true
 	}
 
@@ -323,7 +323,7 @@ func (o *License) SetFraud(v LicenseFraud) {
 
 // GetGateways returns the Gateways field value if set, zero value otherwise.
 func (o *License) GetGateways() LicenseGateways {
-	if o == nil || o.Gateways == nil {
+	if o == nil || isNil(o.Gateways) {
 		var ret LicenseGateways
 		return ret
 	}
@@ -333,15 +333,15 @@ func (o *License) GetGateways() LicenseGateways {
 // GetGatewaysOk returns a tuple with the Gateways field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetGatewaysOk() (*LicenseGateways, bool) {
-	if o == nil || o.Gateways == nil {
-		return nil, false
+	if o == nil || isNil(o.Gateways) {
+    return nil, false
 	}
 	return o.Gateways, true
 }
 
 // HasGateways returns a boolean if a field has been set.
 func (o *License) HasGateways() bool {
-	if o != nil && o.Gateways != nil {
+	if o != nil && !isNil(o.Gateways) {
 		return true
 	}
 
@@ -355,7 +355,7 @@ func (o *License) SetGateways(v LicenseGateways) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *License) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -365,15 +365,15 @@ func (o *License) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *License) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -387,7 +387,7 @@ func (o *License) SetId(v string) {
 
 // GetIntelligence returns the Intelligence field value if set, zero value otherwise.
 func (o *License) GetIntelligence() LicenseIntelligence {
-	if o == nil || o.Intelligence == nil {
+	if o == nil || isNil(o.Intelligence) {
 		var ret LicenseIntelligence
 		return ret
 	}
@@ -397,15 +397,15 @@ func (o *License) GetIntelligence() LicenseIntelligence {
 // GetIntelligenceOk returns a tuple with the Intelligence field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetIntelligenceOk() (*LicenseIntelligence, bool) {
-	if o == nil || o.Intelligence == nil {
-		return nil, false
+	if o == nil || isNil(o.Intelligence) {
+    return nil, false
 	}
 	return o.Intelligence, true
 }
 
 // HasIntelligence returns a boolean if a field has been set.
 func (o *License) HasIntelligence() bool {
-	if o != nil && o.Intelligence != nil {
+	if o != nil && !isNil(o.Intelligence) {
 		return true
 	}
 
@@ -419,7 +419,7 @@ func (o *License) SetIntelligence(v LicenseIntelligence) {
 
 // GetMfa returns the Mfa field value if set, zero value otherwise.
 func (o *License) GetMfa() LicenseMfa {
-	if o == nil || o.Mfa == nil {
+	if o == nil || isNil(o.Mfa) {
 		var ret LicenseMfa
 		return ret
 	}
@@ -429,15 +429,15 @@ func (o *License) GetMfa() LicenseMfa {
 // GetMfaOk returns a tuple with the Mfa field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetMfaOk() (*LicenseMfa, bool) {
-	if o == nil || o.Mfa == nil {
-		return nil, false
+	if o == nil || isNil(o.Mfa) {
+    return nil, false
 	}
 	return o.Mfa, true
 }
 
 // HasMfa returns a boolean if a field has been set.
 func (o *License) HasMfa() bool {
-	if o != nil && o.Mfa != nil {
+	if o != nil && !isNil(o.Mfa) {
 		return true
 	}
 
@@ -463,7 +463,7 @@ func (o *License) GetName() string {
 // and a boolean to check if the value has been set.
 func (o *License) GetNameOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Name, true
 }
@@ -475,7 +475,7 @@ func (o *License) SetName(v string) {
 
 // GetOrchestrate returns the Orchestrate field value if set, zero value otherwise.
 func (o *License) GetOrchestrate() LicenseOrchestrate {
-	if o == nil || o.Orchestrate == nil {
+	if o == nil || isNil(o.Orchestrate) {
 		var ret LicenseOrchestrate
 		return ret
 	}
@@ -485,15 +485,15 @@ func (o *License) GetOrchestrate() LicenseOrchestrate {
 // GetOrchestrateOk returns a tuple with the Orchestrate field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetOrchestrateOk() (*LicenseOrchestrate, bool) {
-	if o == nil || o.Orchestrate == nil {
-		return nil, false
+	if o == nil || isNil(o.Orchestrate) {
+    return nil, false
 	}
 	return o.Orchestrate, true
 }
 
 // HasOrchestrate returns a boolean if a field has been set.
 func (o *License) HasOrchestrate() bool {
-	if o != nil && o.Orchestrate != nil {
+	if o != nil && !isNil(o.Orchestrate) {
 		return true
 	}
 
@@ -507,7 +507,7 @@ func (o *License) SetOrchestrate(v LicenseOrchestrate) {
 
 // GetOrganization returns the Organization field value if set, zero value otherwise.
 func (o *License) GetOrganization() ObjectOrganization {
-	if o == nil || o.Organization == nil {
+	if o == nil || isNil(o.Organization) {
 		var ret ObjectOrganization
 		return ret
 	}
@@ -517,15 +517,15 @@ func (o *License) GetOrganization() ObjectOrganization {
 // GetOrganizationOk returns a tuple with the Organization field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetOrganizationOk() (*ObjectOrganization, bool) {
-	if o == nil || o.Organization == nil {
-		return nil, false
+	if o == nil || isNil(o.Organization) {
+    return nil, false
 	}
 	return o.Organization, true
 }
 
 // HasOrganization returns a boolean if a field has been set.
 func (o *License) HasOrganization() bool {
-	if o != nil && o.Organization != nil {
+	if o != nil && !isNil(o.Organization) {
 		return true
 	}
 
@@ -539,7 +539,7 @@ func (o *License) SetOrganization(v ObjectOrganization) {
 
 // GetPackage returns the Package field value if set, zero value otherwise.
 func (o *License) GetPackage() string {
-	if o == nil || o.Package == nil {
+	if o == nil || isNil(o.Package) {
 		var ret string
 		return ret
 	}
@@ -549,15 +549,15 @@ func (o *License) GetPackage() string {
 // GetPackageOk returns a tuple with the Package field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetPackageOk() (*string, bool) {
-	if o == nil || o.Package == nil {
-		return nil, false
+	if o == nil || isNil(o.Package) {
+    return nil, false
 	}
 	return o.Package, true
 }
 
 // HasPackage returns a boolean if a field has been set.
 func (o *License) HasPackage() bool {
-	if o != nil && o.Package != nil {
+	if o != nil && !isNil(o.Package) {
 		return true
 	}
 
@@ -571,7 +571,7 @@ func (o *License) SetPackage(v string) {
 
 // GetReplacesLicense returns the ReplacesLicense field value if set, zero value otherwise.
 func (o *License) GetReplacesLicense() LicenseReplacesLicense {
-	if o == nil || o.ReplacesLicense == nil {
+	if o == nil || isNil(o.ReplacesLicense) {
 		var ret LicenseReplacesLicense
 		return ret
 	}
@@ -581,15 +581,15 @@ func (o *License) GetReplacesLicense() LicenseReplacesLicense {
 // GetReplacesLicenseOk returns a tuple with the ReplacesLicense field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetReplacesLicenseOk() (*LicenseReplacesLicense, bool) {
-	if o == nil || o.ReplacesLicense == nil {
-		return nil, false
+	if o == nil || isNil(o.ReplacesLicense) {
+    return nil, false
 	}
 	return o.ReplacesLicense, true
 }
 
 // HasReplacesLicense returns a boolean if a field has been set.
 func (o *License) HasReplacesLicense() bool {
-	if o != nil && o.ReplacesLicense != nil {
+	if o != nil && !isNil(o.ReplacesLicense) {
 		return true
 	}
 
@@ -603,7 +603,7 @@ func (o *License) SetReplacesLicense(v LicenseReplacesLicense) {
 
 // GetReplacedByLicense returns the ReplacedByLicense field value if set, zero value otherwise.
 func (o *License) GetReplacedByLicense() LicenseReplacedByLicense {
-	if o == nil || o.ReplacedByLicense == nil {
+	if o == nil || isNil(o.ReplacedByLicense) {
 		var ret LicenseReplacedByLicense
 		return ret
 	}
@@ -613,15 +613,15 @@ func (o *License) GetReplacedByLicense() LicenseReplacedByLicense {
 // GetReplacedByLicenseOk returns a tuple with the ReplacedByLicense field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetReplacedByLicenseOk() (*LicenseReplacedByLicense, bool) {
-	if o == nil || o.ReplacedByLicense == nil {
-		return nil, false
+	if o == nil || isNil(o.ReplacedByLicense) {
+    return nil, false
 	}
 	return o.ReplacedByLicense, true
 }
 
 // HasReplacedByLicense returns a boolean if a field has been set.
 func (o *License) HasReplacedByLicense() bool {
-	if o != nil && o.ReplacedByLicense != nil {
+	if o != nil && !isNil(o.ReplacedByLicense) {
 		return true
 	}
 
@@ -635,7 +635,7 @@ func (o *License) SetReplacedByLicense(v LicenseReplacedByLicense) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *License) GetStatus() EnumLicenseStatus {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		var ret EnumLicenseStatus
 		return ret
 	}
@@ -645,15 +645,15 @@ func (o *License) GetStatus() EnumLicenseStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetStatusOk() (*EnumLicenseStatus, bool) {
-	if o == nil || o.Status == nil {
-		return nil, false
+	if o == nil || isNil(o.Status) {
+    return nil, false
 	}
 	return o.Status, true
 }
 
 // HasStatus returns a boolean if a field has been set.
 func (o *License) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !isNil(o.Status) {
 		return true
 	}
 
@@ -667,7 +667,7 @@ func (o *License) SetStatus(v EnumLicenseStatus) {
 
 // GetTerminatesAt returns the TerminatesAt field value if set, zero value otherwise.
 func (o *License) GetTerminatesAt() string {
-	if o == nil || o.TerminatesAt == nil {
+	if o == nil || isNil(o.TerminatesAt) {
 		var ret string
 		return ret
 	}
@@ -677,15 +677,15 @@ func (o *License) GetTerminatesAt() string {
 // GetTerminatesAtOk returns a tuple with the TerminatesAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetTerminatesAtOk() (*string, bool) {
-	if o == nil || o.TerminatesAt == nil {
-		return nil, false
+	if o == nil || isNil(o.TerminatesAt) {
+    return nil, false
 	}
 	return o.TerminatesAt, true
 }
 
 // HasTerminatesAt returns a boolean if a field has been set.
 func (o *License) HasTerminatesAt() bool {
-	if o != nil && o.TerminatesAt != nil {
+	if o != nil && !isNil(o.TerminatesAt) {
 		return true
 	}
 
@@ -699,7 +699,7 @@ func (o *License) SetTerminatesAt(v string) {
 
 // GetUsers returns the Users field value if set, zero value otherwise.
 func (o *License) GetUsers() LicenseUsers {
-	if o == nil || o.Users == nil {
+	if o == nil || isNil(o.Users) {
 		var ret LicenseUsers
 		return ret
 	}
@@ -709,15 +709,15 @@ func (o *License) GetUsers() LicenseUsers {
 // GetUsersOk returns a tuple with the Users field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetUsersOk() (*LicenseUsers, bool) {
-	if o == nil || o.Users == nil {
-		return nil, false
+	if o == nil || isNil(o.Users) {
+    return nil, false
 	}
 	return o.Users, true
 }
 
 // HasUsers returns a boolean if a field has been set.
 func (o *License) HasUsers() bool {
-	if o != nil && o.Users != nil {
+	if o != nil && !isNil(o.Users) {
 		return true
 	}
 
@@ -731,7 +731,7 @@ func (o *License) SetUsers(v LicenseUsers) {
 
 // GetVerify returns the Verify field value if set, zero value otherwise.
 func (o *License) GetVerify() LicenseVerify {
-	if o == nil || o.Verify == nil {
+	if o == nil || isNil(o.Verify) {
 		var ret LicenseVerify
 		return ret
 	}
@@ -741,15 +741,15 @@ func (o *License) GetVerify() LicenseVerify {
 // GetVerifyOk returns a tuple with the Verify field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *License) GetVerifyOk() (*LicenseVerify, bool) {
-	if o == nil || o.Verify == nil {
-		return nil, false
+	if o == nil || isNil(o.Verify) {
+    return nil, false
 	}
 	return o.Verify, true
 }
 
 // HasVerify returns a boolean if a field has been set.
 func (o *License) HasVerify() bool {
-	if o != nil && o.Verify != nil {
+	if o != nil && !isNil(o.Verify) {
 		return true
 	}
 
@@ -763,70 +763,70 @@ func (o *License) SetVerify(v LicenseVerify) {
 
 func (o License) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AdvancedServices != nil {
+	if !isNil(o.AdvancedServices) {
 		toSerialize["advancedServices"] = o.AdvancedServices
 	}
-	if o.AssignedEnvironmentsCount != nil {
+	if !isNil(o.AssignedEnvironmentsCount) {
 		toSerialize["assignedEnvironmentsCount"] = o.AssignedEnvironmentsCount
 	}
-	if o.Authorize != nil {
+	if !isNil(o.Authorize) {
 		toSerialize["authorize"] = o.Authorize
 	}
-	if o.BeginsAt != nil {
+	if !isNil(o.BeginsAt) {
 		toSerialize["beginsAt"] = o.BeginsAt
 	}
-	if o.Credentials != nil {
+	if !isNil(o.Credentials) {
 		toSerialize["credentials"] = o.Credentials
 	}
-	if o.Environments != nil {
+	if !isNil(o.Environments) {
 		toSerialize["environments"] = o.Environments
 	}
-	if o.ExpiresAt != nil {
+	if !isNil(o.ExpiresAt) {
 		toSerialize["expiresAt"] = o.ExpiresAt
 	}
-	if o.Fraud != nil {
+	if !isNil(o.Fraud) {
 		toSerialize["fraud"] = o.Fraud
 	}
-	if o.Gateways != nil {
+	if !isNil(o.Gateways) {
 		toSerialize["gateways"] = o.Gateways
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Intelligence != nil {
+	if !isNil(o.Intelligence) {
 		toSerialize["intelligence"] = o.Intelligence
 	}
-	if o.Mfa != nil {
+	if !isNil(o.Mfa) {
 		toSerialize["mfa"] = o.Mfa
 	}
 	if true {
 		toSerialize["name"] = o.Name
 	}
-	if o.Orchestrate != nil {
+	if !isNil(o.Orchestrate) {
 		toSerialize["orchestrate"] = o.Orchestrate
 	}
-	if o.Organization != nil {
+	if !isNil(o.Organization) {
 		toSerialize["organization"] = o.Organization
 	}
-	if o.Package != nil {
+	if !isNil(o.Package) {
 		toSerialize["package"] = o.Package
 	}
-	if o.ReplacesLicense != nil {
+	if !isNil(o.ReplacesLicense) {
 		toSerialize["replacesLicense"] = o.ReplacesLicense
 	}
-	if o.ReplacedByLicense != nil {
+	if !isNil(o.ReplacedByLicense) {
 		toSerialize["replacedByLicense"] = o.ReplacedByLicense
 	}
-	if o.Status != nil {
+	if !isNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
-	if o.TerminatesAt != nil {
+	if !isNil(o.TerminatesAt) {
 		toSerialize["terminatesAt"] = o.TerminatesAt
 	}
-	if o.Users != nil {
+	if !isNil(o.Users) {
 		toSerialize["users"] = o.Users
 	}
-	if o.Verify != nil {
+	if !isNil(o.Verify) {
 		toSerialize["verify"] = o.Verify
 	}
 	return json.Marshal(toSerialize)

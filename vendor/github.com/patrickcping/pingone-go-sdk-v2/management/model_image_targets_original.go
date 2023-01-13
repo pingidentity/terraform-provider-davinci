@@ -46,7 +46,7 @@ func NewImageTargetsOriginalWithDefaults() *ImageTargetsOriginal {
 
 // GetHref returns the Href field value if set, zero value otherwise.
 func (o *ImageTargetsOriginal) GetHref() string {
-	if o == nil || o.Href == nil {
+	if o == nil || isNil(o.Href) {
 		var ret string
 		return ret
 	}
@@ -56,15 +56,15 @@ func (o *ImageTargetsOriginal) GetHref() string {
 // GetHrefOk returns a tuple with the Href field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImageTargetsOriginal) GetHrefOk() (*string, bool) {
-	if o == nil || o.Href == nil {
-		return nil, false
+	if o == nil || isNil(o.Href) {
+    return nil, false
 	}
 	return o.Href, true
 }
 
 // HasHref returns a boolean if a field has been set.
 func (o *ImageTargetsOriginal) HasHref() bool {
-	if o != nil && o.Href != nil {
+	if o != nil && !isNil(o.Href) {
 		return true
 	}
 
@@ -78,7 +78,7 @@ func (o *ImageTargetsOriginal) SetHref(v string) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *ImageTargetsOriginal) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -88,15 +88,15 @@ func (o *ImageTargetsOriginal) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImageTargetsOriginal) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *ImageTargetsOriginal) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -110,7 +110,7 @@ func (o *ImageTargetsOriginal) SetId(v string) {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *ImageTargetsOriginal) GetType() EnumImageFormat {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret EnumImageFormat
 		return ret
 	}
@@ -120,15 +120,15 @@ func (o *ImageTargetsOriginal) GetType() EnumImageFormat {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImageTargetsOriginal) GetTypeOk() (*EnumImageFormat, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *ImageTargetsOriginal) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -142,7 +142,7 @@ func (o *ImageTargetsOriginal) SetType(v EnumImageFormat) {
 
 // GetWidth returns the Width field value if set, zero value otherwise.
 func (o *ImageTargetsOriginal) GetWidth() int32 {
-	if o == nil || o.Width == nil {
+	if o == nil || isNil(o.Width) {
 		var ret int32
 		return ret
 	}
@@ -152,15 +152,15 @@ func (o *ImageTargetsOriginal) GetWidth() int32 {
 // GetWidthOk returns a tuple with the Width field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImageTargetsOriginal) GetWidthOk() (*int32, bool) {
-	if o == nil || o.Width == nil {
-		return nil, false
+	if o == nil || isNil(o.Width) {
+    return nil, false
 	}
 	return o.Width, true
 }
 
 // HasWidth returns a boolean if a field has been set.
 func (o *ImageTargetsOriginal) HasWidth() bool {
-	if o != nil && o.Width != nil {
+	if o != nil && !isNil(o.Width) {
 		return true
 	}
 
@@ -174,7 +174,7 @@ func (o *ImageTargetsOriginal) SetWidth(v int32) {
 
 // GetHeight returns the Height field value if set, zero value otherwise.
 func (o *ImageTargetsOriginal) GetHeight() int32 {
-	if o == nil || o.Height == nil {
+	if o == nil || isNil(o.Height) {
 		var ret int32
 		return ret
 	}
@@ -184,15 +184,15 @@ func (o *ImageTargetsOriginal) GetHeight() int32 {
 // GetHeightOk returns a tuple with the Height field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ImageTargetsOriginal) GetHeightOk() (*int32, bool) {
-	if o == nil || o.Height == nil {
-		return nil, false
+	if o == nil || isNil(o.Height) {
+    return nil, false
 	}
 	return o.Height, true
 }
 
 // HasHeight returns a boolean if a field has been set.
 func (o *ImageTargetsOriginal) HasHeight() bool {
-	if o != nil && o.Height != nil {
+	if o != nil && !isNil(o.Height) {
 		return true
 	}
 
@@ -206,19 +206,19 @@ func (o *ImageTargetsOriginal) SetHeight(v int32) {
 
 func (o ImageTargetsOriginal) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Href != nil {
+	if !isNil(o.Href) {
 		toSerialize["href"] = o.Href
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
-	if o.Width != nil {
+	if !isNil(o.Width) {
 		toSerialize["width"] = o.Width
 	}
-	if o.Height != nil {
+	if !isNil(o.Height) {
 		toSerialize["height"] = o.Height
 	}
 	return json.Marshal(toSerialize)

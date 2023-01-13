@@ -52,7 +52,7 @@ func (o *DeviceAuthenticationPolicyMobileApplicationsInnerOtp) GetEnabled() bool
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileApplicationsInnerOtp) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }

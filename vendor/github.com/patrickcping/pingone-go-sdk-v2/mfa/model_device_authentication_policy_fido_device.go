@@ -54,7 +54,7 @@ func (o *DeviceAuthenticationPolicyFIDODevice) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyFIDODevice) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -66,7 +66,7 @@ func (o *DeviceAuthenticationPolicyFIDODevice) SetEnabled(v bool) {
 
 // GetFidoPolicyId returns the FidoPolicyId field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyFIDODevice) GetFidoPolicyId() string {
-	if o == nil || o.FidoPolicyId == nil {
+	if o == nil || isNil(o.FidoPolicyId) {
 		var ret string
 		return ret
 	}
@@ -76,15 +76,15 @@ func (o *DeviceAuthenticationPolicyFIDODevice) GetFidoPolicyId() string {
 // GetFidoPolicyIdOk returns a tuple with the FidoPolicyId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyFIDODevice) GetFidoPolicyIdOk() (*string, bool) {
-	if o == nil || o.FidoPolicyId == nil {
-		return nil, false
+	if o == nil || isNil(o.FidoPolicyId) {
+    return nil, false
 	}
 	return o.FidoPolicyId, true
 }
 
 // HasFidoPolicyId returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyFIDODevice) HasFidoPolicyId() bool {
-	if o != nil && o.FidoPolicyId != nil {
+	if o != nil && !isNil(o.FidoPolicyId) {
 		return true
 	}
 
@@ -101,7 +101,7 @@ func (o DeviceAuthenticationPolicyFIDODevice) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.FidoPolicyId != nil {
+	if !isNil(o.FidoPolicyId) {
 		toSerialize["fidoPolicyId"] = o.FidoPolicyId
 	}
 	return json.Marshal(toSerialize)

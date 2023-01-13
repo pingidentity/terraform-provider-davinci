@@ -53,7 +53,7 @@ func (o *DeviceAuthenticationPolicyMobileOtp) GetFailure() DeviceAuthenticationP
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileOtp) GetFailureOk() (*DeviceAuthenticationPolicyOfflineDeviceOtpFailure, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Failure, true
 }
@@ -77,7 +77,7 @@ func (o *DeviceAuthenticationPolicyMobileOtp) GetWindow() DeviceAuthenticationPo
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileOtp) GetWindowOk() (*DeviceAuthenticationPolicyMobileOtpWindow, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Window, true
 }

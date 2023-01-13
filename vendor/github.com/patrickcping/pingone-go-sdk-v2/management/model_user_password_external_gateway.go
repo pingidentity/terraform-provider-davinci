@@ -44,7 +44,7 @@ func NewUserPasswordExternalGatewayWithDefaults() *UserPasswordExternalGateway {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *UserPasswordExternalGateway) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -54,15 +54,15 @@ func (o *UserPasswordExternalGateway) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPasswordExternalGateway) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *UserPasswordExternalGateway) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -76,7 +76,7 @@ func (o *UserPasswordExternalGateway) SetId(v string) {
 
 // GetType returns the Type field value if set, zero value otherwise.
 func (o *UserPasswordExternalGateway) GetType() string {
-	if o == nil || o.Type == nil {
+	if o == nil || isNil(o.Type) {
 		var ret string
 		return ret
 	}
@@ -86,15 +86,15 @@ func (o *UserPasswordExternalGateway) GetType() string {
 // GetTypeOk returns a tuple with the Type field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPasswordExternalGateway) GetTypeOk() (*string, bool) {
-	if o == nil || o.Type == nil {
-		return nil, false
+	if o == nil || isNil(o.Type) {
+    return nil, false
 	}
 	return o.Type, true
 }
 
 // HasType returns a boolean if a field has been set.
 func (o *UserPasswordExternalGateway) HasType() bool {
-	if o != nil && o.Type != nil {
+	if o != nil && !isNil(o.Type) {
 		return true
 	}
 
@@ -108,7 +108,7 @@ func (o *UserPasswordExternalGateway) SetType(v string) {
 
 // GetUserType returns the UserType field value if set, zero value otherwise.
 func (o *UserPasswordExternalGateway) GetUserType() UserPasswordExternalGatewayUserType {
-	if o == nil || o.UserType == nil {
+	if o == nil || isNil(o.UserType) {
 		var ret UserPasswordExternalGatewayUserType
 		return ret
 	}
@@ -118,15 +118,15 @@ func (o *UserPasswordExternalGateway) GetUserType() UserPasswordExternalGatewayU
 // GetUserTypeOk returns a tuple with the UserType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPasswordExternalGateway) GetUserTypeOk() (*UserPasswordExternalGatewayUserType, bool) {
-	if o == nil || o.UserType == nil {
-		return nil, false
+	if o == nil || isNil(o.UserType) {
+    return nil, false
 	}
 	return o.UserType, true
 }
 
 // HasUserType returns a boolean if a field has been set.
 func (o *UserPasswordExternalGateway) HasUserType() bool {
-	if o != nil && o.UserType != nil {
+	if o != nil && !isNil(o.UserType) {
 		return true
 	}
 
@@ -140,7 +140,7 @@ func (o *UserPasswordExternalGateway) SetUserType(v UserPasswordExternalGatewayU
 
 // GetCorrelationAttributes returns the CorrelationAttributes field value if set, zero value otherwise.
 func (o *UserPasswordExternalGateway) GetCorrelationAttributes() map[string]interface{} {
-	if o == nil || o.CorrelationAttributes == nil {
+	if o == nil || isNil(o.CorrelationAttributes) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -150,15 +150,15 @@ func (o *UserPasswordExternalGateway) GetCorrelationAttributes() map[string]inte
 // GetCorrelationAttributesOk returns a tuple with the CorrelationAttributes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPasswordExternalGateway) GetCorrelationAttributesOk() (map[string]interface{}, bool) {
-	if o == nil || o.CorrelationAttributes == nil {
-		return nil, false
+	if o == nil || isNil(o.CorrelationAttributes) {
+    return map[string]interface{}{}, false
 	}
 	return o.CorrelationAttributes, true
 }
 
 // HasCorrelationAttributes returns a boolean if a field has been set.
 func (o *UserPasswordExternalGateway) HasCorrelationAttributes() bool {
-	if o != nil && o.CorrelationAttributes != nil {
+	if o != nil && !isNil(o.CorrelationAttributes) {
 		return true
 	}
 
@@ -172,16 +172,16 @@ func (o *UserPasswordExternalGateway) SetCorrelationAttributes(v map[string]inte
 
 func (o UserPasswordExternalGateway) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Type != nil {
+	if !isNil(o.Type) {
 		toSerialize["type"] = o.Type
 	}
-	if o.UserType != nil {
+	if !isNil(o.UserType) {
 		toSerialize["userType"] = o.UserType
 	}
-	if o.CorrelationAttributes != nil {
+	if !isNil(o.CorrelationAttributes) {
 		toSerialize["correlationAttributes"] = o.CorrelationAttributes
 	}
 	return json.Marshal(toSerialize)

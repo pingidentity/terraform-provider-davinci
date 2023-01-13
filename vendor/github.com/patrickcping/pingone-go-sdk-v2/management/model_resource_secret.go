@@ -40,7 +40,7 @@ func NewResourceSecretWithDefaults() *ResourceSecret {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *ResourceSecret) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *ResourceSecret) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceSecret) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *ResourceSecret) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -72,7 +72,7 @@ func (o *ResourceSecret) SetEnvironment(v ObjectEnvironment) {
 
 // GetSecret returns the Secret field value if set, zero value otherwise.
 func (o *ResourceSecret) GetSecret() string {
-	if o == nil || o.Secret == nil {
+	if o == nil || isNil(o.Secret) {
 		var ret string
 		return ret
 	}
@@ -82,15 +82,15 @@ func (o *ResourceSecret) GetSecret() string {
 // GetSecretOk returns a tuple with the Secret field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ResourceSecret) GetSecretOk() (*string, bool) {
-	if o == nil || o.Secret == nil {
-		return nil, false
+	if o == nil || isNil(o.Secret) {
+    return nil, false
 	}
 	return o.Secret, true
 }
 
 // HasSecret returns a boolean if a field has been set.
 func (o *ResourceSecret) HasSecret() bool {
-	if o != nil && o.Secret != nil {
+	if o != nil && !isNil(o.Secret) {
 		return true
 	}
 
@@ -104,10 +104,10 @@ func (o *ResourceSecret) SetSecret(v string) {
 
 func (o ResourceSecret) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Secret != nil {
+	if !isNil(o.Secret) {
 		toSerialize["secret"] = o.Secret
 	}
 	return json.Marshal(toSerialize)
