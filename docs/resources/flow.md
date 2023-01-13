@@ -16,7 +16,7 @@ description: |-
 //Read all connections - This is a good first call to make
 data "davinci_connections" "all" {
   name           = "Flow"
-  connector_id   = "flowConnector"
+  connector_ids  = "flowConnector"
   environment_id = var.environment_id
 }
 resource "davinci_connection" "subflow" {
@@ -66,19 +66,20 @@ resource "davinci_flow" "subflow" {
 
 ### Required
 
-- `environment_id` (String) Environment to import flow into.
-- `flow_json` (String) DaVinci Flow in raw json format.
+- `environment_id` (String) PingOne Environment to import flow into.
+- `flow_json` (String, Sensitive) DaVinci Flow in raw json format.
 
 ### Optional
 
-- `connections` (Block Set) Connections this flow depends on. flow_json will be updated with provided connection IDs. (see [below for nested schema](#nestedblock--connections))
-- `deploy` (Boolean) Deploy Flow after import. Defaults to `true`.
-- `subflows` (Block Set) Child flows of this resource. Required if flow_json contains subflows. (see [below for nested schema](#nestedblock--subflows))
+- `connections` (Block Set) Connections this flow depends on. flow_json connectionId will be updated to connection_id matching connection_name . (see [below for nested schema](#nestedblock--connections))
+- `deploy` (Boolean) Deploy Flow after import. Flows must be deployed to be used. Defaults to `true`.
+- `subflows` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to subflow_id matching subflow_name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflows))
+- `variables` (Block Set) Dependent variables of this flow. Required to ensure mapping if flow_json contains variables. flow_json variableId will be updated to variable_id by matching variable_name. (see [below for nested schema](#nestedblock--variables))
 
 ### Read-Only
 
-- `flow_id` (String) Computed Flow ID after import.
-- `flow_name` (String) Computed Flow Name after import.
+- `flow_id` (String) DaVinci generated identifier after import.
+- `flow_name` (String) Computed Flow Name after import. Will match 'name' in flow_json
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--connections"></a>
@@ -86,8 +87,8 @@ resource "davinci_flow" "subflow" {
 
 Required:
 
-- `connection_id` (String) Connection ID
-- `connection_name` (String) Connection Name
+- `connection_id` (String) Connection ID that will be used when flow is imported.
+- `connection_name` (String) Connection Name to match when updating flow_json connectionId.
 
 
 <a id="nestedblock--subflows"></a>
@@ -95,7 +96,16 @@ Required:
 
 Required:
 
-- `subflow_id` (String) Subflow Flow ID
-- `subflow_name` (String) Subflow Name
+- `subflow_id` (String) Subflow Flow ID that will be used when flow is imported.
+- `subflow_name` (String) Subflow Name to match when updating flow_json subflowId.
+
+
+<a id="nestedblock--variables"></a>
+### Nested Schema for `variables`
+
+Required:
+
+- `variable_id` (String) Variable ID that will be used when flow is imported.
+- `variable_name` (String) Variable Name to match when updating flow_json variableId.
 
 

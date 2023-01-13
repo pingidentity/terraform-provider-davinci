@@ -55,12 +55,12 @@ output "default_app_test_key" {
 ### Required
 
 - `environment_id` (String) PingOne environment id
-- `name` (String)
+- `name` (String) Application name
 - `saml` (Block Set, Min: 1, Max: 1) SAML configuration (see [below for nested schema](#nestedblock--saml))
 
 ### Optional
 
-- `api_key_enabled` (Boolean) Defaults to `true`.
+- `api_key_enabled` (Boolean) Enabled by default in UI Defaults to `true`.
 - `oauth` (Block Set, Max: 1) OIDC configuration (see [below for nested schema](#nestedblock--oauth))
 - `policies` (Block Set) Flow Policy Config (see [below for nested schema](#nestedblock--policies))
 - `user_portal` (Block Set, Max: 1) User Profile in UI (see [below for nested schema](#nestedblock--user_portal))
@@ -68,7 +68,7 @@ output "default_app_test_key" {
 ### Read-Only
 
 - `api_keys` (Map of String) Appplication Api Key
-- `application_id` (String)
+- `application_id` (String) DaVinci generated identifier
 - `created_date` (Number)
 - `customer_id` (String)
 - `id` (String) The ID of this resource.

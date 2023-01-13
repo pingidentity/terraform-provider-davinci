@@ -43,17 +43,17 @@ output "cowd_strike_id" {
 
 ### Required
 
-- `connector_id` (String)
+- `connector_id` (String) DaVinci internal connector type. Not found in UI. Look in API read response (e.g Http Connector is 'httpConnector'
 - `environment_id` (String) PingOne environment id
-- `name` (String)
+- `name` (String) Name of the connection displayed in UI. Also used for mapping connection_id on flows between environments.
 
 ### Optional
 
-- `properties` (Block Set) (see [below for nested schema](#nestedblock--properties))
+- `properties` (Block Set) Connection properties. These are specific to the connector type. Get connection properties from connection API read response. (see [below for nested schema](#nestedblock--properties))
 
 ### Read-Only
 
-- `connection_id` (String)
+- `connection_id` (String) DaVinci generated identifier for the connection.
 - `created_date` (Number)
 - `customer_id` (String)
 - `id` (String) The ID of this resource.
@@ -63,11 +63,11 @@ output "cowd_strike_id" {
 
 Required:
 
-- `name` (String)
-- `value` (String)
+- `name` (String) Name of the property.
+- `value` (String) Value of the property as string. If the property is an array, use a comma separated string.
 
 Optional:
 
-- `type` (String)
+- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: string, boolean. Use 'string' for array
 
 

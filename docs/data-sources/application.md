@@ -27,7 +27,7 @@ output "davinci_app_one_key" {
 
 ### Required
 
-- `application_id` (String)
+- `application_id` (String) ID of the application to retrieve.
 - `environment_id` (String) PingOne environment id
 
 ### Read-Only
