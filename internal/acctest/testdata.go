@@ -67,8 +67,9 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 			Connections: []string{"http", "functions"},
 		}),
 		Drifted: makeFlowHcl(resourceName, flowResource{
-			Name:     "simple",
-			FlowJson: flowJsons.Drifted,
+			Name:        "simple",
+			FlowJson:    flowJsons.Drifted,
+			Connections: []string{"http"},
 		}),
 		Mainflow: makeFlowHcl(resourceName, flowResource{
 			Name:        "mainflow",
