@@ -1,7 +1,7 @@
 //Read all connections - This is a good first call to make
 data "davinci_connections" "all" {
   name           = "Flow"
-  connector_id   = "flowConnector"
+  connector_ids  = "flowConnector"
   environment_id = var.environment_id
 }
 resource "davinci_connection" "subflow" {

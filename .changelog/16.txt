@@ -1,0 +1,7 @@
+``````markdown
+```release-note:bug
+davinci_flow: `flow_json` is now sensitive
+davinci_connection: `properties.value` is now sensitive
+davinci_variable: `value` is now sensitive
+```
+``````

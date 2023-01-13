@@ -44,6 +44,7 @@ func TestAccResourceFlow_SimpleFlowUpdate(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
 
 	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl})
+
 	hclDrifted := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Drifted.Hcl})
 
 	resource.Test(t, resource.TestCase{
