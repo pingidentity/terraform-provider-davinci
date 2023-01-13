@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- `connection_id` (String)
+- `connection_id` (String) ID of the connection to retrieve.
 - `environment_id` (String) PingOne environment id
 
 ### Read-Only

@@ -19,12 +19,14 @@ func ResourceConnection() *schema.Resource {
 		DeleteContext: resourceConnectionDelete,
 		Schema: map[string]*schema.Schema{
 			"connection_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "DaVinci generated identifier for the connection.",
 			},
 			"connector_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "DaVinci internal connector type. Not found in UI. Look in API read response (e.g Http Connector is 'httpConnector'",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -36,29 +38,34 @@ func ResourceConnection() *schema.Resource {
 				Computed: true,
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Name of the connection displayed in UI. Also used for mapping connection_id on flows between environments.",
 			},
 			"created_date": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"properties": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Name of the property.",
 						},
 						"value": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Type of the property. This is used to cast the value to the correct type. Must be: string, boolean. Use 'string' for array",
 						},
 					},
 				},

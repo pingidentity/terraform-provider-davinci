@@ -24,25 +24,28 @@ func ResourceApplication() *schema.Resource {
 				Description: "PingOne environment id",
 			},
 			"application_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "DaVinci generated identifier",
 			},
 			"customer_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Application name",
 			},
 			"created_date": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"api_key_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Enabled by default in UI",
 			},
 			"api_keys": {
 				Type:        schema.TypeMap,

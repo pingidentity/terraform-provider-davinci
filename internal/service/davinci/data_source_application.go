@@ -15,8 +15,9 @@ func DataSourceApplication() *schema.Resource {
 		ReadContext: dataSourceApplicationRead,
 		Schema: map[string]*schema.Schema{
 			"application_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the application to retrieve.",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,

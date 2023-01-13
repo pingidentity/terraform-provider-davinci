@@ -53,6 +53,7 @@ func ResourceVariable() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Value as string, type will be inferred",
+				Sensitive:   true,
 			},
 			"min": {
 				Type:        schema.TypeInt,

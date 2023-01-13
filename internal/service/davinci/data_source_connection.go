@@ -16,8 +16,9 @@ func DataSourceConnection() *schema.Resource {
 		ReadContext: dataSourceConnectionRead,
 		Schema: map[string]*schema.Schema{
 			"connection_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the connection to retrieve.",
 			},
 			"connector_id": {
 				Type:     schema.TypeString,
@@ -51,8 +52,9 @@ func DataSourceConnection() *schema.Resource {
 							Computed: true,
 						},
 						"value": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:      schema.TypeString,
+							Computed:  true,
+							Sensitive: true,
 						},
 						"type": {
 							Type:     schema.TypeString,
@@ -64,6 +66,13 @@ func DataSourceConnection() *schema.Resource {
 		},
 	}
 }
+
+// var dvConnectionRetryableErrors = []sdk.RetryableError{
+// 	{
+// 		Status: 400,
+
+// 	}
+// }
 
 func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*dv.APIClient)
