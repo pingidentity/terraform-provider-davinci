@@ -1,8 +1,8 @@
-## 0.0.6 (Unreleased)
+## 0.0.8 (Unreleased)
 
 ENHANCEMENTS:
 
-* davinci_flow: closes #14 - Save `davinci_flow.connections` and `davinci_flow.subflows`
+* davinci_flow: closes #14 - Save `davinci_flow.connections` and `davinci_flow.subflows` to terraform state
 davinci_flow: Add warning when missing relevant connection dependency ([#14](https://github.com/pingidentity/terraform-provider-pingone/issues/14))
 
 BUG FIXES:
