@@ -53,7 +53,7 @@ func (o *DeviceAuthenticationPolicyMobileOtpWindowStepSize) GetDuration() int32 
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileOtpWindowStepSize) GetDurationOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Duration, true
 }
@@ -77,7 +77,7 @@ func (o *DeviceAuthenticationPolicyMobileOtpWindowStepSize) GetTimeUnit() EnumTi
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobileOtpWindowStepSize) GetTimeUnitOk() (*EnumTimeUnit, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.TimeUnit, true
 }

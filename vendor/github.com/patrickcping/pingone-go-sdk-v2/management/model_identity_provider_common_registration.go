@@ -38,7 +38,7 @@ func NewIdentityProviderCommonRegistrationWithDefaults() *IdentityProviderCommon
 
 // GetPopulation returns the Population field value if set, zero value otherwise.
 func (o *IdentityProviderCommonRegistration) GetPopulation() IdentityProviderCommonRegistrationPopulation {
-	if o == nil || o.Population == nil {
+	if o == nil || isNil(o.Population) {
 		var ret IdentityProviderCommonRegistrationPopulation
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *IdentityProviderCommonRegistration) GetPopulation() IdentityProviderCom
 // GetPopulationOk returns a tuple with the Population field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderCommonRegistration) GetPopulationOk() (*IdentityProviderCommonRegistrationPopulation, bool) {
-	if o == nil || o.Population == nil {
-		return nil, false
+	if o == nil || isNil(o.Population) {
+    return nil, false
 	}
 	return o.Population, true
 }
 
 // HasPopulation returns a boolean if a field has been set.
 func (o *IdentityProviderCommonRegistration) HasPopulation() bool {
-	if o != nil && o.Population != nil {
+	if o != nil && !isNil(o.Population) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *IdentityProviderCommonRegistration) SetPopulation(v IdentityProviderCom
 
 func (o IdentityProviderCommonRegistration) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Population != nil {
+	if !isNil(o.Population) {
 		toSerialize["population"] = o.Population
 	}
 	return json.Marshal(toSerialize)

@@ -45,7 +45,7 @@ func NewEmailDomainTrustedEmailWithDefaults() *EmailDomainTrustedEmail {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *EmailDomainTrustedEmail) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -55,15 +55,15 @@ func (o *EmailDomainTrustedEmail) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainTrustedEmail) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *EmailDomainTrustedEmail) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -77,7 +77,7 @@ func (o *EmailDomainTrustedEmail) SetId(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *EmailDomainTrustedEmail) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -87,15 +87,15 @@ func (o *EmailDomainTrustedEmail) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainTrustedEmail) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *EmailDomainTrustedEmail) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -109,7 +109,7 @@ func (o *EmailDomainTrustedEmail) SetEnvironment(v ObjectEnvironment) {
 
 // GetEmailDomain returns the EmailDomain field value if set, zero value otherwise.
 func (o *EmailDomainTrustedEmail) GetEmailDomain() EmailDomainTrustedEmailEmailDomain {
-	if o == nil || o.EmailDomain == nil {
+	if o == nil || isNil(o.EmailDomain) {
 		var ret EmailDomainTrustedEmailEmailDomain
 		return ret
 	}
@@ -119,15 +119,15 @@ func (o *EmailDomainTrustedEmail) GetEmailDomain() EmailDomainTrustedEmailEmailD
 // GetEmailDomainOk returns a tuple with the EmailDomain field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainTrustedEmail) GetEmailDomainOk() (*EmailDomainTrustedEmailEmailDomain, bool) {
-	if o == nil || o.EmailDomain == nil {
-		return nil, false
+	if o == nil || isNil(o.EmailDomain) {
+    return nil, false
 	}
 	return o.EmailDomain, true
 }
 
 // HasEmailDomain returns a boolean if a field has been set.
 func (o *EmailDomainTrustedEmail) HasEmailDomain() bool {
-	if o != nil && o.EmailDomain != nil {
+	if o != nil && !isNil(o.EmailDomain) {
 		return true
 	}
 
@@ -153,7 +153,7 @@ func (o *EmailDomainTrustedEmail) GetEmailAddress() string {
 // and a boolean to check if the value has been set.
 func (o *EmailDomainTrustedEmail) GetEmailAddressOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.EmailAddress, true
 }
@@ -165,7 +165,7 @@ func (o *EmailDomainTrustedEmail) SetEmailAddress(v string) {
 
 // GetStatus returns the Status field value if set, zero value otherwise.
 func (o *EmailDomainTrustedEmail) GetStatus() EnumTrustedEmailStatus {
-	if o == nil || o.Status == nil {
+	if o == nil || isNil(o.Status) {
 		var ret EnumTrustedEmailStatus
 		return ret
 	}
@@ -175,15 +175,15 @@ func (o *EmailDomainTrustedEmail) GetStatus() EnumTrustedEmailStatus {
 // GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EmailDomainTrustedEmail) GetStatusOk() (*EnumTrustedEmailStatus, bool) {
-	if o == nil || o.Status == nil {
-		return nil, false
+	if o == nil || isNil(o.Status) {
+    return nil, false
 	}
 	return o.Status, true
 }
 
 // HasStatus returns a boolean if a field has been set.
 func (o *EmailDomainTrustedEmail) HasStatus() bool {
-	if o != nil && o.Status != nil {
+	if o != nil && !isNil(o.Status) {
 		return true
 	}
 
@@ -197,19 +197,19 @@ func (o *EmailDomainTrustedEmail) SetStatus(v EnumTrustedEmailStatus) {
 
 func (o EmailDomainTrustedEmail) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.EmailDomain != nil {
+	if !isNil(o.EmailDomain) {
 		toSerialize["emailDomain"] = o.EmailDomain
 	}
 	if true {
 		toSerialize["emailAddress"] = o.EmailAddress
 	}
-	if o.Status != nil {
+	if !isNil(o.Status) {
 		toSerialize["status"] = o.Status
 	}
 	return json.Marshal(toSerialize)

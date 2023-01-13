@@ -42,7 +42,7 @@ func NewUserPasswordWithDefaults() *UserPassword {
 
 // GetForceChange returns the ForceChange field value if set, zero value otherwise.
 func (o *UserPassword) GetForceChange() bool {
-	if o == nil || o.ForceChange == nil {
+	if o == nil || isNil(o.ForceChange) {
 		var ret bool
 		return ret
 	}
@@ -52,15 +52,15 @@ func (o *UserPassword) GetForceChange() bool {
 // GetForceChangeOk returns a tuple with the ForceChange field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPassword) GetForceChangeOk() (*bool, bool) {
-	if o == nil || o.ForceChange == nil {
-		return nil, false
+	if o == nil || isNil(o.ForceChange) {
+    return nil, false
 	}
 	return o.ForceChange, true
 }
 
 // HasForceChange returns a boolean if a field has been set.
 func (o *UserPassword) HasForceChange() bool {
-	if o != nil && o.ForceChange != nil {
+	if o != nil && !isNil(o.ForceChange) {
 		return true
 	}
 
@@ -74,7 +74,7 @@ func (o *UserPassword) SetForceChange(v bool) {
 
 // GetValue returns the Value field value if set, zero value otherwise.
 func (o *UserPassword) GetValue() string {
-	if o == nil || o.Value == nil {
+	if o == nil || isNil(o.Value) {
 		var ret string
 		return ret
 	}
@@ -84,15 +84,15 @@ func (o *UserPassword) GetValue() string {
 // GetValueOk returns a tuple with the Value field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPassword) GetValueOk() (*string, bool) {
-	if o == nil || o.Value == nil {
-		return nil, false
+	if o == nil || isNil(o.Value) {
+    return nil, false
 	}
 	return o.Value, true
 }
 
 // HasValue returns a boolean if a field has been set.
 func (o *UserPassword) HasValue() bool {
-	if o != nil && o.Value != nil {
+	if o != nil && !isNil(o.Value) {
 		return true
 	}
 
@@ -106,7 +106,7 @@ func (o *UserPassword) SetValue(v string) {
 
 // GetExternal returns the External field value if set, zero value otherwise.
 func (o *UserPassword) GetExternal() UserPasswordExternal {
-	if o == nil || o.External == nil {
+	if o == nil || isNil(o.External) {
 		var ret UserPasswordExternal
 		return ret
 	}
@@ -116,15 +116,15 @@ func (o *UserPassword) GetExternal() UserPasswordExternal {
 // GetExternalOk returns a tuple with the External field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UserPassword) GetExternalOk() (*UserPasswordExternal, bool) {
-	if o == nil || o.External == nil {
-		return nil, false
+	if o == nil || isNil(o.External) {
+    return nil, false
 	}
 	return o.External, true
 }
 
 // HasExternal returns a boolean if a field has been set.
 func (o *UserPassword) HasExternal() bool {
-	if o != nil && o.External != nil {
+	if o != nil && !isNil(o.External) {
 		return true
 	}
 
@@ -138,13 +138,13 @@ func (o *UserPassword) SetExternal(v UserPasswordExternal) {
 
 func (o UserPassword) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ForceChange != nil {
+	if !isNil(o.ForceChange) {
 		toSerialize["forceChange"] = o.ForceChange
 	}
-	if o.Value != nil {
+	if !isNil(o.Value) {
 		toSerialize["value"] = o.Value
 	}
-	if o.External != nil {
+	if !isNil(o.External) {
 		toSerialize["external"] = o.External
 	}
 	return json.Marshal(toSerialize)

@@ -38,7 +38,7 @@ func NewLicenseOrchestrateWithDefaults() *LicenseOrchestrate {
 
 // GetAllowOrchestration returns the AllowOrchestration field value if set, zero value otherwise.
 func (o *LicenseOrchestrate) GetAllowOrchestration() bool {
-	if o == nil || o.AllowOrchestration == nil {
+	if o == nil || isNil(o.AllowOrchestration) {
 		var ret bool
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *LicenseOrchestrate) GetAllowOrchestration() bool {
 // GetAllowOrchestrationOk returns a tuple with the AllowOrchestration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseOrchestrate) GetAllowOrchestrationOk() (*bool, bool) {
-	if o == nil || o.AllowOrchestration == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowOrchestration) {
+    return nil, false
 	}
 	return o.AllowOrchestration, true
 }
 
 // HasAllowOrchestration returns a boolean if a field has been set.
 func (o *LicenseOrchestrate) HasAllowOrchestration() bool {
-	if o != nil && o.AllowOrchestration != nil {
+	if o != nil && !isNil(o.AllowOrchestration) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *LicenseOrchestrate) SetAllowOrchestration(v bool) {
 
 func (o LicenseOrchestrate) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowOrchestration != nil {
+	if !isNil(o.AllowOrchestration) {
 		toSerialize["allowOrchestration"] = o.AllowOrchestration
 	}
 	return json.Marshal(toSerialize)

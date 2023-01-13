@@ -43,7 +43,7 @@ func NewAgreementLanguageUserExperienceWithDefaults() *AgreementLanguageUserExpe
 
 // GetAcceptCheckboxText returns the AcceptCheckboxText field value if set, zero value otherwise.
 func (o *AgreementLanguageUserExperience) GetAcceptCheckboxText() string {
-	if o == nil || o.AcceptCheckboxText == nil {
+	if o == nil || isNil(o.AcceptCheckboxText) {
 		var ret string
 		return ret
 	}
@@ -53,15 +53,15 @@ func (o *AgreementLanguageUserExperience) GetAcceptCheckboxText() string {
 // GetAcceptCheckboxTextOk returns a tuple with the AcceptCheckboxText field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageUserExperience) GetAcceptCheckboxTextOk() (*string, bool) {
-	if o == nil || o.AcceptCheckboxText == nil {
-		return nil, false
+	if o == nil || isNil(o.AcceptCheckboxText) {
+    return nil, false
 	}
 	return o.AcceptCheckboxText, true
 }
 
 // HasAcceptCheckboxText returns a boolean if a field has been set.
 func (o *AgreementLanguageUserExperience) HasAcceptCheckboxText() bool {
-	if o != nil && o.AcceptCheckboxText != nil {
+	if o != nil && !isNil(o.AcceptCheckboxText) {
 		return true
 	}
 
@@ -75,7 +75,7 @@ func (o *AgreementLanguageUserExperience) SetAcceptCheckboxText(v string) {
 
 // GetContinueButtonText returns the ContinueButtonText field value if set, zero value otherwise.
 func (o *AgreementLanguageUserExperience) GetContinueButtonText() string {
-	if o == nil || o.ContinueButtonText == nil {
+	if o == nil || isNil(o.ContinueButtonText) {
 		var ret string
 		return ret
 	}
@@ -85,15 +85,15 @@ func (o *AgreementLanguageUserExperience) GetContinueButtonText() string {
 // GetContinueButtonTextOk returns a tuple with the ContinueButtonText field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageUserExperience) GetContinueButtonTextOk() (*string, bool) {
-	if o == nil || o.ContinueButtonText == nil {
-		return nil, false
+	if o == nil || isNil(o.ContinueButtonText) {
+    return nil, false
 	}
 	return o.ContinueButtonText, true
 }
 
 // HasContinueButtonText returns a boolean if a field has been set.
 func (o *AgreementLanguageUserExperience) HasContinueButtonText() bool {
-	if o != nil && o.ContinueButtonText != nil {
+	if o != nil && !isNil(o.ContinueButtonText) {
 		return true
 	}
 
@@ -107,7 +107,7 @@ func (o *AgreementLanguageUserExperience) SetContinueButtonText(v string) {
 
 // GetDeclineButtonText returns the DeclineButtonText field value if set, zero value otherwise.
 func (o *AgreementLanguageUserExperience) GetDeclineButtonText() string {
-	if o == nil || o.DeclineButtonText == nil {
+	if o == nil || isNil(o.DeclineButtonText) {
 		var ret string
 		return ret
 	}
@@ -117,15 +117,15 @@ func (o *AgreementLanguageUserExperience) GetDeclineButtonText() string {
 // GetDeclineButtonTextOk returns a tuple with the DeclineButtonText field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *AgreementLanguageUserExperience) GetDeclineButtonTextOk() (*string, bool) {
-	if o == nil || o.DeclineButtonText == nil {
-		return nil, false
+	if o == nil || isNil(o.DeclineButtonText) {
+    return nil, false
 	}
 	return o.DeclineButtonText, true
 }
 
 // HasDeclineButtonText returns a boolean if a field has been set.
 func (o *AgreementLanguageUserExperience) HasDeclineButtonText() bool {
-	if o != nil && o.DeclineButtonText != nil {
+	if o != nil && !isNil(o.DeclineButtonText) {
 		return true
 	}
 
@@ -139,13 +139,13 @@ func (o *AgreementLanguageUserExperience) SetDeclineButtonText(v string) {
 
 func (o AgreementLanguageUserExperience) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AcceptCheckboxText != nil {
+	if !isNil(o.AcceptCheckboxText) {
 		toSerialize["acceptCheckboxText"] = o.AcceptCheckboxText
 	}
-	if o.ContinueButtonText != nil {
+	if !isNil(o.ContinueButtonText) {
 		toSerialize["continueButtonText"] = o.ContinueButtonText
 	}
-	if o.DeclineButtonText != nil {
+	if !isNil(o.DeclineButtonText) {
 		toSerialize["declineButtonText"] = o.DeclineButtonText
 	}
 	return json.Marshal(toSerialize)

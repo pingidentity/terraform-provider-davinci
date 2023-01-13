@@ -50,7 +50,7 @@ func NewLanguageLocalizationStatusWithDefaults() *LanguageLocalizationStatus {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetCreatedAt() string {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || isNil(o.CreatedAt) {
 		var ret string
 		return ret
 	}
@@ -60,15 +60,15 @@ func (o *LanguageLocalizationStatus) GetCreatedAt() string {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetCreatedAtOk() (*string, bool) {
-	if o == nil || o.CreatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.CreatedAt) {
+    return nil, false
 	}
 	return o.CreatedAt, true
 }
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !isNil(o.CreatedAt) {
 		return true
 	}
 
@@ -82,7 +82,7 @@ func (o *LanguageLocalizationStatus) SetCreatedAt(v string) {
 
 // GetEnvironment returns the Environment field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetEnvironment() ObjectEnvironment {
-	if o == nil || o.Environment == nil {
+	if o == nil || isNil(o.Environment) {
 		var ret ObjectEnvironment
 		return ret
 	}
@@ -92,15 +92,15 @@ func (o *LanguageLocalizationStatus) GetEnvironment() ObjectEnvironment {
 // GetEnvironmentOk returns a tuple with the Environment field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetEnvironmentOk() (*ObjectEnvironment, bool) {
-	if o == nil || o.Environment == nil {
-		return nil, false
+	if o == nil || isNil(o.Environment) {
+    return nil, false
 	}
 	return o.Environment, true
 }
 
 // HasEnvironment returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasEnvironment() bool {
-	if o != nil && o.Environment != nil {
+	if o != nil && !isNil(o.Environment) {
 		return true
 	}
 
@@ -114,7 +114,7 @@ func (o *LanguageLocalizationStatus) SetEnvironment(v ObjectEnvironment) {
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || isNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -124,15 +124,15 @@ func (o *LanguageLocalizationStatus) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
-		return nil, false
+	if o == nil || isNil(o.Id) {
+    return nil, false
 	}
 	return o.Id, true
 }
 
 // HasId returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !isNil(o.Id) {
 		return true
 	}
 
@@ -146,7 +146,7 @@ func (o *LanguageLocalizationStatus) SetId(v string) {
 
 // GetLocale returns the Locale field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetLocale() LanguageLocalizationStatusLocale {
-	if o == nil || o.Locale == nil {
+	if o == nil || isNil(o.Locale) {
 		var ret LanguageLocalizationStatusLocale
 		return ret
 	}
@@ -156,15 +156,15 @@ func (o *LanguageLocalizationStatus) GetLocale() LanguageLocalizationStatusLocal
 // GetLocaleOk returns a tuple with the Locale field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetLocaleOk() (*LanguageLocalizationStatusLocale, bool) {
-	if o == nil || o.Locale == nil {
-		return nil, false
+	if o == nil || isNil(o.Locale) {
+    return nil, false
 	}
 	return o.Locale, true
 }
 
 // HasLocale returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasLocale() bool {
-	if o != nil && o.Locale != nil {
+	if o != nil && !isNil(o.Locale) {
 		return true
 	}
 
@@ -190,7 +190,7 @@ func (o *LanguageLocalizationStatus) GetService() string {
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetServiceOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Service, true
 }
@@ -202,7 +202,7 @@ func (o *LanguageLocalizationStatus) SetService(v string) {
 
 // GetLocalizationComplete returns the LocalizationComplete field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetLocalizationComplete() bool {
-	if o == nil || o.LocalizationComplete == nil {
+	if o == nil || isNil(o.LocalizationComplete) {
 		var ret bool
 		return ret
 	}
@@ -212,15 +212,15 @@ func (o *LanguageLocalizationStatus) GetLocalizationComplete() bool {
 // GetLocalizationCompleteOk returns a tuple with the LocalizationComplete field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetLocalizationCompleteOk() (*bool, bool) {
-	if o == nil || o.LocalizationComplete == nil {
-		return nil, false
+	if o == nil || isNil(o.LocalizationComplete) {
+    return nil, false
 	}
 	return o.LocalizationComplete, true
 }
 
 // HasLocalizationComplete returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasLocalizationComplete() bool {
-	if o != nil && o.LocalizationComplete != nil {
+	if o != nil && !isNil(o.LocalizationComplete) {
 		return true
 	}
 
@@ -234,7 +234,7 @@ func (o *LanguageLocalizationStatus) SetLocalizationComplete(v bool) {
 
 // GetStatusDetails returns the StatusDetails field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetStatusDetails() string {
-	if o == nil || o.StatusDetails == nil {
+	if o == nil || isNil(o.StatusDetails) {
 		var ret string
 		return ret
 	}
@@ -244,15 +244,15 @@ func (o *LanguageLocalizationStatus) GetStatusDetails() string {
 // GetStatusDetailsOk returns a tuple with the StatusDetails field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetStatusDetailsOk() (*string, bool) {
-	if o == nil || o.StatusDetails == nil {
-		return nil, false
+	if o == nil || isNil(o.StatusDetails) {
+    return nil, false
 	}
 	return o.StatusDetails, true
 }
 
 // HasStatusDetails returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasStatusDetails() bool {
-	if o != nil && o.StatusDetails != nil {
+	if o != nil && !isNil(o.StatusDetails) {
 		return true
 	}
 
@@ -266,7 +266,7 @@ func (o *LanguageLocalizationStatus) SetStatusDetails(v string) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *LanguageLocalizationStatus) GetUpdatedAt() string {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || isNil(o.UpdatedAt) {
 		var ret string
 		return ret
 	}
@@ -276,15 +276,15 @@ func (o *LanguageLocalizationStatus) GetUpdatedAt() string {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LanguageLocalizationStatus) GetUpdatedAtOk() (*string, bool) {
-	if o == nil || o.UpdatedAt == nil {
-		return nil, false
+	if o == nil || isNil(o.UpdatedAt) {
+    return nil, false
 	}
 	return o.UpdatedAt, true
 }
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *LanguageLocalizationStatus) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !isNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -298,28 +298,28 @@ func (o *LanguageLocalizationStatus) SetUpdatedAt(v string) {
 
 func (o LanguageLocalizationStatus) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.CreatedAt != nil {
+	if !isNil(o.CreatedAt) {
 		toSerialize["createdAt"] = o.CreatedAt
 	}
-	if o.Environment != nil {
+	if !isNil(o.Environment) {
 		toSerialize["environment"] = o.Environment
 	}
-	if o.Id != nil {
+	if !isNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.Locale != nil {
+	if !isNil(o.Locale) {
 		toSerialize["locale"] = o.Locale
 	}
 	if true {
 		toSerialize["service"] = o.Service
 	}
-	if o.LocalizationComplete != nil {
+	if !isNil(o.LocalizationComplete) {
 		toSerialize["localizationComplete"] = o.LocalizationComplete
 	}
-	if o.StatusDetails != nil {
+	if !isNil(o.StatusDetails) {
 		toSerialize["statusDetails"] = o.StatusDetails
 	}
-	if o.UpdatedAt != nil {
+	if !isNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
 	return json.Marshal(toSerialize)

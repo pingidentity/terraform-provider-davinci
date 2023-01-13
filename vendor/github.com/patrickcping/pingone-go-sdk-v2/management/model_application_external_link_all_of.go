@@ -52,7 +52,7 @@ func (o *ApplicationExternalLinkAllOf) GetHomePageUrl() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationExternalLinkAllOf) GetHomePageUrlOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.HomePageUrl, true
 }

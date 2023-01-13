@@ -55,7 +55,7 @@ func (o *DeviceAuthenticationPolicyMobile) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobile) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -79,7 +79,7 @@ func (o *DeviceAuthenticationPolicyMobile) GetOtp() DeviceAuthenticationPolicyMo
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobile) GetOtpOk() (*DeviceAuthenticationPolicyMobileOtp, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Otp, true
 }
@@ -91,7 +91,7 @@ func (o *DeviceAuthenticationPolicyMobile) SetOtp(v DeviceAuthenticationPolicyMo
 
 // GetApplications returns the Applications field value if set, zero value otherwise.
 func (o *DeviceAuthenticationPolicyMobile) GetApplications() []DeviceAuthenticationPolicyMobileApplicationsInner {
-	if o == nil || o.Applications == nil {
+	if o == nil || isNil(o.Applications) {
 		var ret []DeviceAuthenticationPolicyMobileApplicationsInner
 		return ret
 	}
@@ -101,15 +101,15 @@ func (o *DeviceAuthenticationPolicyMobile) GetApplications() []DeviceAuthenticat
 // GetApplicationsOk returns a tuple with the Applications field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyMobile) GetApplicationsOk() ([]DeviceAuthenticationPolicyMobileApplicationsInner, bool) {
-	if o == nil || o.Applications == nil {
-		return nil, false
+	if o == nil || isNil(o.Applications) {
+    return nil, false
 	}
 	return o.Applications, true
 }
 
 // HasApplications returns a boolean if a field has been set.
 func (o *DeviceAuthenticationPolicyMobile) HasApplications() bool {
-	if o != nil && o.Applications != nil {
+	if o != nil && !isNil(o.Applications) {
 		return true
 	}
 
@@ -129,7 +129,7 @@ func (o DeviceAuthenticationPolicyMobile) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["otp"] = o.Otp
 	}
-	if o.Applications != nil {
+	if !isNil(o.Applications) {
 		toSerialize["applications"] = o.Applications
 	}
 	return json.Marshal(toSerialize)

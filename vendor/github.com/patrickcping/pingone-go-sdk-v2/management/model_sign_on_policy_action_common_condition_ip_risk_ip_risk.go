@@ -53,7 +53,7 @@ func (o *SignOnPolicyActionCommonConditionIPRiskIpRisk) GetMinScore() int32 {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionIPRiskIpRisk) GetMinScoreOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.MinScore, true
 }
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionCommonConditionIPRiskIpRisk) GetMaxScore() int32 {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionIPRiskIpRisk) GetMaxScoreOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.MaxScore, true
 }

@@ -41,7 +41,7 @@ func NewPasswordPolicyHistoryWithDefaults() *PasswordPolicyHistory {
 
 // GetCount returns the Count field value if set, zero value otherwise.
 func (o *PasswordPolicyHistory) GetCount() int32 {
-	if o == nil || o.Count == nil {
+	if o == nil || isNil(o.Count) {
 		var ret int32
 		return ret
 	}
@@ -51,15 +51,15 @@ func (o *PasswordPolicyHistory) GetCount() int32 {
 // GetCountOk returns a tuple with the Count field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyHistory) GetCountOk() (*int32, bool) {
-	if o == nil || o.Count == nil {
-		return nil, false
+	if o == nil || isNil(o.Count) {
+    return nil, false
 	}
 	return o.Count, true
 }
 
 // HasCount returns a boolean if a field has been set.
 func (o *PasswordPolicyHistory) HasCount() bool {
-	if o != nil && o.Count != nil {
+	if o != nil && !isNil(o.Count) {
 		return true
 	}
 
@@ -73,7 +73,7 @@ func (o *PasswordPolicyHistory) SetCount(v int32) {
 
 // GetRetentionDays returns the RetentionDays field value if set, zero value otherwise.
 func (o *PasswordPolicyHistory) GetRetentionDays() int32 {
-	if o == nil || o.RetentionDays == nil {
+	if o == nil || isNil(o.RetentionDays) {
 		var ret int32
 		return ret
 	}
@@ -83,15 +83,15 @@ func (o *PasswordPolicyHistory) GetRetentionDays() int32 {
 // GetRetentionDaysOk returns a tuple with the RetentionDays field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *PasswordPolicyHistory) GetRetentionDaysOk() (*int32, bool) {
-	if o == nil || o.RetentionDays == nil {
-		return nil, false
+	if o == nil || isNil(o.RetentionDays) {
+    return nil, false
 	}
 	return o.RetentionDays, true
 }
 
 // HasRetentionDays returns a boolean if a field has been set.
 func (o *PasswordPolicyHistory) HasRetentionDays() bool {
-	if o != nil && o.RetentionDays != nil {
+	if o != nil && !isNil(o.RetentionDays) {
 		return true
 	}
 
@@ -105,10 +105,10 @@ func (o *PasswordPolicyHistory) SetRetentionDays(v int32) {
 
 func (o PasswordPolicyHistory) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Count != nil {
+	if !isNil(o.Count) {
 		toSerialize["count"] = o.Count
 	}
-	if o.RetentionDays != nil {
+	if !isNil(o.RetentionDays) {
 		toSerialize["retentionDays"] = o.RetentionDays
 	}
 	return json.Marshal(toSerialize)

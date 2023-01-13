@@ -16,6 +16,8 @@ import (
 
 // ApplicationSAMLAllOf struct for ApplicationSAMLAllOf
 type ApplicationSAMLAllOf struct {
+	// A string that specifies the custom home page URL for the application.
+	HomePageUrl *string `json:"homePageUrl,omitempty"`
 	// A string that specifies the Assertion Consumer Service URLs. The first URL in the list is used as default (there must be at least one URL). This is a required property.
 	AcsUrls []string `json:"acsUrls"`
 	// An integer that specifies the assertion validity duration in seconds. This is a required property.
@@ -57,6 +59,38 @@ func NewApplicationSAMLAllOfWithDefaults() *ApplicationSAMLAllOf {
 	return &this
 }
 
+// GetHomePageUrl returns the HomePageUrl field value if set, zero value otherwise.
+func (o *ApplicationSAMLAllOf) GetHomePageUrl() string {
+	if o == nil || isNil(o.HomePageUrl) {
+		var ret string
+		return ret
+	}
+	return *o.HomePageUrl
+}
+
+// GetHomePageUrlOk returns a tuple with the HomePageUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ApplicationSAMLAllOf) GetHomePageUrlOk() (*string, bool) {
+	if o == nil || isNil(o.HomePageUrl) {
+    return nil, false
+	}
+	return o.HomePageUrl, true
+}
+
+// HasHomePageUrl returns a boolean if a field has been set.
+func (o *ApplicationSAMLAllOf) HasHomePageUrl() bool {
+	if o != nil && !isNil(o.HomePageUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetHomePageUrl gets a reference to the given string and assigns it to the HomePageUrl field.
+func (o *ApplicationSAMLAllOf) SetHomePageUrl(v string) {
+	o.HomePageUrl = &v
+}
+
 // GetAcsUrls returns the AcsUrls field value
 func (o *ApplicationSAMLAllOf) GetAcsUrls() []string {
 	if o == nil {
@@ -71,7 +105,7 @@ func (o *ApplicationSAMLAllOf) GetAcsUrls() []string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetAcsUrlsOk() ([]string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return o.AcsUrls, true
 }
@@ -95,7 +129,7 @@ func (o *ApplicationSAMLAllOf) GetAssertionDuration() int32 {
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetAssertionDurationOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.AssertionDuration, true
 }
@@ -107,7 +141,7 @@ func (o *ApplicationSAMLAllOf) SetAssertionDuration(v int32) {
 
 // GetAssertionSigned returns the AssertionSigned field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetAssertionSigned() bool {
-	if o == nil || o.AssertionSigned == nil {
+	if o == nil || isNil(o.AssertionSigned) {
 		var ret bool
 		return ret
 	}
@@ -117,15 +151,15 @@ func (o *ApplicationSAMLAllOf) GetAssertionSigned() bool {
 // GetAssertionSignedOk returns a tuple with the AssertionSigned field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetAssertionSignedOk() (*bool, bool) {
-	if o == nil || o.AssertionSigned == nil {
-		return nil, false
+	if o == nil || isNil(o.AssertionSigned) {
+    return nil, false
 	}
 	return o.AssertionSigned, true
 }
 
 // HasAssertionSigned returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasAssertionSigned() bool {
-	if o != nil && o.AssertionSigned != nil {
+	if o != nil && !isNil(o.AssertionSigned) {
 		return true
 	}
 
@@ -139,7 +173,7 @@ func (o *ApplicationSAMLAllOf) SetAssertionSigned(v bool) {
 
 // GetIdpSigning returns the IdpSigning field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetIdpSigning() ApplicationSAMLAllOfIdpSigning {
-	if o == nil || o.IdpSigning == nil {
+	if o == nil || isNil(o.IdpSigning) {
 		var ret ApplicationSAMLAllOfIdpSigning
 		return ret
 	}
@@ -149,15 +183,15 @@ func (o *ApplicationSAMLAllOf) GetIdpSigning() ApplicationSAMLAllOfIdpSigning {
 // GetIdpSigningOk returns a tuple with the IdpSigning field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetIdpSigningOk() (*ApplicationSAMLAllOfIdpSigning, bool) {
-	if o == nil || o.IdpSigning == nil {
-		return nil, false
+	if o == nil || isNil(o.IdpSigning) {
+    return nil, false
 	}
 	return o.IdpSigning, true
 }
 
 // HasIdpSigning returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasIdpSigning() bool {
-	if o != nil && o.IdpSigning != nil {
+	if o != nil && !isNil(o.IdpSigning) {
 		return true
 	}
 
@@ -171,7 +205,7 @@ func (o *ApplicationSAMLAllOf) SetIdpSigning(v ApplicationSAMLAllOfIdpSigning) {
 
 // GetNameIdFormat returns the NameIdFormat field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetNameIdFormat() string {
-	if o == nil || o.NameIdFormat == nil {
+	if o == nil || isNil(o.NameIdFormat) {
 		var ret string
 		return ret
 	}
@@ -181,15 +215,15 @@ func (o *ApplicationSAMLAllOf) GetNameIdFormat() string {
 // GetNameIdFormatOk returns a tuple with the NameIdFormat field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetNameIdFormatOk() (*string, bool) {
-	if o == nil || o.NameIdFormat == nil {
-		return nil, false
+	if o == nil || isNil(o.NameIdFormat) {
+    return nil, false
 	}
 	return o.NameIdFormat, true
 }
 
 // HasNameIdFormat returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasNameIdFormat() bool {
-	if o != nil && o.NameIdFormat != nil {
+	if o != nil && !isNil(o.NameIdFormat) {
 		return true
 	}
 
@@ -203,7 +237,7 @@ func (o *ApplicationSAMLAllOf) SetNameIdFormat(v string) {
 
 // GetResponseSigned returns the ResponseSigned field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetResponseSigned() bool {
-	if o == nil || o.ResponseSigned == nil {
+	if o == nil || isNil(o.ResponseSigned) {
 		var ret bool
 		return ret
 	}
@@ -213,15 +247,15 @@ func (o *ApplicationSAMLAllOf) GetResponseSigned() bool {
 // GetResponseSignedOk returns a tuple with the ResponseSigned field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetResponseSignedOk() (*bool, bool) {
-	if o == nil || o.ResponseSigned == nil {
-		return nil, false
+	if o == nil || isNil(o.ResponseSigned) {
+    return nil, false
 	}
 	return o.ResponseSigned, true
 }
 
 // HasResponseSigned returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasResponseSigned() bool {
-	if o != nil && o.ResponseSigned != nil {
+	if o != nil && !isNil(o.ResponseSigned) {
 		return true
 	}
 
@@ -235,7 +269,7 @@ func (o *ApplicationSAMLAllOf) SetResponseSigned(v bool) {
 
 // GetSloBinding returns the SloBinding field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetSloBinding() EnumApplicationSAMLSloBinding {
-	if o == nil || o.SloBinding == nil {
+	if o == nil || isNil(o.SloBinding) {
 		var ret EnumApplicationSAMLSloBinding
 		return ret
 	}
@@ -245,15 +279,15 @@ func (o *ApplicationSAMLAllOf) GetSloBinding() EnumApplicationSAMLSloBinding {
 // GetSloBindingOk returns a tuple with the SloBinding field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetSloBindingOk() (*EnumApplicationSAMLSloBinding, bool) {
-	if o == nil || o.SloBinding == nil {
-		return nil, false
+	if o == nil || isNil(o.SloBinding) {
+    return nil, false
 	}
 	return o.SloBinding, true
 }
 
 // HasSloBinding returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasSloBinding() bool {
-	if o != nil && o.SloBinding != nil {
+	if o != nil && !isNil(o.SloBinding) {
 		return true
 	}
 
@@ -267,7 +301,7 @@ func (o *ApplicationSAMLAllOf) SetSloBinding(v EnumApplicationSAMLSloBinding) {
 
 // GetSloEndpoint returns the SloEndpoint field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetSloEndpoint() string {
-	if o == nil || o.SloEndpoint == nil {
+	if o == nil || isNil(o.SloEndpoint) {
 		var ret string
 		return ret
 	}
@@ -277,15 +311,15 @@ func (o *ApplicationSAMLAllOf) GetSloEndpoint() string {
 // GetSloEndpointOk returns a tuple with the SloEndpoint field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetSloEndpointOk() (*string, bool) {
-	if o == nil || o.SloEndpoint == nil {
-		return nil, false
+	if o == nil || isNil(o.SloEndpoint) {
+    return nil, false
 	}
 	return o.SloEndpoint, true
 }
 
 // HasSloEndpoint returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasSloEndpoint() bool {
-	if o != nil && o.SloEndpoint != nil {
+	if o != nil && !isNil(o.SloEndpoint) {
 		return true
 	}
 
@@ -299,7 +333,7 @@ func (o *ApplicationSAMLAllOf) SetSloEndpoint(v string) {
 
 // GetSloResponseEndpoint returns the SloResponseEndpoint field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetSloResponseEndpoint() string {
-	if o == nil || o.SloResponseEndpoint == nil {
+	if o == nil || isNil(o.SloResponseEndpoint) {
 		var ret string
 		return ret
 	}
@@ -309,15 +343,15 @@ func (o *ApplicationSAMLAllOf) GetSloResponseEndpoint() string {
 // GetSloResponseEndpointOk returns a tuple with the SloResponseEndpoint field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetSloResponseEndpointOk() (*string, bool) {
-	if o == nil || o.SloResponseEndpoint == nil {
-		return nil, false
+	if o == nil || isNil(o.SloResponseEndpoint) {
+    return nil, false
 	}
 	return o.SloResponseEndpoint, true
 }
 
 // HasSloResponseEndpoint returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasSloResponseEndpoint() bool {
-	if o != nil && o.SloResponseEndpoint != nil {
+	if o != nil && !isNil(o.SloResponseEndpoint) {
 		return true
 	}
 
@@ -343,7 +377,7 @@ func (o *ApplicationSAMLAllOf) GetSpEntityId() string {
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetSpEntityIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SpEntityId, true
 }
@@ -355,7 +389,7 @@ func (o *ApplicationSAMLAllOf) SetSpEntityId(v string) {
 
 // GetSpVerification returns the SpVerification field value if set, zero value otherwise.
 func (o *ApplicationSAMLAllOf) GetSpVerification() ApplicationSAMLAllOfSpVerification {
-	if o == nil || o.SpVerification == nil {
+	if o == nil || isNil(o.SpVerification) {
 		var ret ApplicationSAMLAllOfSpVerification
 		return ret
 	}
@@ -365,15 +399,15 @@ func (o *ApplicationSAMLAllOf) GetSpVerification() ApplicationSAMLAllOfSpVerific
 // GetSpVerificationOk returns a tuple with the SpVerification field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ApplicationSAMLAllOf) GetSpVerificationOk() (*ApplicationSAMLAllOfSpVerification, bool) {
-	if o == nil || o.SpVerification == nil {
-		return nil, false
+	if o == nil || isNil(o.SpVerification) {
+    return nil, false
 	}
 	return o.SpVerification, true
 }
 
 // HasSpVerification returns a boolean if a field has been set.
 func (o *ApplicationSAMLAllOf) HasSpVerification() bool {
-	if o != nil && o.SpVerification != nil {
+	if o != nil && !isNil(o.SpVerification) {
 		return true
 	}
 
@@ -387,37 +421,40 @@ func (o *ApplicationSAMLAllOf) SetSpVerification(v ApplicationSAMLAllOfSpVerific
 
 func (o ApplicationSAMLAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
+	if !isNil(o.HomePageUrl) {
+		toSerialize["homePageUrl"] = o.HomePageUrl
+	}
 	if true {
 		toSerialize["acsUrls"] = o.AcsUrls
 	}
 	if true {
 		toSerialize["assertionDuration"] = o.AssertionDuration
 	}
-	if o.AssertionSigned != nil {
+	if !isNil(o.AssertionSigned) {
 		toSerialize["assertionSigned"] = o.AssertionSigned
 	}
-	if o.IdpSigning != nil {
+	if !isNil(o.IdpSigning) {
 		toSerialize["idpSigning"] = o.IdpSigning
 	}
-	if o.NameIdFormat != nil {
+	if !isNil(o.NameIdFormat) {
 		toSerialize["nameIdFormat"] = o.NameIdFormat
 	}
-	if o.ResponseSigned != nil {
+	if !isNil(o.ResponseSigned) {
 		toSerialize["responseSigned"] = o.ResponseSigned
 	}
-	if o.SloBinding != nil {
+	if !isNil(o.SloBinding) {
 		toSerialize["sloBinding"] = o.SloBinding
 	}
-	if o.SloEndpoint != nil {
+	if !isNil(o.SloEndpoint) {
 		toSerialize["sloEndpoint"] = o.SloEndpoint
 	}
-	if o.SloResponseEndpoint != nil {
+	if !isNil(o.SloResponseEndpoint) {
 		toSerialize["sloResponseEndpoint"] = o.SloResponseEndpoint
 	}
 	if true {
 		toSerialize["spEntityId"] = o.SpEntityId
 	}
-	if o.SpVerification != nil {
+	if !isNil(o.SpVerification) {
 		toSerialize["spVerification"] = o.SpVerification
 	}
 	return json.Marshal(toSerialize)

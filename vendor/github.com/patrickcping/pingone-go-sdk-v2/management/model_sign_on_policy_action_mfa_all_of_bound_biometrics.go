@@ -43,7 +43,7 @@ func NewSignOnPolicyActionMFAAllOfBoundBiometricsWithDefaults() *SignOnPolicyAct
 
 // GetEnabled returns the Enabled field value if set, zero value otherwise.
 func (o *SignOnPolicyActionMFAAllOfBoundBiometrics) GetEnabled() bool {
-	if o == nil || o.Enabled == nil {
+	if o == nil || isNil(o.Enabled) {
 		var ret bool
 		return ret
 	}
@@ -53,15 +53,15 @@ func (o *SignOnPolicyActionMFAAllOfBoundBiometrics) GetEnabled() bool {
 // GetEnabledOk returns a tuple with the Enabled field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionMFAAllOfBoundBiometrics) GetEnabledOk() (*bool, bool) {
-	if o == nil || o.Enabled == nil {
-		return nil, false
+	if o == nil || isNil(o.Enabled) {
+    return nil, false
 	}
 	return o.Enabled, true
 }
 
 // HasEnabled returns a boolean if a field has been set.
 func (o *SignOnPolicyActionMFAAllOfBoundBiometrics) HasEnabled() bool {
-	if o != nil && o.Enabled != nil {
+	if o != nil && !isNil(o.Enabled) {
 		return true
 	}
 
@@ -75,7 +75,7 @@ func (o *SignOnPolicyActionMFAAllOfBoundBiometrics) SetEnabled(v bool) {
 
 func (o SignOnPolicyActionMFAAllOfBoundBiometrics) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.Enabled != nil {
+	if !isNil(o.Enabled) {
 		toSerialize["enabled"] = o.Enabled
 	}
 	return json.Marshal(toSerialize)

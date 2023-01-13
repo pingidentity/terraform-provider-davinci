@@ -47,7 +47,7 @@ func NewSignOnPolicyActionIDPAllOfRegistrationWithDefaults() *SignOnPolicyAction
 
 // GetConfirmIdentityProviderAttributes returns the ConfirmIdentityProviderAttributes field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDPAllOfRegistration) GetConfirmIdentityProviderAttributes() bool {
-	if o == nil || o.ConfirmIdentityProviderAttributes == nil {
+	if o == nil || isNil(o.ConfirmIdentityProviderAttributes) {
 		var ret bool
 		return ret
 	}
@@ -57,15 +57,15 @@ func (o *SignOnPolicyActionIDPAllOfRegistration) GetConfirmIdentityProviderAttri
 // GetConfirmIdentityProviderAttributesOk returns a tuple with the ConfirmIdentityProviderAttributes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOfRegistration) GetConfirmIdentityProviderAttributesOk() (*bool, bool) {
-	if o == nil || o.ConfirmIdentityProviderAttributes == nil {
-		return nil, false
+	if o == nil || isNil(o.ConfirmIdentityProviderAttributes) {
+    return nil, false
 	}
 	return o.ConfirmIdentityProviderAttributes, true
 }
 
 // HasConfirmIdentityProviderAttributes returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDPAllOfRegistration) HasConfirmIdentityProviderAttributes() bool {
-	if o != nil && o.ConfirmIdentityProviderAttributes != nil {
+	if o != nil && !isNil(o.ConfirmIdentityProviderAttributes) {
 		return true
 	}
 
@@ -91,7 +91,7 @@ func (o *SignOnPolicyActionIDPAllOfRegistration) GetEnabled() bool {
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOfRegistration) GetEnabledOk() (*bool, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Enabled, true
 }
@@ -103,7 +103,7 @@ func (o *SignOnPolicyActionIDPAllOfRegistration) SetEnabled(v bool) {
 
 // GetPopulation returns the Population field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDPAllOfRegistration) GetPopulation() SignOnPolicyActionLoginAllOfRegistrationPopulation {
-	if o == nil || o.Population == nil {
+	if o == nil || isNil(o.Population) {
 		var ret SignOnPolicyActionLoginAllOfRegistrationPopulation
 		return ret
 	}
@@ -113,15 +113,15 @@ func (o *SignOnPolicyActionIDPAllOfRegistration) GetPopulation() SignOnPolicyAct
 // GetPopulationOk returns a tuple with the Population field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDPAllOfRegistration) GetPopulationOk() (*SignOnPolicyActionLoginAllOfRegistrationPopulation, bool) {
-	if o == nil || o.Population == nil {
-		return nil, false
+	if o == nil || isNil(o.Population) {
+    return nil, false
 	}
 	return o.Population, true
 }
 
 // HasPopulation returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDPAllOfRegistration) HasPopulation() bool {
-	if o != nil && o.Population != nil {
+	if o != nil && !isNil(o.Population) {
 		return true
 	}
 
@@ -135,13 +135,13 @@ func (o *SignOnPolicyActionIDPAllOfRegistration) SetPopulation(v SignOnPolicyAct
 
 func (o SignOnPolicyActionIDPAllOfRegistration) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.ConfirmIdentityProviderAttributes != nil {
+	if !isNil(o.ConfirmIdentityProviderAttributes) {
 		toSerialize["confirmIdentityProviderAttributes"] = o.ConfirmIdentityProviderAttributes
 	}
 	if true {
 		toSerialize["enabled"] = o.Enabled
 	}
-	if o.Population != nil {
+	if !isNil(o.Population) {
 		toSerialize["population"] = o.Population
 	}
 	return json.Marshal(toSerialize)

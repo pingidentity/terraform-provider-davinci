@@ -23,25 +23,31 @@ import (
 // PhoneDeliverySettingsApiService PhoneDeliverySettingsApi service
 type PhoneDeliverySettingsApiService service
 
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteRequest struct {
+type ApiCreatePhoneDeliverySettingsRequest struct {
 	ctx context.Context
 	ApiService *PhoneDeliverySettingsApiService
 	environmentID string
+	body *map[string]interface{}
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteExecute(r)
+func (r ApiCreatePhoneDeliverySettingsRequest) Body(body map[string]interface{}) ApiCreatePhoneDeliverySettingsRequest {
+	r.body = &body
+	return r
+}
+
+func (r ApiCreatePhoneDeliverySettingsRequest) Execute() (*NotificationsSettingsPhoneDeliverySettings, *http.Response, error) {
+	return r.ApiService.CreatePhoneDeliverySettingsExecute(r)
 }
 
 /*
-V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDelete DELETE Phone Delivery Settings
+CreatePhoneDeliverySettings CREATE Phone Delivery Settings
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param environmentID
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteRequest
+ @return ApiCreatePhoneDeliverySettingsRequest
 */
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDelete(ctx context.Context, environmentID string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteRequest{
+func (a *PhoneDeliverySettingsApiService) CreatePhoneDeliverySettings(ctx context.Context, environmentID string) ApiCreatePhoneDeliverySettingsRequest {
+	return ApiCreatePhoneDeliverySettingsRequest{
 		ApiService: a,
 		ctx: ctx,
 		environmentID: environmentID,
@@ -49,14 +55,194 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 }
 
 // Execute executes the request
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDeleteRequest) (*http.Response, error) {
+//  @return NotificationsSettingsPhoneDeliverySettings
+func (a *PhoneDeliverySettingsApiService) CreatePhoneDeliverySettingsExecute(r ApiCreatePhoneDeliverySettingsRequest) (*NotificationsSettingsPhoneDeliverySettings, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *NotificationsSettingsPhoneDeliverySettings
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.CreatePhoneDeliverySettings")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings"
+	localVarPath = strings.Replace(localVarPath, "{"+"environmentID"+"}", url.PathEscape(parameterToString(r.environmentID, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.body
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 405 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiDeleteEmailDeliverySettingsRequest struct {
+	ctx context.Context
+	ApiService *PhoneDeliverySettingsApiService
+	environmentID string
+}
+
+func (r ApiDeleteEmailDeliverySettingsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteEmailDeliverySettingsExecute(r)
+}
+
+/*
+DeleteEmailDeliverySettings DELETE Email Delivery Settings
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param environmentID
+ @return ApiDeleteEmailDeliverySettingsRequest
+*/
+func (a *PhoneDeliverySettingsApiService) DeleteEmailDeliverySettings(ctx context.Context, environmentID string) ApiDeleteEmailDeliverySettingsRequest {
+	return ApiDeleteEmailDeliverySettingsRequest{
+		ApiService: a,
+		ctx: ctx,
+		environmentID: environmentID,
+	}
+}
+
+// Execute executes the request
+func (a *PhoneDeliverySettingsApiService) DeleteEmailDeliverySettingsExecute(r ApiDeleteEmailDeliverySettingsRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsEmailDeliverySettingsDelete")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.DeleteEmailDeliverySettings")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -114,7 +300,8 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -124,7 +311,8 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -134,7 +322,8 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -144,7 +333,8 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
@@ -154,7 +344,8 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
@@ -164,7 +355,8 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		return localVarHTTPResponse, newErr
@@ -173,25 +365,185 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 	return localVarHTTPResponse, nil
 }
 
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetRequest struct {
+type ApiDeletePhoneDeliverySettingsRequest struct {
+	ctx context.Context
+	ApiService *PhoneDeliverySettingsApiService
+	environmentID string
+	phoneDeliverySettingsID string
+}
+
+func (r ApiDeletePhoneDeliverySettingsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeletePhoneDeliverySettingsExecute(r)
+}
+
+/*
+DeletePhoneDeliverySettings DELETE Phone Delivery Settings
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param environmentID
+ @param phoneDeliverySettingsID
+ @return ApiDeletePhoneDeliverySettingsRequest
+*/
+func (a *PhoneDeliverySettingsApiService) DeletePhoneDeliverySettings(ctx context.Context, environmentID string, phoneDeliverySettingsID string) ApiDeletePhoneDeliverySettingsRequest {
+	return ApiDeletePhoneDeliverySettingsRequest{
+		ApiService: a,
+		ctx: ctx,
+		environmentID: environmentID,
+		phoneDeliverySettingsID: phoneDeliverySettingsID,
+	}
+}
+
+// Execute executes the request
+func (a *PhoneDeliverySettingsApiService) DeletePhoneDeliverySettingsExecute(r ApiDeletePhoneDeliverySettingsRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.DeletePhoneDeliverySettings")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings/{phoneDeliverySettingsID}"
+	localVarPath = strings.Replace(localVarPath, "{"+"environmentID"+"}", url.PathEscape(parameterToString(r.environmentID, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"phoneDeliverySettingsID"+"}", url.PathEscape(parameterToString(r.phoneDeliverySettingsID, "")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 429 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 500 {
+			var v P1Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type ApiReadAllPhoneDeliverySettingsRequest struct {
 	ctx context.Context
 	ApiService *PhoneDeliverySettingsApiService
 	environmentID string
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetExecute(r)
+func (r ApiReadAllPhoneDeliverySettingsRequest) Execute() (*EntityArray, *http.Response, error) {
+	return r.ApiService.ReadAllPhoneDeliverySettingsExecute(r)
 }
 
 /*
-V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGet READ All Phone Delivery Settings
+ReadAllPhoneDeliverySettings READ All Phone Delivery Settings
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param environmentID
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetRequest
+ @return ApiReadAllPhoneDeliverySettingsRequest
 */
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGet(ctx context.Context, environmentID string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetRequest{
+func (a *PhoneDeliverySettingsApiService) ReadAllPhoneDeliverySettings(ctx context.Context, environmentID string) ApiReadAllPhoneDeliverySettingsRequest {
+	return ApiReadAllPhoneDeliverySettingsRequest{
 		ApiService: a,
 		ctx: ctx,
 		environmentID: environmentID,
@@ -199,16 +551,18 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 }
 
 // Execute executes the request
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGetRequest) (*http.Response, error) {
+//  @return EntityArray
+func (a *PhoneDeliverySettingsApiService) ReadAllPhoneDeliverySettingsExecute(r ApiReadAllPhoneDeliverySettingsRequest) (*EntityArray, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
+		localVarReturnValue  *EntityArray
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsGet")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.ReadAllPhoneDeliverySettings")
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings"
@@ -237,19 +591,19 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -262,111 +616,128 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetRequest struct {
+type ApiReadOnePhoneDeliverySettingsRequest struct {
 	ctx context.Context
 	ApiService *PhoneDeliverySettingsApiService
 	environmentID string
-	phoneDeliverySettingsId string
+	phoneDeliverySettingsID string
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetExecute(r)
+func (r ApiReadOnePhoneDeliverySettingsRequest) Execute() (*NotificationsSettingsPhoneDeliverySettings, *http.Response, error) {
+	return r.ApiService.ReadOnePhoneDeliverySettingsExecute(r)
 }
 
 /*
-V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGet READ One Phone Delivery Settings
+ReadOnePhoneDeliverySettings READ One Phone Delivery Settings
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param environmentID
- @param phoneDeliverySettingsId
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetRequest
+ @param phoneDeliverySettingsID
+ @return ApiReadOnePhoneDeliverySettingsRequest
 */
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGet(ctx context.Context, environmentID string, phoneDeliverySettingsId string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetRequest{
+func (a *PhoneDeliverySettingsApiService) ReadOnePhoneDeliverySettings(ctx context.Context, environmentID string, phoneDeliverySettingsID string) ApiReadOnePhoneDeliverySettingsRequest {
+	return ApiReadOnePhoneDeliverySettingsRequest{
 		ApiService: a,
 		ctx: ctx,
 		environmentID: environmentID,
-		phoneDeliverySettingsId: phoneDeliverySettingsId,
+		phoneDeliverySettingsID: phoneDeliverySettingsID,
 	}
 }
 
 // Execute executes the request
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGetRequest) (*http.Response, error) {
+//  @return NotificationsSettingsPhoneDeliverySettings
+func (a *PhoneDeliverySettingsApiService) ReadOnePhoneDeliverySettingsExecute(r ApiReadOnePhoneDeliverySettingsRequest) (*NotificationsSettingsPhoneDeliverySettings, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
+		localVarReturnValue  *NotificationsSettingsPhoneDeliverySettings
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdGet")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.ReadOnePhoneDeliverySettings")
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings/{phoneDeliverySettingsId}"
+	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings/{phoneDeliverySettingsID}"
 	localVarPath = strings.Replace(localVarPath, "{"+"environmentID"+"}", url.PathEscape(parameterToString(r.environmentID, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"phoneDeliverySettingsId"+"}", url.PathEscape(parameterToString(r.phoneDeliverySettingsId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"phoneDeliverySettingsID"+"}", url.PathEscape(parameterToString(r.phoneDeliverySettingsID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -391,19 +762,19 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -416,117 +787,134 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest struct {
+type ApiUpdatePhoneDeliverySettingsRequest struct {
 	ctx context.Context
 	ApiService *PhoneDeliverySettingsApiService
 	environmentID string
-	phoneDeliverySettingsId string
+	phoneDeliverySettingsID string
 	body *map[string]interface{}
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest) Body(body map[string]interface{}) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest {
+func (r ApiUpdatePhoneDeliverySettingsRequest) Body(body map[string]interface{}) ApiUpdatePhoneDeliverySettingsRequest {
 	r.body = &body
 	return r
 }
 
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutExecute(r)
+func (r ApiUpdatePhoneDeliverySettingsRequest) Execute() (*NotificationsSettingsPhoneDeliverySettings, *http.Response, error) {
+	return r.ApiService.UpdatePhoneDeliverySettingsExecute(r)
 }
 
 /*
-V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPut UPDATE Phone Delivery Settings
+UpdatePhoneDeliverySettings UPDATE Phone Delivery Settings
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param environmentID
- @param phoneDeliverySettingsId
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest
+ @param phoneDeliverySettingsID
+ @return ApiUpdatePhoneDeliverySettingsRequest
 */
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPut(ctx context.Context, environmentID string, phoneDeliverySettingsId string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest{
+func (a *PhoneDeliverySettingsApiService) UpdatePhoneDeliverySettings(ctx context.Context, environmentID string, phoneDeliverySettingsID string) ApiUpdatePhoneDeliverySettingsRequest {
+	return ApiUpdatePhoneDeliverySettingsRequest{
 		ApiService: a,
 		ctx: ctx,
 		environmentID: environmentID,
-		phoneDeliverySettingsId: phoneDeliverySettingsId,
+		phoneDeliverySettingsID: phoneDeliverySettingsID,
 	}
 }
 
 // Execute executes the request
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPutRequest) (*http.Response, error) {
+//  @return NotificationsSettingsPhoneDeliverySettings
+func (a *PhoneDeliverySettingsApiService) UpdatePhoneDeliverySettingsExecute(r ApiUpdatePhoneDeliverySettingsRequest) (*NotificationsSettingsPhoneDeliverySettings, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
+		localVarReturnValue  *NotificationsSettingsPhoneDeliverySettings
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPhoneDeliverySettingsIdPut")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.UpdatePhoneDeliverySettings")
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings/{phoneDeliverySettingsId}"
+	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings/{phoneDeliverySettingsID}"
 	localVarPath = strings.Replace(localVarPath, "{"+"environmentID"+"}", url.PathEscape(parameterToString(r.environmentID, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"phoneDeliverySettingsId"+"}", url.PathEscape(parameterToString(r.phoneDeliverySettingsId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"phoneDeliverySettingsID"+"}", url.PathEscape(parameterToString(r.phoneDeliverySettingsID, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -553,19 +941,19 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 	localVarPostBody = r.body
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -578,231 +966,78 @@ func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificatio
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 429 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 500 {
 			var v P1Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
+				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
-}
-
-type ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest struct {
-	ctx context.Context
-	ApiService *PhoneDeliverySettingsApiService
-	environmentID string
-	body *map[string]interface{}
-}
-
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest) Body(body map[string]interface{}) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest {
-	r.body = &body
-	return r
-}
-
-func (r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest) Execute() (*http.Response, error) {
-	return r.ApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostExecute(r)
-}
-
-/*
-V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPost CREATE Phone Delivery Settings (Syniverse)
-
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param environmentID
- @return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest
-*/
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPost(ctx context.Context, environmentID string) ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest {
-	return ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest{
-		ApiService: a,
-		ctx: ctx,
-		environmentID: environmentID,
-	}
-}
-
-// Execute executes the request
-func (a *PhoneDeliverySettingsApiService) V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostExecute(r ApiV1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPostRequest) (*http.Response, error) {
-	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-	)
-
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "PhoneDeliverySettingsApiService.V1EnvironmentsEnvironmentIDNotificationsSettingsPhoneDeliverySettingsPost")
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
-	}
-
-	localVarPath := localBasePath + "/v1/environments/{environmentID}/notificationsSettings/phoneDeliverySettings"
-	localVarPath = strings.Replace(localVarPath, "{"+"environmentID"+"}", url.PathEscape(parameterToString(r.environmentID, "")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
-	if localVarHTTPContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
-	}
-
-	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{"application/json"}
-
-	// set Accept header
-	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
-	if localVarHTTPHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
-	}
-	// body params
-	localVarPostBody = r.body
-	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHTTPResponse, err := a.client.callAPI(req)
-	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
-	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
-	if err != nil {
-		return localVarHTTPResponse, err
-	}
-
-	if localVarHTTPResponse.StatusCode >= 300 {
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
-			error: localVarHTTPResponse.Status,
+			error: err.Error(),
 		}
-		if localVarHTTPResponse.StatusCode == 400 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 401 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 403 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 404 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 405 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 429 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 500 {
-			var v P1Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-			newErr.model = v
-			return localVarHTTPResponse, newErr
-		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	return localVarReturnValue, localVarHTTPResponse, nil
 }

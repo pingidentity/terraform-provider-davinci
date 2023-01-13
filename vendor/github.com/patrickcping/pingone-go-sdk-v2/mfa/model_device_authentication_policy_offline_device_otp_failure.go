@@ -54,7 +54,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailure) GetCount() int32 {
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailure) GetCountOk() (*int32, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.Count, true
 }
@@ -78,7 +78,7 @@ func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailure) GetCoolDown() Device
 // and a boolean to check if the value has been set.
 func (o *DeviceAuthenticationPolicyOfflineDeviceOtpFailure) GetCoolDownOk() (*DeviceAuthenticationPolicyOfflineDeviceOtpFailureCoolDown, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.CoolDown, true
 }

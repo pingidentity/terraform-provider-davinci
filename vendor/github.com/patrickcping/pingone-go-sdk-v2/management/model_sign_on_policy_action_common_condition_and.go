@@ -38,7 +38,7 @@ func NewSignOnPolicyActionCommonConditionAndWithDefaults() *SignOnPolicyActionCo
 
 // GetAnd returns the And field value if set, zero value otherwise.
 func (o *SignOnPolicyActionCommonConditionAnd) GetAnd() []SignOnPolicyActionCommonConditionOrOrInner {
-	if o == nil || o.And == nil {
+	if o == nil || isNil(o.And) {
 		var ret []SignOnPolicyActionCommonConditionOrOrInner
 		return ret
 	}
@@ -48,15 +48,15 @@ func (o *SignOnPolicyActionCommonConditionAnd) GetAnd() []SignOnPolicyActionComm
 // GetAndOk returns a tuple with the And field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionCommonConditionAnd) GetAndOk() ([]SignOnPolicyActionCommonConditionOrOrInner, bool) {
-	if o == nil || o.And == nil {
-		return nil, false
+	if o == nil || isNil(o.And) {
+    return nil, false
 	}
 	return o.And, true
 }
 
 // HasAnd returns a boolean if a field has been set.
 func (o *SignOnPolicyActionCommonConditionAnd) HasAnd() bool {
-	if o != nil && o.And != nil {
+	if o != nil && !isNil(o.And) {
 		return true
 	}
 
@@ -70,7 +70,7 @@ func (o *SignOnPolicyActionCommonConditionAnd) SetAnd(v []SignOnPolicyActionComm
 
 func (o SignOnPolicyActionCommonConditionAnd) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.And != nil {
+	if !isNil(o.And) {
 		toSerialize["and"] = o.And
 	}
 	return json.Marshal(toSerialize)

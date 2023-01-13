@@ -28,6 +28,7 @@ git_push.sh
 CHANGELOG.md
 GNUmakefile
 .version
+test/*
 
 docs/Certificate.md
 docs/PasswordPolicyMinCharacters.md
@@ -50,5 +51,6 @@ model_password_policy_min_characters.go
 model_read_one_application_200_response.go
 model_sign_on_policy_action_common_condition_or_or_inner.go
 model_sign_on_policy_action.go
+model_template_content.go
 model_update_application_request.go
 model_update_domain_200_response.go

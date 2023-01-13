@@ -40,7 +40,7 @@ func NewLicenseGatewaysWithDefaults() *LicenseGateways {
 
 // GetAllowLdapGateway returns the AllowLdapGateway field value if set, zero value otherwise.
 func (o *LicenseGateways) GetAllowLdapGateway() bool {
-	if o == nil || o.AllowLdapGateway == nil {
+	if o == nil || isNil(o.AllowLdapGateway) {
 		var ret bool
 		return ret
 	}
@@ -50,15 +50,15 @@ func (o *LicenseGateways) GetAllowLdapGateway() bool {
 // GetAllowLdapGatewayOk returns a tuple with the AllowLdapGateway field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseGateways) GetAllowLdapGatewayOk() (*bool, bool) {
-	if o == nil || o.AllowLdapGateway == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowLdapGateway) {
+    return nil, false
 	}
 	return o.AllowLdapGateway, true
 }
 
 // HasAllowLdapGateway returns a boolean if a field has been set.
 func (o *LicenseGateways) HasAllowLdapGateway() bool {
-	if o != nil && o.AllowLdapGateway != nil {
+	if o != nil && !isNil(o.AllowLdapGateway) {
 		return true
 	}
 
@@ -72,7 +72,7 @@ func (o *LicenseGateways) SetAllowLdapGateway(v bool) {
 
 // GetAllowKerberosGateway returns the AllowKerberosGateway field value if set, zero value otherwise.
 func (o *LicenseGateways) GetAllowKerberosGateway() bool {
-	if o == nil || o.AllowKerberosGateway == nil {
+	if o == nil || isNil(o.AllowKerberosGateway) {
 		var ret bool
 		return ret
 	}
@@ -82,15 +82,15 @@ func (o *LicenseGateways) GetAllowKerberosGateway() bool {
 // GetAllowKerberosGatewayOk returns a tuple with the AllowKerberosGateway field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseGateways) GetAllowKerberosGatewayOk() (*bool, bool) {
-	if o == nil || o.AllowKerberosGateway == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowKerberosGateway) {
+    return nil, false
 	}
 	return o.AllowKerberosGateway, true
 }
 
 // HasAllowKerberosGateway returns a boolean if a field has been set.
 func (o *LicenseGateways) HasAllowKerberosGateway() bool {
-	if o != nil && o.AllowKerberosGateway != nil {
+	if o != nil && !isNil(o.AllowKerberosGateway) {
 		return true
 	}
 
@@ -104,7 +104,7 @@ func (o *LicenseGateways) SetAllowKerberosGateway(v bool) {
 
 // GetAllowRadiusGateway returns the AllowRadiusGateway field value if set, zero value otherwise.
 func (o *LicenseGateways) GetAllowRadiusGateway() bool {
-	if o == nil || o.AllowRadiusGateway == nil {
+	if o == nil || isNil(o.AllowRadiusGateway) {
 		var ret bool
 		return ret
 	}
@@ -114,15 +114,15 @@ func (o *LicenseGateways) GetAllowRadiusGateway() bool {
 // GetAllowRadiusGatewayOk returns a tuple with the AllowRadiusGateway field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseGateways) GetAllowRadiusGatewayOk() (*bool, bool) {
-	if o == nil || o.AllowRadiusGateway == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowRadiusGateway) {
+    return nil, false
 	}
 	return o.AllowRadiusGateway, true
 }
 
 // HasAllowRadiusGateway returns a boolean if a field has been set.
 func (o *LicenseGateways) HasAllowRadiusGateway() bool {
-	if o != nil && o.AllowRadiusGateway != nil {
+	if o != nil && !isNil(o.AllowRadiusGateway) {
 		return true
 	}
 
@@ -136,13 +136,13 @@ func (o *LicenseGateways) SetAllowRadiusGateway(v bool) {
 
 func (o LicenseGateways) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowLdapGateway != nil {
+	if !isNil(o.AllowLdapGateway) {
 		toSerialize["allowLdapGateway"] = o.AllowLdapGateway
 	}
-	if o.AllowKerberosGateway != nil {
+	if !isNil(o.AllowKerberosGateway) {
 		toSerialize["allowKerberosGateway"] = o.AllowKerberosGateway
 	}
-	if o.AllowRadiusGateway != nil {
+	if !isNil(o.AllowRadiusGateway) {
 		toSerialize["allowRadiusGateway"] = o.AllowRadiusGateway
 	}
 	return json.Marshal(toSerialize)

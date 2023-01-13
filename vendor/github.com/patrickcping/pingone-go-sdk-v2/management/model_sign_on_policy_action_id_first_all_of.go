@@ -45,7 +45,7 @@ func NewSignOnPolicyActionIDFirstAllOfWithDefaults() *SignOnPolicyActionIDFirstA
 
 // GetDiscoveryRules returns the DiscoveryRules field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDFirstAllOf) GetDiscoveryRules() []SignOnPolicyActionIDFirstAllOfDiscoveryRules {
-	if o == nil || o.DiscoveryRules == nil {
+	if o == nil || isNil(o.DiscoveryRules) {
 		var ret []SignOnPolicyActionIDFirstAllOfDiscoveryRules
 		return ret
 	}
@@ -55,15 +55,15 @@ func (o *SignOnPolicyActionIDFirstAllOf) GetDiscoveryRules() []SignOnPolicyActio
 // GetDiscoveryRulesOk returns a tuple with the DiscoveryRules field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) GetDiscoveryRulesOk() ([]SignOnPolicyActionIDFirstAllOfDiscoveryRules, bool) {
-	if o == nil || o.DiscoveryRules == nil {
-		return nil, false
+	if o == nil || isNil(o.DiscoveryRules) {
+    return nil, false
 	}
 	return o.DiscoveryRules, true
 }
 
 // HasDiscoveryRules returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) HasDiscoveryRules() bool {
-	if o != nil && o.DiscoveryRules != nil {
+	if o != nil && !isNil(o.DiscoveryRules) {
 		return true
 	}
 
@@ -77,7 +77,7 @@ func (o *SignOnPolicyActionIDFirstAllOf) SetDiscoveryRules(v []SignOnPolicyActio
 
 // GetEnforceLockoutForIdentityProviders returns the EnforceLockoutForIdentityProviders field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDFirstAllOf) GetEnforceLockoutForIdentityProviders() bool {
-	if o == nil || o.EnforceLockoutForIdentityProviders == nil {
+	if o == nil || isNil(o.EnforceLockoutForIdentityProviders) {
 		var ret bool
 		return ret
 	}
@@ -87,15 +87,15 @@ func (o *SignOnPolicyActionIDFirstAllOf) GetEnforceLockoutForIdentityProviders()
 // GetEnforceLockoutForIdentityProvidersOk returns a tuple with the EnforceLockoutForIdentityProviders field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) GetEnforceLockoutForIdentityProvidersOk() (*bool, bool) {
-	if o == nil || o.EnforceLockoutForIdentityProviders == nil {
-		return nil, false
+	if o == nil || isNil(o.EnforceLockoutForIdentityProviders) {
+    return nil, false
 	}
 	return o.EnforceLockoutForIdentityProviders, true
 }
 
 // HasEnforceLockoutForIdentityProviders returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) HasEnforceLockoutForIdentityProviders() bool {
-	if o != nil && o.EnforceLockoutForIdentityProviders != nil {
+	if o != nil && !isNil(o.EnforceLockoutForIdentityProviders) {
 		return true
 	}
 
@@ -109,7 +109,7 @@ func (o *SignOnPolicyActionIDFirstAllOf) SetEnforceLockoutForIdentityProviders(v
 
 // GetRecovery returns the Recovery field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDFirstAllOf) GetRecovery() SignOnPolicyActionLoginAllOfRecovery {
-	if o == nil || o.Recovery == nil {
+	if o == nil || isNil(o.Recovery) {
 		var ret SignOnPolicyActionLoginAllOfRecovery
 		return ret
 	}
@@ -119,15 +119,15 @@ func (o *SignOnPolicyActionIDFirstAllOf) GetRecovery() SignOnPolicyActionLoginAl
 // GetRecoveryOk returns a tuple with the Recovery field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) GetRecoveryOk() (*SignOnPolicyActionLoginAllOfRecovery, bool) {
-	if o == nil || o.Recovery == nil {
-		return nil, false
+	if o == nil || isNil(o.Recovery) {
+    return nil, false
 	}
 	return o.Recovery, true
 }
 
 // HasRecovery returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) HasRecovery() bool {
-	if o != nil && o.Recovery != nil {
+	if o != nil && !isNil(o.Recovery) {
 		return true
 	}
 
@@ -141,7 +141,7 @@ func (o *SignOnPolicyActionIDFirstAllOf) SetRecovery(v SignOnPolicyActionLoginAl
 
 // GetRegistration returns the Registration field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDFirstAllOf) GetRegistration() SignOnPolicyActionLoginAllOfRegistration {
-	if o == nil || o.Registration == nil {
+	if o == nil || isNil(o.Registration) {
 		var ret SignOnPolicyActionLoginAllOfRegistration
 		return ret
 	}
@@ -151,15 +151,15 @@ func (o *SignOnPolicyActionIDFirstAllOf) GetRegistration() SignOnPolicyActionLog
 // GetRegistrationOk returns a tuple with the Registration field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) GetRegistrationOk() (*SignOnPolicyActionLoginAllOfRegistration, bool) {
-	if o == nil || o.Registration == nil {
-		return nil, false
+	if o == nil || isNil(o.Registration) {
+    return nil, false
 	}
 	return o.Registration, true
 }
 
 // HasRegistration returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) HasRegistration() bool {
-	if o != nil && o.Registration != nil {
+	if o != nil && !isNil(o.Registration) {
 		return true
 	}
 
@@ -173,7 +173,7 @@ func (o *SignOnPolicyActionIDFirstAllOf) SetRegistration(v SignOnPolicyActionLog
 
 // GetSocialProviders returns the SocialProviders field value if set, zero value otherwise.
 func (o *SignOnPolicyActionIDFirstAllOf) GetSocialProviders() []SignOnPolicyActionLoginAllOfSocialProviders {
-	if o == nil || o.SocialProviders == nil {
+	if o == nil || isNil(o.SocialProviders) {
 		var ret []SignOnPolicyActionLoginAllOfSocialProviders
 		return ret
 	}
@@ -183,15 +183,15 @@ func (o *SignOnPolicyActionIDFirstAllOf) GetSocialProviders() []SignOnPolicyActi
 // GetSocialProvidersOk returns a tuple with the SocialProviders field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) GetSocialProvidersOk() ([]SignOnPolicyActionLoginAllOfSocialProviders, bool) {
-	if o == nil || o.SocialProviders == nil {
-		return nil, false
+	if o == nil || isNil(o.SocialProviders) {
+    return nil, false
 	}
 	return o.SocialProviders, true
 }
 
 // HasSocialProviders returns a boolean if a field has been set.
 func (o *SignOnPolicyActionIDFirstAllOf) HasSocialProviders() bool {
-	if o != nil && o.SocialProviders != nil {
+	if o != nil && !isNil(o.SocialProviders) {
 		return true
 	}
 
@@ -205,19 +205,19 @@ func (o *SignOnPolicyActionIDFirstAllOf) SetSocialProviders(v []SignOnPolicyActi
 
 func (o SignOnPolicyActionIDFirstAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.DiscoveryRules != nil {
+	if !isNil(o.DiscoveryRules) {
 		toSerialize["discoveryRules"] = o.DiscoveryRules
 	}
-	if o.EnforceLockoutForIdentityProviders != nil {
+	if !isNil(o.EnforceLockoutForIdentityProviders) {
 		toSerialize["enforceLockoutForIdentityProviders"] = o.EnforceLockoutForIdentityProviders
 	}
-	if o.Recovery != nil {
+	if !isNil(o.Recovery) {
 		toSerialize["recovery"] = o.Recovery
 	}
-	if o.Registration != nil {
+	if !isNil(o.Registration) {
 		toSerialize["registration"] = o.Registration
 	}
-	if o.SocialProviders != nil {
+	if !isNil(o.SocialProviders) {
 		toSerialize["socialProviders"] = o.SocialProviders
 	}
 	return json.Marshal(toSerialize)

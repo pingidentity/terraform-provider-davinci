@@ -53,7 +53,7 @@ func NewIdentityProviderSAMLAllOfWithDefaults() *IdentityProviderSAMLAllOf {
 
 // GetAuthnRequestSigned returns the AuthnRequestSigned field value if set, zero value otherwise.
 func (o *IdentityProviderSAMLAllOf) GetAuthnRequestSigned() bool {
-	if o == nil || o.AuthnRequestSigned == nil {
+	if o == nil || isNil(o.AuthnRequestSigned) {
 		var ret bool
 		return ret
 	}
@@ -63,15 +63,15 @@ func (o *IdentityProviderSAMLAllOf) GetAuthnRequestSigned() bool {
 // GetAuthnRequestSignedOk returns a tuple with the AuthnRequestSigned field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetAuthnRequestSignedOk() (*bool, bool) {
-	if o == nil || o.AuthnRequestSigned == nil {
-		return nil, false
+	if o == nil || isNil(o.AuthnRequestSigned) {
+    return nil, false
 	}
 	return o.AuthnRequestSigned, true
 }
 
 // HasAuthnRequestSigned returns a boolean if a field has been set.
 func (o *IdentityProviderSAMLAllOf) HasAuthnRequestSigned() bool {
-	if o != nil && o.AuthnRequestSigned != nil {
+	if o != nil && !isNil(o.AuthnRequestSigned) {
 		return true
 	}
 
@@ -97,7 +97,7 @@ func (o *IdentityProviderSAMLAllOf) GetIdpEntityId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetIdpEntityIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.IdpEntityId, true
 }
@@ -121,7 +121,7 @@ func (o *IdentityProviderSAMLAllOf) GetIdpVerification() IdentityProviderSAMLAll
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetIdpVerificationOk() (*IdentityProviderSAMLAllOfIdpVerification, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.IdpVerification, true
 }
@@ -145,7 +145,7 @@ func (o *IdentityProviderSAMLAllOf) GetSpEntityId() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetSpEntityIdOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SpEntityId, true
 }
@@ -157,7 +157,7 @@ func (o *IdentityProviderSAMLAllOf) SetSpEntityId(v string) {
 
 // GetSpSigning returns the SpSigning field value if set, zero value otherwise.
 func (o *IdentityProviderSAMLAllOf) GetSpSigning() IdentityProviderSAMLAllOfSpSigning {
-	if o == nil || o.SpSigning == nil {
+	if o == nil || isNil(o.SpSigning) {
 		var ret IdentityProviderSAMLAllOfSpSigning
 		return ret
 	}
@@ -167,15 +167,15 @@ func (o *IdentityProviderSAMLAllOf) GetSpSigning() IdentityProviderSAMLAllOfSpSi
 // GetSpSigningOk returns a tuple with the SpSigning field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetSpSigningOk() (*IdentityProviderSAMLAllOfSpSigning, bool) {
-	if o == nil || o.SpSigning == nil {
-		return nil, false
+	if o == nil || isNil(o.SpSigning) {
+    return nil, false
 	}
 	return o.SpSigning, true
 }
 
 // HasSpSigning returns a boolean if a field has been set.
 func (o *IdentityProviderSAMLAllOf) HasSpSigning() bool {
-	if o != nil && o.SpSigning != nil {
+	if o != nil && !isNil(o.SpSigning) {
 		return true
 	}
 
@@ -201,7 +201,7 @@ func (o *IdentityProviderSAMLAllOf) GetSsoBinding() EnumIdentityProviderSAMLSSOB
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetSsoBindingOk() (*EnumIdentityProviderSAMLSSOBinding, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SsoBinding, true
 }
@@ -225,7 +225,7 @@ func (o *IdentityProviderSAMLAllOf) GetSsoEndpoint() string {
 // and a boolean to check if the value has been set.
 func (o *IdentityProviderSAMLAllOf) GetSsoEndpointOk() (*string, bool) {
 	if o == nil {
-		return nil, false
+    return nil, false
 	}
 	return &o.SsoEndpoint, true
 }
@@ -237,7 +237,7 @@ func (o *IdentityProviderSAMLAllOf) SetSsoEndpoint(v string) {
 
 func (o IdentityProviderSAMLAllOf) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AuthnRequestSigned != nil {
+	if !isNil(o.AuthnRequestSigned) {
 		toSerialize["authnRequestSigned"] = o.AuthnRequestSigned
 	}
 	if true {
@@ -249,7 +249,7 @@ func (o IdentityProviderSAMLAllOf) MarshalJSON() ([]byte, error) {
 	if true {
 		toSerialize["spEntityId"] = o.SpEntityId
 	}
-	if o.SpSigning != nil {
+	if !isNil(o.SpSigning) {
 		toSerialize["spSigning"] = o.SpSigning
 	}
 	if true {

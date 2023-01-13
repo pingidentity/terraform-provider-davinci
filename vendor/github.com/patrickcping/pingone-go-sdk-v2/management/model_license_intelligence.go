@@ -48,7 +48,7 @@ func NewLicenseIntelligenceWithDefaults() *LicenseIntelligence {
 
 // GetAllowGeoVelocity returns the AllowGeoVelocity field value if set, zero value otherwise.
 func (o *LicenseIntelligence) GetAllowGeoVelocity() bool {
-	if o == nil || o.AllowGeoVelocity == nil {
+	if o == nil || isNil(o.AllowGeoVelocity) {
 		var ret bool
 		return ret
 	}
@@ -58,15 +58,15 @@ func (o *LicenseIntelligence) GetAllowGeoVelocity() bool {
 // GetAllowGeoVelocityOk returns a tuple with the AllowGeoVelocity field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseIntelligence) GetAllowGeoVelocityOk() (*bool, bool) {
-	if o == nil || o.AllowGeoVelocity == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowGeoVelocity) {
+    return nil, false
 	}
 	return o.AllowGeoVelocity, true
 }
 
 // HasAllowGeoVelocity returns a boolean if a field has been set.
 func (o *LicenseIntelligence) HasAllowGeoVelocity() bool {
-	if o != nil && o.AllowGeoVelocity != nil {
+	if o != nil && !isNil(o.AllowGeoVelocity) {
 		return true
 	}
 
@@ -80,7 +80,7 @@ func (o *LicenseIntelligence) SetAllowGeoVelocity(v bool) {
 
 // GetAllowAnonymousNetworkDetection returns the AllowAnonymousNetworkDetection field value if set, zero value otherwise.
 func (o *LicenseIntelligence) GetAllowAnonymousNetworkDetection() bool {
-	if o == nil || o.AllowAnonymousNetworkDetection == nil {
+	if o == nil || isNil(o.AllowAnonymousNetworkDetection) {
 		var ret bool
 		return ret
 	}
@@ -90,15 +90,15 @@ func (o *LicenseIntelligence) GetAllowAnonymousNetworkDetection() bool {
 // GetAllowAnonymousNetworkDetectionOk returns a tuple with the AllowAnonymousNetworkDetection field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseIntelligence) GetAllowAnonymousNetworkDetectionOk() (*bool, bool) {
-	if o == nil || o.AllowAnonymousNetworkDetection == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowAnonymousNetworkDetection) {
+    return nil, false
 	}
 	return o.AllowAnonymousNetworkDetection, true
 }
 
 // HasAllowAnonymousNetworkDetection returns a boolean if a field has been set.
 func (o *LicenseIntelligence) HasAllowAnonymousNetworkDetection() bool {
-	if o != nil && o.AllowAnonymousNetworkDetection != nil {
+	if o != nil && !isNil(o.AllowAnonymousNetworkDetection) {
 		return true
 	}
 
@@ -112,7 +112,7 @@ func (o *LicenseIntelligence) SetAllowAnonymousNetworkDetection(v bool) {
 
 // GetAllowReputation returns the AllowReputation field value if set, zero value otherwise.
 func (o *LicenseIntelligence) GetAllowReputation() bool {
-	if o == nil || o.AllowReputation == nil {
+	if o == nil || isNil(o.AllowReputation) {
 		var ret bool
 		return ret
 	}
@@ -122,15 +122,15 @@ func (o *LicenseIntelligence) GetAllowReputation() bool {
 // GetAllowReputationOk returns a tuple with the AllowReputation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseIntelligence) GetAllowReputationOk() (*bool, bool) {
-	if o == nil || o.AllowReputation == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowReputation) {
+    return nil, false
 	}
 	return o.AllowReputation, true
 }
 
 // HasAllowReputation returns a boolean if a field has been set.
 func (o *LicenseIntelligence) HasAllowReputation() bool {
-	if o != nil && o.AllowReputation != nil {
+	if o != nil && !isNil(o.AllowReputation) {
 		return true
 	}
 
@@ -144,7 +144,7 @@ func (o *LicenseIntelligence) SetAllowReputation(v bool) {
 
 // GetAllowDataConsent returns the AllowDataConsent field value if set, zero value otherwise.
 func (o *LicenseIntelligence) GetAllowDataConsent() bool {
-	if o == nil || o.AllowDataConsent == nil {
+	if o == nil || isNil(o.AllowDataConsent) {
 		var ret bool
 		return ret
 	}
@@ -154,15 +154,15 @@ func (o *LicenseIntelligence) GetAllowDataConsent() bool {
 // GetAllowDataConsentOk returns a tuple with the AllowDataConsent field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseIntelligence) GetAllowDataConsentOk() (*bool, bool) {
-	if o == nil || o.AllowDataConsent == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowDataConsent) {
+    return nil, false
 	}
 	return o.AllowDataConsent, true
 }
 
 // HasAllowDataConsent returns a boolean if a field has been set.
 func (o *LicenseIntelligence) HasAllowDataConsent() bool {
-	if o != nil && o.AllowDataConsent != nil {
+	if o != nil && !isNil(o.AllowDataConsent) {
 		return true
 	}
 
@@ -176,7 +176,7 @@ func (o *LicenseIntelligence) SetAllowDataConsent(v bool) {
 
 // GetAllowRisk returns the AllowRisk field value if set, zero value otherwise.
 func (o *LicenseIntelligence) GetAllowRisk() bool {
-	if o == nil || o.AllowRisk == nil {
+	if o == nil || isNil(o.AllowRisk) {
 		var ret bool
 		return ret
 	}
@@ -186,15 +186,15 @@ func (o *LicenseIntelligence) GetAllowRisk() bool {
 // GetAllowRiskOk returns a tuple with the AllowRisk field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseIntelligence) GetAllowRiskOk() (*bool, bool) {
-	if o == nil || o.AllowRisk == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowRisk) {
+    return nil, false
 	}
 	return o.AllowRisk, true
 }
 
 // HasAllowRisk returns a boolean if a field has been set.
 func (o *LicenseIntelligence) HasAllowRisk() bool {
-	if o != nil && o.AllowRisk != nil {
+	if o != nil && !isNil(o.AllowRisk) {
 		return true
 	}
 
@@ -208,7 +208,7 @@ func (o *LicenseIntelligence) SetAllowRisk(v bool) {
 
 // GetAllowAdvancedPredictors returns the AllowAdvancedPredictors field value if set, zero value otherwise.
 func (o *LicenseIntelligence) GetAllowAdvancedPredictors() bool {
-	if o == nil || o.AllowAdvancedPredictors == nil {
+	if o == nil || isNil(o.AllowAdvancedPredictors) {
 		var ret bool
 		return ret
 	}
@@ -218,15 +218,15 @@ func (o *LicenseIntelligence) GetAllowAdvancedPredictors() bool {
 // GetAllowAdvancedPredictorsOk returns a tuple with the AllowAdvancedPredictors field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *LicenseIntelligence) GetAllowAdvancedPredictorsOk() (*bool, bool) {
-	if o == nil || o.AllowAdvancedPredictors == nil {
-		return nil, false
+	if o == nil || isNil(o.AllowAdvancedPredictors) {
+    return nil, false
 	}
 	return o.AllowAdvancedPredictors, true
 }
 
 // HasAllowAdvancedPredictors returns a boolean if a field has been set.
 func (o *LicenseIntelligence) HasAllowAdvancedPredictors() bool {
-	if o != nil && o.AllowAdvancedPredictors != nil {
+	if o != nil && !isNil(o.AllowAdvancedPredictors) {
 		return true
 	}
 
@@ -240,22 +240,22 @@ func (o *LicenseIntelligence) SetAllowAdvancedPredictors(v bool) {
 
 func (o LicenseIntelligence) MarshalJSON() ([]byte, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AllowGeoVelocity != nil {
+	if !isNil(o.AllowGeoVelocity) {
 		toSerialize["allowGeoVelocity"] = o.AllowGeoVelocity
 	}
-	if o.AllowAnonymousNetworkDetection != nil {
+	if !isNil(o.AllowAnonymousNetworkDetection) {
 		toSerialize["allowAnonymousNetworkDetection"] = o.AllowAnonymousNetworkDetection
 	}
-	if o.AllowReputation != nil {
+	if !isNil(o.AllowReputation) {
 		toSerialize["allowReputation"] = o.AllowReputation
 	}
-	if o.AllowDataConsent != nil {
+	if !isNil(o.AllowDataConsent) {
 		toSerialize["allowDataConsent"] = o.AllowDataConsent
 	}
-	if o.AllowRisk != nil {
+	if !isNil(o.AllowRisk) {
 		toSerialize["allowRisk"] = o.AllowRisk
 	}
-	if o.AllowAdvancedPredictors != nil {
+	if !isNil(o.AllowAdvancedPredictors) {
 		toSerialize["allowAdvancedPredictors"] = o.AllowAdvancedPredictors
 	}
 	return json.Marshal(toSerialize)
