@@ -20,10 +20,13 @@ You must have a PingOne account and may use multiple environments within that ac
 
 Prerequisites:
 
-- Have a PingOne environment
-- Add the DaVinci service to your Administrators environment
+> IMPORTANT: To manage multiple Davinci environments with the same credentials, you can add DaVinci to the admin environment. This creates a DaVinci connection and IdP that can be used for SSO into other environments that a user has the `Identity Data Admin` role. The Prerequisites below assume this is the case.
+
+- Have a PingOne environment with DaVinci enabled. 
 - Choose or create a user identity in the Administrators account, 
-  give this user the Environment role over the admin Organization.
+  assign this user the following roles:
+    - Environment role and Identity Data Admin role on the Administrators Environment.
+    - Organization admin for the organization.
 - For each additional DaVinci environment that needs SSO access,
   give this user the Identity Data Admin role for that environment.
   This step can be done in HCL as shown below:
