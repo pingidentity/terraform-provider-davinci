@@ -2,6 +2,7 @@ package sdk
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -30,6 +31,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 		}
 		timeout := 100
 		for i := 0; i <= timeout; {
+			// initially, test if auth is valid for the target environment
 			apps, err := c.ReadApplications(&envId, nil)
 			if err != nil {
 				httpErr, err := c.ParseDvHttpError(err)
@@ -55,9 +57,10 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 				// The final step is creation of the app.
 				if len(apps) == 0 {
 					tflog.Warn(ctx, "Waiting for bootstrap to complete... ")
+					i = i + 5
+					time.Sleep(5 * time.Second)
+					continue
 				}
-				i = i + 5
-				time.Sleep(5 * time.Second)
 			}
 			c.CompanyID = envId
 			break

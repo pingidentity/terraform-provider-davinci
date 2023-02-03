@@ -11,9 +11,11 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/pavius/impi v0.0.3
-	github.com/samir-gandhi/davinci-client-go v0.0.37
+	github.com/samir-gandhi/davinci-client-go v0.0.39
 	github.com/terraform-linters/tflint v0.44.1
 )
+
+// replace github.com/samir-gandhi/davinci-client-go => /home/ubuntu/go/src/github.com/samir-gandhi/davinci-client-go
 
 require (
 	4d63.com/gochecknoglobals v0.1.0 // indirect

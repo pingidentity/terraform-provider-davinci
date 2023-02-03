@@ -267,6 +267,10 @@ data "pingone_role" "%[1]s" {
 	name = "Identity Data Admin"
 }
 
+data "pingone_role" "environment_admin" {
+  name = "Environment Admin"
+}
+
 data "pingone_user" "%[1]s"{
 	username             = "%[3]s"
 	environment_id       = "%[4]s"
@@ -279,6 +283,13 @@ resource "pingone_role_assignment_user" "%[1]s" {
 	scope_environment_id = resource.pingone_environment.%[1]s.id
 }
 
+resource "pingone_role_assignment_user" "environment_admin_sso" {
+  environment_id       = "%[4]s"
+  user_id              = data.pingone_user.%[1]s.id
+  role_id              = data.pingone_role.environment_admin.id
+  scope_environment_id = resource.pingone_environment.%[1]s.id
+}
+
 `, resourceName, licenseID, username, adminEnvID)
 }
 
@@ -289,6 +300,7 @@ func BaselineHcl(resourceName string) string {
 %[1]s
 data "davinci_connections" "read_all" {
 	environment_id = resource.pingone_role_assignment_user.%[3]s.scope_environment_id
+	depends_on = [resource.pingone_role_assignment_user.environment_admin_sso]
 }
 
 %[2]s

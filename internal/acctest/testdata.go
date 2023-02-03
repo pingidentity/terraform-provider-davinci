@@ -100,6 +100,11 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 			FlowJson:    flowJsons.AnotherSubflow,
 			Connections: []string{"http"},
 		}),
+		WithVariableConnector: makeFlowHcl(resourceName, flowResource{
+			Name:        "with_variable_connector",
+			FlowJson:    flowJsons.WithVariableConnector,
+			Connections: []string{"http", "variables"},
+		}),
 	}
 }
 

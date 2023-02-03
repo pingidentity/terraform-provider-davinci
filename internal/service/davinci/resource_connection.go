@@ -239,10 +239,16 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 		if pMap == nil {
 			return nil, fmt.Errorf("Unable to assert property values for %v\n", propName)
 		}
+
+		if _, ok := pMap["value"]; !ok {
+			continue
+		}
+
 		thisProp := map[string]interface{}{
 			"name":  propName,
 			"value": "",
 		}
+
 		if propType, ok := pMap["type"].(string); ok {
 			thisProp["type"] = propType
 			switch propType {

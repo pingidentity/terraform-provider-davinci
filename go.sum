@@ -749,8 +749,8 @@ github.com/ryancurrah/gomodguard v1.2.4 h1:CpMSDKan0LtNGGhPrvupAoLeObRFjND8/tU1r
 github.com/ryancurrah/gomodguard v1.2.4/go.mod h1:+Kem4VjWwvFpUJRJSwa16s1tBJe+vbv02+naTow2f6M=
 github.com/ryanrolds/sqlclosecheck v0.3.0 h1:AZx+Bixh8zdUBxUA1NxbxVAS78vTPq4rCb8OUZI9xFw=
 github.com/ryanrolds/sqlclosecheck v0.3.0/go.mod h1:1gREqxyTGR3lVtpngyFo3hZAgk0KCtEdgEkHwDbigdA=
-github.com/samir-gandhi/davinci-client-go v0.0.37 h1:g0sVQCiyJEQ698GmNNpLyzOUKOQYWoRwwIESMqRB81g=
-github.com/samir-gandhi/davinci-client-go v0.0.37/go.mod h1:BuwBLUsGtB91mN6nICnyCIrOmAPitaQ8JFmBaLyldyU=
+github.com/samir-gandhi/davinci-client-go v0.0.39 h1:ozukgEkDczQ8BLR4jpQqN8kxpVCqEt0CNRCSsdTWLFQ=
+github.com/samir-gandhi/davinci-client-go v0.0.39/go.mod h1:BuwBLUsGtB91mN6nICnyCIrOmAPitaQ8JFmBaLyldyU=
 github.com/sanposhiho/wastedassign/v2 v2.0.6 h1:+6/hQIHKNJAUixEj6EmOngGIisyeI+T3335lYTyxRoA=
 github.com/sanposhiho/wastedassign/v2 v2.0.6/go.mod h1:KyZ0MWTwxxBmfwn33zh3k1dmsbF2ud9pAAGfoLfjhtI=
 github.com/sashamelentyev/interfacebloat v1.1.0 h1:xdRdJp0irL086OyW1H/RTZTr1h/tMEOsumirXcOJqAw=
