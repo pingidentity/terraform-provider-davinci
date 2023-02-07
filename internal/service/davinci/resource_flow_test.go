@@ -2,6 +2,7 @@ package davinci_test
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"testing"
 
@@ -228,6 +229,30 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 						return nil
 					}),
 				),
+			},
+		},
+	})
+}
+
+func TestAccResourceFlow_BrokenFlow(t *testing.T) {
+
+	// resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	testFlows := acctest.FlowsForTests(resourceName)
+	// resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.BrokenFlow.Name)
+
+	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.BrokenFlow.Hcl})
+	// fmt.Println(hcl)
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config:      hcl,
+				ExpectError: regexp.MustCompile(`Error: status: 400`),
 			},
 		},
 	})

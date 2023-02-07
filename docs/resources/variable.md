@@ -38,7 +38,7 @@ resource "davinci_variable" "my_global_var" {
 - `description` (String) Description of variable
 - `max` (Number) Defaults to `2000`.
 - `min` (Number) Defaults to `0`.
-- `mutable` (Boolean)
+- `mutable` (Boolean) Defaults to `true`.
 - `value` (String, Sensitive) Value as string, type will be inferred
 
 ### Read-Only

@@ -60,6 +60,7 @@ func ResourceConnection() *schema.Resource {
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
+							Sensitive:   true,
 							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {

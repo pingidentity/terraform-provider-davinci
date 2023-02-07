@@ -51,7 +51,8 @@ func DataSourceApplications() *schema.Resource {
 							Computed:    true,
 							Description: "Appplication Api Key",
 							Elem: &schema.Schema{
-								Type: schema.TypeString,
+								Type:      schema.TypeString,
+								Sensitive: true,
 							},
 						},
 						"metadata": {

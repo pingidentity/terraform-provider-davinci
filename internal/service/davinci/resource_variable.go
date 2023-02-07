@@ -146,7 +146,6 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 	for _, res := range resp {
 		s := strings.Split(variableName, "##SK##")
 		name := s[0]
-		fmt.Println("name: ", name)
 		if err := d.Set("name", name); err != nil {
 			return diag.FromErr(err)
 		}

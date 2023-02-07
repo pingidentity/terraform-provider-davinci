@@ -51,10 +51,10 @@ output "davinci_connection" {
 Read-Only:
 
 - `company_id` (String)
-- `connection_id` (String)
 - `connector_id` (String)
 - `created_date` (Number)
 - `customer_id` (String)
+- `id` (String)
 - `name` (String)
 - `properties` (Set of Object) (see [below for nested schema](#nestedobjatt--connections--properties))
 

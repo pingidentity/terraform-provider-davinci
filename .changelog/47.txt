@@ -1,0 +1,5 @@
+``````markdown
+```release-note:enhancement
+*_test.go: Updated all tests to use minimal role strategy for main admin user.
+```
+``````

@@ -1,0 +1,8 @@
+``````markdown
+```release-note:enhancement
+resource_davinci_flow: updated connection and subflow dependency fields to `id` and `name`
+resource_davinci_connection: updated connection_id and connection_name to `id` and `name`
+datasource_davinci_connection: updated connection_id and connection_name to `id` and `name`
+datasource_davinci_connections: updated connection_id and connection_name to `id` and `name`
+```
+``````

@@ -290,6 +290,11 @@ resource "pingone_role_assignment_user" "environment_admin_sso" {
   scope_environment_id = resource.pingone_environment.%[1]s.id
 }
 
+data "davinci_connections" "read_all" {
+	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+	depends_on = [resource.pingone_role_assignment_user.environment_admin_sso]
+}
+
 `, resourceName, licenseID, username, adminEnvID)
 }
 
@@ -298,11 +303,7 @@ func BaselineHcl(resourceName string) string {
 	bsConnectionsHcl := BsConnectionsHcl(resourceName)
 	return fmt.Sprintf(`
 %[1]s
-data "davinci_connections" "read_all" {
-	environment_id = resource.pingone_role_assignment_user.%[3]s.scope_environment_id
-	depends_on = [resource.pingone_role_assignment_user.environment_admin_sso]
-}
 
 %[2]s
-`, pingoneHcl, bsConnectionsHcl, resourceName)
+`, pingoneHcl, bsConnectionsHcl)
 }

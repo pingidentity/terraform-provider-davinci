@@ -31,7 +31,7 @@ resource "davinci_application" "use_default_flow" {
     name   = "PingOne - Sign On and Password Reset"
     status = "enabled"
     policy_flows {
-      id    = "abc123"
+      id         = "abc123"
       version_id = -1
       weight     = 100
     }
@@ -142,10 +142,13 @@ Read-Only:
 
 Optional:
 
-- `id` (String)
 - `success_nodes` (List of String)
 - `version_id` (Number)
 - `weight` (Number)
+
+Read-Only:
+
+- `id` (String) The ID of this resource.
 
 
 

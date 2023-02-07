@@ -156,6 +156,7 @@ resource "davinci_flow" "%[2]s_simple_flow" {
 
 resource "davinci_application" "%[2]s_simple_flow_app" {
   name           = "simple-%[2]s"
+	depends_on = [data.davinci_connections.read_all]
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   oauth {
     enabled = true

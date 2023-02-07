@@ -43,6 +43,7 @@ func makeFlowHcl(resourceName string, flow flowResource) FlowHcl {
 resource "davinci_flow" "%[1]s-%[2]s" {
 	flow_json = %[3]s
 	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+	depends_on = [data.davinci_connections.read_all]
 
 	deploy = true
 	
@@ -105,6 +106,11 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 			FlowJson:    flowJsons.WithVariableConnector,
 			Connections: []string{"http", "variables"},
 		}),
+		BrokenFlow: makeFlowHcl(resourceName, flowResource{
+			Name:        "broken_flow",
+			FlowJson:    flowJsons.BrokenFlow,
+			Connections: []string{"errorcustomize"},
+		}),
 	}
 }
 
@@ -147,6 +153,7 @@ func addAllTestFlows(resourceName string, hcl string) string {
 		flowHcl += fmt.Sprintf(`
 resource "davinci_flow" "%[2]s-%[1]s" {
 	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+	depends_on = [data.davinci_connections.read_all]
 	flow_json = %[3]s
 	deploy = true
 }

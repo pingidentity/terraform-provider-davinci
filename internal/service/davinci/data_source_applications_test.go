@@ -34,16 +34,13 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 }
 
 func testAccDataSourceApplications_AllApplications_Hcl(resourceName string) (hcl string) {
-	baseHcl := testAccResourceApplication_Slim_Hcl(resourceName)
+	baseHcl := acctest.BaselineHcl(resourceName)
 	hcl = fmt.Sprintf(`
 %[1]s
 
 data "davinci_applications" "%[2]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-
-	depends_on = [
-		davinci_application.%[2]s
-	]
+	depends_on = [ data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl

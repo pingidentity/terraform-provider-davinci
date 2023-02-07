@@ -179,13 +179,13 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 			Summary:  "Error deploying flow",
 			Detail:   fmt.Sprintf(`This may indicate flow '%s' contains unconfigured nodes.`, res.Name),
 		})
-		_, deployErr := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		_, deleteErr := sdk.DoRetryable(ctx, func() (interface{}, error) {
 			return c.DeleteFlow(&c.CompanyID, res.FlowID)
 		}, nil)
-		if deployErr != nil {
-			return diag.FromErr(deployErr)
+		if deleteErr != nil {
+			return diag.FromErr(deleteErr)
 		}
-		return diag.FromErr(err)
+		return diags
 	}
 
 	d.SetId(res.FlowID)
