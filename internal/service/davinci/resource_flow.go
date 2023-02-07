@@ -33,12 +33,12 @@ func ResourceFlow() *schema.Resource {
 				Default:     true,
 				Description: "Deploy Flow after import. Flows must be deployed to be used.",
 			},
-			"flow_id": {
+			"id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "DaVinci generated identifier after import.",
 			},
-			"flow_name": {
+			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Computed Flow Name after import. Will match 'name' in flow_json",
@@ -52,15 +52,15 @@ func ResourceFlow() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				Description: "Connections this flow depends on. flow_json connectionId will be updated to connection_id matching connection_name .",
+				Description: "Connections this flow depends on. flow_json connectionId will be updated to id matching name .",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"connection_id": {
+						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Connection ID that will be used when flow is imported.",
 						},
-						"connection_name": {
+						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Connection Name to match when updating flow_json connectionId.",
@@ -72,15 +72,15 @@ func ResourceFlow() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				Description: "Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to subflow_id matching subflow_name. Note, subflow will automatically point to latest version (-1).",
+				Description: "Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"subflow_id": {
+						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Subflow Flow ID that will be used when flow is imported.",
 						},
-						"subflow_name": {
+						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Subflow Name to match when updating flow_json subflowId.",
@@ -172,8 +172,20 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	if err := deployIfNeeded(ctx, c, d, res.FlowID); err != nil {
-		return diag.FromErr(err)
+	err = deployIfNeeded(ctx, c, d, res.FlowID)
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Error deploying flow",
+			Detail:   fmt.Sprintf(`This may indicate flow '%s' contains unconfigured nodes.`, res.Name),
+		})
+		_, deleteErr := sdk.DoRetryable(ctx, func() (interface{}, error) {
+			return c.DeleteFlow(&c.CompanyID, res.FlowID)
+		}, nil)
+		if deleteErr != nil {
+			return diag.FromErr(deleteErr)
+		}
+		return diags
 	}
 
 	d.SetId(res.FlowID)
@@ -211,10 +223,10 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		d.SetId("")
 		return diags
 	}
-	if err := d.Set("flow_id", res.Flow.FlowID); err != nil {
+	if err := d.Set("id", res.Flow.FlowID); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("flow_name", res.Flow.Name); err != nil {
+	if err := d.Set("name", res.Flow.Name); err != nil {
 		return diag.FromErr(err)
 	}
 	rString, err := json.Marshal(&res.Flow)
@@ -256,8 +268,8 @@ func flattenSubflows(flow dv.Flow) ([]interface{}, error) {
 				return nil, err
 			}
 			subflowMap := map[string]interface{}{
-				"subflow_id":   sfProp.SubFlowID.Value.Value,
-				"subflow_name": sfProp.SubFlowID.Value.Label,
+				"id":   sfProp.SubFlowID.Value.Value,
+				"name": sfProp.SubFlowID.Value.Label,
 			}
 			subflows = append(subflows, subflowMap)
 		}
@@ -270,8 +282,8 @@ func flattenConnections(flow dv.Flow) ([]interface{}, error) {
 	for _, node := range flow.GraphData.Elements.Nodes {
 		if node.Data.ConnectionID != "" && node.Data.Name != "" {
 			connectionMap := map[string]interface{}{
-				"connection_id":   node.Data.ConnectionID,
-				"connection_name": node.Data.Name,
+				"id":   node.Data.ConnectionID,
+				"name": node.Data.Name,
 			}
 			connections = append(connections, connectionMap)
 		}
@@ -287,7 +299,7 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	flowId := d.Get("flow_id").(string)
+	flowId := d.Get("id").(string)
 
 	if d.HasChanges("flow_json", "connections", "subflows") {
 		flowJson := d.Get("flow_json").(string)
@@ -498,8 +510,8 @@ func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 				sfProp, err = expandSubFlowProps(v.Data.Properties)
 				for _, sfMap := range sfList {
 					sfValues := sfMap.(map[string]interface{})
-					if sfValues["subflow_name"].(string) == sfProp.SubFlowID.Value.Label {
-						sfProp.SubFlowID.Value.Value = sfValues["subflow_id"].(string)
+					if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
+						sfProp.SubFlowID.Value.Value = sfValues["id"].(string)
 						//TODO implement subflow version
 						// sfProp.SubFlowVersionID.Value = sfValues["subflow_version"].(string)
 					}
@@ -554,8 +566,8 @@ func mapFlowConnections(d *schema.ResourceData, flowJson string) (*string, error
 		for i, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
 			for _, connMap := range connList {
 				connValues := connMap.(map[string]interface{})
-				if connValues["connection_name"].(string) == v.Data.Name {
-					v.Data.ConnectionID = connValues["connection_id"].(string)
+				if connValues["name"].(string) == v.Data.Name {
+					v.Data.ConnectionID = connValues["id"].(string)
 				}
 			}
 			fjMap.FlowInfo.GraphData.Elements.Nodes[i] = v
@@ -589,7 +601,7 @@ func validateFlowDepss(d *schema.ResourceData, diags *diag.Diagnostics) {
 					found := false
 					for _, connMap := range connList {
 						connValues := connMap.(map[string]interface{})
-						if connValues["connection_name"].(string) == v.Data.Name {
+						if connValues["name"].(string) == v.Data.Name {
 							found = true
 						}
 					}
@@ -612,7 +624,7 @@ func validateFlowDepss(d *schema.ResourceData, diags *diag.Diagnostics) {
 					sfProp, _ := expandSubFlowProps(v.Data.Properties)
 					for _, sfMap := range sfList {
 						sfValues := sfMap.(map[string]interface{})
-						if sfValues["subflow_name"].(string) == sfProp.SubFlowID.Value.Label {
+						if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
 							found = true
 						}
 					}
@@ -665,7 +677,7 @@ func validateFlowDeps(d *schema.ResourceData, diags *diag.Diagnostics) {
 					sfList := subflows.(*schema.Set).List()
 					for _, sfMap := range sfList {
 						sfValues := sfMap.(map[string]interface{})
-						if sfValues["subflow_name"].(string) == sfProp.SubFlowID.Value.Label {
+						if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
 							foundSubflow = true
 						}
 					}
@@ -686,7 +698,7 @@ func validateFlowDeps(d *schema.ResourceData, diags *diag.Diagnostics) {
 				connList := conns.(*schema.Set).List()
 				for _, connMap := range connList {
 					connValues := connMap.(map[string]interface{})
-					if connValues["connection_name"].(string) == v.ConnectionName {
+					if connValues["name"].(string) == v.ConnectionName {
 						foundConnection = true
 					}
 				}

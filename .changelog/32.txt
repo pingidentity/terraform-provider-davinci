@@ -1,0 +1,5 @@
+``````markdown
+```release-note:bug
+go-client: updated client to v0.0.40 for removed omitempty on node data properties
+```
+``````

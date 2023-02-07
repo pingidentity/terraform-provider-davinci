@@ -163,8 +163,8 @@ resource "davinci_flow" "mainflow" {
   // Dependent subflows are defined in subflows blocks.
   // These should always point to managed subflows
   subflows {
-    subflow_id   = resource.davinci_flow.subflow.flow_id
-    subflow_name = resource.davinci_flow.subflow.flow_name
+    id   = resource.davinci_flow.subflow.id
+    name = resource.davinci_flow.subflow.name
   }
 
   // This depends_on relieves the client from multiple initial authentication attempts

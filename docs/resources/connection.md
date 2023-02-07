@@ -34,7 +34,7 @@ resource "davinci_connection" "crowd_strike" {
 }
 
 output "cowd_strike_id" {
-  value = resource.davinci_connection.crowd_strike.connection_id
+  value = resource.davinci_connection.crowd_strike.id
 }
 ```
 
@@ -45,7 +45,7 @@ output "cowd_strike_id" {
 
 - `connector_id` (String) DaVinci internal connector type. Not found in UI. Look in API read response (e.g Http Connector is 'httpConnector'
 - `environment_id` (String) PingOne environment id
-- `name` (String) Name of the connection displayed in UI. Also used for mapping connection_id on flows between environments.
+- `name` (String) Name of the connection displayed in UI. Also used for mapping id on flows between environments.
 
 ### Optional
 
@@ -53,10 +53,9 @@ output "cowd_strike_id" {
 
 ### Read-Only
 
-- `connection_id` (String) DaVinci generated identifier for the connection.
 - `created_date` (Number)
 - `customer_id` (String)
-- `id` (String) The ID of this resource.
+- `id` (String) DaVinci generated identifier for the connection.
 
 <a id="nestedblock--properties"></a>
 ### Nested Schema for `properties`
@@ -64,7 +63,7 @@ output "cowd_strike_id" {
 Required:
 
 - `name` (String) Name of the property.
-- `value` (String) Value of the property as string. If the property is an array, use a comma separated string.
+- `value` (String, Sensitive) Value of the property as string. If the property is an array, use a comma separated string.
 
 Optional:
 

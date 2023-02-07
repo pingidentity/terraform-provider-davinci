@@ -42,12 +42,13 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 }
 
 func testAccResourceApplication_Slim_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	baseHcl := acctest.BaselineHcl(resourceName)
 	hcl = fmt.Sprintf(`
 %[1]s
 
 resource "davinci_application" "%[2]s" {
 	name = "TF ACC Test"
+	depends_on = [ data.davinci_connections.read_all]
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 	oauth {
 		enabled = true
@@ -112,6 +113,7 @@ func testAccResourceApplication_WithFlowPolicy_Hcl(resourceName string) (hcl str
 resource "davinci_application" "%[2]s" {
 	name = "TF ACC Test"
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [ data.davinci_connections.read_all]
 	oauth {
 		enabled = true
 		values {
@@ -131,7 +133,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "simpleflow"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[3]s.flow_id
+      id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }
@@ -152,6 +154,7 @@ func testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName string) (h
 resource "davinci_application" "%[2]s" {
 	name = "TF ACC Test"
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [ data.davinci_connections.read_all]
 	oauth {
 		enabled = true
 		values {
@@ -171,7 +174,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "simpleflow"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[3]s.flow_id
+      id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }
@@ -180,7 +183,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "subsequentPolicy"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[3]s.flow_id
+      id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }

@@ -17,16 +17,18 @@ description: |-
 
 ### Required
 
-- `connection_id` (String) ID of the connection to retrieve.
 - `environment_id` (String) PingOne environment id
+
+### Optional
+
+- `id` (String) ID of the connection to retrieve. Either id or name must be specified.
+- `name` (String) Name of the connection to retrieve. Either id or name must be specified.
 
 ### Read-Only
 
 - `connector_id` (String)
 - `created_date` (Number)
 - `customer_id` (String)
-- `id` (String) The ID of this resource.
-- `name` (String)
 - `properties` (Set of Object) Connection configuration (see [below for nested schema](#nestedatt--properties))
 
 <a id="nestedatt--properties"></a>

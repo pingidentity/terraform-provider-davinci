@@ -1,0 +1,7 @@
+``````markdown
+```release-note:bug
+sdk: corrected ordering of wait for bootstrap to ensure 5s sleep
+resource_flow_test: added test to validate wait for bootstrap
+acctest: added models for new resource_flow_test
+```
+``````

@@ -15,10 +15,19 @@ func DataSourceConnection() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceConnectionRead,
 		Schema: map[string]*schema.Schema{
-			"connection_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the connection to retrieve.",
+			"id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "ID of the connection to retrieve. Either id or name must be specified.",
+				ExactlyOneOf: []string{"id", "name"},
+			},
+			"name": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "Name of the connection to retrieve. Either id or name must be specified.",
+				ExactlyOneOf: []string{"id", "name"},
 			},
 			"connector_id": {
 				Type:     schema.TypeString,
@@ -30,10 +39,6 @@ func DataSourceConnection() *schema.Resource {
 				Description: "PingOne environment id",
 			},
 			"customer_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -82,7 +87,23 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	connId := d.Get("connection_id").(string)
+	var connId string
+	// prep case where name is provided
+	connName, ok := d.GetOk("name")
+	if ok {
+		connId, err = getConnectionIdByName(ctx, c, connName.(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	// prep case where id is provided
+	_, ok = d.GetOk("id")
+	if ok {
+		connId = d.Get("id").(string)
+	}
+
+	// get connection by id and parse response
 	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 		return c.ReadConnection(&c.CompanyID, connId)
 	}, nil)
@@ -93,6 +114,9 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 	res, ok := sdkRes.(*dv.Connection)
 	if !ok {
 		err = fmt.Errorf("Unable to parse response from Davinci API on connection id: %v", connId)
+		return diag.FromErr(err)
+	}
+	if err := d.Set("id", res.ConnectionID); err != nil {
 		return diag.FromErr(err)
 	}
 	if err := d.Set("name", res.Name); err != nil {
@@ -120,4 +144,25 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 
 	d.SetId(connId)
 	return diags
+}
+
+func getConnectionIdByName(ctx context.Context, c *dv.APIClient, connName string) (string, error) {
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.ReadConnections(&c.CompanyID, nil)
+	}, nil)
+	if err != nil {
+		return "", err
+	}
+
+	res, ok := sdkRes.([]dv.Connection)
+	if !ok {
+		return "", fmt.Errorf("Unable to parse response from Davinci API on connection name: %v", connName)
+	}
+
+	for _, conn := range res {
+		if conn.Name == connName {
+			return conn.ConnectionID, nil
+		}
+	}
+	return "", fmt.Errorf("Unable to find connection with name: %v", connName)
 }

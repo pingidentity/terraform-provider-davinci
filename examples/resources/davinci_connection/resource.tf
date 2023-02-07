@@ -19,5 +19,5 @@ resource "davinci_connection" "crowd_strike" {
 }
 
 output "cowd_strike_id" {
-  value = resource.davinci_connection.crowd_strike.connection_id
+  value = resource.davinci_connection.crowd_strike.id
 }

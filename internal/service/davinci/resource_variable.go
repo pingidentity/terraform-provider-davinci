@@ -3,6 +3,7 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -22,12 +23,14 @@ func ResourceVariable() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Name of the variable",
+				ForceNew:    true,
 			},
 			"context": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"company", "flowInstance", "user"}, false),
 				Description:  "Must be one of: company, flowInstance, user",
+				ForceNew:     true,
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -48,6 +51,7 @@ func ResourceVariable() *schema.Resource {
 			"mutable": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Default:  true,
 			},
 			"value": {
 				Type:        schema.TypeString,
@@ -140,6 +144,11 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 		return diag.FromErr(fmt.Errorf("Received error while attempting to retrieve variable"))
 	}
 	for _, res := range resp {
+		s := strings.Split(variableName, "##SK##")
+		name := s[0]
+		if err := d.Set("name", name); err != nil {
+			return diag.FromErr(err)
+		}
 		if err := d.Set("type", res.Type); err != nil {
 			return diag.FromErr(err)
 		}

@@ -22,7 +22,7 @@ func DataSourceConnections() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"connection_id": {
+						"id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -134,11 +134,11 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m in
 	for i, connItem := range resp {
 		conn := make(map[string]interface{})
 		conn = map[string]interface{}{
-			"connection_id": connItem.ConnectionID,
-			"connector_id":  connItem.ConnectorID,
-			"name":          connItem.Name,
-			"created_date":  connItem.CreatedDate,
-			"company_id":    connItem.CompanyID,
+			"id":           connItem.ConnectionID,
+			"connector_id": connItem.ConnectorID,
+			"name":         connItem.Name,
+			"created_date": connItem.CreatedDate,
+			"company_id":   connItem.CompanyID,
 		}
 		if connItem.Properties != nil {
 			connProps := []map[string]interface{}{}

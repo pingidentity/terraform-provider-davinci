@@ -1,0 +1,5 @@
+``````markdown
+```release-note:enhancement
+datasource_davinci_connection: Added filter to get connection by name
+```
+``````

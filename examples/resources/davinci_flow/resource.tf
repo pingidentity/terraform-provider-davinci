@@ -18,15 +18,15 @@ resource "davinci_flow" "mainflow" {
   // Dependent subflows are defined in subflows blocks.
   // These should always point to managed subflows
   subflows {
-    subflow_id   = resource.davinci_flow.subflow.flow_id
-    subflow_name = resource.davinci_flow.subflow.flow_name
+    id   = resource.davinci_flow.subflow.id
+    name = resource.davinci_flow.subflow.name
   }
   // Dependent connections are defined in conections blocks. 
   // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
 
   // This sample references a managed connection
   connections {
-    connection_id   = davinci_connection.subflow.id
+    id              = davinci_connection.subflow.id
     connection_name = davinci_connection.subflow.name
   }
   // This sample uses a bootstrapped connection
@@ -43,11 +43,11 @@ resource "davinci_flow" "subflow" {
   flow_json      = file("subflow.json")
   deploy         = true
   connections {
-    connection_id   = "867ed4363b2bc21c860085ad2baa817d"
+    id              = "867ed4363b2bc21c860085ad2baa817d"
     connection_name = "Http"
   }
   connections {
-    connection_id   = davinci_connection.subflow.id
+    id              = davinci_connection.subflow.id
     connection_name = davinci_connection.subflow.name
   }
 }
