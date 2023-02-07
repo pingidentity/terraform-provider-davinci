@@ -295,7 +295,7 @@ func ResourceApplication() *schema.Resource {
 							Description: "Weighted flows that this Application will use",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"flow_id": {
+									"id": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
@@ -637,7 +637,7 @@ func expandFlowPolicies(fp interface{}) []dv.Policy {
 			for _, w := range thisPolicyFlows {
 				flPMap := w.(map[string]interface{})
 				thisFvPUpdate := dv.PolicyFlow{
-					FlowID:    flPMap["flow_id"].(string),
+					FlowID:    flPMap["id"].(string),
 					VersionID: flPMap["version_id"].(int),
 					Weight:    flPMap["weight"].(int),
 				}

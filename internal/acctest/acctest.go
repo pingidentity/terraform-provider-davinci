@@ -154,7 +154,7 @@ resource "davinci_connection" "%[1]s" {
 	}
 }
 data "davinci_connection" %[1]s" {
-	connection_id = davinci_connection.%[1]s.connection_id
+	id = davinci_connection.%[1]s.id
 }
 resource "davinci_flow" "%[1]s" {
 	flow_json = "{\"customerId\":\"dc7918cfa4b50966f8508072c2755c2c\",\"name\":\"tf testing-changed\",\"description\":\"\",\"flowStatus\":\"enabled\",\"createdDate\":1662960509175,\"updatedDate\":1662961640567,\"currentVersion\":0,\"authTokenExpireIds\":[],\"deployedDate\":1662960510106,\"functionConnectionId\":null,\"isOutputSchemaSaved\":false,\"outputSchemaCompiled\":null,\"publishedVersion\":1,\"timeouts\":null,\"flowId\":\"bb45eb4a0e8a5c9d6a21c7ac2d1b3faa\",\"companyId\":\"c431739a-29cd-4d9e-b465-0b37b2c235b1\",\"versionId\":0,\"graphData\":{\"elements\":{\"nodes\":[{\"data\":{\"id\":\"pptape4ac2\",\"nodeType\":\"CONNECTION\",\"connectionId\":\"867ed4363b2bc21c860085ad2baa817d\",\"connectorId\":\"httpConnector\",\"name\":\"Http\",\"label\":\"Http\",\"status\":\"configured\",\"capabilityName\":\"customHtmlMessage\",\"type\":\"trigger\",\"properties\":{\"message\":{\"value\":\"[\\n  {\\n    \\\"children\\\": [\\n      {\\n        \\\"text\\\": \\\"hello foobar\\\"\\n      }\\n    ]\\n  }\\n]\"}}},\"position\":{\"x\":570,\"y\":240},\"group\":\"nodes\",\"removed\":false,\"selected\":false,\"selectable\":true,\"locked\":false,\"grabbable\":true,\"pannable\":false,\"classes\":\"\"}]},\"data\":{},\"zoomingEnabled\":true,\"userZoomingEnabled\":true,\"zoom\":1,\"minZoom\":1e-50,\"maxZoom\":1e+50,\"panningEnabled\":true,\"userPanningEnabled\":true,\"pan\":{\"x\":0,\"y\":0},\"boxSelectionEnabled\":true,\"renderer\":{\"name\":\"null\"}},\"flowColor\":\"#AFD5FF\",\"connectorIds\":[\"httpConnector\"],\"savedDate\":1662961640542,\"variables\":[]}"
@@ -175,7 +175,7 @@ resource "davinci_application" "%[1]s" {
 	policies {
 		name = "tf-test-acc-%[1]s"
 		policy_flows {
-			flow_id    = resource.davinci_flow.%[1]s.flow_id
+			id    = resource.davinci_flow.%[1]s.id
 			version_id = -1
 			weight     = 100
 		}
@@ -209,7 +209,7 @@ func MainTfHclUpdate() string {
 		}
 	}
 	data "davinci_connection" "crowd_strike" {
-		connection_id = davinci_connection.crowd_strike.connection_id
+		id = davinci_connection.crowd_strike.id
 	}
 	`)
 }
@@ -229,7 +229,7 @@ resource "davinci_connection" "crowd_strike" {
 	}
 }
 data "davinci_connection" "crowd_strike" {
-	connection_id = davinci_connection.crowd_strike.connection_id
+	id = davinci_connection.crowd_strike.id
 }
 
 	`)

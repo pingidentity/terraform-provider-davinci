@@ -3,6 +3,7 @@ package sdk
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -30,6 +31,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 			return nil
 		}
 		timeout := 100
+		freshEnvTimeout := 50
 		for i := 0; i <= timeout; {
 			// initially, test if auth is valid for the target environment
 			apps, err := c.ReadApplications(&envId, nil)
@@ -38,21 +40,28 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 				if err == nil && httpErr.Status == 401 && strings.Contains(httpErr.Body, "Authorization failed") && i <= timeout {
 					if i == 0 {
 						tflog.Info(ctx, "Identified possible need to refresh access_token. Attempting refresh")
+						i = i + 1
+						time.Sleep(1 * time.Second)
+					} else {
+						i = i + 4
+						time.Sleep(4 * time.Second)
+						if i > 0 {
+							if i > freshEnvTimeout {
+								return fmt.Errorf("Unable to retrieve access_token within %ss for environment %s. Please check your credentials", strconv.Itoa(freshEnvTimeout), envId)
+							}
+							tflog.Warn(ctx, "Possible fresh DaVinci env. Retrying Auth ... ")
+						}
 					}
-					i = i + 4
-					time.Sleep(4 * time.Second)
 					err = c.InitAuth()
 					if err != nil {
 						return err
-					}
-					if i > 0 {
-						tflog.Warn(ctx, "Possible fresh DaVinci env. Retrying Auth ... ")
 					}
 					continue
 				}
 				return err
 			}
-			if i >= 4 {
+			// If auth had to be initialized, check if the target environment is ready.
+			if i >= 1 {
 				// For new environments, need to wait for bootstrapping to complete.
 				// The final step is creation of the app.
 				if len(apps) == 0 {

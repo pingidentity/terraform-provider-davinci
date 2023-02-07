@@ -28,7 +28,7 @@ func TestAccResourceFlow_SimpleFlow(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
 				),
@@ -58,7 +58,7 @@ func TestAccResourceFlow_SimpleFlowUpdate(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
 				),
@@ -66,7 +66,7 @@ func TestAccResourceFlow_SimpleFlowUpdate(t *testing.T) {
 			{
 				Config: hclDrifted,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
 				),
@@ -98,16 +98,16 @@ func TestAccResourceFlow_SubFlows(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "deploy"),
-					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "deploy"),
-					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "deploy"),
-					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "deploy"),
 				),
@@ -115,16 +115,16 @@ func TestAccResourceFlow_SubFlows(t *testing.T) {
 			{
 				Config: hclDrifted,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceMainflowFullName, "deploy"),
-					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceSubflowFullName, "deploy"),
-					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherMainflowFullName, "deploy"),
-					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "deploy"),
 				),
@@ -142,7 +142,9 @@ resource "davinci_connection" "%[2]s-flow" {
 	name = "Flow"
 	connector_id = "flowConnector"
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [data.davinci_connections.read_all]
 }
+
 `, baseHcl, resourceName)
 
 	for _, flowHcl := range flowsHcl {
@@ -202,7 +204,7 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "flow_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
 					resource.TestCheckResourceAttrWith("data.davinci_connections.variables", "connections.#", func(value string) error {

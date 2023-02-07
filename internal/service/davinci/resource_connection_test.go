@@ -27,7 +27,7 @@ func TestAccResourceConnection_Slim(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "connection_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
 				),
@@ -55,7 +55,7 @@ func TestAccResourceConnection_SlimWithUpdate(t *testing.T) {
 			{
 				Config: beforeHcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "connection_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
 				),
@@ -63,7 +63,7 @@ func TestAccResourceConnection_SlimWithUpdate(t *testing.T) {
 			{
 				Config: afterHcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "connection_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
 				),
@@ -117,7 +117,7 @@ func TestAccReadResources_Heavy(t *testing.T) {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "connection_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
 				),
@@ -170,7 +170,7 @@ resource "davinci_application" "%[2]s_simple_flow_app" {
   policies {
     name = "PingOne - Sign On and Password Reset"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[2]s_simple_flow.flow_id
+      id    = resource.davinci_flow.%[2]s_simple_flow.id
       version_id = -1
       weight     = 100
     }
@@ -188,7 +188,7 @@ resource "davinci_application" "%[2]s_simple_flow_app" {
 		connHcl := fmt.Sprintf(`
 data "davinci_connection" "http_%[2]s_%[1]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	connection_id = davinci_connection.%[2]s.connection_id
+	id = davinci_connection.%[2]s.id
 	depends_on = [data.davinci_connections.read_all]
 }
 

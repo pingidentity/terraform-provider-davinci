@@ -9,8 +9,8 @@ func makeSubflowsHcl(resourceName string, subflows []string) (subflowsHcl string
 	for _, subflowName := range subflows {
 		subflowsHcl += fmt.Sprintf(`
 	subflows {
-		subflow_id = davinci_flow.%[1]s-%[2]s.flow_id
-		subflow_name = davinci_flow.%[1]s-%[2]s.flow_name
+		id = davinci_flow.%[1]s-%[2]s.id
+		name = davinci_flow.%[1]s-%[2]s.name
 	}
 		
 `, resourceName, subflowName)
@@ -27,8 +27,8 @@ func makeFlowConnectionsHcl(resourceName string, connections []string) (connecti
 
 		connectionsHcl += fmt.Sprintf(`
 	connections {
-		connection_id = %[1]s.id
-		connection_name = %[1]s.name
+		id = %[1]s.id
+		name = %[1]s.name
 	}
 	
 `, rName)
@@ -122,7 +122,7 @@ func BsConnectionsHcl(resourceName string) string {
 		hcl := fmt.Sprintf(`
 data "davinci_connection" "%[1]s-%[2]s" {
 	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-	connection_id = "%[3]s"
+	id = "%[3]s"
 	depends_on = [data.davinci_connections.read_all]
 }
 

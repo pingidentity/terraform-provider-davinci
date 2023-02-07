@@ -93,7 +93,7 @@ Read-Only:
 
 Read-Only:
 
-- `flow_id` (String)
+- `id` (String)
 - `success_nodes` (List of String)
 - `version_id` (Number)
 - `weight` (Number)

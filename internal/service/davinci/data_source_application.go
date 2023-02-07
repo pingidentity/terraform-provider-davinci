@@ -269,7 +269,7 @@ func DataSourceApplication() *schema.Resource {
 							Description: "SAML configuration",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"flow_id": {
+									"id": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},

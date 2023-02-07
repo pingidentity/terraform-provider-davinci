@@ -18,7 +18,7 @@ func ResourceConnection() *schema.Resource {
 		UpdateContext: resourceConnectionUpdate,
 		DeleteContext: resourceConnectionDelete,
 		Schema: map[string]*schema.Schema{
-			"connection_id": {
+			"id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "DaVinci generated identifier for the connection.",
@@ -40,7 +40,7 @@ func ResourceConnection() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of the connection displayed in UI. Also used for mapping connection_id on flows between environments.",
+				Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments.",
 			},
 			"created_date": {
 				Type:     schema.TypeInt,
@@ -141,7 +141,7 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err := d.Set("name", res.Name); err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("connection_id", res.ConnectionID); err != nil {
+	if err := d.Set("id", res.ConnectionID); err != nil {
 		return diag.FromErr(err)
 	}
 	if err := d.Set("connector_id", res.ConnectorID); err != nil {

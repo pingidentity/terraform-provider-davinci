@@ -131,7 +131,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "simpleflow"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[3]s.flow_id
+      id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }
@@ -171,7 +171,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "simpleflow"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[3]s.flow_id
+      id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }
@@ -180,7 +180,7 @@ resource "davinci_application" "%[2]s" {
   policies {
     name = "subsequentPolicy"
     policy_flows {
-      flow_id    = resource.davinci_flow.%[3]s.flow_id
+      id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }

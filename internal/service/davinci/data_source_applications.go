@@ -275,7 +275,7 @@ func DataSourceApplications() *schema.Resource {
 										Description: "SAML configuration",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"flow_id": {
+												"id": {
 													Type:     schema.TypeString,
 													Computed: true,
 												},
@@ -388,7 +388,7 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 		//User pools seems to always only have one array item
 		"user_pools": map[string]interface{}{
 			"connection_id": app.UserPools[0].ConnectionID,
-			"connector_id":  app.UserPools[0].ConnectionID,
+			"connector_id":  app.UserPools[0].ConnectorID,
 		},
 	}
 
@@ -461,7 +461,7 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 		polFlows := []interface{}{}
 		for _, w := range v.PolicyFlows {
 			thisPolFlow := map[string]interface{}{
-				"flow_id":    w.FlowID,
+				"id":         w.FlowID,
 				"weight":     w.Weight,
 				"version_id": w.VersionID,
 			}

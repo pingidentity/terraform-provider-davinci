@@ -33,8 +33,8 @@ resource "davinci_flow" "mainflow" {
   // Dependent subflows are defined in subflows blocks.
   // These should always point to managed subflows
   subflows {
-    subflow_id   = resource.davinci_flow.subflow.flow_id
-    subflow_name = resource.davinci_flow.subflow.flow_name
+    id   = resource.davinci_flow.subflow.id
+    name = resource.davinci_flow.subflow.name
   }
   // Dependent connections are defined in conections blocks. 
   // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
@@ -80,13 +80,13 @@ resource "davinci_flow" "subflow" {
 
 - `connections` (Block Set) Connections this flow depends on. flow_json connectionId will be updated to connection_id matching connection_name . (see [below for nested schema](#nestedblock--connections))
 - `deploy` (Boolean) Deploy Flow after import. Flows must be deployed to be used. Defaults to `true`.
-- `subflows` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to subflow_id matching subflow_name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflows))
+- `subflows` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflows))
 - `variables` (Block Set) Dependent variables of this flow. Required to ensure mapping if flow_json contains variables. flow_json variableId will be updated to variable_id by matching variable_name. (see [below for nested schema](#nestedblock--variables))
 
 ### Read-Only
 
-- `flow_id` (String) DaVinci generated identifier after import.
-- `flow_name` (String) Computed Flow Name after import. Will match 'name' in flow_json
+- `id` (String) DaVinci generated identifier after import.
+- `name` (String) Computed Flow Name after import. Will match 'name' in flow_json
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--connections"></a>
@@ -103,8 +103,8 @@ Required:
 
 Required:
 
-- `subflow_id` (String) Subflow Flow ID that will be used when flow is imported.
-- `subflow_name` (String) Subflow Name to match when updating flow_json subflowId.
+- `id` (String) Subflow Flow ID that will be used when flow is imported.
+- `name` (String) Subflow Name to match when updating flow_json subflowId.
 
 
 <a id="nestedblock--variables"></a>
