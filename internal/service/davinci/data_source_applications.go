@@ -22,7 +22,7 @@ func DataSourceApplications() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"application_id": {
+						"id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -276,7 +276,7 @@ func DataSourceApplications() *schema.Resource {
 										Description: "SAML configuration",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"id": {
+												"flow_id": {
 													Type:     schema.TypeString,
 													Computed: true,
 												},
@@ -359,6 +359,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 		if err != nil {
 			return diag.FromErr(err)
 		}
+		app["id"] = thisApp.AppID
 		apps[i] = app
 	}
 
@@ -372,7 +373,6 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 
 func flattenApp(app *dv.App) (map[string]interface{}, error) {
 	a := map[string]interface{}{
-		"application_id":  app.AppID,
 		"environment_id":  app.CompanyID,
 		"customer_id":     app.CustomerID,
 		"name":            app.Name,
@@ -462,7 +462,7 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 		polFlows := []interface{}{}
 		for _, w := range v.PolicyFlows {
 			thisPolFlow := map[string]interface{}{
-				"id":         w.FlowID,
+				"flow_id":    w.FlowID,
 				"weight":     w.Weight,
 				"version_id": w.VersionID,
 			}

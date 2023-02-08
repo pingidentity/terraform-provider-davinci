@@ -27,6 +27,7 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(dataSourceFullName, "applications.0.environment_id"),
+					resource.TestCheckResourceAttrSet(dataSourceFullName, "applications.0.id"),
 				),
 			},
 		},

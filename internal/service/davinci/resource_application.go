@@ -23,11 +23,6 @@ func ResourceApplication() *schema.Resource {
 				Required:    true,
 				Description: "PingOne environment id",
 			},
-			"application_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "DaVinci generated identifier",
-			},
 			"customer_id": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -296,7 +291,7 @@ func ResourceApplication() *schema.Resource {
 							Description: "Weighted flows that this Application will use",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"id": {
+									"flow_id": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
@@ -418,6 +413,7 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 
 		d.Set(i, v)
 	}
+	d.SetId(resp.AppID)
 	return diags
 }
 
@@ -429,12 +425,13 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
+	appId := d.Id()
+
 	// if a new policy is added it must be created
 	if d.HasChanges("policies") {
 		_, new := d.GetChange("policies")
 		pols := expandFlowPolicies(new)
 		for _, v := range pols {
-			appId := d.Get("application_id").(string)
 			if v.PolicyID == "" {
 				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 					return c.CreateFlowPolicy(&c.CompanyID, appId, v)
@@ -468,7 +465,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		app.AppID = d.Get("application_id").(string)
+		app.AppID = d.Get("id").(string)
 
 		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 			return c.UpdateApplication(&c.CompanyID, app)
@@ -638,7 +635,7 @@ func expandFlowPolicies(fp interface{}) []dv.Policy {
 			for _, w := range thisPolicyFlows {
 				flPMap := w.(map[string]interface{})
 				thisFvPUpdate := dv.PolicyFlow{
-					FlowID:    flPMap["id"].(string),
+					FlowID:    flPMap["flow_id"].(string),
 					VersionID: flPMap["version_id"].(int),
 					Weight:    flPMap["weight"].(int),
 				}

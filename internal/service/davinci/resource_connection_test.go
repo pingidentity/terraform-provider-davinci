@@ -195,7 +195,7 @@ data "davinci_connection" "http_%[2]s_%[1]s" {
 
 data "davinci_application" "http_%[2]s_%[1]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	application_id = davinci_application.%[2]s_simple_flow_app.application_id
+	application_id = davinci_application.%[2]s_simple_flow_app.id
 	depends_on = [data.davinci_connections.read_all]
 }
 

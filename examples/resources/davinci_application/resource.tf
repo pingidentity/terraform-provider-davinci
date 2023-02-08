@@ -16,7 +16,7 @@ resource "davinci_application" "use_default_flow" {
     name   = "PingOne - Sign On and Password Reset"
     status = "enabled"
     policy_flows {
-      id         = "abc123"
+      flow_id    = var.davinci_flow_id
       version_id = -1
       weight     = 100
     }
