@@ -7,7 +7,7 @@ require (
 	github.com/golangci/golangci-lint v1.51.1
 	github.com/hashicorp/go-changelog v0.0.0-20221013053416-ba40b3a8c7ff
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
-	github.com/hashicorp/terraform-plugin-log v0.7.0
+	github.com/hashicorp/terraform-plugin-log v0.8.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/pavius/impi v0.0.3
