@@ -1,0 +1,9 @@
+``````markdown
+```release-note:enhancement
+*_davinci_application: **BREAKING CHANGE** - Change schema block `policies` to `policy`
+*_davinci_application: **BREAKING CHANGE** - Change schema block `policy_flows` to `policy_flow`
+resource_davinci_flow: **BREAKING CHANGE** - Change schema block `connections` to `connection_link`
+resource_davinci_flow: **BREAKING CHANGE** - Change schema block `subflows` to `subflow_link`
+*_davinci_connection: **BREAKING CHANGE** - Change schema block `properties` to `property
+```
+``````

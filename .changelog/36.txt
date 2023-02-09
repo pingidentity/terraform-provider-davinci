@@ -1,0 +1,5 @@
+``````markdown
+```release-note:bug
+resource_davinci_application: removed unnecessary application_id property
+```
+``````

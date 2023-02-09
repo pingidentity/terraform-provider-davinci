@@ -13,8 +13,9 @@ description: |-
 ## Example Usage
 
 ```terraform
-data "davinci_application" "one" {
-  application_id = "<app_id>"
+data "davinci_application" "by_app_id" {
+  application_id = var.application_id
+  environment_id = var.environment_id
 }
 
 output "davinci_app_one_key" {
@@ -32,15 +33,15 @@ output "davinci_app_one_key" {
 
 ### Read-Only
 
-- `api_key_enabled` (Boolean)
+- `api_key_enabled` (Boolean) Enabled by default in UI
 - `api_keys` (Map of String) Appplication Api Key
 - `created_date` (Number)
 - `customer_id` (String)
 - `id` (String) The ID of this resource.
 - `metadata` (Map of String) Appplication Metadata
-- `name` (String)
+- `name` (String) Application name
 - `oauth` (Set of Object) OIDC configuration (see [below for nested schema](#nestedatt--oauth))
-- `policies` (Set of Object) Flow Policy Config (see [below for nested schema](#nestedatt--policies))
+- `policy` (Set of Object) Flow Policy Config (see [below for nested schema](#nestedatt--policy))
 - `saml` (Set of Object) SAML configuration (see [below for nested schema](#nestedatt--saml))
 - `user_pools` (Map of String)
 - `user_portal` (Set of Object) User Profile in UI (see [below for nested schema](#nestedatt--user_portal))
@@ -58,35 +59,35 @@ Read-Only:
 
 Read-Only:
 
-- `allowed_grants` (List of String)
-- `allowed_scopes` (List of String)
+- `allowed_grants` (Set of String)
+- `allowed_scopes` (Set of String)
 - `client_secret` (String)
 - `enabled` (Boolean)
 - `enforce_signed_request_openid` (Boolean)
-- `logout_uris` (List of String)
-- `redirect_uris` (List of String)
+- `logout_uris` (Set of String)
+- `redirect_uris` (Set of String)
 - `sp_jwks_openid` (String)
 - `sp_jwks_url` (String)
 
 
 
-<a id="nestedatt--policies"></a>
-### Nested Schema for `policies`
+<a id="nestedatt--policy"></a>
+### Nested Schema for `policy`
 
 Read-Only:
 
 - `created_date` (Number)
 - `name` (String)
-- `policy_flows` (Set of Object) (see [below for nested schema](#nestedobjatt--policies--policy_flows))
+- `policy_flow` (Set of Object) (see [below for nested schema](#nestedobjatt--policy--policy_flow))
 - `policy_id` (String)
 - `status` (String)
 
-<a id="nestedobjatt--policies--policy_flows"></a>
-### Nested Schema for `policies.policy_flows`
+<a id="nestedobjatt--policy--policy_flow"></a>
+### Nested Schema for `policy.policy_flow`
 
 Read-Only:
 
-- `id` (String)
+- `flow_id` (String)
 - `success_nodes` (List of String)
 - `version_id` (Number)
 - `weight` (Number)

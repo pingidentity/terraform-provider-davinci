@@ -27,7 +27,8 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
 					//TODO - test attributes in TypeSet.
-					resource.TestCheckResourceAttrSet(resourceFullName, "application_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					// resource.TestCheckNoResourceAttr(resourceFullName, "application_id"),
 					// TODO - use this on integrated acc test
 					// resource.TestCheckTypeSetElemNestedAttrs(resourceFullName,
 					// 	"policies.0.policy_flows.*",
@@ -87,16 +88,17 @@ func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
 			{
 				Config: testAccResourceApplication_WithFlowPolicy_Hcl(resourceName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "application_id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policies.0.policy_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
+					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
 				),
 			},
 			{
 				Config: testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "application_id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policies.1.policy_id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policies.0.policy_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "policy.1.policy_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
 				),
 			},
 		},
@@ -130,10 +132,10 @@ resource "davinci_application" "%[2]s" {
 			enforce_signed_request = false
 		}
 	}
-  policies {
+  policy {
     name = "simpleflow"
-    policy_flows {
-      id    = resource.davinci_flow.%[3]s.id
+    policy_flow {
+      flow_id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }
@@ -171,19 +173,19 @@ resource "davinci_application" "%[2]s" {
 			enforce_signed_request = false
 		}
 	}
-  policies {
+  policy {
     name = "simpleflow"
-    policy_flows {
-      id    = resource.davinci_flow.%[3]s.id
+    policy_flow {
+      flow_id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }
 		status = "enabled"
   }
-  policies {
+  policy {
     name = "subsequentPolicy"
-    policy_flows {
-      id    = resource.davinci_flow.%[3]s.id
+    policy_flow {
+      flow_id    = resource.davinci_flow.%[3]s.id
       version_id = -1
       weight     = 100
     }

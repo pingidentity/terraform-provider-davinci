@@ -23,11 +23,6 @@ func ResourceApplication() *schema.Resource {
 				Required:    true,
 				Description: "PingOne environment id",
 			},
-			"application_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "DaVinci generated identifier",
-			},
 			"customer_id": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -173,6 +168,7 @@ func ResourceApplication() *schema.Resource {
 							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "OIDC configuration",
+							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
@@ -254,6 +250,7 @@ func ResourceApplication() *schema.Resource {
 						"values": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							MaxItems:    1,
 							Description: "SAML configuration",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -284,19 +281,19 @@ func ResourceApplication() *schema.Resource {
 					},
 				},
 			},
-			"policies": {
+			"policy": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Flow Policy Config",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"policy_flows": {
+						"policy_flow": {
 							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "Weighted flows that this Application will use",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"id": {
+									"flow_id": {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
@@ -418,6 +415,7 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 
 		d.Set(i, v)
 	}
+	d.SetId(resp.AppID)
 	return diags
 }
 
@@ -429,12 +427,13 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
+	appId := d.Id()
+
 	// if a new policy is added it must be created
-	if d.HasChanges("policies") {
-		_, new := d.GetChange("policies")
+	if d.HasChanges("policy") {
+		_, new := d.GetChange("policy")
 		pols := expandFlowPolicies(new)
 		for _, v := range pols {
-			appId := d.Get("application_id").(string)
 			if v.PolicyID == "" {
 				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 					return c.CreateFlowPolicy(&c.CompanyID, appId, v)
@@ -468,7 +467,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		app.AppID = d.Get("application_id").(string)
+		app.AppID = d.Get("id").(string)
 
 		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 			return c.UpdateApplication(&c.CompanyID, app)
@@ -602,7 +601,7 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	}
 
 	//Set Flow Policies
-	fp, ok := d.GetOk("policies")
+	fp, ok := d.GetOk("policy")
 	if ok {
 		fvUpdate := expandFlowPolicies(fp)
 		if len(fvUpdate) > 0 {
@@ -634,11 +633,11 @@ func expandFlowPolicies(fp interface{}) []dv.Policy {
 				Status:   flMap["status"].(string),
 				PolicyID: flMap["policy_id"].(string),
 			}
-			thisPolicyFlows := flMap["policy_flows"].(*schema.Set).List()
+			thisPolicyFlows := flMap["policy_flow"].(*schema.Set).List()
 			for _, w := range thisPolicyFlows {
 				flPMap := w.(map[string]interface{})
 				thisFvPUpdate := dv.PolicyFlow{
-					FlowID:    flPMap["id"].(string),
+					FlowID:    flPMap["flow_id"].(string),
 					VersionID: flPMap["version_id"].(int),
 					Weight:    flPMap["weight"].(int),
 				}

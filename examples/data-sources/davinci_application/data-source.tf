@@ -1,5 +1,6 @@
-data "davinci_application" "one" {
-  application_id = "<app_id>"
+data "davinci_application" "by_app_id" {
+  application_id = var.application_id
+  environment_id = var.environment_id
 }
 
 output "davinci_app_one_key" {

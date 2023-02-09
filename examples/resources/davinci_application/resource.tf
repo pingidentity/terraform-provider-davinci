@@ -12,11 +12,20 @@ resource "davinci_application" "use_default_flow" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  policies {
-    name   = "PingOne - Sign On and Password Reset"
+  policy {
+    name   = "PingOne - Authentication"
     status = "enabled"
-    policy_flows {
-      id         = "abc123"
+    policy_flow {
+      flow_id    = var.davinci_flow_id
+      version_id = -1
+      weight     = 100
+    }
+  }
+  policy {
+    name   = "PingOne - Registration"
+    status = "enabled"
+    policy_flow {
+      flow_id    = resource.davinci_flow.registration.id
       version_id = -1
       weight     = 100
     }

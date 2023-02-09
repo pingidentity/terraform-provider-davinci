@@ -46,7 +46,7 @@ func DataSourceConnection() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"properties": {
+			"property": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Connection configuration",
@@ -138,7 +138,7 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("properties", props); err != nil {
+	if err := d.Set("property", props); err != nil {
 		return diag.FromErr(err)
 	}
 

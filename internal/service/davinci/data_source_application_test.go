@@ -27,6 +27,7 @@ func TestAccDatasourceApplication_Slim(t *testing.T) {
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(dataSourceFullName, "name"),
+					resource.TestCheckResourceAttrSet(dataSourceFullName, "id"),
 				),
 			},
 		},

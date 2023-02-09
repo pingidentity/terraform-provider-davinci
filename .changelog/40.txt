@@ -1,6 +1,6 @@
 ``````markdown
 ```release-note:bug
-resource_davinci_application.go: Marked connection property value field at "Sensitive"
-data_source_davinci_application.go: Marked connection property value field at "Sensitive"
+resource_davinci_application: Marked connection property value field at "Sensitive"
+data_source_davinci_application: Marked connection property value field at "Sensitive"
 ```
 ``````
