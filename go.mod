@@ -15,8 +15,6 @@ require (
 	github.com/terraform-linters/tflint v0.44.1
 )
 
-// replace github.com/samir-gandhi/davinci-client-go => /home/ubuntu/go/src/github.com/samir-gandhi/davinci-client-go
-
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
 	4d63.com/gochecknoglobals v0.2.1 // indirect
