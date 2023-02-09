@@ -29,23 +29,26 @@ func DataSourceApplication() *schema.Resource {
 				Computed: true,
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Application name",
 			},
 			"created_date": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"api_key_enabled": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enabled by default in UI",
 			},
 			"api_keys": {
 				Type:        schema.TypeMap,
 				Computed:    true,
 				Description: "Appplication Api Key",
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type:      schema.TypeString,
+					Sensitive: true,
 				},
 			},
 			"metadata": {
@@ -67,7 +70,6 @@ func DataSourceApplication() *schema.Resource {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "User Profile in UI",
-				// MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"up_title": {
@@ -149,7 +151,6 @@ func DataSourceApplication() *schema.Resource {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "OIDC configuration",
-				// MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
@@ -184,28 +185,28 @@ func DataSourceApplication() *schema.Resource {
 										Computed: true,
 									},
 									"redirect_uris": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Computed: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
 									},
 									"logout_uris": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Computed: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
 									},
 									"allowed_scopes": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Computed: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
 									},
 									"allowed_grants": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Computed: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
@@ -221,7 +222,6 @@ func DataSourceApplication() *schema.Resource {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "SAML configuration",
-				// MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"values": {
@@ -257,26 +257,25 @@ func DataSourceApplication() *schema.Resource {
 					},
 				},
 			},
-			"policies": {
+			"policy": {
 				Type:        schema.TypeSet,
 				Computed:    true,
 				Description: "Flow Policy Config",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"policy_flows": {
+						"policy_flow": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							Description: "SAML configuration",
+							Description: "Weighted flows that this Application will use",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"id": {
+									"flow_id": {
 										Type:     schema.TypeString,
 										Computed: true,
 									},
 									"version_id": {
-										Type:      schema.TypeInt,
-										Computed:  true,
-										Sensitive: true,
+										Type:     schema.TypeInt,
+										Computed: true,
 									},
 									"weight": {
 										Type:     schema.TypeInt,

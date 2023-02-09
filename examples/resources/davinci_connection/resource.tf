@@ -8,11 +8,11 @@ resource "davinci_connection" "crowd_strike" {
   connector_id   = "crowdStrikeConnector"
   environment_id = var.pingone_environment_id
   name           = "CrowdStrike"
-  properties {
+  property {
     name  = "clientId"
     value = "12345678"
   }
-  properties {
+  property {
     name  = "clientSecret"
     value = "12345"
   }

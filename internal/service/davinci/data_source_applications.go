@@ -27,24 +27,27 @@ func DataSourceApplications() *schema.Resource {
 							Computed: true,
 						},
 						"environment_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "PingOne environment id",
 						},
 						"customer_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Application name",
 						},
 						"created_date": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
 						"api_key_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Enabled by default in UI",
 						},
 						"api_keys": {
 							Type:        schema.TypeMap,
@@ -74,7 +77,6 @@ func DataSourceApplications() *schema.Resource {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "User Profile in UI",
-							// MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"up_title": {
@@ -156,7 +158,6 @@ func DataSourceApplications() *schema.Resource {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "OIDC configuration",
-							// MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
@@ -191,28 +192,28 @@ func DataSourceApplications() *schema.Resource {
 													Computed: true,
 												},
 												"redirect_uris": {
-													Type:     schema.TypeList,
+													Type:     schema.TypeSet,
 													Computed: true,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"logout_uris": {
-													Type:     schema.TypeList,
+													Type:     schema.TypeSet,
 													Computed: true,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"allowed_scopes": {
-													Type:     schema.TypeList,
+													Type:     schema.TypeSet,
 													Computed: true,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"allowed_grants": {
-													Type:     schema.TypeList,
+													Type:     schema.TypeSet,
 													Computed: true,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
@@ -228,7 +229,6 @@ func DataSourceApplications() *schema.Resource {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "SAML configuration",
-							// MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"values": {
@@ -264,16 +264,16 @@ func DataSourceApplications() *schema.Resource {
 								},
 							},
 						},
-						"policies": {
+						"policy": {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "Flow Policy Config",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"policy_flows": {
+									"policy_flow": {
 										Type:        schema.TypeSet,
 										Computed:    true,
-										Description: "SAML configuration",
+										Description: "Weighted flows that this Application will use",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"flow_id": {
@@ -281,9 +281,8 @@ func DataSourceApplications() *schema.Resource {
 													Computed: true,
 												},
 												"version_id": {
-													Type:      schema.TypeInt,
-													Computed:  true,
-													Sensitive: true,
+													Type:     schema.TypeInt,
+													Computed: true,
 												},
 												"weight": {
 													Type:     schema.TypeInt,
@@ -470,14 +469,14 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 		}
 
 		pols = append(pols, map[string]interface{}{
-			"policy_flows": polFlows,
+			"policy_flow":  polFlows,
 			"name":         v.Name,
 			"status":       v.Status,
 			"policy_id":    v.PolicyID,
 			"created_date": v.CreatedDate,
 		})
 	}
-	a["policies"] = pols
+	a["policy"] = pols
 
 	//Return
 	return a, nil

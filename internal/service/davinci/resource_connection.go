@@ -46,7 +46,7 @@ func ResourceConnection() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"properties": {
+			"property": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
@@ -161,7 +161,7 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	if err := d.Set("properties", props); err != nil {
+	if err := d.Set("property", props); err != nil {
 		return diag.FromErr(err)
 	}
 	return diags
@@ -175,7 +175,7 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, m int
 		return diag.FromErr(err)
 	}
 	connId := d.Id()
-	if d.HasChanges("properties", "name") {
+	if d.HasChanges("property", "name") {
 		connection := dv.Connection{
 			ConnectorID:  d.Get("connector_id").(string),
 			Name:         d.Get("name").(string),
@@ -285,7 +285,7 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 
 func makeProperties(d *schema.ResourceData) *dv.Properties {
 	connProps := dv.Properties{}
-	props := d.Get("properties").(*schema.Set).List()
+	props := d.Get("property").(*schema.Set).List()
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
 		connProps[prop["name"].(string)] = map[string]interface{}{

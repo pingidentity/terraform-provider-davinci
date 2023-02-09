@@ -23,11 +23,11 @@ resource "davinci_connection" "crowd_strike" {
   connector_id   = "crowdStrikeConnector"
   environment_id = var.pingone_environment_id
   name           = "CrowdStrike"
-  properties {
+  property {
     name  = "clientId"
     value = "12345678"
   }
-  properties {
+  property {
     name  = "clientSecret"
     value = "12345"
   }
@@ -49,7 +49,7 @@ output "cowd_strike_id" {
 
 ### Optional
 
-- `properties` (Block Set) Connection properties. These are specific to the connector type. Get connection properties from connection API read response. (see [below for nested schema](#nestedblock--properties))
+- `property` (Block Set) Connection properties. These are specific to the connector type. Get connection properties from connection API read response. (see [below for nested schema](#nestedblock--property))
 
 ### Read-Only
 
@@ -57,8 +57,8 @@ output "cowd_strike_id" {
 - `customer_id` (String)
 - `id` (String) DaVinci generated identifier for the connection.
 
-<a id="nestedblock--properties"></a>
-### Nested Schema for `properties`
+<a id="nestedblock--property"></a>
+### Nested Schema for `property`
 
 Required:
 

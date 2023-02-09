@@ -29,7 +29,7 @@ provider "pingone" {
 }
 
 resource "pingone_environment" "tf_trial" {
-  name        = "Temp TF Trial"
+  name        = "TF Trial"
   description = "My new environment"
   type        = "SANDBOX"
   license_id  = var.license_id
@@ -78,27 +78,27 @@ data "davinci_connections" "read_all" {
 
 // Sample connection resource. Property names must be discovered by looking at API read response
 resource "davinci_connection" "mfa" {
-  depends_on     = [data.davinci_connections.all]
+  depends_on     = [data.davinci_connections.read_all]
   environment_id = resource.pingone_role_assignment_user.samir_tf_trial.scope_environment_id
   connector_id   = "pingOneMfaConnector"
   name           = "PingOne MFA"
-  properties {
+  property {
     name  = "clientId"
     value = "abc"
   }
-  properties {
+  property {
     name  = "clientSecret"
     value = "abc"
   }
-  properties {
+  property {
     name  = "envId"
     value = "abc"
   }
-  properties {
+  property {
     name  = "policyId"
     value = "abc"
   }
-  properties {
+  property {
     name  = "region"
     value = "EU"
   }
@@ -114,13 +114,13 @@ resource "davinci_flow" "mainflow" {
   // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
 
   // This sample references a managed connection
-  connections {
+  connection_link {
     name = resource.davinci_connection.mfa.name
     // 
     id = resource.davinci_connection.mfa.id
   }
   // This sample uses a bootstrapped connection
-  connections {
+  connection_link {
     name = "Http"
     // default connection id for the bootstrapped Http connector
     id = "867ed4363b2bc21c860085ad2baa817d"
@@ -128,7 +128,7 @@ resource "davinci_flow" "mainflow" {
 
   // Dependent subflows are defined in subflows blocks.
   // These should always point to managed subflows
-  subflows {
+  subflow_link {
     id   = resource.davinci_flow.subflow.id
     name = resource.davinci_flow.subflow.name
   }

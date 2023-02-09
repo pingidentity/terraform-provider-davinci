@@ -27,11 +27,20 @@ resource "davinci_application" "use_default_flow" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  policies {
-    name   = "PingOne - Sign On and Password Reset"
+  policy {
+    name   = "PingOne - Authentication"
     status = "enabled"
-    policy_flows {
-      id         = "abc123"
+    policy_flow {
+      flow_id    = var.davinci_flow_id
+      version_id = -1
+      weight     = 100
+    }
+  }
+  policy {
+    name   = "PingOne - Registration"
+    status = "enabled"
+    policy_flow {
+      flow_id    = resource.davinci_flow.registration.id
       version_id = -1
       weight     = 100
     }
@@ -62,13 +71,12 @@ output "default_app_test_key" {
 
 - `api_key_enabled` (Boolean) Enabled by default in UI Defaults to `true`.
 - `oauth` (Block Set, Max: 1) OIDC configuration (see [below for nested schema](#nestedblock--oauth))
-- `policies` (Block Set) Flow Policy Config (see [below for nested schema](#nestedblock--policies))
+- `policy` (Block Set) Flow Policy Config (see [below for nested schema](#nestedblock--policy))
 - `user_portal` (Block Set, Max: 1) User Profile in UI (see [below for nested schema](#nestedblock--user_portal))
 
 ### Read-Only
 
 - `api_keys` (Map of String) Appplication Api Key
-- `application_id` (String) DaVinci generated identifier
 - `created_date` (Number)
 - `customer_id` (String)
 - `id` (String) The ID of this resource.
@@ -80,7 +88,7 @@ output "default_app_test_key" {
 
 Optional:
 
-- `values` (Block Set) SAML configuration (see [below for nested schema](#nestedblock--saml--values))
+- `values` (Block Set, Max: 1) SAML configuration (see [below for nested schema](#nestedblock--saml--values))
 
 <a id="nestedblock--saml--values"></a>
 ### Nested Schema for `saml.values`
@@ -101,7 +109,7 @@ Optional:
 Optional:
 
 - `enabled` (Boolean) Defaults to `true`.
-- `values` (Block Set) OIDC configuration (see [below for nested schema](#nestedblock--oauth--values))
+- `values` (Block Set, Max: 1) OIDC configuration (see [below for nested schema](#nestedblock--oauth--values))
 
 <a id="nestedblock--oauth--values"></a>
 ### Nested Schema for `oauth.values`
@@ -123,13 +131,13 @@ Read-Only:
 
 
 
-<a id="nestedblock--policies"></a>
-### Nested Schema for `policies`
+<a id="nestedblock--policy"></a>
+### Nested Schema for `policy`
 
 Optional:
 
 - `name` (String)
-- `policy_flows` (Block Set) Weighted flows that this Application will use (see [below for nested schema](#nestedblock--policies--policy_flows))
+- `policy_flow` (Block Set) Weighted flows that this Application will use (see [below for nested schema](#nestedblock--policy--policy_flow))
 - `status` (String) Defaults to `enabled`.
 
 Read-Only:
@@ -137,18 +145,15 @@ Read-Only:
 - `created_date` (Number)
 - `policy_id` (String)
 
-<a id="nestedblock--policies--policy_flows"></a>
-### Nested Schema for `policies.policy_flows`
+<a id="nestedblock--policy--policy_flow"></a>
+### Nested Schema for `policy.policy_flow`
 
 Optional:
 
+- `flow_id` (String)
 - `success_nodes` (List of String)
 - `version_id` (Number)
 - `weight` (Number)
-
-Read-Only:
-
-- `id` (String) The ID of this resource.
 
 
 

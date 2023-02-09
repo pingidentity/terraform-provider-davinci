@@ -17,7 +17,7 @@ description: |-
 data "davinci_connections" "all" {
 }
 
-resource "davinci_connection" "subflow" {
+resource "davinci_connection" "flow" {
   name           = "Flow"
   connector_id   = "flowConnector"
   environment_id = var.environment_id
@@ -32,7 +32,7 @@ resource "davinci_flow" "mainflow" {
 
   // Dependent subflows are defined in subflows blocks.
   // These should always point to managed subflows
-  subflows {
+  subflow_link {
     id   = resource.davinci_flow.subflow.id
     name = resource.davinci_flow.subflow.name
   }
@@ -40,12 +40,12 @@ resource "davinci_flow" "mainflow" {
   // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
 
   // This sample references a managed connection
-  connections {
-    id              = davinci_connection.subflow.id
-    connection_name = davinci_connection.subflow.name
+  connection_link {
+    id   = davinci_connection.flow.id
+    name = davinci_connection.flow.name
   }
   // This sample uses a bootstrapped connection
-  connections {
+  connection_link {
     name = "Http"
     // default connection id for the bootstrapped Http connector
     id = "867ed4363b2bc21c860085ad2baa817d"
@@ -57,13 +57,13 @@ resource "davinci_flow" "subflow" {
   environment_id = var.environment_id
   flow_json      = file("subflow.json")
   deploy         = true
-  connections {
-    id              = "867ed4363b2bc21c860085ad2baa817d"
-    connection_name = "Http"
+  connection_link {
+    id   = "867ed4363b2bc21c860085ad2baa817d"
+    name = "Http"
   }
-  connections {
-    id              = davinci_connection.subflow.id
-    connection_name = davinci_connection.subflow.name
+  connection_link {
+    id   = davinci_connection.flow.id
+    name = davinci_connection.flow.name
   }
 }
 ```
@@ -78,18 +78,17 @@ resource "davinci_flow" "subflow" {
 
 ### Optional
 
-- `connections` (Block Set) Connections this flow depends on. flow_json connectionId will be updated to id matching name . (see [below for nested schema](#nestedblock--connections))
+- `connection_link` (Block Set) Connections this flow depends on. flow_json connectionId will be updated to id matching name . (see [below for nested schema](#nestedblock--connection_link))
 - `deploy` (Boolean) Deploy Flow after import. Flows must be deployed to be used. Defaults to `true`.
-- `subflows` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflows))
-- `variables` (Block Set) Dependent variables of this flow. Required to ensure mapping if flow_json contains variables. flow_json variableId will be updated to variable_id by matching variable_name. (see [below for nested schema](#nestedblock--variables))
+- `subflow_link` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflow_link))
 
 ### Read-Only
 
 - `id` (String) DaVinci generated identifier after import.
 - `name` (String) Computed Flow Name after import. Will match 'name' in flow_json
 
-<a id="nestedblock--connections"></a>
-### Nested Schema for `connections`
+<a id="nestedblock--connection_link"></a>
+### Nested Schema for `connection_link`
 
 Required:
 
@@ -97,21 +96,12 @@ Required:
 - `name` (String) Connection Name to match when updating flow_json connectionId.
 
 
-<a id="nestedblock--subflows"></a>
-### Nested Schema for `subflows`
+<a id="nestedblock--subflow_link"></a>
+### Nested Schema for `subflow_link`
 
 Required:
 
 - `id` (String) Subflow Flow ID that will be used when flow is imported.
 - `name` (String) Subflow Name to match when updating flow_json subflowId.
-
-
-<a id="nestedblock--variables"></a>
-### Nested Schema for `variables`
-
-Required:
-
-- `variable_id` (String) Variable ID that will be used when flow is imported.
-- `variable_name` (String) Variable Name to match when updating flow_json variableId.
 
 

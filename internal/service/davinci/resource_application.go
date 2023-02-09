@@ -168,6 +168,7 @@ func ResourceApplication() *schema.Resource {
 							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "OIDC configuration",
+							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
@@ -249,6 +250,7 @@ func ResourceApplication() *schema.Resource {
 						"values": {
 							Type:        schema.TypeSet,
 							Optional:    true,
+							MaxItems:    1,
 							Description: "SAML configuration",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -279,13 +281,13 @@ func ResourceApplication() *schema.Resource {
 					},
 				},
 			},
-			"policies": {
+			"policy": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Flow Policy Config",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"policy_flows": {
+						"policy_flow": {
 							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "Weighted flows that this Application will use",
@@ -428,8 +430,8 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 	appId := d.Id()
 
 	// if a new policy is added it must be created
-	if d.HasChanges("policies") {
-		_, new := d.GetChange("policies")
+	if d.HasChanges("policy") {
+		_, new := d.GetChange("policy")
 		pols := expandFlowPolicies(new)
 		for _, v := range pols {
 			if v.PolicyID == "" {
@@ -599,7 +601,7 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	}
 
 	//Set Flow Policies
-	fp, ok := d.GetOk("policies")
+	fp, ok := d.GetOk("policy")
 	if ok {
 		fvUpdate := expandFlowPolicies(fp)
 		if len(fvUpdate) > 0 {
@@ -631,7 +633,7 @@ func expandFlowPolicies(fp interface{}) []dv.Policy {
 				Status:   flMap["status"].(string),
 				PolicyID: flMap["policy_id"].(string),
 			}
-			thisPolicyFlows := flMap["policy_flows"].(*schema.Set).List()
+			thisPolicyFlows := flMap["policy_flow"].(*schema.Set).List()
 			for _, w := range thisPolicyFlows {
 				flPMap := w.(map[string]interface{})
 				thisFvPUpdate := dv.PolicyFlow{
