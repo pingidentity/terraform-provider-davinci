@@ -29,10 +29,10 @@ description: |-
 - `connector_id` (String)
 - `created_date` (Number)
 - `customer_id` (String)
-- `properties` (Set of Object) Connection configuration (see [below for nested schema](#nestedatt--properties))
+- `property` (Set of Object) Connection configuration (see [below for nested schema](#nestedatt--property))
 
-<a id="nestedatt--properties"></a>
-### Nested Schema for `properties`
+<a id="nestedatt--property"></a>
+### Nested Schema for `property`
 
 Read-Only:
 

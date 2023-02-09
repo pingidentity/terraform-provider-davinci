@@ -56,10 +56,10 @@ Read-Only:
 - `customer_id` (String)
 - `id` (String)
 - `name` (String)
-- `properties` (Set of Object) (see [below for nested schema](#nestedobjatt--connections--properties))
+- `property` (Set of Object) (see [below for nested schema](#nestedobjatt--connections--property))
 
-<a id="nestedobjatt--connections--properties"></a>
-### Nested Schema for `connections.properties`
+<a id="nestedobjatt--connections--property"></a>
+### Nested Schema for `connections.property`
 
 Read-Only:
 
