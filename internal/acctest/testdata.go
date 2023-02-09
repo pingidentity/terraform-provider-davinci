@@ -8,7 +8,7 @@ import (
 func makeSubflowsHcl(resourceName string, subflows []string) (subflowsHcl string) {
 	for _, subflowName := range subflows {
 		subflowsHcl += fmt.Sprintf(`
-	subflow {
+	subflow_link {
 		id = davinci_flow.%[1]s-%[2]s.id
 		name = davinci_flow.%[1]s-%[2]s.name
 	}

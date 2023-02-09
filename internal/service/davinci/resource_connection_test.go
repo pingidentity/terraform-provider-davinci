@@ -81,13 +81,14 @@ func testAccResourceConnection_Slim_Hcl(resourceName, valuePrefix string) (hcl s
 
 resource "davinci_connection" "%[2]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [data.davinci_connections.read_all]
 	connector_id = "crowdStrikeConnector"
 	name         = "%[2]s"
-	properties {
+	property {
 		name  = "clientId"
 		value = "%[3]s"
 	}
-	properties {
+	property {
 		name  = "clientSecret"
 		value = "%[3]s"
 	}
@@ -137,11 +138,11 @@ resource "davinci_connection" "%[2]s" {
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 	connector_id = "crowdStrikeConnector"
 	name         = "%[2]s"
-	properties {
+	property {
 		name  = "clientId"
 		value = "%[3]s"
 	}
-	properties {
+	property {
 		name  = "clientSecret"
 		value = "%[3]s"
 	}
@@ -168,10 +169,10 @@ resource "davinci_application" "%[2]s_simple_flow_app" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  policies {
+  policy {
     name = "PingOne - Sign On and Password Reset"
-    policy_flows {
-      id    = resource.davinci_flow.%[2]s_simple_flow.id
+    policy_flow {
+      flow_id    = resource.davinci_flow.%[2]s_simple_flow.id
       version_id = -1
       weight     = 100
     }
