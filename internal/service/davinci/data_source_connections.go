@@ -46,7 +46,7 @@ func DataSourceConnections() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"properties": {
+						"property": {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Description: "Connection configuration",
@@ -181,7 +181,7 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, m in
 				}
 				connProps = append(connProps, thisProp)
 			}
-			conn["properties"] = connProps
+			conn["property"] = connProps
 		}
 		conns[i] = conn
 	}
