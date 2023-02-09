@@ -1,5 +1,5 @@
 ``````markdown
-```release-note:documentation
+```release-note:docs
 examples/**: updated to reflect latest schema changes
 ```
 ``````
