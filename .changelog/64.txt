@@ -1,0 +1,5 @@
+``````markdown
+```release-note:docs
+resource_application.go: Updated to use correct validation func
+```
+``````

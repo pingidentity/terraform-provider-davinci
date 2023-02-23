@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -211,16 +212,16 @@ func ResourceApplication() *schema.Resource {
 										Type:     schema.TypeSet,
 										Optional: true,
 										Elem: &schema.Schema{
-											Type:         schema.TypeString,
-											ExactlyOneOf: []string{"openid", "profile", "flow_analytics"},
+											Type:             schema.TypeString,
+											ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"openid", "profile", "flow_analytics"}, false)),
 										},
 									},
 									"allowed_grants": {
 										Type:     schema.TypeSet,
 										Optional: true,
 										Elem: &schema.Schema{
-											Type:         schema.TypeString,
-											ExactlyOneOf: []string{"authorizationCode", "clientCredentials", "implicit"},
+											Type:             schema.TypeString,
+											ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"authorizationCode", "clientCredentials", "implicit"}, false)),
 										},
 									},
 								},
