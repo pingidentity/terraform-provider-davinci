@@ -116,9 +116,9 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m int
 		err = fmt.Errorf("Unable to parse response from Davinci API on connection id: %v", connId)
 		return diag.FromErr(err)
 	}
-	if err := d.Set("id", res.ConnectionID); err != nil {
-		return diag.FromErr(err)
-	}
+
+	d.SetId(res.ConnectionID)
+
 	if err := d.Set("name", res.Name); err != nil {
 		return diag.FromErr(err)
 	}

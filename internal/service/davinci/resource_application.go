@@ -468,7 +468,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		app.AppID = d.Get("id").(string)
+		app.AppID = d.Id()
 
 		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 			return c.UpdateApplication(&c.CompanyID, app)

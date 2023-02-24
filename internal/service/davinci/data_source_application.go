@@ -15,9 +15,18 @@ func DataSourceApplication() *schema.Resource {
 		ReadContext: dataSourceApplicationRead,
 		Schema: map[string]*schema.Schema{
 			"application_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the application to retrieve.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "DEPRECATED: Use field 'id'. id of the application to retrieve.",
+				ExactlyOneOf: []string{"id", "application_id"},
+			},
+			"id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "id of the application to retrieve.",
+				ExactlyOneOf: []string{"id", "application_id"},
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -323,7 +332,23 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, m in
 		return diag.FromErr(err)
 	}
 
-	appId := d.Get("application_id").(string)
+	// TODO: remove this once application_id is removed
+	appIdInt, ok := d.GetOk("application_id")
+	if ok {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "application_id is deprecated, please use id instead",
+			Detail:   fmt.Sprintf(`application_id is deprecated and will be removed in a future release, please use id instead`),
+		})
+	}
+	if !ok {
+		appIdInt, ok = d.GetOk("id")
+		if !ok {
+			return diag.FromErr(fmt.Errorf("id must be set"))
+		}
+	}
+	appId := appIdInt.(string)
+
 	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 		return c.ReadApplication(&c.CompanyID, appId)
 	}, nil)
@@ -342,6 +367,9 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, m in
 		d.Set(i, v)
 	}
 
+	// TODO: remove this once application_id is removed
+	d.Set("application_id", resp.AppID)
 	d.SetId(resp.AppID)
+
 	return diags
 }

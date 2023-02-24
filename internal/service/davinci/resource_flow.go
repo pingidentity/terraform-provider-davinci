@@ -33,15 +33,10 @@ func ResourceFlow() *schema.Resource {
 				Default:     true,
 				Description: "Deploy Flow after import. Flows must be deployed to be used.",
 			},
-			"id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "DaVinci generated identifier after import.",
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Computed Flow Name after import. Will match 'name' in flow_json",
+				Description: "Computed Flow Name after import. Matches 'name' in flow_json",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -196,9 +191,9 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		d.SetId("")
 		return diags
 	}
-	if err := d.Set("id", res.Flow.FlowID); err != nil {
-		return diag.FromErr(err)
-	}
+
+	d.SetId(res.Flow.FlowID)
+
 	if err := d.Set("name", res.Flow.Name); err != nil {
 		return diag.FromErr(err)
 	}
@@ -272,7 +267,7 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	flowId := d.Get("id").(string)
+	flowId := d.Id()
 
 	if d.HasChanges("flow_json", "connection_link", "subflow_link") {
 		flowJson := d.Get("flow_json").(string)
@@ -463,7 +458,7 @@ func deployIfNeeded(ctx context.Context, c *dv.APIClient, d *schema.ResourceData
 	if isDeploy {
 		_, err := c.DeployFlow(&c.CompanyID, flowId)
 		if err != nil {
-			return err
+			return fmt.Errorf("Possible misconfigured flow: %v", err)
 		}
 	}
 	return nil

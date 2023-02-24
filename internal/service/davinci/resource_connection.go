@@ -18,11 +18,6 @@ func ResourceConnection() *schema.Resource {
 		UpdateContext: resourceConnectionUpdate,
 		DeleteContext: resourceConnectionDelete,
 		Schema: map[string]*schema.Schema{
-			"id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "DaVinci generated identifier for the connection.",
-			},
 			"connector_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -50,6 +45,8 @@ func ResourceConnection() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
+				// Not yet implemented
+				// ConflictsWith: []string{"custom_auth"},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -71,6 +68,22 @@ func ResourceConnection() *schema.Resource {
 					},
 				},
 			},
+			// Not yet implemented
+			// "custom_auth": {
+			// 	Type:          schema.TypeSet,
+			// 	Optional:      true,
+			// 	Description:   "Properties for CustomAuth type Connectors (Example, OIDC Connector, Social Login)",
+			// 	MinItems:      1,
+			// 	ConflictsWith: []string{"property"},
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"provider_name": {
+			// 				Type:     schema.TypeString,
+			// 				Optional: true,
+			// 			},
+			// 		},
+			// 	},
+			// },
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -139,10 +152,9 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m inter
 		return diag.FromErr(err)
 	}
 
+	d.SetId(res.ConnectionID)
+
 	if err := d.Set("name", res.Name); err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("id", res.ConnectionID); err != nil {
 		return diag.FromErr(err)
 	}
 	if err := d.Set("connector_id", res.ConnectorID); err != nil {

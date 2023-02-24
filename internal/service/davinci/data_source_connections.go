@@ -23,8 +23,9 @@ func DataSourceConnections() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "connection_id for this connection.",
 						},
 						"connector_id": {
 							Type:     schema.TypeString,
