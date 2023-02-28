@@ -28,8 +28,12 @@ output "davinci_app_one_key" {
 
 ### Required
 
-- `application_id` (String) ID of the application to retrieve.
 - `environment_id` (String) PingOne environment id
+
+### Optional
+
+- `application_id` (String) DEPRECATED: Use field 'id'. id of the application to retrieve.
+- `id` (String) id of the application to retrieve.
 
 ### Read-Only
 
@@ -37,7 +41,6 @@ output "davinci_app_one_key" {
 - `api_keys` (Map of String) Appplication Api Key
 - `created_date` (Number)
 - `customer_id` (String)
-- `id` (String) The ID of this resource.
 - `metadata` (Map of String) Appplication Metadata
 - `name` (String) Application name
 - `oauth` (Set of Object) OIDC configuration (see [below for nested schema](#nestedatt--oauth))

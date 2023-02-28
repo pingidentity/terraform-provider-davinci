@@ -76,12 +76,12 @@ output "default_app_test_key" {
 
 ### Read-Only
 
-- `api_keys` (Map of String) Appplication Api Key
-- `created_date` (Number)
-- `customer_id` (String)
+- `api_keys` (Map of String) Appplication Api Key. Returned value for prod field is most commonly used.
+- `created_date` (Number) Creation date as epoch.
+- `customer_id` (String) Internal DaVinci id. Should not be set by user.
 - `id` (String) The ID of this resource.
 - `metadata` (Map of String) Appplication Metadata
-- `user_pools` (Map of String)
+- `user_pools` (Map of String) Appplication User Pools. Not implemented
 
 <a id="nestedblock--saml"></a>
 ### Nested Schema for `saml`

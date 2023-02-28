@@ -84,8 +84,8 @@ resource "davinci_flow" "subflow" {
 
 ### Read-Only
 
-- `id` (String) DaVinci generated identifier after import.
-- `name` (String) Computed Flow Name after import. Will match 'name' in flow_json
+- `id` (String) The ID of this resource.
+- `name` (String) Computed Flow Name after import. Matches 'name' in flow_json
 
 <a id="nestedblock--connection_link"></a>
 ### Nested Schema for `connection_link`

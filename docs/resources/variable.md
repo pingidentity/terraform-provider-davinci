@@ -38,8 +38,8 @@ resource "davinci_variable" "my_global_var" {
 - `description` (String) Description of variable
 - `max` (Number) Defaults to `2000`.
 - `min` (Number) Defaults to `0`.
-- `mutable` (Boolean) Defaults to `true`.
-- `value` (String, Sensitive) Value as string, type will be inferred
+- `mutable` (Boolean) If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow. Defaults to `true`.
+- `value` (String, Sensitive) Variable value as string, type will be inferred
 
 ### Read-Only
 

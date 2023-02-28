@@ -53,9 +53,9 @@ output "cowd_strike_id" {
 
 ### Read-Only
 
-- `created_date` (Number)
-- `customer_id` (String)
-- `id` (String) DaVinci generated identifier for the connection.
+- `created_date` (Number) Creation date as epoch.
+- `customer_id` (String) Internal DaVinci id. Should not be set by user.
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--property"></a>
 ### Nested Schema for `property`
@@ -67,6 +67,6 @@ Required:
 
 Optional:
 
-- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: string, boolean. Use 'string' for array
+- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array
 
 
