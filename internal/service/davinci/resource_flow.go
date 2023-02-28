@@ -132,7 +132,12 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 	}, nil)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Error Importing Flow",
+			Detail:   fmt.Sprintf(`This may indicate the flow contains unconfigured nodes. Additionally the flow may have been imported as an unmanaged resource and may require manual intervention. API Error: %v`, err),
+		})
+		return diags
 	}
 	res, ok := sdkRes.(*dv.Flow)
 	if !ok || res.Name == "" {

@@ -49,14 +49,15 @@ func ResourceVariable() *schema.Resource {
 				Description:  "Must be one of: string, number, boolean, object",
 			},
 			"mutable": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow.",
 			},
 			"value": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Value as string, type will be inferred",
+				Description: "Variable value as string, type will be inferred",
 				Sensitive:   true,
 			},
 			"min": {

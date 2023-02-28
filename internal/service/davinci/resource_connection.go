@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -29,8 +30,9 @@ func ResourceConnection() *schema.Resource {
 				Description: "PingOne environment id",
 			},
 			"customer_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internal DaVinci id. Should not be set by user.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -38,8 +40,9 @@ func ResourceConnection() *schema.Resource {
 				Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments.",
 			},
 			"created_date": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Creation date as epoch.",
 			},
 			"property": {
 				Type:        schema.TypeSet,
@@ -61,9 +64,10 @@ func ResourceConnection() *schema.Resource {
 							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Type of the property. This is used to cast the value to the correct type. Must be: string, boolean. Use 'string' for array",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
+							ValidateFunc: validation.StringInSlice([]string{"string", "boolean"}, false),
 						},
 					},
 				},

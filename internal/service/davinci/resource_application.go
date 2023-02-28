@@ -25,8 +25,9 @@ func ResourceApplication() *schema.Resource {
 				Description: "PingOne environment id",
 			},
 			"customer_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internal DaVinci id. Should not be set by user.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -34,8 +35,9 @@ func ResourceApplication() *schema.Resource {
 				Description: "Application name",
 			},
 			"created_date": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Creation date as epoch.",
 			},
 			"api_key_enabled": {
 				Type:        schema.TypeBool,
@@ -46,7 +48,7 @@ func ResourceApplication() *schema.Resource {
 			"api_keys": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Appplication Api Key",
+				Description: "Appplication Api Key. Returned value for prod field is most commonly used.",
 				Elem: &schema.Schema{
 					Type:      schema.TypeString,
 					Sensitive: true,
@@ -61,8 +63,9 @@ func ResourceApplication() *schema.Resource {
 				},
 			},
 			"user_pools": {
-				Type:     schema.TypeMap,
-				Computed: true,
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: "Appplication User Pools. Not implemented",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
