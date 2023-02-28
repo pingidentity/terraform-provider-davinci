@@ -1,3 +1,25 @@
+## 0.1.1
+
+BUG FIXES:
+
+* data_source_application.go: added `id` field. added deprecation notice for `application_id`
+data_source_application_test.go: organized tests to get by `application_id` and get by `id`
+data_source_connnection.go: updated to use correct `d.SetId()` function
+resource_application.go: updated to use correct `d.SetId()` function
+resource_connection.go: updated to use correct `d.SetId()` function
+resource_flow.go: removed `id` schema element. updated to use correct `d.SetId()` function ([#63](https://github.com/pingidentity/terraform-provider-pingone/issues/63))
+
+## 0.1.0
+
+ENHANCEMENTS:
+
+* data_source_application.go: added `id` field. added deprecation notice for `application_id`
+data_source_application_test.go: organized tests to get by `application_id` and get by `id`
+data_source_connnection.go: updated to use correct `d.SetId()` function
+resource_application.go: updated to use correct `d.SetId()` function
+resource_connection.go: updated to use correct `d.SetId()` function
+resource_flow.go: removed `id` schema element. updated to use correct `d.SetId()` function ([#63](https://github.com/pingidentity/terraform-provider-pingone/issues/63))
+
 ## 0.1.0
 
 ENHANCEMENTS:
