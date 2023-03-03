@@ -34,14 +34,14 @@ func New(version string) func() *schema.Provider {
 					Type:        schema.TypeString,
 					Required:    true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_USERNAME", nil),
-					Description: "The PingOne username used for SSO into a Davinci tenant.",
+					Description: "The PingOne username used for SSO into a Davinci tenant.  Default value can be set with the `PINGONE_USERNAME` environment variable.",
 				},
 				"password": {
 					Type:        schema.TypeString,
 					Required:    true,
 					Sensitive:   true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_PASSWORD", nil),
-					Description: "The PingOne password used for SSO into a Davinci tenant.",
+					Description: "The PingOne password used for SSO into a Davinci tenant.  Default value can be set with the `PINGONE_PASSWORD` environment variable.",
 				},
 				"region": {
 					Type:             schema.TypeString,
