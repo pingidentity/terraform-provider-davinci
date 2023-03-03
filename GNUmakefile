@@ -3,7 +3,7 @@ SWEEP_DIR=./internal/sweep
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.0
+VERSION=0.1.2
 OS_ARCH=linux_amd64
 
 default: build
