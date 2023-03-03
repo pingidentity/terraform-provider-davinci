@@ -14,6 +14,9 @@ tools:
 build: fmtcheck
 	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
 
+generate: fmtcheck
+	go generate ./...
+
 test: fmtcheck
 	go test $(TEST) $(TESTARGS) -timeout=5m
 	
