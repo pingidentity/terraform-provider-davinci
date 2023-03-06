@@ -5,3 +5,7 @@
 ```release-note:note
 Added attribute schema to the documentation index.
 ```
+
+```release-note:note
+Updated index documentation examples.
+```
