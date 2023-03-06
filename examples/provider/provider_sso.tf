@@ -11,26 +11,24 @@ terraform {
 
 provider "davinci" {
   //Must be Identity Data Admin for Environment
-  username = var.pingone_username
-  password = var.pingone_password
+  username = var.pingone_dv_admin_username
+  password = var.pingone_dv_admin_password
   region   = var.pingone_region
   // User should exist in Identities of this environment
-  environment_id = var.pingone_environment_id
+  environment_id = var.pingone_admin_environment_id
 }
 
 provider "pingone" {
-  client_id      = var.pingone_client_id
-  client_secret  = var.pingone_client_secret
-  environment_id = var.pingone_environment_id
+  client_id      = var.pingone_admin_client_id
+  client_secret  = var.pingone_admin_client_secret
+  environment_id = var.pingone_admin_environment_id
   region         = var.pingone_region
-
-  force_delete_production_type = false
-
 }
 
-resource "pingone_environment" "tf_trial" {
-  name        = "TF Trial"
-  description = "My new environment"
+// Create a new environment using the PingOne provider.  The organization must have the DaVinci feature flag enabled.
+resource "pingone_environment" "dv_example" {
+  name        = "DaVinci Example"
+  description = "A new trial environment for DaVinci configuration-as-code."
   type        = "SANDBOX"
   license_id  = var.license_id
 
@@ -46,40 +44,61 @@ resource "pingone_environment" "tf_trial" {
     type = "MFA"
   }
   service {
-    type = "Risk"
-  }
-  service {
     type = "DaVinci"
   }
 
 }
 
+// Get the roles from the organization
 data "pingone_role" "identity_data_admin" {
   name = "Identity Data Admin"
-  depends_on = [
-    pingone_environment.tf_trial
-  ]
 }
 
-resource "pingone_role_assignment_user" "admin_sso" {
-  environment_id       = var.environment_id
-  user_id              = var.admin_user_id
+data "pingone_role" "environment_admin" {
+  name = "Environment Admin"
+}
+
+// Get the ID of the DV admin user
+data "pingone_user" "dv_admin_user" {
+  environment_id = var.pingone_admin_environment_id
+
+  username = var.pingone_dv_admin_username
+}
+
+// Assign the "Identity Data Admin" role to the DV admin user
+resource "pingone_role_assignment_user" "admin_sso_identity_admin" {
+  environment_id       = var.pingone_admin_environment_id
+  user_id              = data.pingone_user.dv_admin_user.id
   role_id              = data.pingone_role.identity_data_admin.id
-  scope_environment_id = resource.pingone_environment.tf_trial.id
+  scope_environment_id = pingone_environment.dv_example.id
+}
+
+// Assign the "Environment Admin" role to the DV admin user
+resource "pingone_role_assignment_user" "admin_sso_environment_admin" {
+  environment_id       = var.pingone_admin_environment_id
+  user_id              = data.pingone_user.dv_admin_user.id
+  role_id              = data.pingone_role.environment_admin.id
+  scope_environment_id = pingone_environment.dv_example.id
 }
 
 // This simple read action is used to as a precursor to all other data/resources
 // Every other data/resource should have a `depends_on` pointing to this read action
 data "davinci_connections" "read_all" {
-  // NOTICE: this is NOT resource.pingone_environment. Dependency is on the role assignment, not environment.
-  // Assigning this correctly ensures the role is not destroyed before davinci resources.
-  environment_id = resource.pingone_role_assignment_user.admin_sso.scope_environment_id
+  // NOTICE: This read action has a dependency is on the role assignment, not environment.
+  // Assigning this correctly ensures the role is not destroyed before DaVinci resources on `terraform destroy`.
+  depends_on = [
+    pingone_role_assignment_user.admin_sso_identity_admin,
+    pingone_role_assignment_user.admin_sso_environment_admin
+  ]
+  environment_id = pingone_environment.dv_example.id
 }
 
-// Sample connection resource. Property names must be discovered by looking at API read response
+// Sample connection  Property names must be discovered by looking at API read response
 resource "davinci_connection" "mfa" {
-  depends_on     = [data.davinci_connections.read_all]
-  environment_id = resource.pingone_role_assignment_user.samir_tf_trial.scope_environment_id
+  depends_on = [
+    data.davinci_connections.read_all
+  ]
+  environment_id = pingone_environment.dv_example.id
   connector_id   = "pingOneMfaConnector"
   name           = "PingOne MFA"
   property {
@@ -92,11 +111,7 @@ resource "davinci_connection" "mfa" {
   }
   property {
     name  = "envId"
-    value = "abc"
-  }
-  property {
-    name  = "policyId"
-    value = "abc"
+    value = pingone_environment.dv_example.id
   }
   property {
     name  = "region"
@@ -104,20 +119,38 @@ resource "davinci_connection" "mfa" {
   }
 }
 
+resource "davinci_connection" "flow_conductor" {
+  depends_on = [
+    data.davinci_connections.read_all
+  ]
+  environment_id = pingone_environment.dv_example.id
+  connector_id   = "flowConnector"
+  name           = "Flow Conductor"
+}
+
 resource "davinci_flow" "mainflow" {
+  // This depends_on relieves the client from multiple initial authentication attempts
+  depends_on = [
+    data.davinci_connections.read_all
+  ]
+
   flow_json = file("mainflow.json")
   deploy    = true
-  // NOTICE: this is NOT resource.pingone_environment. Dependency is on the role assignment, not environment.
-  environment_id = resource.pingone_role_assignment_user.admin_sso.scope_environment_id
+
+  environment_id = pingone_environment.dv_example.id
 
   // Dependent connections are defined in conections blocks. 
   // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
 
   // This sample references a managed connection
   connection_link {
-    name = resource.davinci_connection.mfa.name
-    // 
-    id = resource.davinci_connection.mfa.id
+    name = davinci_connection.mfa.name
+    id   = davinci_connection.mfa.id
+  }
+  // This sample references a managed connection, which in the main flow, calls the subflow.
+  connection_link {
+    name = davinci_connection.flow_conductor.name
+    id   = davinci_connection.flow_conductor.id
   }
   // This sample uses a bootstrapped connection
   connection_link {
@@ -129,12 +162,31 @@ resource "davinci_flow" "mainflow" {
   // Dependent subflows are defined in subflows blocks.
   // These should always point to managed subflows
   subflow_link {
-    id   = resource.davinci_flow.subflow.id
-    name = resource.davinci_flow.subflow.name
+    id   = davinci_flow.subflow.id
+    name = davinci_flow.subflow.name
   }
+}
 
+resource "davinci_flow" "subflow" {
   // This depends_on relieves the client from multiple initial authentication attempts
   depends_on = [
     data.davinci_connections.read_all
   ]
+
+  flow_json = file("subflow.json")
+  deploy    = true
+
+  environment_id = pingone_environment.dv_example.id
+
+  // Dependent connections are defined in conections blocks as with the main flow.
+
+  connection_link {
+    name = davinci_connection.mfa.name
+    id   = davinci_connection.mfa.id
+  }
+
+  connection_link {
+    name = "Http"
+    id   = "867ed4363b2bc21c860085ad2baa817d"
+  }
 }
