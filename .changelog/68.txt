@@ -1,0 +1,7 @@
+```release-note:docs
+`davinci_connection`: Adjusted example HCL.
+```
+
+```release-note:docs
+Added attribute schema to the documentation index.
+```
