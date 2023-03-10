@@ -396,6 +396,12 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 		return c.ReadApplication(&c.CompanyID, appId)
 	}, nil)
 	if err != nil {
+		ep, err := c.ParseDvHttpError(err)
+		if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
+			d.SetId("")
+			// diags = append(diags, diag.Diagnostic{})
+			return diags
+		}
 		return diag.FromErr(err)
 	}
 
@@ -405,15 +411,6 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 		return diag.FromErr(err)
 	}
 
-	if err != nil {
-		ep, err := c.ParseDvHttpError(err)
-		if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
-			d.SetId("")
-			// diags = append(diags, diag.Diagnostic{})
-			return diags
-		}
-		return diag.FromErr(err)
-	}
 	flatResp, err := flattenApp(resp)
 	for i, v := range flatResp {
 

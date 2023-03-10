@@ -31,7 +31,8 @@ func makeFlowConnectionsHcl(resourceName string, connections []string) (connecti
 		name = %[1]s.name
 	}
 	
-`, rName)
+`,
+			rName)
 	}
 	return connectionsHcl
 }
@@ -111,6 +112,12 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 			FlowJson:    flowJsons.BrokenFlow,
 			Connections: []string{"errorcustomize"},
 		}),
+		//notimplemented
+		// PingOneSessionFlow: makeFlowHcl(resourceName, flowResource{
+		// 	Name:        "pingone_session_flow",
+		// 	FlowJson:    flowJsons.PingOneSessionFlow,
+		// 	Connections: []string{"annotation", "flow", "variables", "pingoneauthentication", "node"},
+		// }),
 	}
 }
 
