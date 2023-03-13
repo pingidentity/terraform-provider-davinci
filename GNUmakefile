@@ -3,7 +3,7 @@ SWEEP_DIR=./internal/sweep
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.0
+VERSION=0.1.2
 OS_ARCH=linux_amd64
 
 default: build
@@ -14,6 +14,9 @@ tools:
 build: fmtcheck
 	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
 
+generate: fmtcheck
+	go generate ./...
+	
 test: fmtcheck
 	go test $(TEST) $(TESTARGS) -timeout=5m
 	
