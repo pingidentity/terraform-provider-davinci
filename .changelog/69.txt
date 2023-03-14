@@ -1,0 +1,3 @@
+```release-note:enhancement
+`davinci-client-go`: Updated application create function for p1 session flow policies
+```

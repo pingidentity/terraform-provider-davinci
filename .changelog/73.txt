@@ -1,0 +1,3 @@
+```release-note:bug
+`davinci_application`: Updated read funtion to unset id if application is not found
+```
