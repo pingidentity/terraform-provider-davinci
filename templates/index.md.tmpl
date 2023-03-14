@@ -12,21 +12,20 @@ to stand up fully orchestrated PingOne IAM Experiences.
 
 ## Getting Started
 
-This provider will authenticate an API client to PingOne to configure to the DaVinci environment.
+This provider will authenticate an API client via username and password of an Identity in PingOne to configure to the DaVinci environment.
 
 ### PingOne SSO
 
-You must have a PingOne account and may use multiple environments within that account.
+To manage multiple PingOne DaVinci environments with the same credentials, identify and treat one user in one environment as a service account. This is commonly a user in the `Administrators` environment. The environment in which the user exists must default to the `Single_Factor` Authentication Policy. Thus, it may be more appropriate to create this user in an alternate environment.
 
-Prerequisites:
-
-> IMPORTANT: To manage multiple DaVinci environments with the same credentials, you can add DaVinci to the admin environment. This creates a DaVinci connection and IdP that can be used for SSO into other environments that a user has the `Identity Data Admin` role. The Prerequisites below assume this is the case.
-
-- Have a PingOne environment with DaVinci enabled. 
-- Choose or create a user identity in the Administrators account, assign this user the following roles:
-    - `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne `Administrators` environment.
-    - `Organization Admin` for the organization.
-- For each additional DaVinci environment that needs SSO access, give this user the `Identity Data Admin` and `Environment Admin` roles for that environment.  See the **Full deployment example with a PingOne environment** example below for how to do this in HCL.
+This user must: 
+- Be in a PingOne Environment with DaVinci enabled. 
+  - The PingOne environment must default to the  `Single_Factor` Authentication Policy
+- Have at least the following roles in the environment in which it exists:
+  - `Environment Admin` for it's own environment
+  - `Identity Data Admin` for it's own environment
+  - `Organization Admin` at the organization level. 
+- For each additional DaVinci environment that needs SSO access, give this user the `Identity Data Admin` and `Environment Admin` roles for that environment.  See the **[Full deployment example with a PingOne environment](#full-deployment-example-with-a-pingone-environment)** example below for how to do this in HCL.
 
 ## Example Usage
 
@@ -41,7 +40,7 @@ Prerequisites:
 {{ codefile "shell" (printf "%s" "examples/provider/provider-env.sh") }}
 
 ### Full deployment example with a PingOne environment
-The following assumes that the DV admin user has been provided the `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne `Administrators` environment, and the `Organization Admin` role scoped to the organization.
+The following assumes that the DV admin user has been provided the `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
 
 {{ tffile "examples/provider/provider_sso.tf" }}
 

@@ -84,48 +84,13 @@ resource "pingone_role_assignment_user" "admin_sso_environment_admin" {
 // This simple read action is used to as a precursor to all other data/resources
 // Every other data/resource should have a `depends_on` pointing to this read action
 data "davinci_connections" "read_all" {
-  // NOTICE: This read action has a dependency is on the role assignment, not environment.
-  // Assigning this correctly ensures the role is not destroyed before DaVinci resources on `terraform destroy`.
+  // NOTICE: This read action has a dependency on the role assignment, not environment.
+  // Assigning this correctly ensures the role is not destroyed before DaVinci resources during `terraform destroy`.
   depends_on = [
     pingone_role_assignment_user.admin_sso_identity_admin,
     pingone_role_assignment_user.admin_sso_environment_admin
   ]
   environment_id = pingone_environment.dv_example.id
-}
-
-// Sample connection  Property names must be discovered by looking at API read response
-resource "davinci_connection" "mfa" {
-  depends_on = [
-    data.davinci_connections.read_all
-  ]
-  environment_id = pingone_environment.dv_example.id
-  connector_id   = "pingOneMfaConnector"
-  name           = "PingOne MFA"
-  property {
-    name  = "clientId"
-    value = "abc"
-  }
-  property {
-    name  = "clientSecret"
-    value = "abc"
-  }
-  property {
-    name  = "envId"
-    value = pingone_environment.dv_example.id
-  }
-  property {
-    name  = "region"
-    value = "EU"
-  }
-}
-
-resource "davinci_connection" "flow_conductor" {
-  depends_on = [
-    data.davinci_connections.read_all
-  ]
-  environment_id = pingone_environment.dv_example.id
-  connector_id   = "flowConnector"
-  name           = "Flow Conductor"
 }
 
 resource "davinci_flow" "mainflow" {
@@ -134,59 +99,48 @@ resource "davinci_flow" "mainflow" {
     data.davinci_connections.read_all
   ]
 
-  flow_json = file("mainflow.json")
+  // pingone_sign_on_and_password_reset.json represents an export of the sample flow in a new environment
+  flow_json = file("pingone_sign_on_and_password_reset.json")
   deploy    = true
 
   environment_id = pingone_environment.dv_example.id
 
-  // Dependent connections are defined in conections blocks. 
-  // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
+  // Dependent connections are defined in conection_link blocks. 
+  // It is typically required to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connection ids
 
-  // This sample references a managed connection
+  // This sample uses bootstrapped connections and references the hardcoded default values of those connections.
   connection_link {
-    name = davinci_connection.mfa.name
-    id   = davinci_connection.mfa.id
-  }
-  // This sample references a managed connection, which in the main flow, calls the subflow.
-  connection_link {
-    name = davinci_connection.flow_conductor.name
-    id   = davinci_connection.flow_conductor.id
-  }
-  // This sample uses a bootstrapped connection
-  connection_link {
-    name = "Http"
-    // default connection id for the bootstrapped Http connector
-    id = "867ed4363b2bc21c860085ad2baa817d"
-  }
-
-  // Dependent subflows are defined in subflows blocks.
-  // These should always point to managed subflows
-  subflow_link {
-    id   = davinci_flow.subflow.id
-    name = davinci_flow.subflow.name
-  }
-}
-
-resource "davinci_flow" "subflow" {
-  // This depends_on relieves the client from multiple initial authentication attempts
-  depends_on = [
-    data.davinci_connections.read_all
-  ]
-
-  flow_json = file("subflow.json")
-  deploy    = true
-
-  environment_id = pingone_environment.dv_example.id
-
-  // Dependent connections are defined in conections blocks as with the main flow.
-
-  connection_link {
-    name = davinci_connection.mfa.name
-    id   = davinci_connection.mfa.id
+    id   = "6d8f6f706c45fd459a86b3f092602544"
+    name = "Error"
   }
 
   connection_link {
-    name = "Http"
+    id   = "de650ca45593b82c49064ead10b9fe17"
+    name = "Functions"
+  }
+
+  connection_link {
     id   = "867ed4363b2bc21c860085ad2baa817d"
+    name = "Http"
+  }
+
+  connection_link {
+    id   = "94141bf2f1b9b59a5f5365ff135e02bb"
+    name = "PingOne SSO"
+  }
+
+  connection_link {
+    id   = "3b55f2ca6689560c64cb5bed5afbe40f"
+    name = "Token Management"
+  }
+
+  connection_link {
+    id   = "4cb5e3465d718a84087ec9b6a6251e52"
+    name = "User Policy"
+  }
+
+  connection_link {
+    id   = "06922a684039827499bdbdd97f49827b"
+    name = "Variables"
   }
 }
