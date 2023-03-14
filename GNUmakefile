@@ -16,7 +16,7 @@ build: fmtcheck
 
 generate: fmtcheck
 	go generate ./...
-
+	
 test: fmtcheck
 	go test $(TEST) $(TESTARGS) -timeout=5m
 	
