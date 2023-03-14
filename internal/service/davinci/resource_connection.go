@@ -72,22 +72,6 @@ func ResourceConnection() *schema.Resource {
 					},
 				},
 			},
-			// Not yet implemented
-			// "custom_auth": {
-			// 	Type:          schema.TypeSet,
-			// 	Optional:      true,
-			// 	Description:   "Properties for CustomAuth type Connectors (Example, OIDC Connector, Social Login)",
-			// 	MinItems:      1,
-			// 	ConflictsWith: []string{"property"},
-			// 	Elem: &schema.Resource{
-			// 		Schema: map[string]*schema.Schema{
-			// 			"provider_name": {
-			// 				Type:     schema.TypeString,
-			// 				Optional: true,
-			// 			},
-			// 		},
-			// 	},
-			// },
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
