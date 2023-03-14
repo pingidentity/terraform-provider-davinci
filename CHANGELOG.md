@@ -1,3 +1,19 @@
+## 0.1.2
+
+NOTES:
+
+* Added attribute schema to the documentation index. ([#70](https://github.com/pingidentity/terraform-provider-pingone/issues/70))
+* Updated index documentation examples. ([#70](https://github.com/pingidentity/terraform-provider-pingone/issues/70))
+* `davinci_connection`: Adjusted example HCL. ([#70](https://github.com/pingidentity/terraform-provider-pingone/issues/70))
+
+ENHANCEMENTS:
+
+* `davinci-client-go`: Updated application create function for p1 session flow policies ([#69](https://github.com/pingidentity/terraform-provider-pingone/issues/69))
+
+BUG FIXES:
+
+* `davinci_application`: Updated read funtion to unset id if application is not found ([#73](https://github.com/pingidentity/terraform-provider-pingone/issues/73))
+
 ## 0.1.1
 
 BUG FIXES:
