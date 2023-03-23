@@ -25,7 +25,7 @@ about: If something isn't working as expected or documented
 
 Thank you for opening an issue. Please note that we try to keep the Terraform issue tracker reserved for bug reports and feature requests. For general usage questions, please see: https://www.terraform.io/community.html.
 
-### PingOne Terraform provider Version
+### DaVinci Terraform provider Version
 <!--- Check the version you have configured in your .tf files. If you are not running the latest version of the provider, please upgrade because your issue may have already been fixed. -->
 
 ### Terraform Version
@@ -33,18 +33,20 @@ Thank you for opening an issue. Please note that we try to keep the Terraform is
 
 ### Affected Resource(s)
 <!--- Please list the resources as a list, for example: -->
-- pingone_environment
-- pingone_population
+- `davinci_application`
+- `davinci_flow`
 
 <!--- If this issue appears to affect multiple resources, it may be an issue with Terraform's core, so please mention this. -->
 
 ### Terraform Configuration Files
 ```hcl
-# Copy-paste your PingOne related Terraform configurations here - for large Terraform configs,
+# Copy-paste your DaVinci related Terraform configurations here - for large Terraform configs,
 # please use a service like Dropbox and share a link to the ZIP file. For
 # security, you can also encrypt the files using our GPG public key.
 
 # Remember to replace any account/customer sensitive information in the configuration before submitting the issue
+
+# NOTE: PLEASE DO NOT share DaVinci JSON exports publicly without encrypting files first.  DaVinci JSON exports can contain environment/tenant specific information, and may also include secrets.
 ```
 
 ### Debug Output
