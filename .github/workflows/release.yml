@@ -14,8 +14,6 @@ on:
   push:
     tags:
       - 'v*'
-permissions:
-  contents: write
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
@@ -28,14 +26,14 @@ jobs:
         run: git fetch --prune --unshallow
       -
         name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version-file: 'go.mod'
           cache: true
       -
         name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v5
         id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v5
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
