@@ -111,7 +111,7 @@ resource "davinci_flow" "mainflow" {
   // This sample uses bootstrapped connections and references the hardcoded default values of those connections.
   connection_link {
     id   = "6d8f6f706c45fd459a86b3f092602544"
-    name = "Error"
+    name = "Error Customize"
   }
 
   connection_link {
@@ -126,7 +126,7 @@ resource "davinci_flow" "mainflow" {
 
   connection_link {
     id   = "94141bf2f1b9b59a5f5365ff135e02bb"
-    name = "PingOne SSO"
+    name = "PingOne"
   }
 
   connection_link {
