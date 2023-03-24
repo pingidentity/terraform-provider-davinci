@@ -66,7 +66,7 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 		Simple: makeFlowHcl(resourceName, flowResource{
 			Name:        "simple",
 			FlowJson:    flowJsons.Simple,
-			Connections: []string{"http", "functions"},
+			Connections: []string{"http"},
 		}),
 		Drifted: makeFlowHcl(resourceName, flowResource{
 			Name:        "simple",
@@ -112,12 +112,21 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 			FlowJson:    flowJsons.BrokenFlow,
 			Connections: []string{"errorcustomize"},
 		}),
-		//notimplemented
-		// PingOneSessionFlow: makeFlowHcl(resourceName, flowResource{
-		// 	Name:        "pingone_session_flow",
-		// 	FlowJson:    flowJsons.PingOneSessionFlow,
-		// 	Connections: []string{"annotation", "flow", "variables", "pingoneauthentication", "node"},
-		// }),
+		PingOneSessionMainFlow: makeFlowHcl(resourceName, flowResource{
+			Name:        "pingone_session_main_flow",
+			FlowJson:    flowJsons.PingOneSessionMainFlow,
+			Connections: []string{"annotation", "flow", "pingoneauthentication", "node"},
+		}),
+		PingOneSessionMainFlowUpdate: makeFlowHcl(resourceName, flowResource{
+			Name:        "pingone_session_main_flow",
+			FlowJson:    flowJsons.PingOneSessionMainFlowUpdate,
+			Connections: []string{"annotation", "flow", "pingoneauthentication", "node"},
+		}),
+		PingOneSessionSubFlow: makeFlowHcl(resourceName, flowResource{
+			Name:        "pingone_session_sub_flow",
+			FlowJson:    flowJsons.PingOneSessionSubFlow,
+			Connections: []string{"annotation", "errorcustomize", "functions", "http", "node", "pingonesso", "variables"},
+		}),
 	}
 }
 

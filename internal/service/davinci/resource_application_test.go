@@ -195,3 +195,158 @@ resource "davinci_application" "%[2]s" {
 `, baseHcl, resourceName, flows.Simple.Name)
 	return hcl
 }
+
+func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
+
+	resourceBase := "davinci_application"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
+					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
+				),
+			},
+			{
+				Config: testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
+					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
+				),
+			},
+		},
+	})
+}
+
+func testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName string) (hcl string) {
+	flows := acctest.FlowsForTests(resourceName)
+
+	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlow.Hcl, flows.PingOneSessionSubFlow.Hcl})
+	hcl = fmt.Sprintf(`
+%[1]s
+
+resource "davinci_connection" "%[2]s-pingoneauthentication" {
+	name = "Ping One Authentication"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	connector_id = "pingOneAuthenticationConnector"
+	depends_on = [data.davinci_connections.read_all]
+}
+resource "davinci_connection" "%[2]s-node" {
+	name = "Node"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	connector_id = "nodeConnector"
+	depends_on = [data.davinci_connections.read_all]
+}
+
+resource "davinci_connection" "%[2]s-flow" {
+	name = "Flow"
+	connector_id = "flowConnector"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [data.davinci_connections.read_all]
+}
+
+resource "davinci_application" "%[2]s" {
+	name = "TF ACC Test-%[2]s"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [ data.davinci_connections.read_all]
+	oauth {
+		enabled = true
+		values {
+			allowed_grants                = ["authorizationCode"]
+			allowed_scopes                = ["openid", "profile"]
+			enabled                       = true
+			enforce_signed_request_openid = false
+			redirect_uris                 = ["https://auth.pingone.com/env-id/rp/callback/openid_connect"]
+		}
+	}
+	saml {
+		values {
+			enabled                = false
+			enforce_signed_request = false
+		}
+	}
+  policy {
+    name = "simpleflow"
+    policy_flow {
+      flow_id    = resource.davinci_flow.%[3]s.id
+      version_id = -1
+      weight     = 100
+    }
+		status = "enabled"
+  }
+}
+`, baseHcl, resourceName, flows.PingOneSessionMainFlow.Name)
+	return hcl
+}
+
+func testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
+	flows := acctest.FlowsForTests(resourceName)
+
+	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlowUpdate.Hcl, flows.PingOneSessionSubFlow.Hcl})
+	hcl = fmt.Sprintf(`
+%[1]s
+
+resource "davinci_connection" "%[2]s-pingoneauthentication" {
+	name = "Ping One Authentication"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	connector_id = "pingOneAuthenticationConnector"
+	depends_on = [data.davinci_connections.read_all]
+}
+resource "davinci_connection" "%[2]s-node" {
+	name = "Node"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	connector_id = "nodeConnector"
+	depends_on = [data.davinci_connections.read_all]
+}
+
+resource "davinci_connection" "%[2]s-flow" {
+	name = "Flow"
+	connector_id = "flowConnector"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [data.davinci_connections.read_all]
+}
+
+resource "davinci_application" "%[2]s" {
+	name = "TF ACC Test-%[2]s"
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on = [ data.davinci_connections.read_all]
+	oauth {
+		enabled = true
+		values {
+			allowed_grants                = ["authorizationCode"]
+			allowed_scopes                = ["openid", "profile"]
+			enabled                       = true
+			enforce_signed_request_openid = false
+			redirect_uris                 = ["https://auth.pingone.com/env-id/rp/callback/openid_connect"]
+		}
+	}
+	saml {
+		values {
+			enabled                = false
+			enforce_signed_request = false
+		}
+	}
+  policy {
+    name = "simpleflow"
+    policy_flow {
+      flow_id    = resource.davinci_flow.%[3]s.id
+      version_id = -1
+      weight     = 100
+    }
+		status = "enabled"
+  }
+}
+`, baseHcl, resourceName, flows.PingOneSessionMainFlow.Name)
+	return hcl
+}
