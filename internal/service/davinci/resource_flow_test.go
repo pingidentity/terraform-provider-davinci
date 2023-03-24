@@ -1,13 +1,16 @@
 package davinci_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
+	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 func TestAccResourceFlow_SimpleFlow(t *testing.T) {
@@ -256,4 +259,246 @@ func TestAccResourceFlow_BrokenFlow(t *testing.T) {
 			},
 		},
 	})
+}
+
+// tests for changes other than graph data.
+func TestAccResourceFlow_SchemaChanges(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+				),
+			},
+			//change flow_json.settings only
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.SimpleSettingDrift.Hcl}),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+					testAccCheckAttributeSimpleFlowSetting(resourceFullName),
+				),
+			},
+			//revert to simple. This likely is not actually reverting because
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+				),
+			},
+			//change flow_json.inputSchema only
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.SimpleInputSchemaDrift.Hcl}),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+					testAccCheckAttributeSimpleFlowInputSchema(resourceFullName),
+				),
+			},
+			//revert to simple
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+				),
+			},
+			//change flow_json.outputSchema only
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.SimpleOutputSchemaDrift.Hcl}),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+					testAccCheckAttributeSimpleFlowOutputSchema(resourceFullName),
+				),
+			},
+			//revert to simple
+			{
+				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckAttributeSimpleFlowSetting(resourceFullName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		fj, err := acctest.GetAttributeFromState(s, resourceFullName, "flow_json")
+		if err != nil {
+			return err
+		}
+
+		var flow davinci.Flow
+		err = json.Unmarshal([]byte(fj), &flow)
+		if err != nil {
+			return err
+		}
+		flowSettingsMap := flow.Settings.(map[string]interface{})
+
+		flowHttpTimeoutInSeconds := acctest.SchemaAttributeFloat64{
+			AttributeName: "flowHttpTimeoutInSeconds",
+			ExpectedValue: 300,
+			ActualValue:   flowSettingsMap["flowHttpTimeoutInSeconds"].(float64),
+		}
+
+		csp := acctest.SchemaAttributeString{
+			AttributeName: "csp",
+			ExpectedValue: "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
+			ActualValue:   flowSettingsMap["csp"].(string),
+		}
+
+		return acctest.ComposeCompare(
+			flowHttpTimeoutInSeconds.Compare(),
+			csp.Compare(),
+		)
+	}
+}
+
+func testAccCheckAttributeSimpleFlowInputSchema(resourceFullName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		fj, err := acctest.GetAttributeFromState(s, resourceFullName, "flow_json")
+		if err != nil {
+			return err
+		}
+
+		var flow davinci.Flow
+		err = json.Unmarshal([]byte(fj), &flow)
+		if err != nil {
+			return err
+		}
+		//sample inputSchemaJson: {  "isInputSchemaSaved": true,
+		// "inputSchemaCompiled": {
+		//   "parameters": {
+		//     "type": "object",
+		//     "properties": {
+		//       "foo": {
+		//         "description": "fooDesc",
+		//         "preferredDataType": "string",
+		//         "isExpanded": true,
+		//         "type": "string",
+		//         "name": "foo"
+		//       }
+		//     },
+		//     "additionalProperties": false,
+		//     "required": [
+		//       "foo"
+		//     ]
+		//   }
+		// },
+		// "inputSchema": [
+		//   {
+		//     "propertyName": "foo",
+		//     "description": "fooDesc",
+		//     "preferredDataType": "string",
+		//     "preferredControlType": "textField",
+		//     "isExpanded": true,
+		//     "required": true
+		//   }
+		// ],}
+
+		fsMap := flow.InputSchema[0].(map[string]interface{})
+		inputSchemaPropName := acctest.SchemaAttributeString{
+			AttributeName: "Input Schema propertyName'foo'",
+			ExpectedValue: "foo",
+			ActualValue:   fsMap["propertyName"].(string),
+		}
+
+		isInputSchemaSaved := acctest.SchemaAttributeBoolean{
+			AttributeName: "isInputSchemaSaved",
+			ExpectedValue: true,
+			ActualValue:   flow.IsInputSchemaSaved,
+		}
+
+		var inputSchemaCompiledPropFooDesc string
+		inputSchemaCompiledMap, ok := flow.InputSchemaCompiled.(map[string]interface{})
+		if ok {
+			inputSchemaCompiledMap, ok = inputSchemaCompiledMap["parameters"].(map[string]interface{})
+			if ok {
+				inputSchemaCompiledMap, ok = inputSchemaCompiledMap["properties"].(map[string]interface{})
+				if ok {
+					inputSchemaCompiledMap, ok = inputSchemaCompiledMap["foo"].(map[string]interface{})
+					if ok {
+						inputSchemaCompiledPropFooDesc = inputSchemaCompiledMap["description"].(string)
+					}
+				}
+			}
+		}
+
+		inputSchemaCompiled := acctest.SchemaAttributeString{
+			AttributeName: "inputSchemaCompiled",
+			ExpectedValue: "fooDesc",
+			ActualValue:   inputSchemaCompiledPropFooDesc,
+		}
+
+		return acctest.ComposeCompare(
+			inputSchemaPropName.Compare(),
+			isInputSchemaSaved.Compare(),
+			inputSchemaCompiled.Compare(),
+		)
+	}
+}
+
+func testAccCheckAttributeSimpleFlowOutputSchema(resourceFullName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		fj, err := acctest.GetAttributeFromState(s, resourceFullName, "flow_json")
+		if err != nil {
+			return err
+		}
+
+		var flow davinci.Flow
+		err = json.Unmarshal([]byte(fj), &flow)
+		if err != nil {
+			return err
+		}
+		//sample inputSchemaJson: {
+		// "outputSchemaCompiled": {
+		//     "output": {
+		//       "type": "object",
+		//       "additionalProperties": true,
+		//       "properties": {
+		//         "far": {
+		//           "type": "string"
+		//         }
+		//       }
+		//     }
+		//   }
+		// }
+		var outputMap map[string]interface{}
+		if flow.OutputSchemaCompiled.Output != nil {
+			outputMap = flow.OutputSchemaCompiled.Output.(map[string]interface{})
+			outputPropertiesMap := outputMap["properties"].(map[string]interface{})
+
+			outputSchemaCompiled := acctest.SchemaAttributeMap{
+				AttributeName: "outputSchemaCompiled",
+				ExpectedValue: map[string]interface{}{"type": "string"},
+				ActualValue:   outputPropertiesMap["far"].(map[string]interface{}),
+			}
+			return outputSchemaCompiled.Compare()
+		}
+		return fmt.Errorf("outputSchemaCompiled is nil")
+	}
 }

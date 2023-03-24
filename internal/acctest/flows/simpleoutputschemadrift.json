@@ -129,5 +129,16 @@
   "flowColor": "#AFD5FF",
   "savedDate": 1679514239427,
   "variables": [],
-  "connections": []
+  "connections": [],
+  "outputSchemaCompiled": {
+    "output": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "far": {
+          "type": "string"
+        }
+      }
+    }
+  }
 }
