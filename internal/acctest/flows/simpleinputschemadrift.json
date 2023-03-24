@@ -126,6 +126,35 @@
       "name": "null"
     }
   },
+  "isInputSchemaSaved": true,
+  "inputSchemaCompiled": {
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "foo": {
+          "description": "fooDesc",
+          "preferredDataType": "string",
+          "isExpanded": true,
+          "type": "string",
+          "name": "foo"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "foo"
+      ]
+    }
+  },
+  "inputSchema": [
+    {
+      "description": "fooDesc",
+      "isExpanded": true,
+      "preferredControlType": "textField",
+      "preferredDataType": "string",
+      "propertyName": "foo",
+      "required": true
+    }
+  ],
   "flowColor": "#AFD5FF",
   "savedDate": 1679514239427,
   "variables": [],

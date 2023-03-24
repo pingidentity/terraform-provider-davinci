@@ -422,10 +422,37 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 	}
 
-	if current.Name != desired.Name {
+	// Check for Settings, inputSchema, outputSchema, name, FlowStatus, trigger drift
+	if !reflect.DeepEqual(current.Settings, desired.Settings) {
+		return false
+	}
+	if current.InputSchema != nil && desired.InputSchema == nil {
+		desired.InputSchema = make([]interface{}, 0)
+	}
+	if !reflect.DeepEqual(current.InputSchema, desired.InputSchema) {
 		return false
 	}
 
+	//OutputSchema Diff
+	// currentOutputSchema, currentOk := current.OutputSchema.(map[string]interface{})
+	// currentOutputSchema, desiredOk = currentOutputSchema["output"].(map[string]interface{})
+	// desiredOutputSchema := desired.OutputSchemaCompiled.(map[string]interface{})
+	// desiredOutputSchema = desiredOutputSchema["output"].(map[string]interface{})
+	// fmt.Println("current", current.OutputSchema, "desired", desired.OutputSchema)
+	if !reflect.DeepEqual(current.OutputSchema, desired.OutputSchemaCompiled) {
+		fmt.Println("returning false")
+		fmt.Println("currentOutputSchema", current.OutputSchema, "desired", desired.OutputSchemaCompiled)
+		return false
+	}
+
+	if !reflect.DeepEqual(current.Trigger, desired.Trigger) {
+		fmt.Println("returning false for Trigger")
+		return false
+	}
+
+	if current.Name != desired.Name {
+		return false
+	}
 	if current.FlowStatus != desired.FlowStatus {
 		return false
 	}
