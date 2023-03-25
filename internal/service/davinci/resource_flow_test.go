@@ -197,13 +197,11 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.WithVariableConnector.Name)
 
 	hcl := testAccResourceFlow_VariableConnectorFlows_Hcl(resourceName, []acctest.FlowHcl{testFlows.WithVariableConnector})
-	// fmt.Println(hcl)
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -245,7 +243,6 @@ func TestAccResourceFlow_BrokenFlow(t *testing.T) {
 	// resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.BrokenFlow.Name)
 
 	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.BrokenFlow.Hcl})
-	// fmt.Println(hcl)
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,

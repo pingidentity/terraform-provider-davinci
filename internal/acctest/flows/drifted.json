@@ -15,7 +15,13 @@
   "timeouts": null,
   "flowId": "bb45eb4a0e8a5c9d6a21c7ac2d1b3faa",
   "companyId": "c431739a-29cd-4d9e-b465-0b37b2c235b1",
+  "trigger": {},
   "versionId": 0,
+  "settings": {
+    "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
+    "intermediateLoadingScreenCSS": "",
+    "intermediateLoadingScreenHTML": ""
+  },
   "graphData": {
     "elements": {
       "nodes": [
