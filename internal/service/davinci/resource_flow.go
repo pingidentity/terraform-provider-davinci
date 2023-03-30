@@ -604,7 +604,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 	}
 
 	//OutputSchema Diff
-	if !reflect.DeepEqual(current.OutputSchema, desired.OutputSchemaCompiled) {
+	if !reflect.DeepEqual(current.OutputSchemaCompiled, desired.OutputSchemaCompiled) {
 		return false
 	}
 

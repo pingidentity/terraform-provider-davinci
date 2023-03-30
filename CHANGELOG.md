@@ -1,3 +1,10 @@
+## 0.1.4
+
+BUG FIXES:
+
+* `go_client`: Updated Models for flow and variable
+`davinci_flow`: Added computed flow_variable section ([#93](https://github.com/pingidentity/terraform-provider-pingone/issues/93))
+
 ## 0.1.3
 
 NOTES:
