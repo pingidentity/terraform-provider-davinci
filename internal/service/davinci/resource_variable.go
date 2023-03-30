@@ -141,9 +141,12 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 		return diag.FromErr(err)
 	}
 
+	//variable not found
 	if len(resp) != 1 {
-		return diag.FromErr(fmt.Errorf("Received error while attempting to retrieve variable"))
+		d.SetId("")
+		return diags
 	}
+
 	for _, res := range resp {
 		s := strings.Split(variableName, "##SK##")
 		name := s[0]
@@ -237,6 +240,9 @@ func getVariableAttributes(d *schema.ResourceData) dv.VariablePayload {
 		Name:    d.Get("name").(string),
 		Context: d.Get("context").(string),
 		Type:    d.Get("type").(string),
+	}
+	if flowId, ok := d.GetOk("flow_id"); ok {
+		variablePayload.FlowId = flowId.(string)
 	}
 	if mutable, ok := d.GetOk("mutable"); ok {
 		variablePayload.Mutable = mutable.(bool)

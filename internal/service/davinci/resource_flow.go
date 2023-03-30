@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"sort"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -87,6 +89,60 @@ func ResourceFlow() *schema.Resource {
 						// 	Computed: true,
 						// 	Description: "Subflow Version to use",
 						// },
+					},
+				},
+			},
+			"flow_variables": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Returned list of Flow Context variables. These are Variable resources that are created and managed by the Flow resource via flow_json",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DaVinci internal name of variable",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Friendly Name of Variable in UI",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Description of Variable in UI",
+						},
+						"flow_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Should match id of this davinci_flow",
+						},
+						"context": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Should always return 'flow'",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Underlying type of variable",
+						},
+						"mutable": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow.",
+						},
+						"min": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "",
+						},
+						"max": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "",
+						},
 					},
 				},
 			},
@@ -180,10 +236,14 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	flowId := d.Id()
 
 	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadFlow(&c.CompanyID, flowId)
+		return c.ReadFlowVersion(&c.CompanyID, flowId, nil)
 	}, nil)
-
 	if err != nil {
+		httpErr, _ := dv.ParseDvHttpError(err)
+		if strings.Contains(httpErr.Body, "Error retrieving flow version") {
+			d.SetId("")
+			return diags
+		}
 		return diag.FromErr(err)
 	}
 	res, ok := sdkRes.(*dv.FlowInfo)
@@ -229,6 +289,15 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 
+	// Set flow_variables, this is important for terraform import)
+	flowVariables, err := flattenFlowVariables(res.Flow)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("flow_variables", flowVariables); err != nil {
+		return diag.FromErr(err)
+	}
+
 	return diags
 }
 
@@ -264,6 +333,34 @@ func flattenConnections(flow dv.Flow) ([]interface{}, error) {
 	return connections, nil
 }
 
+func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
+	flowJson, err := json.Marshal(flow)
+	if err != nil {
+		return nil, err
+	}
+	flowVars, err := getFlowVariables(string(flowJson))
+	var flowVariables []interface{}
+	for _, flowVar := range flowVars {
+		varStateSimpleName := strings.Split(flowVar.Name, "##SK##")
+		if varStateSimpleName[0] == "" || len(varStateSimpleName) == 1 {
+			return nil, fmt.Errorf("Unable to parse variable name: %s for state", flowVar.Name)
+		}
+		flowVariableMap := map[string]interface{}{
+			"id":          flowVar.Name,
+			"name":        varStateSimpleName[0],
+			"description": flowVar.Fields.DisplayName,
+			"flow_id":     flowVar.FlowID,
+			"context":     flowVar.Context,
+			"type":        flowVar.Type,
+			"mutable":     flowVar.Fields.Mutable,
+			"min":         flowVar.Fields.Min,
+			"max":         flowVar.Fields.Max,
+		}
+		flowVariables = append(flowVariables, flowVariableMap)
+	}
+	return flowVariables, nil
+}
+
 func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*dv.APIClient)
 
@@ -274,6 +371,12 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 
 	flowId := d.Id()
 
+	// If changes are detected:
+	// 1. Map subflows
+	// 2. Map connections
+	// 3. Update flow via API
+	// 4. Update flow variables via variables api
+	// 5. Deploy flow if needed
 	if d.HasChanges("flow_json", "connection_link", "subflow_link") {
 		flowJson := d.Get("flow_json").(string)
 		subsJson, err := mapSubFlows(d, flowJson)
@@ -286,12 +389,77 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		}
 		flowJson = *connsJson
 
+		flowVars, err := getFlowVariables(flowJson)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+
 		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 			return c.UpdateFlowWithJson(&c.CompanyID, &flowJson, flowId)
 		}, nil)
-
 		if err != nil {
 			return diag.FromErr(err)
+		}
+
+		// Update Flow Variables
+		// this will ONLY be flow variables because getFlowVariables removes all other variables contexts
+		// If variable exists in state, it should be updated. Else it should be created.
+		flowVariablesState, variableStateOk := d.GetOk("flow_variables")
+		for _, v := range flowVars {
+			variablePayload := dv.VariablePayload{
+				// Name:        v.Name,
+				Description: v.Fields.DisplayName,
+				FlowId:      flowId,
+				Context:     v.Context,
+				Type:        v.Fields.Type,
+				Mutable:     v.Fields.Mutable,
+				Min:         v.Fields.Min,
+				Max:         v.Fields.Max,
+			}
+			// Variable Payload is identified by the simple name of the variable because it is suffixed with an unknown unique id.
+			varSimpleName := strings.Split(v.Name, "##SK##")
+			existsInState := false
+			if varSimpleName[0] == "" || len(varSimpleName) == 1 {
+				return diag.FromErr(fmt.Errorf("Unable to parse variable name: %s from flow_json", v.Name))
+			}
+			if variableStateOk {
+				for _, stateVar := range flowVariablesState.([]interface{}) {
+					stateVarMap := stateVar.(map[string]interface{})
+					if stateVarMap["name"].(string) == varSimpleName[0] {
+						variablePayload.Name = stateVarMap["name"].(string)
+						existsInState = true
+						// Update SHOULD be safe because the variable should exist if the flow exists.
+						_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+							return c.UpdateVariable(&c.CompanyID, &variablePayload)
+						}, nil)
+						if err != nil {
+							return diag.FromErr(err)
+						}
+						break
+					}
+				}
+			}
+			if !existsInState {
+				variablePayload.Name = varSimpleName[0]
+
+				_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+					return c.CreateVariable(&c.CompanyID, &variablePayload)
+				}, nil)
+				if err != nil {
+					// In rare scenarios, the variable may exist in the environment but not in state, if so it should update instead.
+					httpErr, _ := dv.ParseDvHttpError(err)
+					if httpErr != nil && strings.Contains(httpErr.Body, "Record already exists") {
+						_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+							return c.UpdateVariable(&c.CompanyID, &variablePayload)
+						}, nil)
+						if err != nil {
+							return diag.FromErr(err)
+						}
+					} else {
+						return diag.FromErr(err)
+					}
+				}
+			}
 		}
 
 		res, ok := sdkRes.(*dv.Flow)
@@ -449,6 +617,26 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 	}
 	if current.FlowStatus != desired.FlowStatus {
 		return false
+	}
+
+	// Variables Diff
+	sort.SliceStable(current.Variables, func(i, j int) bool {
+		return current.Variables[i].Name < current.Variables[j].Name
+	})
+	sort.SliceStable(desired.Variables, func(i, j int) bool {
+		return desired.Variables[i].Name < desired.Variables[j].Name
+	})
+	for i, currentV := range current.Variables {
+		//Check relevant fields only
+		desiredV := desired.Variables[i]
+		if currentV.Fields.DisplayName != desiredV.Fields.DisplayName ||
+			currentV.Type != desiredV.Type ||
+			currentV.Visibility != desiredV.Visibility ||
+			currentV.Fields.Mutable != desiredV.Fields.Mutable ||
+			currentV.Fields.Max != desiredV.Fields.Max ||
+			currentV.Fields.Min != desiredV.Fields.Min {
+			return false
+		}
 	}
 
 	// Overall GraphData Diff
@@ -646,4 +834,20 @@ func validateFlowDeps(d *schema.ResourceData, diags *diag.Diagnostics) {
 			}
 		}
 	}
+}
+
+func getFlowVariables(flowJson string) ([]dv.FlowVariable, error) {
+	flowOutput, err := dv.MakeFlowPayload(&flowJson, "Flow")
+	if err == nil {
+		var flow dv.Flow
+		json.Unmarshal([]byte(*flowOutput), &flow)
+		return flow.Variables, nil
+	}
+	flowOutput, err = dv.MakeFlowPayload(&flowJson, "FlowImport")
+	if err == nil {
+		var flow dv.FlowImport
+		json.Unmarshal([]byte(*flowOutput), &flow)
+		return flow.FlowInfo.Variables, nil
+	}
+	return nil, fmt.Errorf("Error: Unable to abstract flow variables from flow_json")
 }

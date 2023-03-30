@@ -499,3 +499,31 @@ func testAccCheckAttributeSimpleFlowOutputSchema(resourceFullName string) resour
 		return fmt.Errorf("outputSchemaCompiled is nil")
 	}
 }
+
+func TestAccResourceFlow_FlowContextVarFlow(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.FlowContextVarFlow.Name)
+
+	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.FlowContextVarFlow.Hcl})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: hcl,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
+				),
+			},
+		},
+	})
+}

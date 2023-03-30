@@ -26,6 +26,7 @@ type TestFlowsJson struct {
 	PingOneSessionMainFlow       string
 	PingOneSessionMainFlowUpdate string
 	PingOneSessionSubFlow        string
+	FlowContextVarFlow           string
 }
 
 type TestFlowsHcl struct {
@@ -46,6 +47,7 @@ type TestFlowsHcl struct {
 	PingOneSessionMainFlow       FlowHcl
 	PingOneSessionMainFlowUpdate FlowHcl
 	PingOneSessionSubFlow        FlowHcl
+	FlowContextVarFlow           FlowHcl
 }
 
 type FlowHcl struct {

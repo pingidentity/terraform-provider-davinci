@@ -92,6 +92,11 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 			FlowJson:    flowJsons.PingOneSessionSubFlow,
 			Connections: []string{"annotation", "errorcustomize", "functions", "http", "node", "pingonesso", "variables"},
 		}),
+		FlowContextVarFlow: makeFlowHcl(resourceName, flowResource{
+			Name:        "flow_context_var_flow",
+			FlowJson:    flowJsons.FlowContextVarFlow,
+			Connections: []string{"http", "variables"},
+		}),
 	}
 }
 
@@ -163,6 +168,7 @@ func getFlowJsons(resourceName string) TestFlowsJson {
 		PingOneSessionMainFlow:       readFlowJsonFile("flows/p1sessionmainflow.json", resourceName),
 		PingOneSessionMainFlowUpdate: readFlowJsonFile("flows/p1sessionmainflowupdate.json", resourceName),
 		PingOneSessionSubFlow:        readFlowJsonFile("flows/p1sessionsubflow.json", resourceName),
+		FlowContextVarFlow:           readFlowJsonFile("flows/flowcontextvarflow.json", resourceName),
 	}
 }
 

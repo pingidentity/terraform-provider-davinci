@@ -1,0 +1,4 @@
+```release-note:bug
+`go_client`: Updated Models for flow and variable
+`davinci_flow`: Added computed flow_variable section
+```

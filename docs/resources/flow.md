@@ -84,6 +84,7 @@ resource "davinci_flow" "subflow" {
 
 ### Read-Only
 
+- `flow_variables` (List of Object) Returned list of Flow Context variables. These are Variable resources that are created and managed by the Flow resource via flow_json (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 - `name` (String) Computed Flow Name after import. Matches 'name' in flow_json
 
@@ -103,5 +104,21 @@ Required:
 
 - `id` (String) Subflow Flow ID that will be used when flow is imported.
 - `name` (String) Subflow Name to match when updating flow_json subflowId.
+
+
+<a id="nestedatt--flow_variables"></a>
+### Nested Schema for `flow_variables`
+
+Read-Only:
+
+- `context` (String)
+- `description` (String)
+- `flow_id` (String)
+- `id` (String)
+- `max` (Number)
+- `min` (Number)
+- `mutable` (Boolean)
+- `name` (String)
+- `type` (String)
 
 

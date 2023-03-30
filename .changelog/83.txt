@@ -1,5 +1,5 @@
 ```release-note:bug
-`go_client`: updated UpdateFlow method for additional fields
-`davinci_flow`: update DiffSuppressFunc to account for various parts of flow_json
-`davinci_flow`: added schema test for various parts of flow_json
+`go_client`: Updated UpdateFlow method for additional fields
+`davinci_flow`: Update DiffSuppressFunc to account for various parts of flow_json
+`davinci_flow`: Added schema test for various parts of flow_json
 ```

@@ -1,3 +1,3 @@
 ```release-note:bug
-`go_client`: made TriggerType non-null field to ensure it's always included in payload
+`go_client`: TriggerType to non-null field to ensure it's always included in payload
 ```

@@ -1,0 +1,521 @@
+{
+  "companyId": "98b527a9-31b4-4992-95e1-77c9bce5941b",
+  "authTokenExpireIds": [],
+  "connectorIds": [
+    "variablesConnector",
+    "httpConnector"
+  ],
+  "createdDate": 1679929895866,
+  "currentVersion": 6,
+  "customerId": "ee728871d18a3b9b273c87192cee4a18",
+  "description": "",
+  "enabledGraphData": {
+    "elements": {
+      "nodes": [
+        {
+          "data": {
+            "id": "gpeoytafk0",
+            "nodeType": "CONNECTION",
+            "connectionId": "06922a684039827499bdbdd97f49827b",
+            "connectorId": "variablesConnector",
+            "name": "Variables",
+            "label": "Variables",
+            "status": "configured",
+            "capabilityName": "saveFlowValue",
+            "type": "trigger",
+            "properties": {
+              "saveFlowVariables": {
+                "value": [
+                  {
+                    "name": "myFlowVar",
+                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"success\",\n        \"data\": \"{{local.6e6a1i57ur.payload.success}}\",\n        \"tooltip\": \"{{local.6e6a1i57ur.payload.success}}\",\n        \"children\": [\n          {\n            \"text\": \"success\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]",
+                    "key": 0.3616216250282964,
+                    "type": "string",
+                    "label": "myFlowVar (string - flow)",
+                    "nameDefault": "success"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "l0g6p716bu",
+            "nodeType": "EVAL",
+            "label": "Evaluator"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "6e6a1i57ur",
+            "nodeType": "CONNECTION",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
+            "connectorId": "httpConnector",
+            "name": "Http",
+            "label": "Http",
+            "status": "configured",
+            "capabilityName": "customHtmlMessage",
+            "type": "trigger",
+            "properties": {
+              "message": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"making flow variable\"\n      }\n    ]\n  }\n]"
+              },
+              "showContinueButton": {
+                "value": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "q491yvvf13",
+            "nodeType": "EVAL"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "ojles82pdm",
+            "nodeType": "CONNECTION",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
+            "connectorId": "httpConnector",
+            "name": "Http",
+            "label": "Http",
+            "status": "configured",
+            "capabilityName": "customHtmlMessage",
+            "type": "trigger",
+            "properties": {
+              "message": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"flow var is: \"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"variable.svg\",\n        \"url\": \"myFlowVar\",\n        \"data\": \"{{global.flow.variables.myFlowVar}}\",\n        \"tooltip\": \"{{global.flow.variables.myFlowVar}}\",\n        \"children\": [\n          {\n            \"text\": \"myFlowVar\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        }
+      ],
+      "edges": [
+        {
+          "data": {
+            "id": "bxcjkcemyv",
+            "source": "6e6a1i57ur",
+            "target": "q491yvvf13"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "vwva2eifs6",
+            "source": "gpeoytafk0",
+            "target": "l0g6p716bu"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "5z2o4vo0vw",
+            "source": "q491yvvf13",
+            "target": "gpeoytafk0"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "5elfe8hl4v",
+            "source": "l0g6p716bu",
+            "target": "ojles82pdm"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        }
+      ]
+    },
+    "data": {},
+    "zoomingEnabled": true,
+    "userZoomingEnabled": true,
+    "zoom": 1,
+    "minZoom": 1e-50,
+    "maxZoom": 1e+50,
+    "panningEnabled": true,
+    "userPanningEnabled": true,
+    "pan": {
+      "x": 0,
+      "y": 0
+    },
+    "boxSelectionEnabled": true,
+    "renderer": {
+      "name": "null"
+    }
+  },
+  "flowStatus": "enabled",
+  "name": "flowvariable",
+  "orx": "{\"companyId\":\"98b527a9-31b4-4992-95e1-77c9bce5941b\",\"flowId\":\"023764ee47f62241f4f6851260a79c45\",\"flowVersionId\":6,\"version\":\"4.0.0\",\"states\":[\"initialize\",\"start_0\",\"inside_0\",\"end_0\"],\"currentState\":[\"initialize\"],\"transitions\":[{\"from\":[\"initialize\"],\"to\":\"start_0\",\"conditions\":{\"$and\":[{\"initializeFlow\":true}]},\"signals\":[{\"name\":\"Http\",\"companyId\":\"98b527a9-31b4-4992-95e1-77c9bce5941b\",\"flowId\":\"023764ee47f62241f4f6851260a79c45\",\"flowVersionId\":6,\"id\":\"6e6a1i57ur\",\"connectionId\":\"867ed4363b2bc21c860085ad2baa817d\",\"connectorId\":\"httpConnector\",\"capabilityName\":\"customHtmlMessage\",\"properties\":{\"message\":{\"value\":\"making flow variable\"},\"showContinueButton\":{\"value\":true}},\"debugMode\":false,\"logLevel\":null,\"isDisabled\":false,\"inputs\":[\"global.error\"],\"respondToUser\":true,\"transitionId\":0,\"signalId\":0}],\"transitionId\":0},{\"from\":[\"start_0\"],\"to\":\"inside_0\",\"conditions\":{\"$and\":[{\"id\":\"6e6a1i57ur\",\"connectionId\":\"867ed4363b2bc21c860085ad2baa817d\",\"connectorId\":\"httpConnector\",\"capabilityName\":\"customHtmlMessage\",\"success\":true}]},\"signals\":[{\"name\":\"Variables\",\"companyId\":\"98b527a9-31b4-4992-95e1-77c9bce5941b\",\"flowId\":\"023764ee47f62241f4f6851260a79c45\",\"flowVersionId\":6,\"id\":\"gpeoytafk0\",\"connectionId\":\"06922a684039827499bdbdd97f49827b\",\"connectorId\":\"variablesConnector\",\"capabilityName\":\"saveFlowValue\",\"properties\":{\"saveFlowVariables\":{\"value\":[{\"name\":\"myFlowVar\",\"value\":\"{{local.6e6a1i57ur.payload.success}}\",\"key\":0.3616216250282964,\"type\":\"string\",\"label\":\"myFlowVar (string - flow)\",\"nameDefault\":\"success\"}]}},\"debugMode\":false,\"logLevel\":null,\"isDisabled\":false,\"inputs\":[],\"transitionId\":1,\"signalId\":0}],\"evalNodeId\":\"q491yvvf13\",\"transitionId\":1},{\"from\":[\"inside_0\"],\"to\":\"end_0\",\"conditions\":{\"$and\":[{\"id\":\"gpeoytafk0\",\"connectionId\":\"06922a684039827499bdbdd97f49827b\",\"connectorId\":\"variablesConnector\",\"capabilityName\":\"saveFlowValue\",\"success\":true}]},\"signals\":[{\"name\":\"Http\",\"companyId\":\"98b527a9-31b4-4992-95e1-77c9bce5941b\",\"flowId\":\"023764ee47f62241f4f6851260a79c45\",\"flowVersionId\":6,\"id\":\"ojles82pdm\",\"connectionId\":\"867ed4363b2bc21c860085ad2baa817d\",\"connectorId\":\"httpConnector\",\"capabilityName\":\"customHtmlMessage\",\"properties\":{\"message\":{\"value\":\"flow var is: {{global.flow.variables.myFlowVar}}\"}},\"debugMode\":false,\"logLevel\":null,\"isDisabled\":false,\"inputs\":[\"global.error\"],\"respondToUser\":true,\"transitionId\":2,\"signalId\":0}],\"evalNodeId\":\"l0g6p716bu\",\"transitionId\":2}],\"history\":[],\"outputs\":{\"variablesConnector_saveFlowValue\":{\"localOutputs\":[\"output\"]}},\"outputParameters\":[\"local.6e6a1i57ur.payload.success\",\"global.flow.variables.myFlowVar\"],\"global\":{},\"local\":{},\"idMapping\":{},\"nodeMappingForTids\":{\"6e6a1i57ur\":\"initialize\",\"6e6a1i57ur_customHtmlMessage\":\"initialize\",\"ojles82pdm\":\"6e6a1i57ur\",\"ojles82pdm_customHtmlMessage\":\"6e6a1i57ur_customHtmlMessage\"},\"tids\":{},\"delayedConditionalStateChangeMappings\":{},\"delayedConditionalStateChangeMappingsReverse\":{},\"delayedConditionalStatesList\":[],\"lbsTransitionIdsToIgnore\":[],\"lbsTransitionIdsMapping\":{},\"outputParametersDefault\":{\"local.6e6a1i57ur.payload.success\":\"\",\"global.flow.variables.myFlowVar\":\"\"},\"outputParametersDefaultBlacklist\":[],\"historyThreshold\":70,\"errorRewindBlackListIds\":[],\"nodeMappingForTidsNew\":{\"6e6a1i57ur\":\"initialize\",\"ojles82pdm\":[\"6e6a1i57ur\"]},\"nodeStates\":{\"6e6a1i57ur\":\"start_0\",\"gpeoytafk0\":\"inside_0\",\"ojles82pdm\":\"end_0\"}}",
+  "publishedVersion": 6,
+  "updatedDate": 1679929897084,
+  "flowId": "023764ee47f62241f4f6851260a79c45",
+  "versionId": 6,
+  "graphData": {
+    "elements": {
+      "nodes": [
+        {
+          "data": {
+            "id": "gpeoytafk0",
+            "nodeType": "CONNECTION",
+            "connectionId": "06922a684039827499bdbdd97f49827b",
+            "connectorId": "variablesConnector",
+            "name": "Variables",
+            "label": "Variables",
+            "status": "configured",
+            "capabilityName": "saveFlowValue",
+            "type": "trigger",
+            "properties": {
+              "saveFlowVariables": {
+                "value": [
+                  {
+                    "name": "myFlowVar",
+                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"success\",\n        \"data\": \"{{local.6e6a1i57ur.payload.success}}\",\n        \"tooltip\": \"{{local.6e6a1i57ur.payload.success}}\",\n        \"children\": [\n          {\n            \"text\": \"success\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]",
+                    "key": 0.3616216250282964,
+                    "type": "string",
+                    "label": "myFlowVar (string - flow)",
+                    "nameDefault": "success"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 480,
+            "y": 240
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "l0g6p716bu",
+            "nodeType": "EVAL",
+            "label": "Evaluator"
+          },
+          "position": {
+            "x": 600,
+            "y": 240
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "6e6a1i57ur",
+            "nodeType": "CONNECTION",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
+            "connectorId": "httpConnector",
+            "name": "Http",
+            "label": "Http",
+            "status": "configured",
+            "capabilityName": "customHtmlMessage",
+            "type": "trigger",
+            "properties": {
+              "message": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"making flow variable\"\n      }\n    ]\n  }\n]"
+              },
+              "showContinueButton": {
+                "value": true
+              }
+            }
+          },
+          "position": {
+            "x": 210,
+            "y": 240
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "q491yvvf13",
+            "nodeType": "EVAL"
+          },
+          "position": {
+            "x": 315,
+            "y": 240
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "ojles82pdm",
+            "nodeType": "CONNECTION",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
+            "connectorId": "httpConnector",
+            "name": "Http",
+            "label": "Http",
+            "status": "configured",
+            "capabilityName": "customHtmlMessage",
+            "type": "trigger",
+            "properties": {
+              "message": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"flow var is: \"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"variable.svg\",\n        \"url\": \"myFlowVar\",\n        \"data\": \"{{global.flow.variables.myFlowVar}}\",\n        \"tooltip\": \"{{global.flow.variables.myFlowVar}}\",\n        \"children\": [\n          {\n            \"text\": \"myFlowVar\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              }
+            }
+          },
+          "position": {
+            "x": 816.0027324363339,
+            "y": 237.70775313480522
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        }
+      ],
+      "edges": [
+        {
+          "data": {
+            "id": "bxcjkcemyv",
+            "source": "6e6a1i57ur",
+            "target": "q491yvvf13"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "vwva2eifs6",
+            "source": "gpeoytafk0",
+            "target": "l0g6p716bu"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "5z2o4vo0vw",
+            "source": "q491yvvf13",
+            "target": "gpeoytafk0"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "5elfe8hl4v",
+            "source": "l0g6p716bu",
+            "target": "ojles82pdm"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        }
+      ]
+    },
+    "data": {},
+    "zoomingEnabled": true,
+    "userZoomingEnabled": true,
+    "zoom": 1,
+    "minZoom": 1e-50,
+    "maxZoom": 1e+50,
+    "panningEnabled": true,
+    "userPanningEnabled": true,
+    "pan": {
+      "x": 0,
+      "y": 0
+    },
+    "boxSelectionEnabled": true,
+    "renderer": {
+      "name": "null"
+    }
+  },
+  "flowColor": "#AFD5FF",
+  "savedDate": 1679929895842,
+  "variables": [
+    {
+      "context": "flow",
+      "createdDate": 1679929814557,
+      "customerId": "ee728871d18a3b9b273c87192cee4a18",
+      "fields": {
+        "type": "string",
+        "displayName": "",
+        "mutable": true,
+        "min": 0,
+        "max": 2000,
+        "value": true
+      },
+      "flowId": "023764ee47f62241f4f6851260a79c45",
+      "type": "property",
+      "updatedDate": 1679929899791,
+      "visibility": "private",
+      "name": "myFlowVar##SK##flow##SK##023764ee47f62241f4f6851260a79c45",
+      "companyId": "98b527a9-31b4-4992-95e1-77c9bce5941b"
+    }
+  ],
+  "connections": []
+}
