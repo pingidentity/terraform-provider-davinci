@@ -72,7 +72,7 @@ $ terraform plan
 ```
 
 ### Full deployment example with a PingOne environment
-The following assumes that the DV admin user has been provided the `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
+The following assumes that the DaVinci admin user has been provided the `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
 
 ```terraform
 terraform {
