@@ -620,6 +620,20 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 	}
 
 	// Variables Diff
+	dVar := []dv.FlowVariable{}
+	for _, v := range desired.Variables {
+		if v.Context == "flow" {
+			dVar = append(dVar, v)
+		}
+	}
+	desired.Variables = dVar
+	cVar := []dv.FlowVariable{}
+	for _, v := range current.Variables {
+		if v.Context == "flow" {
+			cVar = append(cVar, v)
+		}
+	}
+	current.Variables = cVar
 	sort.SliceStable(current.Variables, func(i, j int) bool {
 		return current.Variables[i].Name < current.Variables[j].Name
 	})
