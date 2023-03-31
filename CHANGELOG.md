@@ -2,6 +2,13 @@
 
 BUG FIXES:
 
+* `go_client`: fixed flow variable loop logic
+`davinci_flow`: correct variable diff function ([#95](https://github.com/pingidentity/terraform-provider-pingone/issues/95))
+
+## 0.1.4
+
+BUG FIXES:
+
 * `go_client`: Updated Models for flow and variable
 `davinci_flow`: Added computed flow_variable section ([#93](https://github.com/pingidentity/terraform-provider-pingone/issues/93))
 
