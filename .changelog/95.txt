@@ -1,0 +1,4 @@
+```release-note:bug
+`go_client`: fixed flow variable loop logic
+`davinci_flow`: correct variable diff function
+```
