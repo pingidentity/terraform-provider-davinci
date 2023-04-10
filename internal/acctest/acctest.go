@@ -56,7 +56,7 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: "0.7.0",
+			VersionConstraint: "0.11.1",
 		},
 	}
 
@@ -253,8 +253,8 @@ resource "pingone_environment" "%[1]s" {
 	name = "tf-testacc-dynamic-%[1]s"
 	type = "SANDBOX"
 	license_id = "%[2]s"
-	default_population {
-	}
+  default_population {
+  }
 	service {
 		type = "SSO"
 	}
