@@ -28,8 +28,8 @@ labels: enhancement
 
 ### New or Affected Resource(s)
 <!--- Please provide a list of the new and/or affected resources/data sources, for example: -->
-- pingone_environment
-- pingone_population
+- `davinci_application`
+- `davinci_flow`
 
 <!--- Optionally include a brief description on the type of change required, but this isn't essential -->
 
@@ -43,6 +43,8 @@ labels: enhancement
 # security, you can also encrypt the files using our GPG public key.
 
 # Remember to replace any account/customer sensitive information in the configuration before submitting the issue
+
+# NOTE: PLEASE DO NOT share DaVinci JSON exports publicly without encrypting files first.  DaVinci JSON exports can contain environment/tenant specific information, and may also include secrets.
 ```
 
 ### References
