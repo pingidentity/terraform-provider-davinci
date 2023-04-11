@@ -143,11 +143,12 @@ func testAccResourceFlow_SubFlows_Hcl(resourceName string, flowsHcl []string) (h
 %[1]s
 
 resource "davinci_connection" "%[2]s-flow" {
-	name = "Flow"
-	connector_id = "flowConnector"
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	depends_on = [data.davinci_connections.read_all]
+  name           = "Flow"
+  connector_id   = "flowConnector"
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [data.davinci_connections.read_all]
 }
+
 
 `, baseHcl, resourceName)
 
@@ -176,10 +177,11 @@ func testAccResourceFlow_VariableConnectorFlows_Hcl(resourceName string, flowsHc
 %[1]s
 
 data "davinci_connections" "variables" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	depends_on = [resource.davinci_flow.%[3]s]
-	connector_ids = ["variablesConnector"]
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [resource.davinci_flow.%[3]s]
+  connector_ids  = ["variablesConnector"]
 }
+
 
 `, baseHcl, resourceName, flowsHcl[0].Name)
 

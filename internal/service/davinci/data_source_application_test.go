@@ -65,8 +65,8 @@ func testAccDatasourceApplication_SlimByAppId_Hcl(resourceName string) (hcl stri
 %[1]s
 
 data "davinci_application" "%[2]s" {
-	application_id = resource.davinci_application.%[2]s.id
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  application_id = resource.davinci_application.%[2]s.id
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 }
 `, baseHcl, resourceName)
 	return hcl
@@ -78,8 +78,8 @@ func testAccDatasourceApplication_SlimById_Hcl(resourceName string) (hcl string)
 %[1]s
 
 data "davinci_application" "%[2]s" {
-	id = resource.davinci_application.%[2]s.id
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  id             = resource.davinci_application.%[2]s.id
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 }
 `, baseHcl, resourceName)
 	return hcl

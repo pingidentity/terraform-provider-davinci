@@ -41,13 +41,13 @@ func testAccResourceVariable_CompanyContext_Hcl(resourceName string) (hcl string
 %[1]s
 
 resource "davinci_variable" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	name = "company-%[2]s"
-	context = "company"
-	description = "desc-%[2]s"
-	value = "val-%[2]s"
-	type = "string"
-	depends_on = [data.davinci_connections.read_all]
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  name           = "company-%[2]s"
+  context        = "company"
+  description    = "desc-%[2]s"
+  value          = "val-%[2]s"
+  type           = "string"
+  depends_on     = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl
@@ -89,15 +89,15 @@ func testAccResourceVariable_FlowInstanceContext_Hcl(resourceName string) (hcl s
 %[1]s
 
 resource "davinci_variable" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	name = "flowInstance-%[2]s"
-	context = "flowInstance"
-	description = "desc-%[2]s"
-	value = "val-%[2]s"
-	type = "string"
-	min = 0
-	max = 1000
-	depends_on = [data.davinci_connections.read_all]
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  name           = "flowInstance-%[2]s"
+  context        = "flowInstance"
+  description    = "desc-%[2]s"
+  value          = "val-%[2]s"
+  type           = "string"
+  min            = 0
+  max            = 1000
+  depends_on     = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl
