@@ -11,7 +11,7 @@ default: build
 tools:
 	go generate -tags tools tools/tools.go
 
-build: terrafmtcheck
+build: vet depscheck
 	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
 
 generate: terrafmtcheck
