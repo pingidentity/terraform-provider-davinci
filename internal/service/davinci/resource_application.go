@@ -412,9 +412,13 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	flatResp, err := flattenApp(resp)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	for i, v := range flatResp {
-
-		d.Set(i, v)
+		if err = d.Set(i, v); err != nil {
+			return diag.FromErr(err)
+		}
 	}
 	d.SetId(resp.AppID)
 	return diags

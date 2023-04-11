@@ -263,6 +263,9 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 	rString, err := json.Marshal(&res.Flow)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	if err := d.Set("flow_json", string(rString)); err != nil {
 		return diag.FromErr(err)
@@ -339,6 +342,10 @@ func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
 		return nil, err
 	}
 	flowVars, err := getFlowVariables(string(flowJson))
+	if err != nil {
+		return nil, err
+	}
+
 	var flowVariables []interface{}
 	for _, flowVar := range flowVars {
 		varStateSimpleName := strings.Split(flowVar.Name, "##SK##")
@@ -704,6 +711,9 @@ func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 			// Only two types of subflow capabilities use the subflowId and subflowVersionId properties
 			if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
 				sfProp, err = expandSubFlowProps(v.Data.Properties)
+				if err != nil {
+					return nil, err
+				}
 				for _, sfMap := range sfList {
 					sfValues := sfMap.(map[string]interface{})
 					if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
@@ -854,13 +864,17 @@ func getFlowVariables(flowJson string) ([]dv.FlowVariable, error) {
 	flowOutput, err := dv.MakeFlowPayload(&flowJson, "Flow")
 	if err == nil {
 		var flow dv.Flow
-		json.Unmarshal([]byte(*flowOutput), &flow)
+		if err = json.Unmarshal([]byte(*flowOutput), &flow); err != nil {
+			return nil, err
+		}
 		return flow.Variables, nil
 	}
 	flowOutput, err = dv.MakeFlowPayload(&flowJson, "FlowImport")
 	if err == nil {
 		var flow dv.FlowImport
-		json.Unmarshal([]byte(*flowOutput), &flow)
+		if err = json.Unmarshal([]byte(*flowOutput), &flow); err != nil {
+			return nil, err
+		}
 		return flow.FlowInfo.Variables, nil
 	}
 	return nil, fmt.Errorf("Error: Unable to abstract flow variables from flow_json")

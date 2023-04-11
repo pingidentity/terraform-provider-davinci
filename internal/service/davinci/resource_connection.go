@@ -294,9 +294,3 @@ func makeProperties(d *schema.ResourceData) *dv.Properties {
 	}
 	return &connProps
 }
-
-func getCompanyId(c *dv.Client, d *schema.ResourceData) {
-	if cId, ok := d.GetOk("environment_id"); ok {
-		c.CompanyID = cId.(string)
-	}
-}

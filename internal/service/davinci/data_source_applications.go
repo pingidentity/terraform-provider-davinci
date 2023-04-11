@@ -353,7 +353,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 		return diag.FromErr(err)
 	}
 
-	apps := make([]interface{}, len(resp), len(resp))
+	apps := make([]interface{}, len(resp))
 	for i, thisApp := range resp {
 		app, err := flattenApp(&thisApp)
 		if err != nil {

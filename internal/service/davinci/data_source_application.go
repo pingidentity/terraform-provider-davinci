@@ -338,7 +338,7 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, m in
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Warning,
 			Summary:  "application_id is deprecated, please use id instead",
-			Detail:   fmt.Sprintf(`application_id is deprecated and will be removed in a future release, please use id instead`),
+			Detail:   "application_id is deprecated and will be removed in a future release, please use id instead",
 		})
 	}
 	if !ok {
@@ -363,12 +363,21 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, m in
 	}
 
 	flatResp, err := flattenApp(resp)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 	for i, v := range flatResp {
-		d.Set(i, v)
+		err := d.Set(i, v)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
 	// TODO: remove this once application_id is removed
-	d.Set("application_id", resp.AppID)
+	if err = d.Set("application_id", resp.AppID); err != nil {
+		return diag.FromErr(err)
+	}
+
 	d.SetId(resp.AppID)
 
 	return diags
