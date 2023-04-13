@@ -21,7 +21,7 @@ func TestAccResourceVariable_CompanyContext(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_variable"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -66,7 +66,7 @@ func TestAccResourceVariable_FlowInstanceContext(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_variable"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,

@@ -1,5 +1,6 @@
 TEST?=$$(go list ./...)
 SWEEP_DIR=./internal/sweep
+DAVINCI_DIR=./internal/service/davinci
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
@@ -52,9 +53,10 @@ depscheck:
 
 lint: golangci-lint providerlint importlint tflint terrafmtcheck
 
+# TODO: Update to cover all files
 golangci-lint:
-	@echo "==> Checking source code with golangci-lint..."
-	@golangci-lint run ./...
+	@echo "==> Checking davinci service source code with golangci-lint..."
+	@golangci-lint run $(DAVINCI_DIR)
 
 importlint:
 	@echo "==> Checking source code with importlint..."

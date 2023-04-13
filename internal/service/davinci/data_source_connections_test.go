@@ -20,7 +20,7 @@ func TestAccDataSourceConnection_AllConections(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -57,7 +57,7 @@ func TestAccDataSourceConnection_FilteredConnections(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,

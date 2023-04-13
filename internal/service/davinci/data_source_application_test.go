@@ -21,7 +21,7 @@ func TestAccDatasourceApplication_SlimByAppId(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -46,7 +46,7 @@ func TestAccDatasourceApplication_SlimById(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,

@@ -21,7 +21,7 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,

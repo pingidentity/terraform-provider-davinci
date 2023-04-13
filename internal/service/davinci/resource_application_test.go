@@ -21,7 +21,7 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -83,7 +83,7 @@ func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceApplication_WithFlowPolicy_Hcl(resourceName),
@@ -207,7 +207,7 @@ func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName),

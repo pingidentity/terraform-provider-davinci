@@ -12,7 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/provider"
+	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 // ProviderFactories is a static map containing only the main provider instance
@@ -36,6 +38,9 @@ var Provider *schema.Provider
 // ExternalProviders is a map of additional providers that may be used during
 // testing.
 var ExternalProviders map[string]resource.ExternalProvider
+
+// TestCheckFunc is used by CheckDestroy to determine for proper resource destruction
+var TestCheckFunc func(*terraform.State) error
 
 func init() {
 	Provider = provider.New("dev")()
@@ -306,4 +311,101 @@ func BaselineHcl(resourceName string) string {
 
 %[2]s
 `, pingoneHcl, bsConnectionsHcl)
+}
+
+func TestClient() (*dv.APIClient, error) {
+	e := ""
+	username := os.Getenv("PINGONE_USERNAME")
+	if username == "" {
+		e = e + "PINGONE_USERNAME "
+	}
+	password := os.Getenv("PINGONE_PASSWORD")
+	if password == "" {
+		e = e + "PINGONE_PASSWORD "
+	}
+	region := os.Getenv("PINGONE_REGION")
+	if region == "" {
+		e = e + "PINGONE_REGION "
+	}
+	environment_id := os.Getenv("PINGONE_ENVIRONMENT_ID")
+	if environment_id == "" {
+		e = e + "PINGONE_ENVIRONMENT_ID "
+	}
+	if e != "" {
+		return nil, fmt.Errorf("missing environment variables: %s", e)
+	}
+
+	cInput := dv.ClientInput{
+		Username:        username,
+		Password:        password,
+		PingOneRegion:   region,
+		PingOneSSOEnvId: environment_id,
+	}
+	c, err := dv.NewClient(&cInput)
+	if err != nil {
+		return nil, err
+	}
+	if environment_id != "" {
+		c.CompanyID = environment_id
+	}
+	return c, nil
+}
+
+func CheckEnvDestroy(s *terraform.State) error {
+	c, err := TestClient()
+	if err != nil {
+		return err
+	}
+
+	for _, resource := range s.RootModule().Resources {
+		if resource.Type != "davinci_application" {
+			continue
+		}
+		envId := resource.Primary.Attributes["environment_id"]
+		appId := resource.Primary.Attributes["id"]
+		res, err := c.ReadApplication(&envId, appId)
+		if res != nil {
+			fmt.Println(res)
+		}
+		if err == nil {
+			return fmt.Errorf("application still exists")
+		}
+	}
+
+	return nil
+}
+
+func CheckResourceDestroy(resourceTypes []string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		c, err := TestClient()
+		if err != nil {
+			return err
+		}
+		for _, resource := range s.RootModule().Resources {
+			for _, rType := range resourceTypes {
+				if resource.Type != rType {
+					continue
+				}
+				envId := resource.Primary.Attributes["environment_id"]
+				rId := resource.Primary.Attributes["id"]
+				var err error
+				switch rType {
+				case "davinci_application":
+					_, err = c.ReadApplication(&envId, rId)
+				case "davinci_connection":
+					_, err = c.ReadConnection(&envId, rId)
+				case "davinci_flow":
+					_, err = c.ReadFlow(&envId, rId)
+				case "davinci_variable":
+					_, err = c.ReadVariable(&envId, rId)
+				default:
+					return fmt.Errorf("unknown resource type: %s", rType)
+				}
+				if err == nil {
+					return fmt.Errorf("%s still exists", rType)
+				}
+			}
+		}
+		return nil
+	}
 }

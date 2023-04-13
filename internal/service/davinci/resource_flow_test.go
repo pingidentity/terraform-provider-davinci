@@ -27,7 +27,7 @@ func TestAccResourceFlow_SimpleFlow(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -57,7 +57,7 @@ func TestAccResourceFlow_SimpleFlowUpdate(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -97,7 +97,7 @@ func TestAccResourceFlow_SubFlows(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -203,6 +203,7 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		ErrorCheck:        acctest.ErrorCheck(t),
 		Steps: []resource.TestStep{
 			{
@@ -250,7 +251,7 @@ func TestAccResourceFlow_BrokenFlow(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config:      hcl,
@@ -273,7 +274,7 @@ func TestAccResourceFlow_SchemaChanges(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
@@ -516,7 +517,7 @@ func TestAccResourceFlow_FlowContextVarFlow(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,

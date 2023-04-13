@@ -22,7 +22,7 @@ func TestAccResourceConnection_Slim(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -50,7 +50,7 @@ func TestAccResourceConnection_SlimWithUpdate(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
 				Config: beforeHcl,
@@ -99,13 +99,13 @@ resource "davinci_connection" "%[2]s" {
 }
 
 // Test to try to hit API rate Limit
-func TestAccReadResources_Heavy(t *testing.T) {
+func TestAccResourceConnection_HeavyRead(t *testing.T) {
 
 	resourceBase := "davinci_connection"
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	hcl := testAccReadResources_Heavy_Hcl(resourceName, "heavy")
+	hcl := testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
 	// fmt.Printf(`HCL: \n %s \n`, hcl)
 
 	resource.Test(t, resource.TestCase{
@@ -113,7 +113,7 @@ func TestAccReadResources_Heavy(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application, davinci_connection, davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -127,7 +127,7 @@ func TestAccReadResources_Heavy(t *testing.T) {
 	})
 }
 
-func testAccReadResources_Heavy_Hcl(resourceName, valuePrefix string) (hcl string) {
+func testAccResourceConnection_HeavyRead_Hcl(resourceName, valuePrefix string) (hcl string) {
 	baseHcl := acctest.BaselineHcl(resourceName)
 	clientId := acctest.RandStringWithPrefix(valuePrefix)
 	clientSecret := acctest.RandStringWithPrefix(valuePrefix)
