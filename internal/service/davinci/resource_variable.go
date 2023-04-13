@@ -79,8 +79,8 @@ func ResourceVariable() *schema.Resource {
 	}
 }
 
-func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -112,13 +112,13 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, m inter
 		d.SetId(fmt.Sprint(i))
 	}
 
-	resourceVariableRead(ctx, d, m)
+	resourceVariableRead(ctx, d, meta)
 
 	return diags
 }
 
-func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -175,8 +175,8 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 	return diags
 }
 
-func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
 	if err != nil {
@@ -204,11 +204,11 @@ func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, m inter
 
 	}
 
-	return resourceVariableRead(ctx, d, m)
+	return resourceVariableRead(ctx, d, meta)
 }
 
-func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)

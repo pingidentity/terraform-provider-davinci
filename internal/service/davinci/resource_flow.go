@@ -153,8 +153,8 @@ func ResourceFlow() *schema.Resource {
 	}
 }
 
-func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -219,13 +219,13 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 
 	d.SetId(res.FlowID)
 
-	resourceFlowRead(ctx, d, m)
+	resourceFlowRead(ctx, d, meta)
 
 	return diags
 }
 
-func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -368,8 +368,8 @@ func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
 	return flowVariables, nil
 }
 
-func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
 	if err != nil {
@@ -480,11 +480,11 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	return resourceFlowRead(ctx, d, m)
+	return resourceFlowRead(ctx, d, meta)
 }
 
-func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -524,6 +524,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if new != "" {
 			newFlowJson, err := mapSubFlows(d, new)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			new = *newFlowJson
@@ -531,6 +532,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if old != "" {
 			oldFlowJson, err := mapSubFlows(d, old)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			old = *oldFlowJson
@@ -542,6 +544,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if new != "" {
 			newFlowJson, err := mapFlowConnections(d, new)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			new = *newFlowJson
@@ -549,6 +552,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if old != "" {
 			oldFlowJson, err := mapFlowConnections(d, old)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			old = *oldFlowJson
@@ -563,6 +567,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		currentF := dv.Flow{}
 		err = json.Unmarshal([]byte(old), &currentFi)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		// convert to type Flow if needed
@@ -571,6 +576,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		err = json.Unmarshal([]byte(old), &currentF)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		if currentF.GraphData.Elements.Nodes != nil {
@@ -582,6 +588,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		desiredF := dv.Flow{}
 		err = json.Unmarshal([]byte(new), &desiredFi)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		// convert to type Flow if needed
@@ -590,6 +597,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		err = json.Unmarshal([]byte(new), &desiredF)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		if desiredF.GraphData.Elements.Nodes != nil {
@@ -672,10 +680,12 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		currentNodes, err := json.Marshal(current.GraphData.Elements.Nodes)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		desiredNodes, err := json.Marshal(desired.GraphData.Elements.Nodes)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 

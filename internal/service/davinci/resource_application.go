@@ -346,8 +346,8 @@ func ResourceApplication() *schema.Resource {
 	}
 }
 
-func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -376,13 +376,13 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, m in
 
 	d.SetId(res.AppID)
 
-	resourceApplicationRead(ctx, d, m)
+	resourceApplicationRead(ctx, d, meta)
 
 	return diags
 }
 
-func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -424,8 +424,8 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
 	if err != nil {
@@ -436,7 +436,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 
 	// if a new policy is added it must be created
 	if d.HasChanges("policy") {
-		_, new := d.GetChange("policy")
+		new := d.Get("policy")
 		pols := expandFlowPolicies(new)
 		for _, v := range pols {
 			if v.PolicyID == "" {
@@ -467,7 +467,8 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		}
 	}
 
-	if d.HasChanges("name", "api_key_enabled", "user_portal", "oauth", "saml") {
+	// if d.HasChangesExcept("name", "api_key_enabled", "user_portal", "oauth", "saml") {
+	if d.HasChangesExcept("policy") {
 		app, err := expandApp(d)
 		if err != nil {
 			return diag.FromErr(err)
@@ -487,11 +488,11 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, m in
 		}
 	}
 
-	return resourceApplicationRead(ctx, d, m)
+	return resourceApplicationRead(ctx, d, meta)
 }
 
-func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)

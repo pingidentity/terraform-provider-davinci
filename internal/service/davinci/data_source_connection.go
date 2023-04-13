@@ -79,8 +79,8 @@ func DataSourceConnection() *schema.Resource {
 // 	}
 // }
 
-func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)

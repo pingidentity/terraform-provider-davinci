@@ -323,8 +323,8 @@ func DataSourceApplication() *schema.Resource {
 	}
 }
 
-func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)

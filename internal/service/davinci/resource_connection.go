@@ -79,8 +79,8 @@ func ResourceConnection() *schema.Resource {
 	}
 }
 
-func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -111,13 +111,13 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, m int
 
 	d.SetId(resp.ConnectionID)
 
-	resourceConnectionRead(ctx, d, m)
+	resourceConnectionRead(ctx, d, meta)
 
 	return diags
 }
 
-func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -167,8 +167,8 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, m inter
 	return diags
 }
 
-func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
 	if err != nil {
@@ -198,11 +198,11 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, m int
 		}
 	}
 
-	return resourceConnectionRead(ctx, d, m)
+	return resourceConnectionRead(ctx, d, meta)
 }
 
-func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)

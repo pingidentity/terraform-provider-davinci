@@ -69,6 +69,8 @@ providerlint:
 		-AT001.ignored-filename-suffixes=_data_source_test.go \
 		-XR004=false \
 		-XS002=false \
+		-R001=false \
+		-S018=false \
 		./internal/provider/... ./internal/service/...
 
 tflint:
