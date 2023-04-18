@@ -30,8 +30,9 @@ func DataSourceConnection() *schema.Resource {
 				ExactlyOneOf: []string{"id", "name"},
 			},
 			"connector_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -39,12 +40,14 @@ func DataSourceConnection() *schema.Resource {
 				Description: "PingOne environment id",
 			},
 			"customer_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Internal DaVinci id. Should not be set by user.",
 			},
 			"created_date": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Resource creation date as epoch.",
 			},
 			"property": {
 				Type:        schema.TypeSet,
@@ -53,17 +56,20 @@ func DataSourceConnection() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the property.",
 						},
 						"value": {
-							Type:      schema.TypeString,
-							Computed:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
+							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
 						},
 					},
 				},

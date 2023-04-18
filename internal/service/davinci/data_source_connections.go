@@ -16,8 +16,9 @@ func DataSourceConnections() *schema.Resource {
 		ReadContext: dataSourceConnectionsRead,
 		Schema: map[string]*schema.Schema{
 			"connections": {
-				Type:     schema.TypeSet,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Returned set of connections matching environment and/or the filter criteria.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -26,42 +27,50 @@ func DataSourceConnections() *schema.Resource {
 							Description: "connection_id for this connection.",
 						},
 						"connector_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')",
 						},
 						"company_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "PingOne environment id. Matches environment_id and will be deprecated in the future.",
 						},
 						"customer_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Internal DaVinci id. Should not be set by user.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments.",
 						},
 						"created_date": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Resource creation date as epoch.",
 						},
 						"property": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							Description: "Connection configuration",
+							Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Name of the property.",
 									},
 									"value": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
 									},
 								},
 							},

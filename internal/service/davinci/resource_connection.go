@@ -22,7 +22,7 @@ func ResourceConnection() *schema.Resource {
 			"connector_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "DaVinci internal connector type. Not found in UI. Look in API read response (e.g Http Connector is 'httpConnector'",
+				Description: "DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -42,7 +42,7 @@ func ResourceConnection() *schema.Resource {
 			"created_date": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Creation date as epoch.",
+				Description: "Resource creation date as epoch.",
 			},
 			"property": {
 				Type:        schema.TypeSet,
@@ -64,9 +64,9 @@ func ResourceConnection() *schema.Resource {
 							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
+							Type:     schema.TypeString,
+							Optional: true,
+							// Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
 							ValidateFunc: validation.StringInSlice([]string{"string", "boolean"}, false),
 						},
 					},

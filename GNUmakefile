@@ -70,7 +70,6 @@ providerlint:
 		-XR004=false \
 		-XS002=false \
 		-R001=false \
-		-S018=false \
 		./internal/provider/... ./internal/service/...
 
 tflint:

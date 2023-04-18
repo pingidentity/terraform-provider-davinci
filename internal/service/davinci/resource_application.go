@@ -71,157 +71,184 @@ func ResourceApplication() *schema.Resource {
 				},
 			},
 			"user_portal": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "User Profile in UI",
+				Description: "This is deprecated in the UI and will be removed in a future release.",
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"up_title": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"add_auth_method_title": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"remove_auth_method_title": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"cred_page_title": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"cred_page_subtitle": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"name_auth_method_title": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"name_confirm_btn_text": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"update_message": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"update_body_message": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"remove_message": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"remove_body_message": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"remove_confirm_btn_text": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"remove_cancel_btn_text": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Optional: true, Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"flow_timeout_seconds": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"show_user_info": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"show_mfa_button": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"show_variables": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 						"show_logout_button": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "This is deprecated in the UI and will be removed in a future release.",
 						},
 					},
 				},
 			},
 			"oauth": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "OIDC configuration",
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enabled": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     true,
+							Description: "Set to true if using oauth block",
 						},
 						"values": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Optional:    true,
 							Description: "OIDC configuration",
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
-										Type:     schema.TypeBool,
-										Optional: true,
-										Default:  true,
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     true,
+										Description: "Set to true if using oauth block",
 									},
 									"client_secret": {
-										Type:      schema.TypeString,
-										Computed:  true,
-										Sensitive: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Sensitive:   true,
+										Description: "The client secret for the OIDC application.",
 									},
 									"enforce_signed_request_openid": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Field: 'Enforce Receiving Signed Requests' in UI.",
 									},
 									"sp_jwks_url": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Field: 'Service Provider (SP) JWKS URL' in UI.",
 									},
 									"sp_jwks_openid": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Field: 'Service Provider (SP) JWKS Keys to Verify Authorization Request Signature' in UI. ",
 									},
 									"redirect_uris": {
-										Type:     schema.TypeSet,
-										Optional: true,
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Redirect URLs for the application",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
 									},
 									"logout_uris": {
-										Type:     schema.TypeSet,
-										Optional: true,
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Logout URLs for the application",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
 									},
 									"allowed_scopes": {
-										Type:     schema.TypeSet,
-										Optional: true,
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Allowed scopes for the application. Available scopes are: openid, profile, flow_analytics.",
 										Elem: &schema.Schema{
 											Type:             schema.TypeString,
 											ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"openid", "profile", "flow_analytics"}, false)),
 										},
 									},
 									"allowed_grants": {
-										Type:     schema.TypeSet,
-										Optional: true,
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Allowed grants for the application. Available grants are: authorizationCode, clientCredentials, implicit. ",
 										Elem: &schema.Schema{
 											Type:             schema.TypeString,
 											ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"authorizationCode", "clientCredentials", "implicit"}, false)),
@@ -234,11 +261,11 @@ func ResourceApplication() *schema.Resource {
 				},
 			},
 			"saml": {
-				Type: schema.TypeSet,
+				Type: schema.TypeList,
 				//TODO - Remove the need for this
 				// requiring this to accound for returned nil values.
 				Required:    true,
-				Description: "SAML configuration",
+				Description: "SAML configuration. This is deprecated in the UI and will be removed in a future release.",
 				MaxItems:    1,
 				// DefaultFunc: func() (interface{}, error) {
 				// 	smap := []map[string]interface{}{{
@@ -252,32 +279,37 @@ func ResourceApplication() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"values": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Optional:    true,
 							MaxItems:    1,
 							Description: "SAML configuration",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Set to true if using saml block. This is deprecated in the UI and will be removed in a future release.",
 									},
 									"redirect_uri": {
-										Type:      schema.TypeString,
-										Optional:  true,
-										Sensitive: true,
+										Type:        schema.TypeString,
+										Optional:    true,
+										Sensitive:   true,
+										Description: "The redirect URI for the SAML application. This is deprecated in the UI and will be removed in a future release.",
 									},
 									"enforce_signed_request": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Field: 'Enforce Receiving Signed Requests' in UI. This is deprecated in the UI and will be removed in a future release.",
 									},
 									"audience": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Field: 'Audience' in UI. This is deprecated in the UI and will be removed in a future release.",
 									},
 									"sp_cert": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 								},
 							},
@@ -288,30 +320,34 @@ func ResourceApplication() *schema.Resource {
 			"policy": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Flow Policy Config",
+				Description: "Flow Policy Configuration",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_flow": {
 							Type:        schema.TypeSet,
 							Optional:    true,
-							Description: "Weighted flows that this Application will use",
+							Description: "Set of weighted flows that this application will use",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"flow_id": {
-										Type:     schema.TypeString,
-										Optional: true,
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Identifier of the flow that this policy will use.",
 									},
 									"version_id": {
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Version of the flow that this policy will use. Use -1 for latest",
 									},
 									"weight": {
-										Type:     schema.TypeInt,
-										Optional: true,
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100",
 									},
 									"success_nodes": {
-										Type:     schema.TypeList,
-										Optional: true,
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "List of node ids used by analytics for tracking user interaction.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
@@ -320,21 +356,26 @@ func ResourceApplication() *schema.Resource {
 							},
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Policy friendly name",
 						},
 						"status": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Default:  "enabled",
+							Type:             schema.TypeString,
+							Optional:         true,
+							Default:          "enabled",
+							Description:      "Policy status. Valid values are: enabled, disabled",
+							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"enabled", "disabled"}, false)),
 						},
 						"policy_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Generated identifier of a created policy.",
 						},
 						"created_date": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Creation epoch of policy.",
 						},
 					},
 				},
@@ -529,7 +570,7 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	// Set OAuth
 	oa, ok := d.GetOk("oauth")
 	if ok {
-		oal := oa.(*schema.Set).List()
+		oal := oa.([]interface{})
 		oaUpdate := &dv.Oauth{}
 
 		//Set OAuthEnabled
@@ -538,7 +579,7 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 			oaUpdate.Enabled = oalmEnabled
 		}
 		// Set OAuth Values
-		oamValues := oam["values"].(*schema.Set).List()
+		oamValues := oam["values"].([]interface{})
 		if len(oamValues) == 1 {
 			oamValuesMap := oamValues[0].(map[string]interface{})
 			oaUpdate.Values = &dv.OauthValues{
@@ -567,11 +608,11 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	//Set Saml
 	saml, ok := d.GetOk("saml")
 	if ok {
-		sl := saml.(*schema.Set).List()
+		sl := saml.([]interface{})
 		if len(sl) == 1 {
 			svUpdate := &dv.Saml{}
 			sm := sl[0].(map[string]interface{})
-			samlValues := sm["values"].(*schema.Set).List()
+			samlValues := sm["values"].([]interface{})
 			if len(samlValues) == 1 {
 				svMap := samlValues[0].(map[string]interface{})
 				svUpdate.Values = &dv.SamlValues{
@@ -595,7 +636,7 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 	//Set User Portal
 	uv, ok := d.GetOk("user_portal")
 	if ok {
-		upValues := uv.(*schema.Set).List()
+		upValues := uv.([]interface{})
 		if len(upValues) == 1 {
 			up := &dv.UserPortal{}
 			up.Values = upValues[0].(*dv.UserPortalValues)
