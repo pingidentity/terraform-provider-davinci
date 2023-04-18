@@ -92,7 +92,7 @@ jobs:
       - name: terrafmtcheck lint
         run: |
           make terrafmtcheck
-
+          
   golangci-lint:
     needs: [build]
     runs-on: ubuntu-latest
