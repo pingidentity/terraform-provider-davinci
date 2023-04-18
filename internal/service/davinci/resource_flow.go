@@ -153,8 +153,8 @@ func ResourceFlow() *schema.Resource {
 	}
 }
 
-func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -219,13 +219,13 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, m interface
 
 	d.SetId(res.FlowID)
 
-	resourceFlowRead(ctx, d, m)
+	resourceFlowRead(ctx, d, meta)
 
 	return diags
 }
 
-func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -263,6 +263,9 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 	rString, err := json.Marshal(&res.Flow)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	if err := d.Set("flow_json", string(rString)); err != nil {
 		return diag.FromErr(err)
@@ -339,6 +342,10 @@ func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
 		return nil, err
 	}
 	flowVars, err := getFlowVariables(string(flowJson))
+	if err != nil {
+		return nil, err
+	}
+
 	var flowVariables []interface{}
 	for _, flowVar := range flowVars {
 		varStateSimpleName := strings.Split(flowVar.Name, "##SK##")
@@ -361,8 +368,8 @@ func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
 	return flowVariables, nil
 }
 
-func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
 	if err != nil {
@@ -473,11 +480,11 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	return resourceFlowRead(ctx, d, m)
+	return resourceFlowRead(ctx, d, meta)
 }
 
-func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -517,6 +524,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if new != "" {
 			newFlowJson, err := mapSubFlows(d, new)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			new = *newFlowJson
@@ -524,6 +532,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if old != "" {
 			oldFlowJson, err := mapSubFlows(d, old)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			old = *oldFlowJson
@@ -535,6 +544,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if new != "" {
 			newFlowJson, err := mapFlowConnections(d, new)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			new = *newFlowJson
@@ -542,6 +552,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if old != "" {
 			oldFlowJson, err := mapFlowConnections(d, old)
 			if err != nil {
+				//lintignore:R009
 				panic(err)
 			}
 			old = *oldFlowJson
@@ -556,6 +567,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		currentF := dv.Flow{}
 		err = json.Unmarshal([]byte(old), &currentFi)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		// convert to type Flow if needed
@@ -564,6 +576,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		err = json.Unmarshal([]byte(old), &currentF)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		if currentF.GraphData.Elements.Nodes != nil {
@@ -575,6 +588,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		desiredF := dv.Flow{}
 		err = json.Unmarshal([]byte(new), &desiredFi)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		// convert to type Flow if needed
@@ -583,6 +597,7 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		err = json.Unmarshal([]byte(new), &desiredF)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		if desiredF.GraphData.Elements.Nodes != nil {
@@ -665,10 +680,12 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		currentNodes, err := json.Marshal(current.GraphData.Elements.Nodes)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 		desiredNodes, err := json.Marshal(desired.GraphData.Elements.Nodes)
 		if err != nil {
+			//lintignore:R009
 			panic(err)
 		}
 
@@ -704,6 +721,9 @@ func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 			// Only two types of subflow capabilities use the subflowId and subflowVersionId properties
 			if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
 				sfProp, err = expandSubFlowProps(v.Data.Properties)
+				if err != nil {
+					return nil, err
+				}
 				for _, sfMap := range sfList {
 					sfValues := sfMap.(map[string]interface{})
 					if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
@@ -854,13 +874,17 @@ func getFlowVariables(flowJson string) ([]dv.FlowVariable, error) {
 	flowOutput, err := dv.MakeFlowPayload(&flowJson, "Flow")
 	if err == nil {
 		var flow dv.Flow
-		json.Unmarshal([]byte(*flowOutput), &flow)
+		if err = json.Unmarshal([]byte(*flowOutput), &flow); err != nil {
+			return nil, err
+		}
 		return flow.Variables, nil
 	}
 	flowOutput, err = dv.MakeFlowPayload(&flowJson, "FlowImport")
 	if err == nil {
 		var flow dv.FlowImport
-		json.Unmarshal([]byte(*flowOutput), &flow)
+		if err = json.Unmarshal([]byte(*flowOutput), &flow); err != nil {
+			return nil, err
+		}
 		return flow.FlowInfo.Variables, nil
 	}
 	return nil, fmt.Errorf("Error: Unable to abstract flow variables from flow_json")

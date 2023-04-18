@@ -21,7 +21,7 @@ func TestAccDataSourceApplications_AllApplications(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -40,8 +40,8 @@ func testAccDataSourceApplications_AllApplications_Hcl(resourceName string) (hcl
 %[1]s
 
 data "davinci_applications" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	depends_on = [ data.davinci_connections.read_all]
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl

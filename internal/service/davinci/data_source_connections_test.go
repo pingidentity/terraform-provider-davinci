@@ -20,7 +20,7 @@ func TestAccDataSourceConnection_AllConections(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -39,7 +39,7 @@ func testAccDataSourceConnection_AllConections_Hcl(resourceName string) (hcl str
 %[1]s
 
 data "davinci_connections" "%[2]s" {
-	environment_id = resource.pingone_environment.%[2]s.id
+  environment_id = resource.pingone_environment.%[2]s.id
 }
 `, baseHcl, resourceName)
 	return hcl
@@ -57,7 +57,7 @@ func TestAccDataSourceConnection_FilteredConnections(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -77,8 +77,8 @@ func testAccDataSourceConnection_FilteredConnections_Hcl(resourceName string) (h
 %[1]s
 
 data "davinci_connections" "%[2]s" {
-	connector_ids = [ "httpConnector", "functionsConnector" ]
-	environment_id = resource.pingone_environment.%[2]s.id
+  connector_ids  = ["httpConnector", "functionsConnector"]
+  environment_id = resource.pingone_environment.%[2]s.id
 }
 `, baseHcl, resourceName)
 	return hcl

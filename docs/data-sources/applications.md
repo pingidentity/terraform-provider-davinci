@@ -31,7 +31,7 @@ output "davinci_applications" {
 
 ### Read-Only
 
-- `applications` (Set of Object) (see [below for nested schema](#nestedatt--applications))
+- `applications` (Set of Object) List of applications in the environment. (see [below for nested schema](#nestedatt--applications))
 - `id` (String) The ID of this resource.
 
 <a id="nestedatt--applications"></a>

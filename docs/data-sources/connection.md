@@ -26,9 +26,9 @@ description: |-
 
 ### Read-Only
 
-- `connector_id` (String)
-- `created_date` (Number)
-- `customer_id` (String)
+- `connector_id` (String) DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')
+- `created_date` (Number) Resource creation date as epoch.
+- `customer_id` (String) Internal DaVinci id. Should not be set by user.
 - `property` (Set of Object) Connection configuration (see [below for nested schema](#nestedatt--property))
 
 <a id="nestedatt--property"></a>

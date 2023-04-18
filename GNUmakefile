@@ -1,5 +1,6 @@
 TEST?=$$(go list ./...)
 SWEEP_DIR=./internal/sweep
+DAVINCI_DIR=./internal/service/davinci
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
@@ -11,21 +12,21 @@ default: build
 tools:
 	go generate -tags tools tools/tools.go
 
-build: fmtcheck
+build: vet depscheck
 	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
 
-generate: fmtcheck
+generate: terrafmtcheck
 	go generate ./...
 	
-test: fmtcheck
+test:
 	go test $(TEST) $(TESTARGS) -timeout=5m
 	
 testacc:
-	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
-# sweep:
-# 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
-# 	go test $(SWEEP_DIR) -v -sweep=all $(SWEEPARGS) -timeout 10m
+sweep:
+	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
+	go test $(SWEEP_DIR) -v -sweep=all $(SWEEPARGS) -timeout 10m
 
 vet:
 	@echo "==> Running go vet..."
@@ -50,11 +51,12 @@ depscheck:
 	@git diff --exit-code -- go.mod go.sum || \
 		(echo; echo "Unexpected difference in go.mod/go.sum files. Run 'go mod tidy' command or revert any go.mod/go.sum changes and commit."; exit 1)
 
-lint: golangci-lint providerlint importlint tflint
+lint: golangci-lint providerlint importlint tflint terrafmtcheck
 
+# TODO: Update to cover all files
 golangci-lint:
-	@echo "==> Checking source code with golangci-lint..."
-	@golangci-lint run ./...
+	@echo "==> Checking davinci service source code with golangci-lint..."
+	@golangci-lint run $(DAVINCI_DIR)
 
 importlint:
 	@echo "==> Checking source code with importlint..."
@@ -67,6 +69,7 @@ providerlint:
 		-AT001.ignored-filename-suffixes=_data_source_test.go \
 		-XR004=false \
 		-XS002=false \
+		-R001=false \
 		./internal/provider/... ./internal/service/...
 
 tflint:
@@ -90,6 +93,6 @@ terrafmtcheck:
 		exit 1; \
 	fi
 
-devcheck: build vet tools generate docscategorycheck lint terrafmtcheck test sweep testacc
+devcheck: build vet tools generate terrafmt docscategorycheck lint test sweep testacc
 
 .PHONY: tools build generate docscategorycheck test testacc sweep vet fmtcheck depscheck lint golangci-lint importlint providerlint tflint terrafmt terrafmtcheck
