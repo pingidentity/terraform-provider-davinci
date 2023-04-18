@@ -5,7 +5,8 @@ name: Acceptance Tests (Multi-region)
 on:
   push:
     branches:
-      - main
+    # Disabling multi-region while it is being tested
+      - changeme
     paths-ignore:
       - 'README.md'
       - '.vscode'
