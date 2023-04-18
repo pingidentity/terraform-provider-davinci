@@ -64,9 +64,9 @@ func ResourceConnection() *schema.Resource {
 							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Optional: true,
-							// Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
 							ValidateFunc: validation.StringInSlice([]string{"string", "boolean"}, false),
 						},
 					},
