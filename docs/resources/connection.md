@@ -67,6 +67,6 @@ Required:
 
 Optional:
 
-- `type` (String)
+- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array
 
 
