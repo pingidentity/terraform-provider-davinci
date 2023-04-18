@@ -39,15 +39,15 @@ output "davinci_app_one_key" {
 
 - `api_key_enabled` (Boolean) Enabled by default in UI
 - `api_keys` (Map of String) Appplication Api Key
-- `created_date` (Number)
-- `customer_id` (String)
+- `created_date` (Number) Resource creation date
+- `customer_id` (String) Internal used field
 - `metadata` (Map of String) Appplication Metadata
 - `name` (String) Application name
 - `oauth` (Set of Object) OIDC configuration (see [below for nested schema](#nestedatt--oauth))
-- `policy` (Set of Object) Flow Policy Config (see [below for nested schema](#nestedatt--policy))
+- `policy` (Set of Object) Flow Policy Configuration (see [below for nested schema](#nestedatt--policy))
 - `saml` (Set of Object) SAML configuration (see [below for nested schema](#nestedatt--saml))
-- `user_pools` (Map of String)
-- `user_portal` (Set of Object) User Profile in UI (see [below for nested schema](#nestedatt--user_portal))
+- `user_pools` (Map of String) Internal read only field.
+- `user_portal` (Set of Object) This is deprecated in the UI and will be removed in a future release. (see [below for nested schema](#nestedatt--user_portal))
 
 <a id="nestedatt--oauth"></a>
 ### Nested Schema for `oauth`

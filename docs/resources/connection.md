@@ -43,7 +43,7 @@ output "crowd_strike_id" {
 
 ### Required
 
-- `connector_id` (String) DaVinci internal connector type. Not found in UI. Look in API read response (e.g Http Connector is 'httpConnector'
+- `connector_id` (String) DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')
 - `environment_id` (String) PingOne environment id
 - `name` (String) Name of the connection displayed in UI. Also used for mapping id on flows between environments.
 
@@ -53,7 +53,7 @@ output "crowd_strike_id" {
 
 ### Read-Only
 
-- `created_date` (Number) Creation date as epoch.
+- `created_date` (Number) Resource creation date as epoch.
 - `customer_id` (String) Internal DaVinci id. Should not be set by user.
 - `id` (String) The ID of this resource.
 
@@ -67,6 +67,6 @@ Required:
 
 Optional:
 
-- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array
+- `type` (String)
 
 

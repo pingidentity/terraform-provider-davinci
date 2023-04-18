@@ -42,7 +42,7 @@ output "davinci_connection" {
 
 ### Read-Only
 
-- `connections` (Set of Object) (see [below for nested schema](#nestedatt--connections))
+- `connections` (Set of Object) Returned set of connections matching environment and/or the filter criteria. (see [below for nested schema](#nestedatt--connections))
 - `id` (String) The ID of this resource.
 
 <a id="nestedatt--connections"></a>
