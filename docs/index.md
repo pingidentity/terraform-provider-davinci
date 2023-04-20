@@ -12,20 +12,13 @@ to stand up fully orchestrated PingOne IAM Experiences.
 
 ## Getting Started
 
-This provider will authenticate an API client via username and password of an Identity in PingOne to configure to the DaVinci environment.
+To get started using the PingOne and DaVinci Terraform providers, first you'll need an active PingOne cloud subscription with the DaVinci service license additions.  Get instant access with a [PingOne trial account](https://www.pingidentity.com/en/try-ping.html), or read more about Ping Identity at [pingidentity.com](https://www.pingidentity.com).
 
-### PingOne SSO
+Further information about enabing the DaVinci service license can be found [here](https://terraform.pingidentity.com/getting-started/davinci/#the-pingone-davinci-service-license).
 
-To manage multiple PingOne DaVinci environments with the same credentials, identify and treat one user in one environment as a service account. This is commonly a user in the `Administrators` environment. The environment in which the user exists must default to the `Single_Factor` Authentication Policy. Thus, it may be more appropriate to create this user in an alternate environment.
+### Configure PingOne and DaVinci for Terraform access
 
-This user must: 
-- Be in a PingOne Environment with DaVinci enabled. 
-  - The PingOne environment must default to the  `Single_Factor` Authentication Policy
-- Have at least the following roles in the environment in which it exists:
-  - `Environment Admin` for it's own environment
-  - `Identity Data Admin` for it's own environment
-  - `Organization Admin` at the organization level. 
-- For each additional DaVinci environment that needs SSO access, give this user the `Identity Data Admin` and `Environment Admin` roles for that environment.  See the **[Full deployment example with a PingOne environment](#full-deployment-example-with-a-pingone-environment)** example below for how to do this in HCL.
+For detailed instructions on how to prepare PingOne and DaVinci for Terraform access, see the [DaVinci provider getting started guide](https://terraform.pingidentity.com/getting-started/davinci/#configure-pingone-for-terraform-access) at [terraform.pingidentity.com](https://terraform.pingidentity.com).
 
 ## Example Usage
 
