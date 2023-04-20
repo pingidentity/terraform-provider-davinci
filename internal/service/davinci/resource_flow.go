@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -759,8 +760,23 @@ func expandSubFlowProps(subflowProps map[string]interface{}) (*dv.SubFlowPropert
 		},
 	}
 	subflowVersionId := subflowProps["subFlowVersionId"].(map[string]interface{})
+	var sfvidString string
+
+	switch subflowVersionId["value"].(type) {
+	case int:
+		fmt.Println("type is int")
+		sfvidString = strconv.Itoa(subflowVersionId["value"].(int))
+	case float64:
+		fmt.Println("type is float")
+		sfvidString = strconv.FormatFloat(subflowVersionId["value"].(float64), 'f', -1, 64)
+	case string:
+		sfvidString = subflowVersionId["value"].(string)
+	default:
+		return nil, fmt.Errorf("Error: subflow versionId is not a string or int")
+	}
+
 	sfv := dv.SubFlowVersionID{
-		Value: subflowVersionId["value"].(string),
+		Value: sfvidString,
 	}
 	if sfId.Value.Value == "" || sfv.Value == "" {
 		return nil, fmt.Errorf("Error: subflow value or versionId is empty")
