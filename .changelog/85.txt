@@ -1,0 +1,3 @@
+```release-note:note
+`GNUMakefile`: updated release validation checks and preparation for multi-region tests.
+```
