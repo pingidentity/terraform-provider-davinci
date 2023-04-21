@@ -1,0 +1,3 @@
+```release-note:docs
+`provider-env.sh`: added pignone tf vars.
+```
