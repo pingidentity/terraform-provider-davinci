@@ -1,3 +1,15 @@
+## 0.1.6
+
+NOTES:
+
+* Updated the index document to refer to detailed getting started guide at `terraform.pingidentity.com`. ([#104](https://github.com/pingidentity/terraform-provider-pingone/issues/104))
+* `GNUMakefile`: updated release validation checks and preparation for multi-region tests. ([#85](https://github.com/pingidentity/terraform-provider-pingone/issues/85))
+
+BUG FIXES:
+
+* `davinci_flow`: switch for subflowVersionId types ([#106](https://github.com/pingidentity/terraform-provider-pingone/issues/106))
+* `go_client`: v0.0.48 corrected logic for empty nodes of type CONNECTION ([#98](https://github.com/pingidentity/terraform-provider-pingone/issues/98))
+
 ## 0.1.5
 
 BUG FIXES:
