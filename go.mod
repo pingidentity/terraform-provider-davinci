@@ -14,7 +14,7 @@ require (
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.17.1
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.9.1
 	github.com/pavius/impi v0.0.3
-	github.com/samir-gandhi/davinci-client-go v0.0.48
+	github.com/samir-gandhi/davinci-client-go v0.0.49
 	github.com/terraform-linters/tflint v0.45.0
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 )
