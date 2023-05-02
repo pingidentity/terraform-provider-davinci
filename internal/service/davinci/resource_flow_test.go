@@ -27,7 +27,7 @@ func TestAccResourceFlow_SimpleFlow(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -57,7 +57,7 @@ func TestAccResourceFlow_SimpleFlowUpdate(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -97,7 +97,7 @@ func TestAccResourceFlow_SubFlows(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
@@ -143,11 +143,12 @@ func testAccResourceFlow_SubFlows_Hcl(resourceName string, flowsHcl []string) (h
 %[1]s
 
 resource "davinci_connection" "%[2]s-flow" {
-	name = "Flow"
-	connector_id = "flowConnector"
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	depends_on = [data.davinci_connections.read_all]
+  name           = "Flow"
+  connector_id   = "flowConnector"
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [data.davinci_connections.read_all]
 }
+
 
 `, baseHcl, resourceName)
 
@@ -176,10 +177,11 @@ func testAccResourceFlow_VariableConnectorFlows_Hcl(resourceName string, flowsHc
 %[1]s
 
 data "davinci_connections" "variables" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	depends_on = [resource.davinci_flow.%[3]s]
-	connector_ids = ["variablesConnector"]
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [resource.davinci_flow.%[3]s]
+  connector_ids  = ["variablesConnector"]
 }
+
 
 `, baseHcl, resourceName, flowsHcl[0].Name)
 
@@ -201,6 +203,7 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		ErrorCheck:        acctest.ErrorCheck(t),
 		Steps: []resource.TestStep{
 			{
@@ -248,7 +251,7 @@ func TestAccResourceFlow_BrokenFlow(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config:      hcl,
@@ -271,7 +274,7 @@ func TestAccResourceFlow_SchemaChanges(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
@@ -514,7 +517,7 @@ func TestAccResourceFlow_FlowContextVarFlow(t *testing.T) {
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy: testAccCheckExampleResourceDestroy,
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,

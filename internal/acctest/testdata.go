@@ -184,7 +184,10 @@ func readFlowJsonFile(path string, resourceName string) string {
 	}
 
 	var flowMap map[string]interface{}
-	json.Unmarshal(flowByte, &flowMap)
+	err = json.Unmarshal(flowByte, &flowMap)
+	if err != nil {
+		panic(err)
+	}
 
 	flowMap["name"] = flowMap["name"].(string) + "-" + resourceName
 
@@ -193,6 +196,9 @@ func readFlowJsonFile(path string, resourceName string) string {
 		panic(err)
 	}
 	flowJson, err := json.Marshal(string(flowByte))
+	if err != nil {
+		panic(err)
+	}
 
 	return string(flowJson)
 }

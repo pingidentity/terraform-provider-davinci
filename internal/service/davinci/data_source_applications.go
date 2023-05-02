@@ -3,9 +3,6 @@ package davinci
 import (
 	"context"
 	"fmt"
-	// "log"
-	"strconv"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,8 +15,9 @@ func DataSourceApplications() *schema.Resource {
 		ReadContext: dataSourceApplicationsRead,
 		Schema: map[string]*schema.Schema{
 			"applications": {
-				Type:     schema.TypeSet,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "List of applications in the environment. ",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -33,8 +31,9 @@ func DataSourceApplications() *schema.Resource {
 							Description: "PingOne environment id",
 						},
 						"customer_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Internal DaVinci id. Should not be set by user.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -42,8 +41,9 @@ func DataSourceApplications() *schema.Resource {
 							Description: "Application name",
 						},
 						"created_date": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Creation date as epoch.",
 						},
 						"api_key_enabled": {
 							Type:        schema.TypeBool,
@@ -68,8 +68,9 @@ func DataSourceApplications() *schema.Resource {
 							},
 						},
 						"user_pools": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Appplication User Pools. Not implemented",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -81,76 +82,94 @@ func DataSourceApplications() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"up_title": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"add_auth_method_title": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"remove_auth_method_title": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"cred_page_title": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"cred_page_subtitle": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"name_auth_method_title": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"name_confirm_btn_text": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"update_message": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"update_body_message": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"remove_message": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"remove_body_message": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"remove_confirm_btn_text": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"remove_cancel_btn_text": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"flow_timeout_seconds": {
-										Type:     schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"show_user_info": {
-										Type:     schema.TypeBool,
-										Computed: true,
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"show_mfa_button": {
-										Type:     schema.TypeBool,
-										Computed: true,
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"show_variables": {
-										Type:     schema.TypeBool,
-										Computed: true,
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 									"show_logout_button": {
-										Type:     schema.TypeBool,
-										Computed: true,
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "This is deprecated in the UI and will be removed in a future release.",
 									},
 								},
 							},
@@ -162,8 +181,9 @@ func DataSourceApplications() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enabled": {
-										Type:     schema.TypeBool,
-										Computed: true,
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Set to true if using oauth block",
 									},
 									"values": {
 										Type:        schema.TypeSet,
@@ -172,50 +192,59 @@ func DataSourceApplications() *schema.Resource {
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"enabled": {
-													Type:     schema.TypeBool,
-													Computed: true,
+													Type:        schema.TypeBool,
+													Computed:    true,
+													Description: "This is set to true if using oauth block",
 												},
 												"client_secret": {
-													Type:      schema.TypeString,
-													Computed:  true,
-													Sensitive: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Sensitive:   true,
+													Description: "The client secret for the OIDC application.",
 												},
 												"enforce_signed_request_openid": {
-													Type:     schema.TypeBool,
-													Computed: true,
+													Type:        schema.TypeBool,
+													Computed:    true,
+													Description: "Field: 'Enforce Receiving Signed Requests' in UI.",
 												},
 												"sp_jwks_url": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Field: 'Service Provider (SP) JWKS URL' in UI.",
 												},
 												"sp_jwks_openid": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Field: 'Service Provider (SP) JWKS Keys to Verify Authorization Request Signature' in UI. ",
 												},
 												"redirect_uris": {
-													Type:     schema.TypeSet,
-													Computed: true,
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "Redirect URLs for the application",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"logout_uris": {
-													Type:     schema.TypeSet,
-													Computed: true,
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "Logout URLs for the application",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"allowed_scopes": {
-													Type:     schema.TypeSet,
-													Computed: true,
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "Allowed scopes for the application. Available scopes are: openid, profile, flow_analytics.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
 												},
 												"allowed_grants": {
-													Type:     schema.TypeSet,
-													Computed: true,
+													Type:        schema.TypeSet,
+													Computed:    true,
+													Description: "Allowed grants for the application. Available grants are: authorizationCode, clientCredentials, implicit. ",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
@@ -229,35 +258,39 @@ func DataSourceApplications() *schema.Resource {
 						"saml": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							Description: "SAML configuration",
+							Description: "SAML configuration. This is deprecated in the UI and will be removed in a future release.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"values": {
 										Type:        schema.TypeSet,
 										Computed:    true,
-										Description: "SAML configuration",
+										Description: "SAML configuration. This is deprecated in the UI and will be removed in a future release.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"enabled": {
-													Type:     schema.TypeBool,
-													Computed: true,
+													Type:        schema.TypeBool,
+													Computed:    true,
+													Description: "Set to true if using saml block. This is deprecated in the UI and will be removed in a future release.",
 												},
 												"redirect_uri": {
-													Type:      schema.TypeString,
-													Computed:  true,
-													Sensitive: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "The redirect URI for the SAML application. This is deprecated in the UI and will be removed in a future release.",
 												},
 												"enforce_signed_request": {
-													Type:     schema.TypeBool,
-													Computed: true,
+													Type:        schema.TypeBool,
+													Computed:    true,
+													Description: "Field: 'Enforce Receiving Signed Requests' in UI. This is deprecated in the UI and will be removed in a future release.",
 												},
 												"audience": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Field: 'Audience' in UI. This is deprecated in the UI and will be removed in a future release.",
 												},
 												"sp_cert": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "This is deprecated in the UI and will be removed in a future release.",
 												},
 											},
 										},
@@ -274,24 +307,28 @@ func DataSourceApplications() *schema.Resource {
 									"policy_flow": {
 										Type:        schema.TypeSet,
 										Computed:    true,
-										Description: "Weighted flows that this Application will use",
+										Description: "Set of weighted flows that this application will use",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"flow_id": {
-													Type:     schema.TypeString,
-													Computed: true,
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Identifier of the flow that this policy will use.",
 												},
 												"version_id": {
-													Type:     schema.TypeInt,
-													Computed: true,
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Version of the flow that this policy will use. Use -1 for latest",
 												},
 												"weight": {
-													Type:     schema.TypeInt,
-													Computed: true,
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100",
 												},
 												"success_nodes": {
-													Type:     schema.TypeList,
-													Computed: true,
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "List of node ids used by analytics for tracking user interaction.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
@@ -300,20 +337,24 @@ func DataSourceApplications() *schema.Resource {
 										},
 									},
 									"name": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Policy friendly name",
 									},
 									"status": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Policy status. Valid values are: enabled, disabled",
 									},
 									"policy_id": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Generated identifier of a created policy.",
 									},
 									"created_date": {
-										Type:     schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Creation epoch of policy.",
 									},
 								},
 							},
@@ -330,8 +371,8 @@ func DataSourceApplications() *schema.Resource {
 	}
 }
 
-func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*dv.APIClient)
+func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
 	err := sdk.CheckAndRefreshAuth(ctx, c, d)
@@ -353,7 +394,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 		return diag.FromErr(err)
 	}
 
-	apps := make([]interface{}, len(resp), len(resp))
+	apps := make([]interface{}, len(resp))
 	for i, thisApp := range resp {
 		app, err := flattenApp(&thisApp)
 		if err != nil {
@@ -366,8 +407,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("applications", apps); err != nil {
 		return diag.FromErr(err)
 	}
-
-	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+	d.SetId(fmt.Sprintf("id-%s-applications", c.CompanyID))
 	return diags
 }
 

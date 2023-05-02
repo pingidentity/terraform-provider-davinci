@@ -1,0 +1,3 @@
+```release-note:bug
+`go_client`: v0.0.48 corrected logic for empty nodes of type CONNECTION 
+```

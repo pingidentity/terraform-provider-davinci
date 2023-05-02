@@ -1,0 +1,3 @@
+```release-note:note
+Updated the index document to refer to detailed getting started guide at `terraform.pingidentity.com`.
+```
