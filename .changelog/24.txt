@@ -1,0 +1,5 @@
+``````markdown
+```release-note:docs
+davinci_connection: added plugin to generate connection detail docs
+```
+``````
