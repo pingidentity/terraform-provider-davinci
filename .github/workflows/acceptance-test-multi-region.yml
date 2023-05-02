@@ -6,7 +6,7 @@ on:
   push:
     branches:
     # Disabling multi-region while it is being tested
-      - changeme
+      - 57-nightly-test-for-bootstrapped-items
     paths-ignore:
       - 'README.md'
       - '.vscode'
@@ -24,8 +24,8 @@ on:
   # we recommend testing at a regular interval not necessarily tied to code changes. This will 
   # ensure you are alerted to something breaking due to an API change, even if the code did not
   # change.
-  schedule:
-    - cron: '0 4 * * *'
+  # schedule:
+  #   - cron: '0 4 * * *'
 jobs:
   # ensure the code builds...
   build:
@@ -481,6 +481,7 @@ jobs:
     - name: Get dependencies
       run: |
         go mod download
+        go mod tidy
 
     - name: TF acceptance tests
       timeout-minutes: 45

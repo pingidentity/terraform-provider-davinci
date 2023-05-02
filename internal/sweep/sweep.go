@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	EnvironmentNamePrefix = "tf-testacc-"
+	EnvironmentNamePrefix = "tf-testacc-dv-"
 )
 
 func SweepClient(ctx context.Context) (*Client, error) {
