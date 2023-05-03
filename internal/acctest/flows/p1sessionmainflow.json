@@ -950,7 +950,7 @@
     "debugMode": true,
     "intermediateLoadingScreenCSS": "",
     "intermediateLoadingScreenHTML": "",
-    "logLevel": 2,
+    "logLevel": 3,
     "pingOneFlow": true,
     "scrubSensitiveInfo": false,
     "sensitiveInfoFields": [],
