@@ -609,8 +609,14 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 	// Check for Settings, inputSchema, outputSchema, name, FlowStatus, trigger drift
 
 	//ignore logLevel
-	cSettings := current.Settings.(map[string]interface{})
-	dSettings := desired.Settings.(map[string]interface{})
+	var cSettings, dSettings map[string]interface{}
+
+	if _, ok := current.Settings.(map[string]interface{}); ok {
+		cSettings = current.Settings.(map[string]interface{})
+	}
+	if _, ok := desired.Settings.(map[string]interface{}); ok {
+		dSettings = desired.Settings.(map[string]interface{})
+	}
 	if _, ok := cSettings["logLevel"]; ok {
 		delete(cSettings, "logLevel")
 	}
