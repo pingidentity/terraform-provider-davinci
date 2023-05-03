@@ -63,6 +63,11 @@ jobs:
     name: go generate
     needs: [build]
     runs-on: ubuntu-latest
+    env:
+      PINGONE_USERNAME: ${{ secrets.NA_PINGONE_USERNAME }}
+      PINGONE_PASSWORD: ${{ secrets.NA_PINGONE_PASSWORD }}
+      PINGONE_ENVIRONMENT_ID: ${{ secrets.NA_PINGONE_ENVIRONMENT_ID }}
+      PINGONE_REGION: "NorthAmerica"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
@@ -70,7 +75,10 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       
-      - run: go generate ./...
+      - run: |
+        go mod tidy
+        go mod vendor
+        go generate ./...
 
       - name: git diff
         run: |

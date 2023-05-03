@@ -5,8 +5,7 @@ name: Acceptance Tests (Multi-region)
 on:
   push:
     branches:
-    # Disabling multi-region while it is being tested
-      - changeme
+      - main
     paths-ignore:
       - 'README.md'
       - '.vscode'
@@ -25,7 +24,7 @@ on:
   # ensure you are alerted to something breaking due to an API change, even if the code did not
   # change.
   schedule:
-    - cron: '0 4 * * *'
+    - cron: '0 7 * * *'
 jobs:
   # ensure the code builds...
   build:
@@ -481,6 +480,7 @@ jobs:
     - name: Get dependencies
       run: |
         go mod download
+        go mod tidy
 
     - name: TF acceptance tests
       timeout-minutes: 45

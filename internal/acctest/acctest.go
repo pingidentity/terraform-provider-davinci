@@ -255,7 +255,7 @@ func PingoneEnvrionmentSsoHcl(resourceName string) (hcl string) {
 	username := os.Getenv("PINGONE_USERNAME")
 	return fmt.Sprintf(`
 resource "pingone_environment" "%[1]s" {
-	name = "tf-testacc-dynamic-%[1]s"
+	name = "tf-testacc-dv-dynamic-%[1]s"
 	type = "SANDBOX"
 	license_id = "%[2]s"
   default_population {
