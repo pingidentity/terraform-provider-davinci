@@ -27,7 +27,7 @@
       "https://assets.pingone.com/ux/astro-nano/0.1.0-alpha.6/icons.css"
     ],
     "useCustomCSS": true,
-    "logLevel": 3,
+    "logLevel": 2,
     "scrubSensitiveInfo": false,
     "sensitiveInfoFields": [],
     "useBetaAlgorithm": true,
