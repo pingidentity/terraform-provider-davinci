@@ -76,9 +76,9 @@ jobs:
           cache: true
       
       - run: |
-        go mod tidy
-        go mod vendor
-        go generate ./...
+          go mod tidy
+          go mod vendor
+          go generate ./...
 
       - name: git diff
         run: |
