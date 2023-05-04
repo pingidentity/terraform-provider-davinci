@@ -613,14 +613,10 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 
 	if _, ok := current.Settings.(map[string]interface{}); ok {
 		cSettings = current.Settings.(map[string]interface{})
+		delete(cSettings, "logLevel")
 	}
 	if _, ok := desired.Settings.(map[string]interface{}); ok {
 		dSettings = desired.Settings.(map[string]interface{})
-	}
-	if _, ok := cSettings["logLevel"]; ok {
-		delete(cSettings, "logLevel")
-	}
-	if _, ok := dSettings["logLevel"]; ok {
 		delete(dSettings, "logLevel")
 	}
 	if !reflect.DeepEqual(cSettings, dSettings) {

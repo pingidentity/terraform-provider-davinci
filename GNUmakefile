@@ -10,21 +10,27 @@ OS_ARCH=linux_amd64
 default: build
 
 tools:
+	@echo "==> Installing tools..."
 	go generate -tags tools tools/tools.go
 
 build: vet depscheck
+	@echo "==> Building..."
 	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
 
 generate: terrafmtcheck
+	@echo "==> Generating code..."
 	go generate ./...
 	
 test:
+	@echo "==> Running tests..."
 	go test $(TEST) $(TESTARGS) -timeout=5m
 	
 testacc:
+	@echo "==> Running acceptance tests..."
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
 sweep:
+	@echo "==> Running sweep..."
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
 	go test $(SWEEP_DIR) -v -sweep=all $(SWEEPARGS) -timeout 10m
 
