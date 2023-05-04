@@ -1,3 +1,13 @@
+## 0.1.7
+
+BUG FIXES:
+
+* `davinci_flow`: Diff handling for flow_json.settings.logLevel ([#125](https://github.com/pingidentity/terraform-provider-pingone/issues/125))
+
+DOCUMENTATION:
+
+* `davinci_connection`: added plugin to generate connection detail docs
+
 ## 0.1.6
 
 NOTES:
