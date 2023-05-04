@@ -1,0 +1,3 @@
+```release-note:bug
+`davinci_flow`: Diff handling for flow_json.settings.logLevel
+```
