@@ -69,11 +69,11 @@ func init() {
 
 // check required variabes are met for tests
 func PreCheck(t *testing.T) {
-	if v := os.Getenv("PINGONE_USERNAME"); v == "" {
-		t.Fatal("PINGONE_USERNAME is missing and must be set")
-	}
-	if v := os.Getenv("PINGONE_PASSWORD"); v == "" {
-		t.Fatal("PINGONE_PASSWORD is missing and must be set")
+	username := os.Getenv("PINGONE_USERNAME")
+	password := os.Getenv("PINGONE_PASSWORD")
+	accessToken := os.Getenv("PINGONE_DAVINCI_ACCESS_TOKEN")
+	if (username == "" || password == "") && accessToken == "" {
+		t.Fatal("PINGONE_USERNAME and PINGONE_PASSWORD or PINGONE_DAVINCI_ACCESS_TOKEN are missing and must be set")
 	}
 	if v := os.Getenv("PINGONE_REGION"); v == "" {
 		t.Fatal("PINGONE_REGION is missing and must be set")

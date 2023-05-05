@@ -8,6 +8,51 @@ import (
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
 )
 
+func TestAccDataSourceConnection_ReadAllAT(t *testing.T) {
+
+	resourceBase := "davinci_connections"
+	resourceName := acctest.ResourceNameGen()
+	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
+
+	hcl := testAccDataSourceConnection_Slim(resourceName)
+	hcl = fmt.Sprintf(`
+data "davinci_connections" "%[1]s" {
+	environment_id = var.environment_id
+}
+
+resource "davinci_connection" "%[1]s" {
+  environment_id = var.environment_id
+  connector_id   = "httpConnector"
+  name           = "%[1]s"
+}
+
+variable "environment_id" {
+	default = "089b57b4-70a5-45db-8add-01120f8b0063"
+}
+`, resourceName)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		// CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connections"}),
+		Steps: []resource.TestStep{
+			{
+				Config: hcl,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(fmt.Sprintf("%s", dataSourceFullName), "environment_id", "089b57b4-70a5-45db-8add-01120f8b0063"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("davinci_connection.%s", resourceName), "environment_id", "089b57b4-70a5-45db-8add-01120f8b0063"),
+					// resource.TestCheckResourceAttrSet(dataSourceFullName, "connector_id"),
+					// resource.TestCheckResourceAttrSet(dataSourceFullName, "created_date"),
+					// resource.TestCheckResourceAttrSet(dataSourceFullName, "environment_id"),
+					// resource.TestCheckResourceAttrSet(dataSourceFullName, "id"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccDataSourceConnection_ReadSingle(t *testing.T) {
 
 	resourceBase := "davinci_connection"
