@@ -32,13 +32,13 @@ func New(version string) func() *schema.Provider {
 			Schema: map[string]*schema.Schema{
 				"username": {
 					Type:        schema.TypeString,
-					Required:    true,
+					Optional:    true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_USERNAME", nil),
 					Description: "The PingOne username used for SSO into a Davinci tenant.  Default value can be set with the `PINGONE_USERNAME` environment variable.",
 				},
 				"password": {
 					Type:        schema.TypeString,
-					Required:    true,
+					Optional:    true,
 					Sensitive:   true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_PASSWORD", nil),
 					Description: "The PingOne password used for SSO into a Davinci tenant.  Default value can be set with the `PINGONE_PASSWORD` environment variable.",
@@ -55,6 +55,12 @@ func New(version string) func() *schema.Provider {
 					Required:    true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_ENVIRONMENT_ID", nil),
 					Description: "Environment ID PingOne User Login. Default value can be set with the `PINGONE_ENVIRONMENT_ID` environment variable.",
+				},
+				"access_token": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("PINGONE_DAVINCI_ACCESS_TOKEN", nil),
+					Description: "PingOne DaVinci specific access token. Must be authorized for environment_id.  Default value can be set with the `PINGONE_DAVINCI_ACCESS_TOKEN` environment variable.",
 				},
 			},
 			ResourcesMap: map[string]*schema.Resource{
@@ -77,12 +83,21 @@ func New(version string) func() *schema.Provider {
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		username := d.Get("username").(string)
-		password := d.Get("password").(string)
-		region := d.Get("region").(string)
-		var environment_id string
-		if env, ok := d.GetOk("environment_id"); ok {
-			environment_id = env.(string)
+		var username, password, region, accessToken, environment_id string
+		if _, ok := d.GetOk("username"); ok {
+			username = d.Get("username").(string)
+		}
+		if _, ok := d.GetOk("password"); ok {
+			password = d.Get("password").(string)
+		}
+		if _, ok := d.GetOk("region"); ok {
+			region = d.Get("region").(string)
+		}
+		if _, ok := d.GetOk("access_token"); ok {
+			accessToken = d.Get("access_token").(string)
+		}
+		if _, ok := d.GetOk("environment_id"); ok {
+			environment_id = d.Get("environment_id").(string)
 		}
 
 		var diags diag.Diagnostics
@@ -92,6 +107,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			Password:        password,
 			PingOneRegion:   region,
 			PingOneSSOEnvId: environment_id,
+			AccessToken:     accessToken,
 		}
 		c, err := client.NewClient(&cInput)
 		if err != nil {
