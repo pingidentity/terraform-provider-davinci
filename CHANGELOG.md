@@ -1,3 +1,9 @@
+## 0.1.8
+
+BUG FIXES:
+
+* `davinci_api_client`: update to v0.0.52. http default timeout raised to 300s ([#131](https://github.com/pingidentity/terraform-provider-pingone/issues/131))
+
 ## 0.1.7
 
 BUG FIXES:
