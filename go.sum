@@ -855,8 +855,8 @@ github.com/ryancurrah/gomodguard v1.3.0 h1:q15RT/pd6UggBXVBuLps8BXRvl5GPBcwVA7BJ
 github.com/ryancurrah/gomodguard v1.3.0/go.mod h1:ggBxb3luypPEzqVtq33ee7YSN35V28XeGnid8dnni50=
 github.com/ryanrolds/sqlclosecheck v0.4.0 h1:i8SX60Rppc1wRuyQjMciLqIzV3xnoHB7/tXbr6RGYNI=
 github.com/ryanrolds/sqlclosecheck v0.4.0/go.mod h1:TBRRjzL31JONc9i4XMinicuo+s+E8yKZ5FN8X3G6CKQ=
-github.com/samir-gandhi/davinci-client-go v0.0.49 h1:LZpQLE367yftLUfKunSNjcaBLNmQoScF6YYx++65SFU=
-github.com/samir-gandhi/davinci-client-go v0.0.49/go.mod h1:2Cd34SQC6bFB8zGwWs4Sf3LOb2oNZtpRsxm6w6wrNbE=
+github.com/samir-gandhi/davinci-client-go v0.0.51 h1:ciYathMOef7SoXDDWXlk9Ww6lh8KBttdTUpyxM174KE=
+github.com/samir-gandhi/davinci-client-go v0.0.51/go.mod h1:2Cd34SQC6bFB8zGwWs4Sf3LOb2oNZtpRsxm6w6wrNbE=
 github.com/samir-gandhi/dvgenerate v0.0.7 h1:1ff58iR9pbaYAZ37CTmQW9AgCjHQlMew+JXv2DNMHJ4=
 github.com/samir-gandhi/dvgenerate v0.0.7/go.mod h1:MSAcNGRG30YUfSry4JJMZn8GN9Au7RviqnWbaFMxbxQ=
 github.com/sanposhiho/wastedassign/v2 v2.0.7 h1:J+6nrY4VW+gC9xFzUc+XjPD3g3wF3je/NsJFwFK7Uxc=
