@@ -2429,6 +2429,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### ServiceNow
+
+**Connector Display Name**: ServiceNow
+
+**Connector ID** - schema `connectorId`: servicenowConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Username | `adminUsername` | `` | Your ServiceNow administrator username. |
+| API URL | `apiUrl` | `string` | The API URL to target, such as "https://mycompany.service-now.com". |
+| Password | `password` | `string` | Your ServiceNow administrator password. | 
+
+
+
+
 ### Shopify Connector
 
 **Connector Display Name**: Shopify Connector
