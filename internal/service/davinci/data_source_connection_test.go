@@ -2,20 +2,24 @@ package davinci_test
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
 )
 
+// Only "PINGONE_DAVINCI_ACCESS_TOKEN","PINGONE_REGION","PINGONE_ENVIRONMENT_ID"`
+// should be set in the environment before running this test
 func TestAccDataSourceConnection_ReadAllAT(t *testing.T) {
 
 	resourceBase := "davinci_connections"
 	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("davinci_connection.%s", resourceName)
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
+	targetEnvId := os.Getenv("PINGONE_ENVIRONMENT_ID")
 
-	hcl := testAccDataSourceConnection_Slim(resourceName)
-	hcl = fmt.Sprintf(`
+	hcl := fmt.Sprintf(`
 data "davinci_connections" "%[1]s" {
 	environment_id = var.environment_id
 }
@@ -27,26 +31,23 @@ resource "davinci_connection" "%[1]s" {
 }
 
 variable "environment_id" {
-	default = "089b57b4-70a5-45db-8add-01120f8b0063"
+	default = "%[2]s"
 }
-`, resourceName)
+`, resourceName, targetEnvId)
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		PreCheck:          func() { acctest.PreCheck(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
-		// CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connections"}),
 		Steps: []resource.TestStep{
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf("%s", dataSourceFullName), "environment_id", "089b57b4-70a5-45db-8add-01120f8b0063"),
-					resource.TestCheckResourceAttr(fmt.Sprintf("davinci_connection.%s", resourceName), "environment_id", "089b57b4-70a5-45db-8add-01120f8b0063"),
-					// resource.TestCheckResourceAttrSet(dataSourceFullName, "connector_id"),
-					// resource.TestCheckResourceAttrSet(dataSourceFullName, "created_date"),
-					// resource.TestCheckResourceAttrSet(dataSourceFullName, "environment_id"),
-					// resource.TestCheckResourceAttrSet(dataSourceFullName, "id"),
+					resource.TestCheckResourceAttr(fmt.Sprintf("%s", dataSourceFullName), "environment_id", targetEnvId),
+					resource.TestCheckResourceAttr(fmt.Sprintf("davinci_connection.%s", resourceName), "environment_id", targetEnvId),
+					resource.TestCheckResourceAttrSet(resourceFullName, "name"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 				),
 			},
 		},
