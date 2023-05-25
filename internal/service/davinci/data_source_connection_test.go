@@ -44,7 +44,7 @@ variable "environment_id" {
 			{
 				Config: hcl,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(fmt.Sprintf("%s", dataSourceFullName), "environment_id", targetEnvId),
+					resource.TestCheckResourceAttr(dataSourceFullName, "environment_id", targetEnvId),
 					resource.TestCheckResourceAttr(fmt.Sprintf("davinci_connection.%s", resourceName), "environment_id", targetEnvId),
 					resource.TestCheckResourceAttrSet(resourceFullName, "name"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
