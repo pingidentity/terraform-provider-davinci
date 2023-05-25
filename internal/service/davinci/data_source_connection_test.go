@@ -21,7 +21,7 @@ func TestAccDataSourceConnection_ReadAllAT(t *testing.T) {
 
 	hcl := fmt.Sprintf(`
 data "davinci_connections" "%[1]s" {
-	environment_id = var.environment_id
+  environment_id = var.environment_id
 }
 
 resource "davinci_connection" "%[1]s" {
@@ -31,7 +31,7 @@ resource "davinci_connection" "%[1]s" {
 }
 
 variable "environment_id" {
-	default = "%[2]s"
+  default = "%[2]s"
 }
 `, resourceName, targetEnvId)
 
