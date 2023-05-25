@@ -1,3 +1,9 @@
+## 0.1.9
+
+ENHANCEMENTS:
+
+* `provider`: added handling to optionally accept davinci access token in place of username/password ([#124](https://github.com/pingidentity/terraform-provider-pingone/issues/124))
+
 ## 0.1.8
 
 BUG FIXES:
