@@ -11,13 +11,13 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.1.7
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.21.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.22.0
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.11.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.52
 	github.com/samir-gandhi/dvgenerate v0.0.7
 	github.com/terraform-linters/tflint v0.46.1
-	golang.org/x/exp v0.0.0-20230519143937-03e91628a987
+	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
 )
 
 require (
@@ -154,7 +154,7 @@ require (
 	github.com/owenrumney/go-sarif v1.1.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/agreementmanagement v0.1.4 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.1.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.6.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.7.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -279,7 +279,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2 v0.7.1
+	github.com/patrickcping/pingone-go-sdk-v2 v0.7.2
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
