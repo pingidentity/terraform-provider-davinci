@@ -183,6 +183,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Adobe Marketo
+
+**Connector Display Name**: Adobe Marketo
+
+**Connector ID** - schema `connectorId`: adobemarketoConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientId` | `string` | Your Adobe Marketo client ID. |
+| Client Secret | `clientSecret` | `string` | Your Adobe Marketo client secret. |
+| API URL | `endpoint` | `` | The API endpoint for your Adobe Marketo instance, such as "abc123.mktorest.com/rest". | 
+
+
+
+
 ### Amazon DynamoDB
 
 **Connector Display Name**: Amazon DynamoDB
@@ -334,6 +353,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Authomize Incident Connector
+
+**Connector Display Name**: Authomize Incident Connector
+
+**Connector ID** - schema `connectorId`: connectorAuthomize
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Authomize API Key | `apiKey` | `string` | The API Key from the Authomize API Tokens creation page | 
+
+
+
+
 ### Azure AD User Management
 
 **Connector Display Name**: Azure AD User Management
@@ -348,6 +384,23 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | API URL | `baseUrl` | `string` | The Microsoft API URL to target. For a custom value, select Use Custom API URL and enter a value in the Custom API URL field. |
 | Custom API URL | `customApiUrl` | `` | The URL for the Microsoft Graph API, such as "https://graph.microsoft.com/v1.0". |
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
+### Badge
+
+**Connector Display Name**: Badge
+
+**Connector ID** - schema `connectorId`: connectorBadge
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
 | Custom Parameters | `customAuth` | `array` |  | 
 
 
@@ -446,6 +499,23 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 | Oauth2 Parameters | `oauth2` | `array` |  | 
+
+
+
+
+### CASTLE
+
+**Connector Display Name**: CASTLE
+
+**Connector ID** - schema `connectorId`: castleConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| API Secret | `apiSecret` | `` | Your 32-character Castle API secret, such as “Olc…QBF”. | 
 
 
 
@@ -2026,6 +2096,27 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### PingOne Credentials
+
+**Connector Display Name**: PingOne Credentials
+
+**Connector ID** - schema `connectorId`: pingOneCredentialsConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientId` | `string` | The Client ID of your PingOne Worker application |
+| Client Secret | `clientSecret` | `string` | The Client Secret of your PingOne Worker application |
+| Digital Wallet Application ID | `digitalWalletApplicationId` | `` | Identifier (UUID) associated with the credential digital wallet app. |
+| Environment ID | `envId` | `string` | Your PingOne Environment ID. |
+| Region | `region` | `string` | The region your PingOne environment is in. | 
+
+
+
+
 ### PingOne Forms
 
 **Connector Display Name**: PingOne Forms
@@ -2084,25 +2175,9 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### PingOne RADIUS Gateway
+### PingOne Protect
 
-**Connector Display Name**: PingOne RADIUS Gateway
-
-**Connector ID** - schema `connectorId`: pingOneIntegrationsConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----| 
-
-
-
-
-### PingOne Risk
-
-**Connector Display Name**: PingOne Risk
+**Connector Display Name**: PingOne Protect
 
 **Connector ID** - schema `connectorId`: pingOneRiskConnector
 
@@ -2116,6 +2191,22 @@ If the `value` type of a property is not defined it must be inferred.
 | Client Secret | `clientSecret` | `string` | Client Secret from your App in Ping's Dashboard |
 | Environment ID | `envId` | `string` | Your Environment ID provided by Ping. |
 | Region | `region` | `string` | The region your PingOne environment is in. | 
+
+
+
+
+### PingOne RADIUS Gateway
+
+**Connector Display Name**: PingOne RADIUS Gateway
+
+**Connector ID** - schema `connectorId`: pingOneIntegrationsConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----| 
 
 
 
@@ -2233,6 +2324,24 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 | SAML Parameters | `saml` | `array` |  | 
+
+
+
+
+### SEON
+
+**Connector Display Name**: SEON
+
+**Connector ID** - schema `connectorId`: seonConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| API Base URL | `baseURL` | `` | The API URL to target. |
+| License Key | `licenseKey` | `` | Your SEON license key. For help, see the SEON REST API documentation. | 
 
 
 
@@ -2462,6 +2571,8 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | Admin API Access Token | `accessToken` | `string` | Your store's unique Admin API Access Token that goes into the X-Shopify-Access-Token property. Required scopes when generating Admin API Access Token: 'read_customers' and 'write_customers'. Note any Custom Shopify API calls you intend to use with this connector via Make Custom API Call capability, will have to be added as well. |
 | API Version Name | `apiVersion` | `` | The Shopify version name ( ex. 2022-04 ) |
+| Multipass Secret | `multipassSecret` | `` | Shopify Multipass Secret |
+| Multipass Store Domain | `multipassStoreDomain` | `` | Shopify Multipass Store Domain (yourstorename.myshopify.com) |
 | Store Name | `yourStoreName` | `` | The name of your store as Shopify identifies you ( first text that comes after HTTPS:// ) | 
 
 
@@ -2534,7 +2645,9 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | ID+ Key | `apiKey` | `string` | ID+ Key is the API key that you can retrieve from Socure Admin Portal |
 | API URL | `baseUrl` | `string` | The Socure API URL to target. For a custom value, select Use Custom API URL and enter a value in the Custom API URL field. |
-| SDK Key | `sdkKey` | `` | SDK Key that you can retrieve from Socure Admin Portal | 
+| Custom API URL | `customApiUrl` | `` | The URL for the Socure API, such as "https://example.socure.com". |
+| SDK Key | `sdkKey` | `` | SDK Key that you can retrieve from Socure Admin Portal |
+| Webhook URL | `skWebhookUri` | `string` | Use this url as the Webhook URL in the Third Party Integration's configuration | 
 
 
 
@@ -2988,6 +3101,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Veriff
+
+**Connector Display Name**: Veriff
+
+**Connector ID** - schema `connectorId`: veriffConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| API Key | `access_token` | `` | The API Key provided by Veriff, such as "323aa031-b4af-4e12-b354-de0da91a2ab0". |
+| Base URL | `baseUrl` | `string` | The API URL to target, such as “https://stationapi.veriff.com/”. |
+| Shared Secret Key | `password` | `string` | The Share Secret Key from Veriff to create HMAC signature, such as "20bf4sf0-fbg7-488c-b4f1-d9594lf707bk". | 
+
+
+
+
 ### Verosint
 
 **Connector Display Name**: Verosint
@@ -3056,6 +3188,43 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 | OpenId Parameters | `openId` | `array` |  | 
+
+
+
+
+### WireWheel
+
+**Connector Display Name**: WireWheel
+
+**Connector ID** - schema `connectorId`: wireWheelConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| WireWheel Base API URL | `baseURL` | `` | The base API URL of the WireWheel environment. |
+| Client ID | `clientId` | `string` | Client ID from WireWheel Channel settings |
+| Client Secret | `clientSecret` | `string` | Client Secret from WireWheel Channel settings |
+| Issuer URL | `issuerId` | `` | Issuer URL from WireWheel Channel settings | 
+
+
+
+
+### Yoti
+
+**Connector Display Name**: Yoti
+
+**Connector ID** - schema `connectorId`: yotiConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 

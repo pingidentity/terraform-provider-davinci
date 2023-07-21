@@ -80,6 +80,7 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 		PingOneSessionMainFlow: makeFlowHcl(resourceName, flowResource{
 			Name:        "pingone_session_main_flow",
 			FlowJson:    flowJsons.PingOneSessionMainFlow,
+			Subflows:    []string{"pingone_session_sub_flow"},
 			Connections: []string{"annotation", "flow", "pingoneauthentication", "node"},
 		}),
 		PingOneSessionMainFlowUpdate: makeFlowHcl(resourceName, flowResource{
@@ -189,7 +190,8 @@ func readFlowJsonFile(path string, resourceName string) string {
 		panic(err)
 	}
 
-	flowMap["name"] = flowMap["name"].(string) + "-" + resourceName
+	// flowMap["name"] = flowMap["name"].(string) + "-" + resourceName
+	flowMap["name"] = flowMap["name"].(string)
 
 	flowByte, err = json.Marshal(flowMap)
 	if err != nil {

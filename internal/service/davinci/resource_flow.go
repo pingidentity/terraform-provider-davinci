@@ -776,10 +776,8 @@ func expandSubFlowProps(subflowProps map[string]interface{}) (*dv.SubFlowPropert
 
 	switch subflowVersionId["value"].(type) {
 	case int:
-		fmt.Println("type is int")
 		sfvidString = strconv.Itoa(subflowVersionId["value"].(int))
 	case float64:
-		fmt.Println("type is float")
 		sfvidString = strconv.FormatFloat(subflowVersionId["value"].(float64), 'f', -1, 64)
 	case string:
 		sfvidString = subflowVersionId["value"].(string)
