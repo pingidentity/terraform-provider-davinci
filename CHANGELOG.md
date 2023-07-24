@@ -1,3 +1,9 @@
+## 0.1.10
+
+ENHANCEMENTS:
+
+* `provider`: support host_url as provider input parameter ([#151](https://github.com/pingidentity/terraform-provider-pingone/issues/151))
+
 ## 0.1.9
 
 ENHANCEMENTS:
