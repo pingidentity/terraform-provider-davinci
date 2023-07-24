@@ -464,6 +464,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### BeyondTrust - Privileged Remote Access
+
+**Connector Display Name**: BeyondTrust - Privileged Remote Access
+
+**Connector ID** - schema `connectorId`: connectorBTpra
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientID` | `` | PRA API Client ID |
+| Client Secret | `clientSecret` | `string` | PRA API Client Secret |
+| PRA Web API Address | `praAPIurl` | `` | URL of PRA Appliance | 
+
+
+
+
 ### BioCatch
 
 **Connector Display Name**: BioCatch
