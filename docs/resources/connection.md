@@ -1590,6 +1590,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Keyless
+
+**Connector Display Name**: Keyless
+
+**Connector ID** - schema `connectorId`: connectorKeyless
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### Keyri QR Login
 
 **Connector Display Name**: Keyri QR Login
@@ -2314,6 +2331,27 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Red Violet
+
+**Connector Display Name**: Red Violet
+
+**Connector ID** - schema `connectorId`: connectorIdiVERIFIED
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| API Secret | `apiSecret` | `` | Please enter your API secret that Red Violet has provided you |
+| Company Key | `companyKey` | `` | Please enter the company key that Red Violet has assigned |
+| Environment | `idiEnv` | `string` | Please choose which coreIDENTITY environment you would like to query  |
+| Site Key | `siteKey` | `` | Please enter your site key that Red Violet has provided you |
+| Unique URL | `uniqueUrl` | `` | Please enter your unique URL that Red Violet has provided you | 
+
+
+
+
 ### SAML
 
 **Connector Display Name**: SAML
@@ -2719,6 +2757,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----| 
+
+
+
+
+### Svipe
+
+**Connector Display Name**: Svipe
+
+**Connector ID** - schema `connectorId`: connectorSvipe
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 
