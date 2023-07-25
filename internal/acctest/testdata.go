@@ -101,6 +101,8 @@ func FlowsForTests(resourceName string) TestFlowsHcl {
 	}
 }
 
+var BsConnectionsCount = len(bsConnections)
+
 // Hardcoded map of bootstrapped connections that come with new DV tenant.
 // keys are connectorIds are one word lowercased
 var bsConnections = map[string]flowConnection{
@@ -124,10 +126,30 @@ var bsConnections = map[string]flowConnection{
 		Name:        "Http",
 		Id:          "867ed4363b2bc21c860085ad2baa817d",
 	},
+	"pingid": {
+		ConnectorId: "pingIdConnector",
+		Name:        "PingID",
+		Id:          "7cfb64c2d10f3d4ebe0515639d9c8e6f",
+	},
+	"pingonenotifications": {
+		ConnectorId: "notificationsConnector",
+		Name:        "PingOne Notifications",
+		Id:          "cacf3d2861657174d93cbf445d55797a",
+	},
+	"pingonemfa": {
+		ConnectorId: "pingOneMfaConnector",
+		Name:        "PingOne MFA",
+		Id:          "b72bd44e6be8180bd5988ac74cd9c949",
+	},
 	"pingonesso": {
 		ConnectorId: "pingOneSSOConnector",
 		Name:        "PingOne",
 		Id:          "94141bf2f1b9b59a5f5365ff135e02bb",
+	},
+	"pingonerisk": {
+		ConnectorId: "pingOneRiskConnector",
+		Name:        "PingOne Risk",
+		Id:          "4c653c375e07bdf8614406113f998666",
 	},
 	"skopenid": {
 		ConnectorId: "skOpenIdConnector",

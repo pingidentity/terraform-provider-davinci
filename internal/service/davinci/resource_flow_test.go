@@ -227,8 +227,8 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 						if err != nil {
 							return err
 						}
-						if v != 9 {
-							return fmt.Errorf("Bootstrap not completed, or has changed. Expected 9 connections, got %d", v)
+						if v != acctest.BsConnectionsCount {
+							return fmt.Errorf("Bootstrap not completed, or has changed. Expected %d connections, got %d", acctest.BsConnectionsCount, v)
 						}
 						return nil
 					}),
