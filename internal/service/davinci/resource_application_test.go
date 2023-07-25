@@ -201,7 +201,6 @@ func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
 	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
-
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,

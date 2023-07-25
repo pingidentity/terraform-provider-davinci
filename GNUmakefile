@@ -4,7 +4,7 @@ DAVINCI_DIR=./internal/service/davinci
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.9
+VERSION=0.1.10
 OS_ARCH=linux_amd64
 
 default: build
@@ -13,7 +13,7 @@ tools:
 	@echo "==> Installing tools..."
 	go generate -tags tools tools/tools.go
 
-build: vet depscheck
+build: 
 	@echo "==> Building..."
 	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
 

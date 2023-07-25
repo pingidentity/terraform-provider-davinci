@@ -56,6 +56,12 @@ func New(version string) func() *schema.Provider {
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_ENVIRONMENT_ID", nil),
 					Description: "Environment ID PingOne User Login. Default value can be set with the `PINGONE_ENVIRONMENT_ID` environment variable.",
 				},
+				"host_url": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("PINGONE_DAVINCI_HOST_URL", nil),
+					Description: "To override the default region-based url, provide a PingOne DaVinci API host url. Default value can be set with the `PINGONE_DAVINCI_HOST_URL` environment variable.",
+				},
 				"access_token": {
 					Type:        schema.TypeString,
 					Optional:    true,
@@ -83,7 +89,7 @@ func New(version string) func() *schema.Provider {
 
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		var username, password, region, accessToken, environment_id string
+		var username, password, region, accessToken, environment_id, host_url string
 		if _, ok := d.GetOk("username"); ok {
 			username = d.Get("username").(string)
 		}
@@ -99,6 +105,9 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		if _, ok := d.GetOk("environment_id"); ok {
 			environment_id = d.Get("environment_id").(string)
 		}
+		if _, ok := d.GetOk("host_url"); ok {
+			host_url = d.Get("host_url").(string)
+		}
 
 		var diags diag.Diagnostics
 
@@ -107,6 +116,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			Password:        password,
 			PingOneRegion:   region,
 			PingOneSSOEnvId: environment_id,
+			HostURL:         host_url,
 			AccessToken:     accessToken,
 		}
 		c, err := client.NewClient(&cInput)

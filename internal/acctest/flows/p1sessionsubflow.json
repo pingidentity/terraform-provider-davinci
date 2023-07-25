@@ -1,5 +1,5 @@
 {
-  "companyId": "ee43f700-c751-494d-9dbf-70946a85b328",
+  "companyId": "96ce0d5f-1fd9-4645-bff7-2a9083084f06",
   "authTokenExpireIds": [],
   "connectorIds": [
     "errorConnector",
@@ -10,13 +10,15 @@
     "httpConnector",
     "variablesConnector"
   ],
-  "createdDate": 1678449152222,
-  "currentVersion": 38,
-  "customerId": "f3e47d945ae971a4b4142ec75012d155",
-  "description": "Imported on Tue Mar 07 2023 19:05:20 GMT+0000 (Coordinated Universal Time)",
+  "createdDate": 1689969084237,
+  "currentVersion": 1,
+  "customerId": "ee728871d18a3b9b273c87192cee4a18",
+  "deployedDate": 1689969085460,
+  "description": "Imported on Fri Jul 21 2023 19:51:22 GMT+0000 (Coordinated Universal Time)",
   "flowStatus": "enabled",
+  "isOutputSchemaSaved": false,
   "name": "PingOne Sign On with Registration, Password Reset and Recovery",
-  "publishedVersion": 38,
+  "publishedVersion": 1,
   "settings": {
     "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
     "intermediateLoadingScreenCSS": "",
@@ -35,9 +37,9 @@
     "css": ".companyLogo {\n    /* Ping Logo  */\n    content: url(\"https://assets.pingone.com/ux/ui-library/5.0.2/images/logo-pingidentity.png\");\n    width: 65px;\n    height: 65px;\n}"
   },
   "trigger": {},
-  "updatedDate": 1678449155725,
-  "flowId": "4d3dca9fc4161ab2402e1ed17bd96fd1",
-  "versionId": 38,
+  "updatedDate": 1689969085460,
+  "flowId": "7062aa6918f062b6e925c0077c1a3530",
+  "versionId": 1,
   "graphData": {
     "elements": {
       "nodes": [
@@ -207,10 +209,10 @@
           "data": {
             "id": "ofk8hitz8r",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "startNode",
             "type": "trigger",
@@ -276,10 +278,10 @@
           "data": {
             "id": "1dw8r9r4eg",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "startNode",
             "type": "trigger",
@@ -377,10 +379,10 @@
           "data": {
             "id": "s26s7nbn5d",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -414,10 +416,10 @@
           "data": {
             "id": "scrsg9o0e2",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -472,10 +474,10 @@
           "data": {
             "id": "bviv3cclyg",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -523,10 +525,10 @@
           "data": {
             "id": "ercttap70x",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "startNode",
             "type": "trigger",
@@ -574,10 +576,10 @@
           "data": {
             "id": "8tr0nbjz2r",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -614,10 +616,10 @@
           "data": {
             "id": "4qxu8ofxjj",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -738,7 +740,7 @@
           "data": {
             "id": "qp6fpnw2hk",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -790,7 +792,7 @@
           "data": {
             "id": "q58gzphsoq",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -970,7 +972,7 @@
           "data": {
             "id": "zqt7m8uu76",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Teleport",
@@ -2107,7 +2109,7 @@
           "data": {
             "id": "dpo5892st9",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -2334,7 +2336,7 @@
             "type": "trigger",
             "properties": {
               "customHTML": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"<div class=\\\"bg-light d-flex flex-column justify-content-center align-items-center position-absolute top-0 start-0 bottom-0 end-0 overflow-auto\\\">\\n   <div style=\\\"max-width: 400px; min-width: 400px; width: 100%\\\">\\n        <div class=\\\"card shadow mb-5\\\">\\n            <div class=\\\"card-body p-5 d-flex flex-column\\\">\\n                <img class=\\\"companyLogo align-self-center mb-5\\\" alt=\\\"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"variable.svg\",\n        \"url\": \"companyName\",\n        \"data\": \"{{global.variables.companyName}}\",\n        \"tooltip\": \"{{global.variables.companyName}}\",\n        \"children\": [\n          {\n            \"text\": \"{{global.variables.companyName}}\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\\\" />\\n                <h1 class=\\\"text-center mb-4\\\">Flow Configuration Error</h1>\\n                <p class=\\\"text-muted text-center\\\">Please set the PingOne Population Id <strong>(populationId)</strong> instance variable prior to running this demo flow.</p>\\n            </div>\\n        </div>\\n    </div>\\n</div>\"\n      }\n    ]\n  }\n]"
+                "value": "[{\"children\":[{\"text\":\"<div class=\\\"bg-light d-flex flex-column justify-content-center align-items-center position-absolute top-0 start-0 bottom-0 end-0 overflow-auto\\\">\\n   <div style=\\\"max-width: 400px; min-width: 400px; width: 100%\\\">\\n        <div class=\\\"card shadow mb-5\\\">\\n            <div class=\\\"card-body p-5 d-flex flex-column\\\">\\n                <img class=\\\"companyLogo align-self-center mb-5\\\" alt=\\\"\"},{\"text\":\"\"},{\"type\":\"link\",\"src\":\"variable.svg\",\"url\":\"companyName\",\"data\":\"{{global.variables.companyName}}\",\"tooltip\":\"{{global.variables.companyName}}\",\"children\":[{\"text\":\"{{global.variables.companyName}}\"}]},{\"text\":\"\"},{\"text\":\"\\\" />\\n                <h1 class=\\\"text-center mb-4\\\">Flow Configuration Error</h1>\\n                <p class=\\\"text-muted text-center\\\">Please set the PingOne Population Id <strong>(populationId)</strong> instance variable prior to running this demo flow.</p>\\n            </div>\\n        </div>\\n    </div>\\n</div>\"}]}]"
               },
               "formFieldsList": {
                 "value": [
@@ -2431,7 +2433,7 @@
           "data": {
             "id": "5kyosaxnqb",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -2748,7 +2750,7 @@
                 ]
               },
               "customHTML": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"<div\\n  class=\\\"bg-light d-flex flex-column justify-content-center align-items-center position-absolute top-0 start-0 bottom-0 end-0\\\">\\n  <div style=\\\"max-width: 400px; width: 100%\\\">\\n    <div class=\\\"card shadow mb-5\\\">\\n      <div class=\\\"card-body p-5 d-flex flex-column\\\">\\n        <img class=\\\"companyLogo align-self-center mb-5\\\" alt=\\\"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"variable.svg\",\n        \"url\": \"companyName\",\n        \"data\": \"{{global.variables.companyName}}\",\n        \"tooltip\": \"{{global.variables.companyName}}\",\n        \"children\": [\n          {\n            \"text\": \"{{global.variables.companyName}}\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\\\" />\\n        <h1 id=\\\"header\\\" class=\\\"text-center mb-4\\\">Create Your Profile</h1>\\n        <p id=\\\"feedback\\\" data-id=\\\"feedback\\\" class=\\\"text-danger mdi mdi-alert-circle\\\" data-skcomponent=\\\"skerror\\\"></p>\\n        <form id=\\\"registrationForm\\\" data-id=\\\"registrationForm\\\" class=\\\"form\\\">\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"email\\\" data-id=\\\"email\\\" class=\\\"form-control\\\" type=\\\"text\\\" name=\\\"email\\\" placeholder=\\\"Email Address\\\" autocomplete=\\\"off\\\" />\\n            <label id=\\\"emailLabel\\\" data-id=\\\"emailLabel\\\" class=\\\"form-label\\\" for=\\\"email\\\">Email Address</label>\\n          </div>\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"firstName\\\" data-id=\\\"firstName\\\" class=\\\"form-control\\\" type=\\\"text\\\" name=\\\"firstName\\\" placeholder=\\\"First Name\\\" autocomplete=\\\"off\\\" />\\n            <label id=\\\"firstNameLabel\\\" data-id=\\\"firstNameLabel\\\" class=\\\"form-label\\\" for=\\\"firstName\\\">First Name</label>\\n          </div>\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"lastName\\\" data-id=\\\"lastName\\\" class=\\\"form-control\\\" type=\\\"text\\\" placeholder=\\\"Last Name\\\" autocomplete=\\\"off\\\" name=\\\"lastName\\\" />\\n            <label id=\\\"lastNameLabel\\\" data-id=\\\"lastNameLabel\\\" class=\\\"form-label\\\" for=\\\"lastName\\\">Last Name</label>\\n          </div>\\n          <div id=\\\"passwordContainer\\\" class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"password\\\" data-id=\\\"password\\\" class=\\\"form-control\\\" type=\\\"password\\\" placeholder=\\\"Password\\\" autocomplete=\\\"off\\\" name=\\\"password\\\" />\\n            <label id=\\\"passwordLabel\\\" data-id=\\\"passwordLabel\\\" class=\\\"form-label\\\" for=\\\"password\\\">Password</label>\\n          </div>\\n          <div class=\\\"d-flex flex-column\\\">\\n            <button id=\\\"submitBtn\\\" data-id=\\\"submitBtn\\\" class=\\\"btn btn-primary mb-3\\\" type=\\\"submit\\\" data-skcomponent=\\\"skbutton\\\" \\n              data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"registrationForm\\\" data-skbuttonvalue=\\\"REGISTER\\\">\\n                Save\\n              </button>\\n            <button id=\\\"cancelBtn\\\" data-id=\\\"cancelBtn\\\" class=\\\"btn btn-link\\\" type=\\\"submit\\\" data-skcomponent=\\\"skbutton\\\"\\n              data-skbuttontype=\\\"next-event\\\" data-skform=\\\"registrationForm\\\" data-skbuttonvalue=\\\"SIGNON\\\">\\n                Already have an account? Sign on\\n            </button>\\n          </div>\\n        </form>\\n      </div>\\n    </div>\\n  </div>\\n</div>\"\n      }\n    ]\n  }\n]"
+                "value": "[{\"children\":[{\"text\":\"<div\\n  class=\\\"bg-light d-flex flex-column justify-content-center align-items-center position-absolute top-0 start-0 bottom-0 end-0\\\">\\n  <div style=\\\"max-width: 400px; width: 100%\\\">\\n    <div class=\\\"card shadow mb-5\\\">\\n      <div class=\\\"card-body p-5 d-flex flex-column\\\">\\n        <img class=\\\"companyLogo align-self-center mb-5\\\" alt=\\\"\"},{\"text\":\"\"},{\"type\":\"link\",\"src\":\"variable.svg\",\"url\":\"companyName\",\"data\":\"{{global.variables.companyName}}\",\"tooltip\":\"{{global.variables.companyName}}\",\"children\":[{\"text\":\"{{global.variables.companyName}}\"}]},{\"text\":\"\"},{\"text\":\"\\\" />\\n        <h1 id=\\\"header\\\" class=\\\"text-center mb-4\\\">Create Your Profile</h1>\\n        <p id=\\\"feedback\\\" data-id=\\\"feedback\\\" class=\\\"text-danger mdi mdi-alert-circle\\\" data-skcomponent=\\\"skerror\\\"></p>\\n        <form id=\\\"registrationForm\\\" data-id=\\\"registrationForm\\\" class=\\\"form\\\">\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"email\\\" data-id=\\\"email\\\" class=\\\"form-control\\\" type=\\\"text\\\" name=\\\"email\\\" placeholder=\\\"Email Address\\\" autocomplete=\\\"off\\\" />\\n            <label id=\\\"emailLabel\\\" data-id=\\\"emailLabel\\\" class=\\\"form-label\\\" for=\\\"email\\\">Email Address</label>\\n          </div>\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"firstName\\\" data-id=\\\"firstName\\\" class=\\\"form-control\\\" type=\\\"text\\\" name=\\\"firstName\\\" placeholder=\\\"First Name\\\" autocomplete=\\\"off\\\" />\\n            <label id=\\\"firstNameLabel\\\" data-id=\\\"firstNameLabel\\\" class=\\\"form-label\\\" for=\\\"firstName\\\">First Name</label>\\n          </div>\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"lastName\\\" data-id=\\\"lastName\\\" class=\\\"form-control\\\" type=\\\"text\\\" placeholder=\\\"Last Name\\\" autocomplete=\\\"off\\\" name=\\\"lastName\\\" />\\n            <label id=\\\"lastNameLabel\\\" data-id=\\\"lastNameLabel\\\" class=\\\"form-label\\\" for=\\\"lastName\\\">Last Name</label>\\n          </div>\\n          <div id=\\\"passwordContainer\\\" class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"password\\\" data-id=\\\"password\\\" class=\\\"form-control\\\" type=\\\"password\\\" placeholder=\\\"Password\\\" autocomplete=\\\"off\\\" name=\\\"password\\\" />\\n            <label id=\\\"passwordLabel\\\" data-id=\\\"passwordLabel\\\" class=\\\"form-label\\\" for=\\\"password\\\">Password</label>\\n          </div>\\n          <div class=\\\"d-flex flex-column\\\">\\n            <button id=\\\"submitBtn\\\" data-id=\\\"submitBtn\\\" class=\\\"btn btn-primary mb-3\\\" type=\\\"submit\\\" data-skcomponent=\\\"skbutton\\\" \\n              data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"registrationForm\\\" data-skbuttonvalue=\\\"REGISTER\\\">\\n                Save\\n              </button>\\n            <button id=\\\"cancelBtn\\\" data-id=\\\"cancelBtn\\\" class=\\\"btn btn-link\\\" type=\\\"submit\\\" data-skcomponent=\\\"skbutton\\\"\\n              data-skbuttontype=\\\"next-event\\\" data-skform=\\\"registrationForm\\\" data-skbuttonvalue=\\\"SIGNON\\\">\\n                Already have an account? Sign on\\n            </button>\\n          </div>\\n        </form>\\n      </div>\\n    </div>\\n  </div>\\n</div>\"}]}]"
               },
               "customCSS": {},
               "customScript": {
@@ -2788,7 +2790,7 @@
             "type": "trigger",
             "properties": {
               "customHTML": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"<div\\n  class=\\\"bg-light d-flex flex-column justify-content-center align-items-center position-absolute top-0 start-0 bottom-0 end-0 overflow-auto\\\">\\n  <div style=\\\"max-width: 400px; min-width: 400px; width: 100%\\\">\\n    <div class=\\\"card shadow mb-5\\\">\\n      <div class=\\\"card-body p-5 d-flex flex-column\\\">\\n        <img class=\\\"companyLogo align-self-center mb-5\\\" alt=\\\"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"variable.svg\",\n        \"url\": \"companyName\",\n        \"data\": \"{{global.variables.companyName}}\",\n        \"tooltip\": \"{{global.variables.companyName}}\",\n        \"children\": [\n          {\n            \"text\": \"{{global.variables.companyName}}\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\\\" />\\n        <h1 id=\\\"header\\\" class=\\\"text-center mb-4\\\">Verification Code</h1>\\n        <p class=\\\"text-muted text-center\\\">\\n          We’ve sent a verification code to your email address. Please verify\\n          your email to finish setting up your account.\\n        </p>\\n        <p id=\\\"feedback\\\" data-id=\\\"feedback\\\" class=\\\"text-danger mdi mdi-alert-circle\\\" data-skcomponent=\\\"skerror\\\"></p>\\n        <p id=\\\"feedback\\\" data-id=\\\"feedback\\\" class=\\\"text-muted text-center\\\">\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"teleport.svg\",\n        \"url\": \"message\",\n        \"data\": \"{{local.lf3nqueorj.payload.output.message}}\",\n        \"tooltip\": \"{{local.lf3nqueorj.payload.output.message}}\",\n        \"children\": [\n          {\n            \"text\": \"message\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"</p>\\n\\n        <p id=\\\"verificationCodeFeedback\\\" data-id=\\\"verificationCodeFeedback\\\" class=\\\"text-danger mdi mdi-alert-circle\\\"\\n          data-skerrorid=\\\"verificationCode\\\" data-skcomponent=\\\"skerrormessage\\\"></p>\\n        <form id=\\\"otpForm\\\" data-id=\\\"otpForm\\\">\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"verificationCode\\\" data-id=\\\"verificationCode\\\" class=\\\"form-control\\\" type=\\\"text\\\" name=\\\"verificationCode\\\"\\n              placeholder=\\\"Verification Code\\\" autocomplete=\\\"off\\\" />\\n            <label id=\\\"verificationCodeLabel\\\" data-id=\\\"verificationCodeLabel\\\" class=\\\"form-label\\\" for=\\\"verificationCode\\\">\\n              Verification Code\\n            </label>\\n          </div>\\n          <div class=\\\"d-flex flex-column\\\">\\n            <button id=\\\"verifyBtn\\\" data-id=\\\"verifyBtn\\\" class=\\\"btn btn-primary mb-3\\\" type=\\\"submit\\\"\\n              data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"otpForm\\\" data-skbuttonvalue=\\\"VERIFY\\\">\\n              Verify\\n            </button>\\n            <button type=\\\"submit\\\" class=\\\"btn btn-link\\\" data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"next-event\\\" \\n              data-skform=\\\"otpForm\\\" data-skbuttonvalue=\\\"RESEND\\\">\\n                  Resend Verification Code\\n              </button>   \\n          </div>\\n        </form>\\n      </div>\\n    </div>\\n  </div>\\n</div>\"\n      }\n    ]\n  }\n]"
+                "value": "[{\"children\":[{\"text\":\"<div\\n  class=\\\"bg-light d-flex flex-column justify-content-center align-items-center position-absolute top-0 start-0 bottom-0 end-0 overflow-auto\\\">\\n  <div style=\\\"max-width: 400px; min-width: 400px; width: 100%\\\">\\n    <div class=\\\"card shadow mb-5\\\">\\n      <div class=\\\"card-body p-5 d-flex flex-column\\\">\\n        <img class=\\\"companyLogo align-self-center mb-5\\\" alt=\\\"\"},{\"text\":\"\"},{\"type\":\"link\",\"src\":\"variable.svg\",\"url\":\"companyName\",\"data\":\"{{global.variables.companyName}}\",\"tooltip\":\"{{global.variables.companyName}}\",\"children\":[{\"text\":\"{{global.variables.companyName}}\"}]},{\"text\":\"\"},{\"text\":\"\\\" />\\n        <h1 id=\\\"header\\\" class=\\\"text-center mb-4\\\">Verification Code</h1>\\n        <p class=\\\"text-muted text-center\\\">\\n          We’ve sent a verification code to your email address. Please verify\\n          your email to finish setting up your account.\\n        </p>\\n        <p id=\\\"feedback\\\" data-id=\\\"feedback\\\" class=\\\"text-danger mdi mdi-alert-circle\\\" data-skcomponent=\\\"skerror\\\"></p>\\n        <p id=\\\"feedback\\\" data-id=\\\"feedback\\\" class=\\\"text-muted text-center\\\">\"},{\"text\":\"\"},{\"type\":\"link\",\"src\":\"teleport.svg\",\"url\":\"message\",\"data\":\"{{local.lf3nqueorj.payload.output.message}}\",\"tooltip\":\"{{local.lf3nqueorj.payload.output.message}}\",\"children\":[{\"text\":\"message\"}]},{\"text\":\"\"},{\"text\":\"</p>\\n\\n        <p id=\\\"verificationCodeFeedback\\\" data-id=\\\"verificationCodeFeedback\\\" class=\\\"text-danger mdi mdi-alert-circle\\\"\\n          data-skerrorid=\\\"verificationCode\\\" data-skcomponent=\\\"skerrormessage\\\"></p>\\n        <form id=\\\"otpForm\\\" data-id=\\\"otpForm\\\">\\n          <div class=\\\"mb-4 form-floating\\\">\\n            <input id=\\\"verificationCode\\\" data-id=\\\"verificationCode\\\" class=\\\"form-control\\\" type=\\\"text\\\" name=\\\"verificationCode\\\"\\n              placeholder=\\\"Verification Code\\\" autocomplete=\\\"off\\\" />\\n            <label id=\\\"verificationCodeLabel\\\" data-id=\\\"verificationCodeLabel\\\" class=\\\"form-label\\\" for=\\\"verificationCode\\\">\\n              Verification Code\\n            </label>\\n          </div>\\n          <div class=\\\"d-flex flex-column\\\">\\n            <button id=\\\"verifyBtn\\\" data-id=\\\"verifyBtn\\\" class=\\\"btn btn-primary mb-3\\\" type=\\\"submit\\\"\\n              data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"otpForm\\\" data-skbuttonvalue=\\\"VERIFY\\\">\\n              Verify\\n            </button>\\n            <button type=\\\"submit\\\" class=\\\"btn btn-link\\\" data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"next-event\\\" \\n              data-skform=\\\"otpForm\\\" data-skbuttonvalue=\\\"RESEND\\\">\\n                  Resend Verification Code\\n              </button>   \\n          </div>\\n        </form>\\n      </div>\\n    </div>\\n  </div>\\n</div>\"}]}]"
               },
               "formFieldsList": {
                 "value": [
@@ -3143,7 +3145,7 @@
           "data": {
             "id": "exmw1x7cgs",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -3765,7 +3767,7 @@
           "data": {
             "id": "lf3nqueorj",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -3835,7 +3837,7 @@
           "data": {
             "id": "j9kqkxa5is",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
             "label": "Node",
@@ -4529,10 +4531,10 @@
           "data": {
             "id": "sqvlrcujem",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -5146,10 +5148,10 @@
           "data": {
             "id": "jmilzai0kx",
             "nodeType": "CONNECTION",
-            "connectionId": "b3b6bfe4bcfc8bd1d8851a5664d824d2",
+            "connectionId": "e7eae662d2ca276e4c6f097fc36a3bb1",
             "connectorId": "nodeConnector",
             "name": "Node",
-            "label": "Node [2023-01-09]",
+            "label": "Node",
             "status": "configured",
             "capabilityName": "goToNode",
             "type": "action",
@@ -7726,11 +7728,11 @@
     }
   },
   "flowColor": "#CACED3",
-  "savedDate": 1678449151947,
+  "savedDate": 1689969082768,
   "variables": [
     {
       "context": "flowInstance",
-      "createdDate": 1676296600642,
+      "createdDate": 1689969082570,
       "fields": {
         "type": "string",
         "displayName": "",
@@ -7741,12 +7743,11 @@
       "type": "property",
       "visibility": "private",
       "name": "companyName##SK##flowInstance",
-      "companyId": "ee43f700-c751-494d-9dbf-70946a85b328"
+      "companyId": "96ce0d5f-1fd9-4645-bff7-2a9083084f06"
     },
     {
       "context": "flowInstance",
-      "createdDate": 1677009854303,
-      "customerId": "f3e47d945ae971a4b4142ec75012d155",
+      "createdDate": 1689969082569,
       "fields": {
         "type": "string",
         "displayName": "",
@@ -7757,7 +7758,8 @@
       "type": "property",
       "visibility": "private",
       "name": "populationId##SK##flowInstance",
-      "companyId": "ee43f700-c751-494d-9dbf-70946a85b328"
+      "companyId": "96ce0d5f-1fd9-4645-bff7-2a9083084f06"
     }
-  ]
+  ],
+  "connections": []
 }
