@@ -1,3 +1,3 @@
 ```release-note:bug
-`internal_sweep_client`: update model to match new pingone client schema.
+`internal_sweep_client`: Update model to match new pingone client schema.
 ```

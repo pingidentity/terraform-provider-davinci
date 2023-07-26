@@ -1,3 +1,4 @@
 ```release-note:enhancement
-`provider`: support host_url as provider input parameter
+`provider`: Support host_url as provider input parameter
+`davinci-client-go`: Update to v0.0.53 for host_url support
 ```
