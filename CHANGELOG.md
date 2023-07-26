@@ -2,7 +2,12 @@
 
 ENHANCEMENTS:
 
-* `provider`: support host_url as provider input parameter ([#151](https://github.com/pingidentity/terraform-provider-pingone/issues/151))
+* `provider`: Support host_url as provider input parameter
+`davinci-client-go`: Update to v0.0.53 for host_url support ([#151](https://github.com/pingidentity/terraform-provider-pingone/issues/151))
+
+BUG FIXES:
+
+* `internal_sweep_client`: Update model to match new pingone client schema. ([#163](https://github.com/pingidentity/terraform-provider-pingone/issues/163))
 
 ## 0.1.9
 
