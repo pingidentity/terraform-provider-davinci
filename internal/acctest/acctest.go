@@ -61,7 +61,7 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: "0.11.1",
+			VersionConstraint: "0.18.1",
 		},
 	}
 
@@ -269,11 +269,7 @@ resource "pingone_environment" "%[1]s" {
 }
 
 data "pingone_role" "%[1]s" {
-	name = "Identity Data Admin"
-}
-
-data "pingone_role" "environment_admin" {
-  name = "Environment Admin"
+	name = "DaVinci Admin"
 }
 
 data "pingone_user" "%[1]s"{
@@ -288,16 +284,8 @@ resource "pingone_role_assignment_user" "%[1]s" {
 	scope_environment_id = resource.pingone_environment.%[1]s.id
 }
 
-resource "pingone_role_assignment_user" "environment_admin_sso" {
-  environment_id       = "%[4]s"
-  user_id              = data.pingone_user.%[1]s.id
-  role_id              = data.pingone_role.environment_admin.id
-  scope_environment_id = resource.pingone_environment.%[1]s.id
-}
-
 data "davinci_connections" "read_all" {
 	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-	depends_on = [resource.pingone_role_assignment_user.environment_admin_sso]
 }
 
 `, resourceName, licenseID, username, adminEnvID)
