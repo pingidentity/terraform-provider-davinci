@@ -111,9 +111,27 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 
 	d.SetId(resp.ConnectionID)
 
+	// Set properties based on incoming config after successful create
+	// not using reponse itself because it may contain obfuscated values
+	configProps := makePropsListMap(d)
+	if err := d.Set("property", configProps); err != nil {
+		return diag.FromErr(err)
+	}
+
 	resourceConnectionRead(ctx, d, meta)
 
 	return diags
+}
+
+// get properties from incoming config
+func makePropsListMap(d *schema.ResourceData) []map[string]interface{} {
+	propsList := d.Get("property").(*schema.Set).List()
+	propsListMap := []map[string]interface{}{}
+	for _, prop := range propsList {
+		propMap := prop.(map[string]interface{})
+		propsListMap = append(propsListMap, propMap)
+	}
+	return propsListMap
 }
 
 func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {

@@ -90,7 +90,34 @@ resource "davinci_connection" "%[2]s" {
   }
   property {
     name  = "clientSecret"
+    value = "%[4]s"
+  }
+}
+
+resource "davinci_connection" "%[2]s_mfa" {
+	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+	depends_on     = [data.davinci_connections.read_all]
+	connector_id   = "pingOneMfaConnector"
+	name           = "%[2]s_mfa"
+  property {
+    name  = "region"
+    value = "NA"
+  }
+  property {
+    name  = "envId"
+    value = "env-abc-123"
+  }
+  property {
+    name  = "clientId"
     value = "%[3]s"
+  }
+  property {
+    name  = "clientSecret"
+    value = "%[4]s"
+  }
+  property {
+    name  = "policyId"
+    value = "policy-abc-123"
   }
 }
 `, baseHcl, resourceName, clientId, clientSecret)
