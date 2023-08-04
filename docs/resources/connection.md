@@ -241,22 +241,6 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### Amazon Simple Notification Service
-
-**Connector Display Name**: Amazon Simple Notification Service
-
-**Connector ID** - schema `connectorId`: amazonSimpleNotificationConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----| 
-
-
-
-
 ### Annotation
 
 **Connector Display Name**: Annotation
@@ -1060,26 +1044,6 @@ If the `value` type of a property is not defined it must be inferred.
 
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----| 
-
-
-
-
-### GBG
-
-**Connector Display Name**: GBG
-
-**Connector ID** - schema `connectorId`: gbgConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----|
-| GBG Password | `password` | `string` |  |
-| Request URL | `requestUrl` | `string` |  |
-| Soap Action URL | `soapAction` | `string` | SOAP Action is a header required for the soap request |
-| GBG Username | `username` | `string` |  | 
 
 
 
@@ -2886,26 +2850,6 @@ If the `value` type of a property is not defined it must be inferred.
 | Title | `title` | `string` |  |
 | Tooltip | `toolTip` | `string` |  |
 | Username | `username` | `string` |  | 
-
-
-
-
-### TeleSign IVR
-
-**Connector Display Name**: TeleSign IVR
-
-**Connector ID** - schema `connectorId`: telesignIvrConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----|
-| API Key | `apiKey` | `string` |  |
-| Customer ID | `customerId` | `string` |  |
-| Flow ID | `flowId` | `string` |  |
-| TeleSign IVR Phone Number | `telesignIvrPhoneNumber` | `` |  | 
 
 
 
