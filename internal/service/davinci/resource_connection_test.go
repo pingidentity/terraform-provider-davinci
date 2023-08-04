@@ -118,10 +118,10 @@ resource "davinci_connection" "%[2]s_crowdstrike" {
 }
 
 resource "davinci_connection" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-	depends_on     = [data.davinci_connections.read_all]
-	connector_id   = "pingOneMfaConnector"
-	name           = "%[2]s"
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [data.davinci_connections.read_all]
+  connector_id   = "pingOneMfaConnector"
+  name           = "%[2]s"
   property {
     name  = "region"
     value = "NA"
