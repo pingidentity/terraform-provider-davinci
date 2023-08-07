@@ -1,0 +1,3 @@
+```release-note:bug
+`resource_connection`: creation and update of connection directly updates state. Read avoids obfuscated values.
+```
