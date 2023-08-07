@@ -3,10 +3,13 @@ package davinci_test
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
+	// "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 func TestAccResourceConnection_Slim(t *testing.T) {
@@ -58,6 +61,7 @@ func TestAccResourceConnection_SlimWithUpdate(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
+					testAccCheckAttributeConnection_SlimWithUpdate(resourceFullName),
 				),
 			},
 			{
@@ -66,10 +70,29 @@ func TestAccResourceConnection_SlimWithUpdate(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
+					testAccCheckAttributeConnection_SlimWithUpdate(resourceFullName),
 				),
 			},
 		},
 	})
+}
+
+func testAccCheckAttributeConnection_SlimWithUpdate(resourceFullName string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		attrMap := s.RootModule().Resources[resourceFullName].Primary.Attributes
+		var clientSecretValue string
+		for k, v := range attrMap {
+			if strings.Contains(k, "clientSecret") {
+				clientSecretValue = v
+			}
+		}
+		if clientSecretValue == "******" {
+			return acctest.ComposeCompare(
+				fmt.Errorf("clientSecret is not updated, still has value: %s", clientSecretValue),
+			)
+		}
+		return nil
+	}
 }
 
 func testAccResourceConnection_Slim_Hcl(resourceName, valuePrefix string) (hcl string) {
@@ -79,18 +102,45 @@ func testAccResourceConnection_Slim_Hcl(resourceName, valuePrefix string) (hcl s
 	hcl = fmt.Sprintf(`
 %[1]s
 
-resource "davinci_connection" "%[2]s" {
+resource "davinci_connection" "%[2]s_crowdstrike" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   depends_on     = [data.davinci_connections.read_all]
   connector_id   = "crowdStrikeConnector"
-  name           = "%[2]s"
+  name           = "%[2]s_crowdstrike"
   property {
     name  = "clientId"
     value = "%[3]s"
   }
   property {
     name  = "clientSecret"
+    value = "%[4]s"
+  }
+}
+
+resource "davinci_connection" "%[2]s" {
+  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
+  depends_on     = [data.davinci_connections.read_all]
+  connector_id   = "pingOneMfaConnector"
+  name           = "%[2]s"
+  property {
+    name  = "region"
+    value = "NA"
+  }
+  property {
+    name  = "envId"
+    value = "env-abc-123"
+  }
+  property {
+    name  = "clientId"
     value = "%[3]s"
+  }
+  property {
+    name  = "clientSecret"
+    value = "%[4]s"
+  }
+  property {
+    name  = "policyId"
+    value = "policy-abc-123"
   }
 }
 `, baseHcl, resourceName, clientId, clientSecret)

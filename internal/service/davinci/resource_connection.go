@@ -111,9 +111,27 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 
 	d.SetId(resp.ConnectionID)
 
+	// Set properties based on incoming config after successful create
+	// not using reponse itself because it may contain obfuscated values
+	configProps := makePropsListMap(d)
+	if err := d.Set("property", configProps); err != nil {
+		return diag.FromErr(err)
+	}
+
 	resourceConnectionRead(ctx, d, meta)
 
 	return diags
+}
+
+// get properties from incoming config
+func makePropsListMap(d *schema.ResourceData) []map[string]interface{} {
+	propsList := d.Get("property").(*schema.Set).List()
+	propsListMap := []map[string]interface{}{}
+	for _, prop := range propsList {
+		propMap := prop.(map[string]interface{})
+		propsListMap = append(propsListMap, propMap)
+	}
+	return propsListMap
 }
 
 func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
@@ -161,6 +179,18 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	// // override props with state props if obfuscated
+	stateProps := makePropsListMap(d)
+	for _, prop := range props {
+		if prop["value"] == "******" {
+			for _, stateProp := range stateProps {
+				if prop["name"] == stateProp["name"] {
+					prop["value"] = stateProp["value"]
+				}
+			}
+		}
+	}
+
 	if err := d.Set("property", props); err != nil {
 		return diag.FromErr(err)
 	}
@@ -194,6 +224,12 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 		res, ok := sdkRes.(*dv.Connection)
 		if !ok || res.Name == "" {
 			err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
+			return diag.FromErr(err)
+		}
+		// Set properties based on incoming config after successful create
+		// not using reponse itself because it may contain obfuscated values
+		configProps := makePropsListMap(d)
+		if err := d.Set("property", configProps); err != nil {
 			return diag.FromErr(err)
 		}
 	}
