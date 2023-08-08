@@ -57,8 +57,7 @@ data "pingone_role" "davinci_admin" {
 // Get the ID of the DV admin user
 data "pingone_user" "dv_admin_user" {
   environment_id = var.pingone_admin_environment_id
-
-  username = var.pingone_dv_admin_username
+  username       = var.pingone_dv_admin_username
 }
 
 // Assign the "DaVinci" role to the DV admin user
