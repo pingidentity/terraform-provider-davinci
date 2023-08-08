@@ -42,10 +42,10 @@ For a more thorough example on how to set up PingOne for DaVinci API authenticat
 
 ### Full deployment example with a PingOne environment
 
-The following assumes that the PingOne worker app has been provided the `DaVinci Admin` and `Identity Data Admin` roles scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
+The following assumes that the PingOne worker app has been provided the `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
 
 {{ tffile "examples/provider/provider_sso_davinci_role.tf" }}
 
-This above example was updated to reflect new DaVinci roles added on August 5th, 2023. The `DaVinci Admin` role is now required for user SSO and interaction with DaVinci APIs.
+> This above example was updated to reflect new DaVinci roles added on August 5th, 2023. The `DaVinci Admin` role is now required for user SSO and interaction with DaVinci APIs.
 
 {{ .SchemaMarkdown | trimspace }}
