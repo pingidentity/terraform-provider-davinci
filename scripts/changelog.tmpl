@@ -39,3 +39,11 @@ BUG FIXES:
 {{ template "note" . }}
 {{ end -}}
 {{- end -}}
+
+{{- if .NotesByType.docs }}
+DOCUMENTATION:
+
+{{range .NotesByType.docs | sort -}}
+{{ template "note" . }}
+{{ end -}}
+{{- end -}}
