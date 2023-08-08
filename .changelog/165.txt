@@ -1,3 +1,3 @@
-```release-note:documentation
+```release-note:docs
 `provider`: Add example of new PingOne role usage: "DaVinci Admin"
 ```
