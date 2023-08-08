@@ -1,3 +1,13 @@
+## 0.1.11
+
+BUG FIXES:
+
+* `resource_connection`: creation and update of connection directly updates state. Read avoids obfuscated values. ([#168](https://github.com/pingidentity/terraform-provider-pingone/issues/168))
+
+DOCUMENTATION:
+
+* `provider`: Add example of new PingOne role usage: "DaVinci Admin" ([#165](https://github.com/pingidentity/terraform-provider-pingone/issues/165))
+
 ## 0.1.10
 
 ENHANCEMENTS:
