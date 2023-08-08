@@ -61,7 +61,7 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: "0.18.1",
+			VersionConstraint: "0.19.0",
 		},
 	}
 
