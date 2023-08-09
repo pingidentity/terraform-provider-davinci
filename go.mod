@@ -11,13 +11,13 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.2.1
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.24.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.25.0
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.15.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.53
 	github.com/samir-gandhi/dvgenerate v0.0.7
 	github.com/terraform-linters/tflint v0.47.0
-	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb
+	golang.org/x/exp v0.0.0-20230725093048-515e97ebf090
 )
 
 require (
