@@ -10,14 +10,14 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
 	github.com/katbyte/terrafmt v0.5.2
-	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.2.1
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.24.0
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.15.0
+	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.3.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.25.0
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.16.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.53
 	github.com/samir-gandhi/dvgenerate v0.0.7
 	github.com/terraform-linters/tflint v0.47.0
-	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb
+	golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b
 )
 
 require (
@@ -157,9 +157,9 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/owenrumney/go-sarif v1.1.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/agreementmanagement v0.2.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.2.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.8.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/verify v0.2.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.3.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.9.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/verify v0.3.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
@@ -231,7 +231,7 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20230224173230-c95f2b4c22f2 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/oauth2 v0.10.0 // indirect
+	golang.org/x/oauth2 v0.11.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/tools v0.10.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
@@ -291,17 +291,17 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2 v0.10.1
+	github.com/patrickcping/pingone-go-sdk-v2 v0.10.2
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.13.2 // indirect
-	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/net v0.12.0 // indirect
-	golang.org/x/sys v0.10.0 // indirect
-	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/crypto v0.12.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/text v0.12.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230530153820-e85fd2cbaebc // indirect
 	google.golang.org/grpc v1.56.0 // indirect
