@@ -63,6 +63,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.AP_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "AsiaPacific"
       PINGONE_LICENSE_ID: ${{ secrets.AP_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -99,6 +100,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.AP_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "AsiaPacific"
       PINGONE_LICENSE_ID: ${{ secrets.AP_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 45
     strategy:
@@ -146,6 +148,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.AP_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "AsiaPacific"
       PINGONE_LICENSE_ID: ${{ secrets.AP_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -180,6 +183,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.CA_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "Canada"
       PINGONE_LICENSE_ID: ${{ secrets.CA_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -216,6 +220,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.CA_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "Canada"
       PINGONE_LICENSE_ID: ${{ secrets.CA_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 45
     strategy:
@@ -263,6 +268,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.CA_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "Canada"
       PINGONE_LICENSE_ID: ${{ secrets.CA_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -297,6 +303,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.EU_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "Europe"
       PINGONE_LICENSE_ID: ${{ secrets.EU_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -333,6 +340,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.EU_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "Europe"
       PINGONE_LICENSE_ID: ${{ secrets.EU_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 45
     strategy:
@@ -380,6 +388,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.EU_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "Europe"
       PINGONE_LICENSE_ID: ${{ secrets.EU_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -414,6 +423,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.NA_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "NorthAmerica"
       PINGONE_LICENSE_ID: ${{ secrets.NA_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
@@ -450,6 +460,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.NA_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "NorthAmerica"
       PINGONE_LICENSE_ID: ${{ secrets.NA_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 45
     strategy:
@@ -500,6 +511,7 @@ jobs:
       PINGONE_ENVIRONMENT_ID: ${{ secrets.NA_PINGONE_ENVIRONMENT_ID }}
       PINGONE_REGION: "NorthAmerica"
       PINGONE_LICENSE_ID: ${{ secrets.NA_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
 
     timeout-minutes: 5
     steps:
