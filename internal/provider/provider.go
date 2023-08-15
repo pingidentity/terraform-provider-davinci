@@ -118,7 +118,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			PingOneSSOEnvId: environment_id,
 			HostURL:         host_url,
 			AccessToken:     accessToken,
-			UserAgent:       fmt.Sprintf("terraform-provider-pingone/%s/go", version),
+			UserAgent:       fmt.Sprintf("terraform-provider-davinci/%s/go", version),
 		}
 		c, err := client.NewClient(&cInput)
 		if err != nil {
