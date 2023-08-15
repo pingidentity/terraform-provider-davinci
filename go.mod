@@ -10,9 +10,9 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
 	github.com/katbyte/terrafmt v0.5.2
-	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.2.1
+	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.3.0
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.25.0
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.15.0
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.16.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.54
 	github.com/samir-gandhi/dvgenerate v0.0.7
