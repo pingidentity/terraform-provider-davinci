@@ -475,26 +475,22 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 
 	appId := d.Id()
 
-	// if a new policy is added it must be created
-	if d.HasChanges("policy") {
-		new := d.Get("policy")
-		pols := expandFlowPolicies(new)
-		for _, v := range pols {
-			if v.PolicyID == "" {
+	//Policy CRUD
+	// if policies have changes, compare changes. if new policy is added, create it. if old policy is removed, delete it. if policy is updated, update it.
+	if d.HasChange("policy") {
+		oldPols, newPols := d.GetChange("policy")
+		oldPolsList := expandFlowPolicies(oldPols)
+		newPolsList := expandFlowPolicies(newPols)
+		oldPolicyMap := make(map[string]dv.Policy)
+		for _, v := range oldPolsList {
+			oldPolicyMap[v.PolicyID] = v
+		}
+		for _, newPol := range newPolsList {
+			oldPol, exists := oldPolicyMap[newPol.PolicyID]
+			if exists {
+				//update policy
 				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.CreateFlowPolicy(&c.CompanyID, appId, v)
-				}, nil)
-				if err != nil {
-					return diag.FromErr(err)
-				}
-				res, ok := sdkRes.(*dv.App)
-				if !ok || res.Name == "" {
-					err = fmt.Errorf("failed to cast create policy response to Application on id: %s", appId)
-					return diag.FromErr(err)
-				}
-			} else {
-				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.UpdateFlowPolicy(&c.CompanyID, appId, v)
+					return c.UpdateFlowPolicy(&c.CompanyID, appId, newPol)
 				}, nil)
 				if err != nil {
 					return diag.FromErr(err)
@@ -504,6 +500,30 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					err = fmt.Errorf("failed to cast update policy response to Application on id: %s", appId)
 					return diag.FromErr(err)
 				}
+				delete(oldPolicyMap, oldPol.PolicyID)
+			} else {
+				// create policy
+				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+					return c.CreateFlowPolicy(&c.CompanyID, appId, newPol)
+				}, nil)
+				if err != nil {
+					return diag.FromErr(err)
+				}
+				res, ok := sdkRes.(*dv.App)
+				if !ok || res.Name == "" {
+					err = fmt.Errorf("failed to cast create policy response to Application on id: %s", appId)
+					return diag.FromErr(err)
+				}
+				delete(oldPolicyMap, oldPol.PolicyID)
+			}
+		}
+		//delete old policies that are not in new policies
+		for _, oldPol := range oldPolicyMap {
+			_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+				return c.DeleteFlowPolicy(&c.CompanyID, appId, oldPol.PolicyID)
+			}, nil)
+			if err != nil {
+				return diag.FromErr(err)
 			}
 		}
 	}
