@@ -1,3 +1,13 @@
+## 0.1.12
+
+ENHANCEMENTS:
+
+* `provider`: Support for custom User Agent API request header ([#182](https://github.com/pingidentity/terraform-provider-davinci/issues/182))
+
+BUG FIXES:
+
+* `resource_application`: Add full CRUD logic to application policies ([#183](https://github.com/pingidentity/terraform-provider-davinci/issues/183))
+
 ## 0.1.11
 
 BUG FIXES:
