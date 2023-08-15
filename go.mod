@@ -11,13 +11,13 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.27.0
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.3.0
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.25.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.26.0
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.16.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.54
 	github.com/samir-gandhi/dvgenerate v0.0.7
 	github.com/terraform-linters/tflint v0.47.0
-	golang.org/x/exp v0.0.0-20230725093048-515e97ebf090
+	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb
 )
 
 require (
@@ -157,9 +157,9 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/owenrumney/go-sarif v1.1.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/agreementmanagement v0.2.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.2.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.8.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/verify v0.2.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.3.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.9.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/verify v0.3.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
@@ -231,7 +231,7 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20230307190834-24139beb5833 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.12.0 // indirect
-	golang.org/x/oauth2 v0.10.0 // indirect
+	golang.org/x/oauth2 v0.11.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
@@ -291,7 +291,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2 v0.10.1
+	github.com/patrickcping/pingone-go-sdk-v2 v0.10.3
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
