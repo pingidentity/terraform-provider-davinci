@@ -1622,6 +1622,11 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | ACAS Endpoint | `acasEndpoint` | `` | ACAS Endpoint |
 | Account ID | `accountId` | `` | Account ID provided by LexisNexis. |
+| Camera Script | `acuantCameraScript` | `` | The URL for the Acuant camera script, such as "https://myhost.com/AcuantCamera.min.js". |
+| Configuration Script | `acuantConfigurationScript` | `` | The URL for the Acuant configuration script, such as "https://myhost.com/configuration.js." |
+| Javascript Web SDK Script | `acuantJavascriptWebSdkScript` | `` | Tooltip: The URL for the Acuant JavaScript Web SDK, such as "https://myhost.com/AcuantJavascriptWebSdk.min.js". |
+| Acuant JavaScript Web SDK Script Source | `acuantJavascriptWebSdkScriptSource` | `` | Select the version of the Acuant scripts that you want to use, or use your own copy of the scripts by selecting Use External Acuant Script URLs. |
+| Passive Liveness Script | `acuantPassiveLivenessScript` | `` | The URL for the Acuant passive liveness script, such as "https://myhost.com/AcuantPassiveLiveness.min.js". |
 | API Key | `apiKey` | `string` | API Key provided by LexisNexis. |
 | API Key | `apiKey2` | `` | API Key provided by LexisNexis. |
 | API Base URL | `apiUrl` | `string` | The Base URL for Phone Finder, ID Verification and ThreatMetrix Capability for LexisNexis. |
@@ -1630,7 +1635,9 @@ If the `value` type of a property is not defined it must be inferred.
 | API Base URL | `apiUrl4` | `` | The Base URL for Emailage using LexisNexis. Remember to add the / in the end. |
 | Client ID | `clientId` | `string` | Account SID for Emailage provided by LexisNexis. |
 | Client Secret | `clientSecret` | `string` | OAuth Secret for Emailage provided by LexisNexis. |
+| External Acuant Script URLs | `externalAcuantScriptURLsLabel` | `` | Provide the location of externally-hosted Acuant scripts. Note: The connector supports version 11.5.0 and later. |
 | Javascript CDN URL | `javascriptCdnUrl` | `string` | This script is used for ThreatMetrix Profiling. |
+| Open CV Script | `openCvScript` | `` | The URL for the Acuant Open CV script, such as "https://myhost.com/opencv.min.js". |
 | Organization ID | `orgId` | `` | Organization ID provided by LexisNexis. |
 | Organization ID | `orgId2` | `` | Organization ID provided by LexisNexis. |
 | Password | `password` | `string` | Account Password provided by LexisNexis for OTP, KBA or Document Verification |
