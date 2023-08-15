@@ -49,7 +49,11 @@ func init() {
 	// ProviderConfigure() can overwrite configuration during concurrent testing.
 	ProviderFactories = map[string]func() (*schema.Provider, error){
 		"davinci": func() (*schema.Provider, error) {
-			provider := provider.New("dev")()
+			testVersion := os.Getenv("PINGONE_TESTING_PROVIDER_VERSION")
+			if testVersion == "" {
+				testVersion = "dev"
+			}
+			provider := provider.New(testVersion)()
 
 			if provider == nil {
 				return nil, fmt.Errorf("Cannot initiate provider factory")

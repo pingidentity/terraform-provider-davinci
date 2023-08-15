@@ -15,7 +15,7 @@ tools:
 
 build: 
 	@echo "==> Building..."
-	go install -ldflags="-X github.com/pingidentity/terraform-provider-davinci/main.version=$(VERSION)"
+	go install -ldflags="-X main.version=$(VERSION)"
 
 generate: terrafmtcheck
 	@echo "==> Generating code..."
