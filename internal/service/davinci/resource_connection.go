@@ -287,7 +287,10 @@ func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta 
 		return nil, err
 	}
 
-	d.Set("environment_id", attributes["environment_id"])
+	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
+		return nil, err
+	}
+
 	d.SetId(attributes["davinci_connection_id"])
 
 	resourceConnectionRead(ctx, d, meta)

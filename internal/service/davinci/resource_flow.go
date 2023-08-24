@@ -534,7 +534,10 @@ func resourceFlowImport(ctx context.Context, d *schema.ResourceData, meta interf
 		return nil, err
 	}
 
-	d.Set("environment_id", attributes["environment_id"])
+	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
+		return nil, err
+	}
+
 	d.SetId(attributes["davinci_flow_id"])
 
 	resourceFlowRead(ctx, d, meta)

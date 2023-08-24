@@ -256,7 +256,10 @@ func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta in
 		return nil, err
 	}
 
-	d.Set("environment_id", attributes["environment_id"])
+	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
+		return nil, err
+	}
+
 	d.SetId(attributes["davinci_variable_id"])
 
 	resourceVariableRead(ctx, d, meta)
