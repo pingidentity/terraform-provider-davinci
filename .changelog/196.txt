@@ -1,0 +1,4 @@
+```release-note:bug
+`resource/davinci_variable`: Fixed error when attempting to import resource state.
+```
+
