@@ -367,7 +367,6 @@ func testAccGetResourceApplicationIDs(resourceName string, environmentID, resour
 }
 
 func TestAccResourceApplication_RemovalDrift(t *testing.T) {
-	t.Parallel()
 
 	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
@@ -380,8 +379,9 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
+		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			// Configure
 			{

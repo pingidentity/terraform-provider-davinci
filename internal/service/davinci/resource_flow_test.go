@@ -547,7 +547,6 @@ func testAccGetResourceFlowIDs(resourceName string, environmentID, resourceID *s
 }
 
 func TestAccResourceFlow_RemovalDrift(t *testing.T) {
-	t.Parallel()
 
 	resourceBase := "davinci_flow"
 	resourceName := acctest.ResourceNameGen()
@@ -561,8 +560,9 @@ func TestAccResourceFlow_RemovalDrift(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
+		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
 		Steps: []resource.TestStep{
 			// Configure
 			{

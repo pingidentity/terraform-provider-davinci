@@ -120,7 +120,6 @@ func testAccGetResourceVariableIDs(resourceName string, environmentID, resourceI
 }
 
 func TestAccResourceVariable_RemovalDrift(t *testing.T) {
-	t.Parallel()
 
 	resourceBase := "davinci_variable"
 	resourceName := acctest.ResourceNameGen()
@@ -133,8 +132,9 @@ func TestAccResourceVariable_RemovalDrift(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_variable"}),
+		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_variable"}),
 		Steps: []resource.TestStep{
 			// Configure
 			{

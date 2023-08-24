@@ -274,7 +274,6 @@ func testAccGetResourceConnectionIDs(resourceName string, environmentID, resourc
 }
 
 func TestAccResourceConnection_RemovalDrift(t *testing.T) {
-	t.Parallel()
 
 	resourceBase := "davinci_connection"
 	resourceName := acctest.ResourceNameGen()
@@ -287,8 +286,9 @@ func TestAccResourceConnection_RemovalDrift(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
-		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
+		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			// Configure
 			{
