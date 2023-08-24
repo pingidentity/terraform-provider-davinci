@@ -180,3 +180,10 @@ Optional:
 - `update_body_message` (String) This is deprecated in the UI and will be removed in a future release.
 - `update_message` (String) This is deprecated in the UI and will be removed in a future release.
 
+## Import
+
+Import is supported using the following syntax, where attributes in `<>` brackets are replaced with the relevant ID.  For example, `<environment_id>` should be replaced with the ID of the environment to import from.
+
+```shell
+$ terraform import davinci_application.example <environment_id>/<davinci_application_id>
+```
