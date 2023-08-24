@@ -135,3 +135,21 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		return c, diags
 	}
 }
+
+func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
+	var c *client.APIClient
+	var err error
+	for true {
+		c, err = client.NewClient(cInput)
+		switch {
+		case err == nil:
+			return c, nil
+		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
+			fmt.Println("Found retryable error while initializing client. Retrying...")
+			continue
+		default:
+			return nil, err
+		}
+	}
+	return nil, fmt.Errorf("Error initializing client. Please report this as a bug.")
+}
