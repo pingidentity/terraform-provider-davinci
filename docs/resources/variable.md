@@ -44,3 +44,10 @@ resource "davinci_variable" "my_global_var" {
 
 - `id` (String) The ID of this resource.
 
+## Import
+
+Import is supported using the following syntax, where attributes in `<>` brackets are replaced with the relevant ID.  For example, `<environment_id>` should be replaced with the ID of the environment to import from.
+
+```shell
+$ terraform import davinci_variable.example <environment_id>/<davinci_variable_id>
+```

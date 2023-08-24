@@ -1,0 +1,1 @@
+$ terraform import davinci_application.example <environment_id>/<davinci_application_id>
