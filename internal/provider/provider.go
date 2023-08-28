@@ -120,7 +120,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			AccessToken:     accessToken,
 			UserAgent:       fmt.Sprintf("terraform-provider-davinci/%s/go", version),
 		}
-		c, err := client.NewClient(&cInput)
+		c, err := retryableClient(&cInput)
 		if err != nil {
 			return nil, diag.FromErr(err)
 		}
@@ -139,14 +139,17 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
 	var c *client.APIClient
 	var err error
-	for true {
+
+	for retries := 0; retries <= 2; retries++ {
 		c, err = client.NewClient(cInput)
+		if retries == 2 && err != nil {
+			return nil, err
+		}
 		switch {
 		case err == nil:
 			return c, nil
-		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
+		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
 			fmt.Println("Found retryable error while initializing client. Retrying...")
-			continue
 		default:
 			return nil, err
 		}
