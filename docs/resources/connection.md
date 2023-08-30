@@ -467,6 +467,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### BeyondTrust - Remote Support
+
+**Connector Display Name**: BeyondTrust - Remote Support
+
+**Connector ID** - schema `connectorId`: connectorBTrs
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientID` | `` | RS API Client ID |
+| Client Secret | `clientSecret` | `string` | RS API Client Secret |
+| RS Web API Address | `rsAPIurl` | `` | URL of RS Appliance | 
+
+
+
+
 ### BioCatch
 
 **Connector Display Name**: BioCatch
@@ -1151,6 +1170,25 @@ If the `value` type of a property is not defined it must be inferred.
 | Select an OpenID token management connection for signed HTTP responses. | `connectionId` | `string` |  |
 | reCAPTCHA v2 Secret Key | `recaptchaSecretKey` | `string` | The Secret Key from reCAPTCHA Admin dashboard. |
 | reCAPTCHA v2 Site Key | `recaptchaSiteKey` | `string` | The Site Key from reCAPTCHA Admin dashboard. | 
+
+
+
+
+### HUMAN
+
+**Connector Display Name**: HUMAN
+
+**Connector ID** - schema `connectorId`: connectorHuman
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| HUMAN Authentication Token | `humanAuthenticationToken` | `` | Bearer Token from HUMAN |
+| HUMAN Customer ID | `humanCustomerID` | `` | Customer ID from HUMAN |
+| HUMAN Policy Name | `humanPolicyName` | `` | HUMAN mitigation policy name | 
 
 
 
@@ -2712,6 +2750,23 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 | Oauth2 Parameters | `oauth2` | `array` |  | 
+
+
+
+
+### SpyCloud Enterprise Protection
+
+**Connector Display Name**: SpyCloud Enterprise Protection
+
+**Connector ID** - schema `connectorId`: connectorSpycloud
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| SpyCloud Employee ATO Prevention API Key | `apiKey` | `string` | Contact SpyCloud to acquire an Employee ATO Prevention API Key that will work with DaVinci. | 
 
 
 
