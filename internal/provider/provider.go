@@ -148,7 +148,10 @@ func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
 		switch {
 		case err == nil:
 			return c, nil
+		// These cases come from the davinci-client-go library and may be subject to change
 		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
+			fmt.Println("Found retryable error while initializing client. Retrying...")
+		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
 			fmt.Println("Found retryable error while initializing client. Retrying...")
 		default:
 			return nil, err
