@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -139,6 +140,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
 	var c *client.APIClient
 	var err error
+	ctx := context.Background()
 
 	for retries := 0; retries <= 2; retries++ {
 		c, err = client.NewClient(cInput)
@@ -150,9 +152,9 @@ func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
 			return c, nil
 		// These cases come from the davinci-client-go library and may be subject to change
 		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
-			fmt.Println("Found retryable error while initializing client. Retrying...")
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
 		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
-			fmt.Println("Found retryable error while initializing client. Retrying...")
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
 		default:
 			return nil, err
 		}
