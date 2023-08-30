@@ -530,3 +530,66 @@ func TestAccResourceFlow_FlowContextVarFlow(t *testing.T) {
 		},
 	})
 }
+
+func testAccGetResourceFlowIDs(resourceName string, environmentID, resourceID *string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("Resource Not found: %s", resourceName)
+		}
+
+		*resourceID = rs.Primary.ID
+		*environmentID = rs.Primary.Attributes["environment_id"]
+
+		return nil
+	}
+}
+
+func TestAccResourceFlow_RemovalDrift(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
+
+	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl})
+
+	var resourceID, environmentID string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
+		Steps: []resource.TestStep{
+			// Configure
+			{
+				Config: hcl,
+				Check:  testAccGetResourceFlowIDs(resourceFullName, &environmentID, &resourceID),
+			},
+			// Replan after removal preconfig
+			{
+				PreConfig: func() {
+					c, err := acctest.TestClient()
+
+					if err != nil {
+						t.Fatalf("Failed to get API client: %v", err)
+					}
+
+					if environmentID == "" || resourceID == "" {
+						t.Fatalf("One of environment ID or resource ID cannot be determined. Environment ID: %s, Resource ID: %s", environmentID, resourceID)
+					}
+
+					_, err = c.DeleteFlow(&environmentID, resourceID)
+					if err != nil {
+						t.Fatalf("Failed to delete flow: %v", err)
+					}
+				},
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+			},
+		},
+	})
+}
