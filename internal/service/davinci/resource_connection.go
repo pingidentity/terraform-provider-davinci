@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -149,6 +150,12 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 		return c.ReadConnection(&c.CompanyID, connId)
 	}, nil)
 	if err != nil {
+		// currently a 400 (rather than 404) is returned if the connection is not found.
+		// The comparison is made to match the entire error message to avoid false positives
+		if strings.Contains(err.Error(), "status: 400, body: {\"cause\":null,\"logLevel\":\"error\",\"serviceName\":null,\"message\":\"Error retrieving connectors\",\"errorMessage\":\"Error retrieving connectors\",\"success\":false,\"httpResponseCode\":400,\"code\":7005}") {
+			d.SetId("")
+			return diags
+		}
 		return diag.FromErr(err)
 	}
 
