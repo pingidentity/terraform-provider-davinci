@@ -51,7 +51,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 							tflog.Warn(ctx, "Possible fresh DaVinci env. Retrying Auth ... ")
 						}
 					}
-					err = c.InitAuth()
+					err = initAuthRetryable(ctx, c)
 					if err != nil {
 						return err
 					}
@@ -75,4 +75,26 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 		}
 	}
 	return nil
+}
+
+// re-initialize auth, with optionial retry
+func initAuthRetryable(ctx context.Context, c *dv.APIClient) error {
+	for retries := 0; retries <= 2; retries++ {
+		err := c.InitAuth()
+		if retries == 2 && err != nil {
+			return err
+		}
+		switch {
+		case err == nil:
+			return nil
+		// These cases come from the davinci-client-go library and may be subject to change
+		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+		default:
+			return err
+		}
+	}
+	return fmt.Errorf("Error re-initializing authorization. Please report this as a bug.")
 }
