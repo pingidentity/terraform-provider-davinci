@@ -123,6 +123,8 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		}
 		c, err := retryableClient(&cInput)
 		if err != nil {
+			// DELETE ME
+			tflog.Info(ctx, "Error initializing client")
 			return nil, diag.FromErr(err)
 		}
 		if environment_id != "" {
