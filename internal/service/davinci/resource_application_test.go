@@ -17,7 +17,7 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 
 	hcl := testAccResourceApplication_Slim_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -79,7 +79,7 @@ func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -202,7 +202,7 @@ func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
 	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -376,7 +376,7 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 
 	var resourceID, environmentID string
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

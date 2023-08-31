@@ -29,6 +29,10 @@ testacc:
 	@echo "==> Running acceptance tests..."
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
+testaccparallel:
+	@echo "==> Running acceptance tests..."
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel 5
+
 sweep:
 	@echo "==> Running sweep..."
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."

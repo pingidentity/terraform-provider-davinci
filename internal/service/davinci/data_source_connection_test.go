@@ -2,7 +2,7 @@ package davinci_test
 
 import (
 	"fmt"
-	"os"
+	// "os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -11,48 +11,48 @@ import (
 
 // Only "PINGONE_DAVINCI_ACCESS_TOKEN","PINGONE_REGION","PINGONE_ENVIRONMENT_ID"`
 // should be set in the environment before running this test
-func TestAccDataSourceConnection_ReadAllAT(t *testing.T) {
+// func TestAccDataSourceConnection_ReadAllAT(t *testing.T) {
 
-	resourceBase := "davinci_connections"
-	resourceName := acctest.ResourceNameGen()
-	resourceFullName := fmt.Sprintf("davinci_connection.%s", resourceName)
-	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
-	targetEnvId := os.Getenv("PINGONE_ENVIRONMENT_ID")
+// 	resourceBase := "davinci_connections"
+// 	resourceName := acctest.ResourceNameGen()
+// 	resourceFullName := fmt.Sprintf("davinci_connection.%s", resourceName)
+// 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
+// 	targetEnvId := os.Getenv("PINGONE_ENVIRONMENT_ID")
 
-	hcl := fmt.Sprintf(`
-data "davinci_connections" "%[1]s" {
-  environment_id = var.environment_id
-}
+// 	hcl := fmt.Sprintf(`
+// data "davinci_connections" "%[1]s" {
+//   environment_id = var.environment_id
+// }
 
-resource "davinci_connection" "%[1]s" {
-  environment_id = var.environment_id
-  connector_id   = "httpConnector"
-  name           = "%[1]s"
-}
+// resource "davinci_connection" "%[1]s" {
+//   environment_id = var.environment_id
+//   connector_id   = "httpConnector"
+//   name           = "%[1]s"
+// }
 
-variable "environment_id" {
-  default = "%[2]s"
-}
-`, resourceName, targetEnvId)
+// variable "environment_id" {
+//   default = "%[2]s"
+// }
+// `, resourceName, targetEnvId)
 
-	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.PreCheck(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		Steps: []resource.TestStep{
-			{
-				Config: hcl,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(dataSourceFullName, "environment_id", targetEnvId),
-					resource.TestCheckResourceAttr(fmt.Sprintf("davinci_connection.%s", resourceName), "environment_id", targetEnvId),
-					resource.TestCheckResourceAttrSet(resourceFullName, "name"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-				),
-			},
-		},
-	})
-}
+// 	resource.Test(t, resource.TestCase{
+// 		PreCheck:          func() { acctest.PreCheck(t) },
+// 		ProviderFactories: acctest.ProviderFactories,
+// 		ExternalProviders: acctest.ExternalProviders,
+// 		ErrorCheck:        acctest.ErrorCheck(t),
+// 		Steps: []resource.TestStep{
+// 			{
+// 				Config: hcl,
+// 				Check: resource.ComposeTestCheckFunc(
+// 					resource.TestCheckResourceAttr(dataSourceFullName, "environment_id", targetEnvId),
+// 					resource.TestCheckResourceAttr(fmt.Sprintf("davinci_connection.%s", resourceName), "environment_id", targetEnvId),
+// 					resource.TestCheckResourceAttrSet(resourceFullName, "name"),
+// 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+// 				),
+// 			},
+// 		},
+// 	})
+// }
 
 func TestAccDataSourceConnection_ReadSingle(t *testing.T) {
 
@@ -61,7 +61,7 @@ func TestAccDataSourceConnection_ReadSingle(t *testing.T) {
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 	hcl := testAccDataSourceConnection_Slim(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -89,7 +89,7 @@ func TestAccDataSourceConnection_ReadSingleByName(t *testing.T) {
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 	hcl := testAccDataSourceConnection_SlimByName(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

@@ -15,8 +15,7 @@ func TestAccDatasourceApplication_SlimByAppId(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 	hcl := testAccDatasourceApplication_SlimByAppId_Hcl(resourceName)
-
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -41,7 +40,7 @@ func TestAccDatasourceApplication_SlimById(t *testing.T) {
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 	hcl := testAccDatasourceApplication_SlimById_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

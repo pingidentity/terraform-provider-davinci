@@ -82,17 +82,24 @@ func initAuthRetryable(ctx context.Context, c *dv.APIClient) error {
 	for retries := 0; retries <= 2; retries++ {
 		err := c.InitAuth()
 		if retries == 2 && err != nil {
+			fmt.Println("max retries hit.")
 			return err
 		}
 		switch {
 		case err == nil:
+			fmt.Println("print: Successfully refreshed access_token")
+			tflog.Info(ctx, "Successfully refreshed access_token")
 			return nil
-		// These cases come from the davinci-client-go library and may be subject to change
+			// These cases come from the davinci-client-go library and may be subject to change
 		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
+			fmt.Println("print: Found retryable error while initializing client. Retrying")
 			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
 		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
+			fmt.Println("print: Found retryable error while initializing client. Retrying")
 			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
 		default:
+			fmt.Println(ctx, "print: Error re-initializing authorization.")
+			tflog.Info(ctx, "Error re-initializing authorization.")
 			return err
 		}
 	}

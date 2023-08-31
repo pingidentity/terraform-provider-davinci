@@ -17,7 +17,7 @@ func TestAccResourceVariable_CompanyContext(t *testing.T) {
 
 	hcl := testAccResourceVariable_CompanyContext_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -62,7 +62,7 @@ func TestAccResourceVariable_FlowInstanceContext(t *testing.T) {
 
 	hcl := testAccResourceVariable_FlowInstanceContext_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -129,7 +129,7 @@ func TestAccResourceVariable_RemovalDrift(t *testing.T) {
 
 	var resourceID, environmentID string
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
