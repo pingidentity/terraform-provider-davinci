@@ -147,22 +147,17 @@ func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
 	for retries := 0; retries <= 2; retries++ {
 		c, err = client.NewClient(cInput)
 		if retries == 2 && err != nil {
-			fmt.Println("print: too many retries")
 			return nil, err
 		}
 		switch {
 		case err == nil:
-			fmt.Println("print: successfully initialized client")
 			return c, nil
 			// These cases come from the davinci-client-go library and may be subject to change
 		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
-			fmt.Println("print: Found retryable error while initializing client. Retrying")
 			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
 		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
-			fmt.Println("print: Found retryable error while initializing client. Retrying")
 			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
 		default:
-			fmt.Println("print: hit some other error")
 			return nil, err
 		}
 	}
