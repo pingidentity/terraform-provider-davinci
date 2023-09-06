@@ -236,7 +236,7 @@ If the `value` type of a property is not defined it must be inferred.
 | AWS Access Key | `awsAccessKey` | `string` |  |
 | AWS Access Secret | `awsAccessSecret` | `string` |  |
 | AWS Region | `awsRegion` | `string` |  |
-| From | `from` | `` |  | 
+| From (Default) * | `from` | `` | The email address that the message appears to originate from, as registered with your AWS account, such as "support@mycompany.com". | 
 
 
 
