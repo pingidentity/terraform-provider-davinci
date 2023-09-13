@@ -406,7 +406,7 @@ If the `value` type of a property is not defined it must be inferred.
 | Base URL | `baseUrl` | `string` |  BambooHR Base URL |
 | Company Sub Domain | `companySubDomain` | `string` |  Your BambooHR subdomain |
 | Flow ID | `flowId` | `string` | Select ID of the flow to execute when BambooHR sends a webhook |
-| Singular Key Webhook URL | `skWebhookUri` | `string` | Use this url as the Webhook URL in the Third Party Integration's configuration |
+| DaVinci Webhook URL | `skWebhookUri` | `string` | Use this url as the Webhook URL in the Third Party Integration's configuration |
 | Webhook Token | `webhookToken` | `string` | Create a webhook token and configure it in the bambooHR webhook url. | 
 
 
@@ -3125,6 +3125,23 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 |  | `customAttributes` | `array` |  | 
+
+
+
+
+### ValidSoft
+
+**Connector Display Name**: ValidSoft
+
+**Connector ID** - schema `connectorId`: connectorValidsoft
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 
