@@ -147,59 +147,6 @@ resource "davinci_connection" "%[2]s" {
 	return hcl
 }
 
-func testAccResourceConnectionAdditionalP1Services_Slim_Hcl(resourceName, valuePrefix string, p1Services []string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentServicesSsoHcl(resourceName, p1Services)
-	clientId := acctest.RandStringWithPrefix(valuePrefix)
-	clientSecret := acctest.RandStringWithPrefix(valuePrefix)
-	hcl = fmt.Sprintf(`
-%[1]s
-
-resource "davinci_connection" "%[2]s_crowdstrike" {
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-  connector_id   = "crowdStrikeConnector"
-  name           = "%[2]s_crowdstrike"
-  property {
-    name  = "clientId"
-    value = "%[3]s"
-  }
-  property {
-    name  = "clientSecret"
-    value = "%[4]s"
-  }
-}
-
-resource "davinci_connection" "%[2]s" {
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-  connector_id   = "pingOneMfaConnector"
-  name           = "%[2]s"
-  property {
-    name  = "region"
-    value = "NA"
-  }
-  property {
-    name  = "envId"
-    value = "env-abc-123"
-  }
-  property {
-    name  = "clientId"
-    value = "%[3]s"
-  }
-  property {
-    name  = "clientSecret"
-    value = "%[4]s"
-  }
-  property {
-    name  = "policyId"
-    value = "policy-abc-123"
-  }
-}
-`, baseHcl, resourceName, clientId, clientSecret)
-
-	return hcl
-}
-
 // Test to try to hit API rate Limit
 func TestAccResourceConnection_HeavyRead(t *testing.T) {
 
