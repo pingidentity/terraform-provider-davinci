@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
-	// "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 func TestAccResourceConnection_Slim(t *testing.T) {
@@ -96,7 +95,7 @@ func testAccCheckAttributeConnection_SlimWithUpdate(resourceFullName string) res
 }
 
 func testAccResourceConnection_Slim_Hcl(resourceName, valuePrefix string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	baseHcl := acctest.PingoneEnvrionmentServicesSsoHcl(resourceName, nil)
 	clientId := acctest.RandStringWithPrefix(valuePrefix)
 	clientSecret := acctest.RandStringWithPrefix(valuePrefix)
 	hcl = fmt.Sprintf(`
@@ -315,6 +314,119 @@ func TestAccResourceConnection_RemovalDrift(t *testing.T) {
 				},
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
+			},
+		},
+	})
+}
+
+// similar to RemovalDrift, but interacts directly with properties of a connection to cause drift.
+func TestAccResourceConnection_PropertyDrift(t *testing.T) {
+
+	resourceBase := "davinci_connection"
+	resourceName := acctest.ResourceNameGen()
+	mfaConnection := acctest.TestConnection{
+		ResourcePrefix: resourceName,
+		Name:           "PingOneMFA",
+		ConnectorId:    "pingOneMfaConnector",
+		Properties: []acctest.TestConnectionProperty{
+			{
+				Name:  "region",
+				Value: "NA",
+				Type:  "string",
+			},
+			{
+				Name:  "envId",
+				Value: "env-abc-123",
+				Type:  "string",
+			},
+			{
+				Name:  "clientId",
+				Value: "client-abc-123",
+				Type:  "string",
+			},
+			{
+				Name:  "clientSecret",
+				Value: "",
+				Type:  "string",
+			},
+			{
+				Name:  "policyId",
+				Value: "policy-abc-123",
+				Type:  "string",
+			},
+		},
+	}
+	mfaConnectionNoPolicyId := acctest.TestConnection{
+		ResourcePrefix: mfaConnection.ResourcePrefix,
+		Name:           mfaConnection.Name,
+		ConnectorId:    mfaConnection.ConnectorId,
+		Properties:     []acctest.TestConnectionProperty{mfaConnection.Properties[len(mfaConnection.Properties)-1]},
+	}
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, mfaConnection.GetResourceName())
+	var resourceID, environmentID string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
+		Steps: []resource.TestStep{
+			// Start without PolicyId property
+			{
+				Config: acctest.TestAccResourceConnectionHcl(resourceName, []string{"MFA"}, []acctest.TestConnection{mfaConnectionNoPolicyId}),
+				Check:  testAccGetResourceConnectionIDs(resourceFullName, &environmentID, &resourceID),
+			},
+			// Add policyId property and expect empty plan
+			{
+				Config: acctest.TestAccResourceConnectionHcl(resourceName, []string{"MFA"}, []acctest.TestConnection{mfaConnection}),
+				Check:  testAccGetResourceConnectionIDs(resourceFullName, &environmentID, &resourceID),
+			},
+			// Remove policyId via api and check for non-empty plan
+			{
+				PreConfig: func() {
+					c, err := acctest.TestClient()
+
+					if err != nil {
+						t.Fatalf("Failed to get API client: %v", err)
+					}
+
+					if environmentID == "" || resourceID == "" {
+						t.Fatalf("One of environment ID or resource ID cannot be determined. Environment ID: %s, Resource ID: %s", environmentID, resourceID)
+					}
+					connection, err := c.ReadConnection(&environmentID, resourceID)
+					if err != nil {
+						t.Fatalf("Failed to read connection: %v", err)
+					}
+					if _, ok := connection.Properties["policyId"]; ok {
+						//remove policyId property
+						delete(connection.Properties, "policyId")
+					} else {
+						t.Fatalf("Failed to read connection property: policyId")
+					}
+
+					_, err = c.UpdateConnection(&environmentID, connection)
+					if err != nil {
+						t.Fatalf("Failed to update connection: %v", err)
+					}
+				},
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+			},
+			// Revert policyId property and expect empty plan
+			{
+				Config: acctest.TestAccResourceConnectionHcl(resourceName, []string{"MFA"}, []acctest.TestConnection{mfaConnection}),
+				Check:  testAccGetResourceConnectionIDs(resourceFullName, &environmentID, &resourceID),
+			},
+			// remove PolicyId property via tf
+			{
+				Config: acctest.TestAccResourceConnectionHcl(resourceName, []string{"MFA"}, []acctest.TestConnection{mfaConnectionNoPolicyId}),
+				Check:  testAccGetResourceConnectionIDs(resourceFullName, &environmentID, &resourceID),
+			},
+			// Add back property and expect empty plan
+			{
+				Config: acctest.TestAccResourceConnectionHcl(resourceName, []string{"MFA"}, []acctest.TestConnection{mfaConnection}),
+				Check:  testAccGetResourceConnectionIDs(resourceFullName, &environmentID, &resourceID),
 			},
 		},
 	})
