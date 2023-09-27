@@ -2,8 +2,8 @@
 
 BUG FIXES:
 
-* `data_source_connection`: add handling for empty property. ([#204](https://github.com/pingidentity/terraform-provider-davinci/issues/204))
-* `resource_connection`: add handling for connection deletion drift. ([#191](https://github.com/pingidentity/terraform-provider-davinci/issues/191))
+* `datasource_connection`: update datasource to account for empty value ([#204](https://github.com/pingidentity/terraform-provider-davinci/issues/204))
+* `resource_connection`: handling for resource removed without terraform. ([#191](https://github.com/pingidentity/terraform-provider-davinci/issues/191))
 
 ## 0.1.12
 
