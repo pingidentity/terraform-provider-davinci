@@ -1,0 +1,3 @@
+```release-note:bug
+`datasource_connection`: update datasource to account for empty value
+```

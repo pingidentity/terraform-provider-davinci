@@ -1102,9 +1102,9 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### Google Chrome Device Trust
+### Google Chrome Enterprise Device Trust
 
-**Connector Display Name**: Google Chrome Device Trust
+**Connector Display Name**: Google Chrome Enterprise Device Trust
 
 **Connector ID** - schema `connectorId`: connectorGoogleChromeEnterprise
 
@@ -3002,6 +3002,24 @@ If the `value` type of a property is not defined it must be inferred.
 | Secret | `otpSecret` | `` | Secret for otp Verification, provided by TransUnion |
 | Site ID | `otpSiteId` | `` | Site ID for otp Verification, provided by TransUnion |
 | Username | `otpUsername` | `` | Username for otp Verification, provided by TransUnion | 
+
+
+
+
+### Trulioo
+
+**Connector Display Name**: Trulioo
+
+**Connector ID** - schema `connectorId`: connectorTrulioo
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientID` | `` | Trulioo Client ID |
+| Client Secret | `clientSecret` | `string` | Trulioo Client Secret | 
 
 
 
