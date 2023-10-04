@@ -1,0 +1,1 @@
+$ terraform import davinci_flow.example <environment_id>/<davinci_flow_id>
