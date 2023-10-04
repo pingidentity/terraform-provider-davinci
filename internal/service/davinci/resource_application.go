@@ -317,69 +317,70 @@ func ResourceApplication() *schema.Resource {
 					},
 				},
 			},
-			"policy": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Description: "Flow Policy Configuration",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"policy_flow": {
-							Type:        schema.TypeSet,
-							Optional:    true,
-							Description: "Set of weighted flows that this application will use",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"flow_id": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "Identifier of the flow that this policy will use.",
-									},
-									"version_id": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "Version of the flow that this policy will use. Use -1 for latest",
-									},
-									"weight": {
-										Type:        schema.TypeInt,
-										Optional:    true,
-										Description: "If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100",
-									},
-									"success_nodes": {
-										Type:        schema.TypeList,
-										Optional:    true,
-										Description: "List of node ids used by analytics for tracking user interaction.",
-										Elem: &schema.Schema{
-											Type: schema.TypeString,
-										},
-									},
-								},
-							},
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Policy friendly name",
-						},
-						"status": {
-							Type:             schema.TypeString,
-							Optional:         true,
-							Default:          "enabled",
-							Description:      "Policy status. Valid values are: enabled, disabled",
-							ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"enabled", "disabled"}, false)),
-						},
-						"policy_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Generated identifier of a created policy.",
-						},
-						"created_date": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Creation epoch of policy.",
-						},
-					},
-				},
-			},
+			// "policy": {
+			// 	Type:        schema.TypeSet,
+			// 	Optional:    true,
+			// 	Computed:    true,
+			// 	Description: "Flow Policy Configuration",
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"policy_flow": {
+			// 				Type:        schema.TypeSet,
+			// 				Optional:    true,
+			// 				Description: "Set of weighted flows that this application will use",
+			// 				Elem: &schema.Resource{
+			// 					Schema: map[string]*schema.Schema{
+			// 						"flow_id": {
+			// 							Type:        schema.TypeString,
+			// 							Optional:    true,
+			// 							Description: "Identifier of the flow that this policy will use.",
+			// 						},
+			// 						"version_id": {
+			// 							Type:        schema.TypeInt,
+			// 							Optional:    true,
+			// 							Description: "Version of the flow that this policy will use. Use -1 for latest",
+			// 						},
+			// 						"weight": {
+			// 							Type:        schema.TypeInt,
+			// 							Optional:    true,
+			// 							Description: "If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100",
+			// 						},
+			// 						"success_nodes": {
+			// 							Type:        schema.TypeList,
+			// 							Optional:    true,
+			// 							Description: "List of node ids used by analytics for tracking user interaction.",
+			// 							Elem: &schema.Schema{
+			// 								Type: schema.TypeString,
+			// 							},
+			// 						},
+			// 					},
+			// 				},
+			// 			},
+			// 			"name": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "Policy friendly name",
+			// 			},
+			// 			"status": {
+			// 				Type:             schema.TypeString,
+			// 				Optional:         true,
+			// 				Default:          "enabled",
+			// 				Description:      "Policy status. Valid values are: enabled, disabled",
+			// 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"enabled", "disabled"}, false)),
+			// 			},
+			// 			"policy_id": {
+			// 				Type:        schema.TypeString,
+			// 				Computed:    true,
+			// 				Description: "Generated identifier of a created policy.",
+			// 			},
+			// 			"created_date": {
+			// 				Type:        schema.TypeInt,
+			// 				Computed:    true,
+			// 				Description: "Creation epoch of policy.",
+			// 			},
+			// 		},
+			// 	},
+			// },
 		},
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -457,6 +458,9 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 		return diag.FromErr(err)
 	}
 	for i, v := range flatResp {
+		if i == "policy" {
+			continue
+		}
 		if err = d.Set(i, v); err != nil {
 			return diag.FromErr(err)
 		}
@@ -473,80 +477,80 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 		return diag.FromErr(err)
 	}
 
-	appId := d.Id()
+	// appId := d.Id()
 
 	//Policy CRUD
 	// if policies have changes, compare changes. if new policy is added, create it. if old policy is removed, delete it. if policy is updated, update it.
-	if d.HasChange("policy") {
-		oldPols, newPols := d.GetChange("policy")
-		oldPolsList := expandFlowPolicies(oldPols)
-		newPolsList := expandFlowPolicies(newPols)
-		oldPolicyMap := make(map[string]dv.Policy)
-		for _, v := range oldPolsList {
-			oldPolicyMap[v.PolicyID] = v
-		}
-		for _, newPol := range newPolsList {
-			oldPol, exists := oldPolicyMap[newPol.PolicyID]
-			if exists {
-				//update policy
-				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.UpdateFlowPolicy(&c.CompanyID, appId, newPol)
-				}, nil)
-				if err != nil {
-					return diag.FromErr(err)
-				}
-				res, ok := sdkRes.(*dv.App)
-				if !ok || res.Name == "" {
-					err = fmt.Errorf("failed to cast update policy response to Application on id: %s", appId)
-					return diag.FromErr(err)
-				}
-				delete(oldPolicyMap, oldPol.PolicyID)
-			} else {
-				// create policy
-				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.CreateFlowPolicy(&c.CompanyID, appId, newPol)
-				}, nil)
-				if err != nil {
-					return diag.FromErr(err)
-				}
-				res, ok := sdkRes.(*dv.App)
-				if !ok || res.Name == "" {
-					err = fmt.Errorf("failed to cast create policy response to Application on id: %s", appId)
-					return diag.FromErr(err)
-				}
-				delete(oldPolicyMap, oldPol.PolicyID)
-			}
-		}
-		//delete old policies that are not in new policies
-		for _, oldPol := range oldPolicyMap {
-			_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-				return c.DeleteFlowPolicy(&c.CompanyID, appId, oldPol.PolicyID)
-			}, nil)
-			if err != nil {
-				return diag.FromErr(err)
-			}
-		}
-	}
+	// if d.HasChange("policy") {
+	// 	oldPols, newPols := d.GetChange("policy")
+	// 	oldPolsList := expandFlowPolicies(oldPols)
+	// 	newPolsList := expandFlowPolicies(newPols)
+	// 	oldPolicyMap := make(map[string]dv.Policy)
+	// 	for _, v := range oldPolsList {
+	// 		oldPolicyMap[v.PolicyID] = v
+	// 	}
+	// 	for _, newPol := range newPolsList {
+	// 		oldPol, exists := oldPolicyMap[newPol.PolicyID]
+	// 		if exists {
+	// 			//update policy
+	// 			sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+	// 				return c.UpdateFlowPolicy(&c.CompanyID, appId, newPol)
+	// 			}, nil)
+	// 			if err != nil {
+	// 				return diag.FromErr(err)
+	// 			}
+	// 			res, ok := sdkRes.(*dv.App)
+	// 			if !ok || res.Name == "" {
+	// 				err = fmt.Errorf("failed to cast update policy response to Application on id: %s", appId)
+	// 				return diag.FromErr(err)
+	// 			}
+	// 			delete(oldPolicyMap, oldPol.PolicyID)
+	// 		} else {
+	// 			// create policy
+	// 			sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+	// 				return c.CreateFlowPolicy(&c.CompanyID, appId, newPol)
+	// 			}, nil)
+	// 			if err != nil {
+	// 				return diag.FromErr(err)
+	// 			}
+	// 			res, ok := sdkRes.(*dv.App)
+	// 			if !ok || res.Name == "" {
+	// 				err = fmt.Errorf("failed to cast create policy response to Application on id: %s", appId)
+	// 				return diag.FromErr(err)
+	// 			}
+	// 			delete(oldPolicyMap, oldPol.PolicyID)
+	// 		}
+	// 	}
+	// 	//delete old policies that are not in new policies
+	// 	for _, oldPol := range oldPolicyMap {
+	// 		_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+	// 			return c.DeleteFlowPolicy(&c.CompanyID, appId, oldPol.PolicyID)
+	// 		}, nil)
+	// 		if err != nil {
+	// 			return diag.FromErr(err)
+	// 		}
+	// 	}
+	// }
 
 	// if d.HasChangesExcept("name", "api_key_enabled", "user_portal", "oauth", "saml") {
-	if d.HasChangesExcept("policy") {
-		app, err := expandApp(d)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		app.AppID = d.Id()
+	// if d.HasChanges("policy") {
+	app, err := expandApp(d)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	app.AppID = d.Id()
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateApplication(&c.CompanyID, app)
-		}, nil)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		res, ok := sdkRes.(*dv.App)
-		if !ok || res.Name == "" {
-			err = fmt.Errorf("failed to cast update application response to Application on id: %s", app.AppID)
-			return diag.FromErr(err)
-		}
+	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
+		return c.UpdateApplication(&c.CompanyID, app)
+	}, nil)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	res, ok := sdkRes.(*dv.App)
+	if !ok || res.Name == "" {
+		err = fmt.Errorf("failed to cast update application response to Application on id: %s", app.AppID)
+		return diag.FromErr(err)
+		// }
 	}
 
 	return resourceApplicationRead(ctx, d, meta)
@@ -667,14 +671,14 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 		}
 	}
 
-	//Set Flow Policies
-	fp, ok := d.GetOk("policy")
-	if ok {
-		fvUpdate := expandFlowPolicies(fp)
-		if len(fvUpdate) > 0 {
-			a.Policies = fvUpdate
-		}
-	}
+	// //Set Flow Policies
+	// fp, ok := d.GetOk("policy")
+	// if ok {
+	// 	fvUpdate := expandFlowPolicies(fp)
+	// 	if len(fvUpdate) > 0 {
+	// 		a.Policies = fvUpdate
+	// 	}
+	// }
 	return &a, nil
 }
 
@@ -689,30 +693,30 @@ func expandStringList(configured []interface{}) []string {
 	return vs
 }
 
-func expandFlowPolicies(fp interface{}) []dv.Policy {
-	fl := fp.(*schema.Set).List()
-	fvUpdate := []dv.Policy{}
-	if len(fl) > 0 {
-		for _, v := range fl {
-			flMap := v.(map[string]interface{})
-			thisFvUpdate := dv.Policy{
-				Name:     flMap["name"].(string),
-				Status:   flMap["status"].(string),
-				PolicyID: flMap["policy_id"].(string),
-			}
-			thisPolicyFlows := flMap["policy_flow"].(*schema.Set).List()
-			for _, w := range thisPolicyFlows {
-				flPMap := w.(map[string]interface{})
-				thisFvPUpdate := dv.PolicyFlow{
-					FlowID:    flPMap["flow_id"].(string),
-					VersionID: flPMap["version_id"].(int),
-					Weight:    flPMap["weight"].(int),
-				}
-				thisFvUpdate.PolicyFlows = append(thisFvUpdate.PolicyFlows, thisFvPUpdate)
-			}
+// func expandFlowPolicies(fp interface{}) []dv.Policy {
+// 	fl := fp.(*schema.Set).List()
+// 	fvUpdate := []dv.Policy{}
+// 	if len(fl) > 0 {
+// 		for _, v := range fl {
+// 			flMap := v.(map[string]interface{})
+// 			thisFvUpdate := dv.Policy{
+// 				Name:     flMap["name"].(string),
+// 				Status:   flMap["status"].(string),
+// 				PolicyID: flMap["policy_id"].(string),
+// 			}
+// 			thisPolicyFlows := flMap["policy_flow"].(*schema.Set).List()
+// 			for _, w := range thisPolicyFlows {
+// 				flPMap := w.(map[string]interface{})
+// 				thisFvPUpdate := dv.PolicyFlow{
+// 					FlowID:    flPMap["flow_id"].(string),
+// 					VersionID: flPMap["version_id"].(int),
+// 					Weight:    flPMap["weight"].(int),
+// 				}
+// 				thisFvUpdate.PolicyFlows = append(thisFvUpdate.PolicyFlows, thisFvPUpdate)
+// 			}
 
-			fvUpdate = append(fvUpdate, thisFvUpdate)
-		}
-	}
-	return fvUpdate
-}
+// 			fvUpdate = append(fvUpdate, thisFvUpdate)
+// 		}
+// 	}
+// 	return fvUpdate
+// }
