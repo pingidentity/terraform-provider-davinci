@@ -63,7 +63,7 @@ resource "davinci_application" "%[2]s" {
 resource "davinci_application_flow_policy" "%[2]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   application_id = davinci_application.%[2]s.id
-  name = "simpleflow"
+  name           = "simpleflow"
   policy_flow {
     flow_id    = resource.davinci_flow.%[3]s.id
     version_id = -1
@@ -145,7 +145,7 @@ resource "davinci_application" "%[2]s" {
 resource "davinci_application_flow_policy" "%[2]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   application_id = davinci_application.%[2]s.id
-  name = "simpleflow"
+  name           = "simpleflow"
   policy_flow {
     flow_id    = resource.davinci_flow.%[3]s.id
     version_id = -1
@@ -188,7 +188,7 @@ resource "davinci_application" "%[2]s" {
 resource "davinci_application_flow_policy" "%[2]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   application_id = davinci_application.%[2]s.id
-  name = "simpleflow"
+  name           = "simpleflow"
   policy_flow {
     flow_id    = resource.davinci_flow.%[3]s.id
     version_id = -1
@@ -199,7 +199,7 @@ resource "davinci_application_flow_policy" "%[2]s" {
 resource "davinci_application_flow_policy" "%[4]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   application_id = davinci_application.%[2]s.id
-  name = "simpleflow-another"
+  name           = "simpleflow-another"
   policy_flow {
     flow_id    = resource.davinci_flow.%[3]s.id
     version_id = -1
@@ -302,7 +302,7 @@ resource "davinci_application" "%[2]s" {
 resource "davinci_application_flow_policy" "%[2]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   application_id = davinci_application.%[2]s.id
-  name = "simpleflow"
+  name           = "simpleflow"
   policy_flow {
     flow_id    = resource.davinci_flow.%[3]s.id
     version_id = -1
@@ -365,7 +365,7 @@ resource "davinci_application" "%[2]s" {
 resource "davinci_application_flow_policy" "%[2]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
   application_id = davinci_application.%[2]s.id
-  name = "simpleflow"
+  name           = "simpleflow"
   policy_flow {
     flow_id    = resource.davinci_flow.%[3]s.id
     version_id = -1

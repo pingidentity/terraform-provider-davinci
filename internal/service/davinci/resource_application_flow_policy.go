@@ -3,12 +3,14 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
+	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -80,7 +82,7 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
+			StateContext: resourceApplicaionFlowPolicyImport,
 		},
 	}
 }
@@ -146,8 +148,12 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 	skdRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 		return c.ReadApplication(&c.CompanyID, appId)
 	}, nil)
+	fmt.Printf("err: %+v\n", err)
 	if err != nil {
-		ep, err := c.ParseDvHttpError(err)
+		ep, errErr := c.ParseDvHttpError(err)
+		if errErr != nil {
+			return diag.FromErr(errErr)
+		}
 		if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
 			d.SetId("")
 			// diags = append(diags, diag.Diagnostic{})
@@ -295,4 +301,37 @@ func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, err
 
 	//Return
 	return a, nil
+}
+
+func resourceApplicaionFlowPolicyImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+	idComponents := []utils.ImportComponent{
+		{
+			Label:  "environment_id",
+			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+		},
+		{
+			Label:  "davinci_application_id",
+			Regexp: regexp.MustCompile(`[a-f0-9]{32}`),
+		},
+		{
+			Label:     "davinci_application_flow_policy_id",
+			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			PrimaryID: true,
+		},
+	}
+	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	if err != nil {
+		return nil, err
+	}
+	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
+		return nil, err
+	}
+	if err = d.Set("application_id", attributes["davinci_application_id"]); err != nil {
+		return nil, err
+	}
+	d.SetId(attributes["davinci_application_flow_policy_id"])
+
+	resourceApplicationFlowPolicyRead(ctx, d, meta)
+
+	return []*schema.ResourceData{d}, nil
 }
