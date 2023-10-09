@@ -2667,6 +2667,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Singpass Login
+
+**Connector Display Name**: Singpass Login
+
+**Connector ID** - schema `connectorId`: singpassLoginConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### Slack Login
 
 **Connector Display Name**: Slack Login

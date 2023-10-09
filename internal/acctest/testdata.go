@@ -113,12 +113,12 @@ var bsConnections = map[string]flowConnection{
 	},
 	"errorcustomize": {
 		ConnectorId: "errorConnector",
-		Name:        "Error Customize",
-		Id:          "6d8f6f706c45fd459a86b3f092602544",
+		Name:        "Error Message",
+		Id:          "53ab83a4a4ab919d9f2cb02d9e111ac8",
 	},
 	"functions": {
 		ConnectorId: "functionsConnector",
-		Name:        "Function",
+		Name:        "Functions",
 		Id:          "de650ca45593b82c49064ead10b9fe17",
 	},
 	"http": {
@@ -148,8 +148,8 @@ var bsConnections = map[string]flowConnection{
 	},
 	"pingonerisk": {
 		ConnectorId: "pingOneRiskConnector",
-		Name:        "PingOne Risk",
-		Id:          "4c653c375e07bdf8614406113f998666",
+		Name:        "PingOne Protect",
+		Id:          "292873d5ceea806d81373ed0341b5c88",
 	},
 	"skopenid": {
 		ConnectorId: "skOpenIdConnector",

@@ -148,7 +148,6 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 	skdRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
 		return c.ReadApplication(&c.CompanyID, appId)
 	}, nil)
-	fmt.Printf("err: %+v\n", err)
 	if err != nil {
 		ep, errErr := c.ParseDvHttpError(err)
 		if errErr != nil {

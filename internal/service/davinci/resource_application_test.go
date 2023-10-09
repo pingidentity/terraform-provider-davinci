@@ -29,6 +29,9 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					//TODO - test attributes in TypeSet.
 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					testAccCheckApplication(acctest.TestApplication{
+						ApplicationResourceName: resourceName,
+					}),
 					// resource.TestCheckNoResourceAttr(resourceFullName, "application_id"),
 					// TODO - use this on integrated acc test
 					// resource.TestCheckTypeSetElemNestedAttrs(resourceFullName,
@@ -71,6 +74,36 @@ resource "davinci_application" "%[2]s" {
 }
 `, baseHcl, resourceName)
 	return hcl
+}
+
+// Looks at an application to validate certain properties are set.
+func testAccCheckApplication(appCheck acctest.TestApplication) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		client, err := acctest.TestClient()
+		if err != nil {
+			return err
+		}
+		resourceFullName := appCheck.GetResourceFullName()
+		fmt.Printf("resources: %v\n", s.RootModule().Resources)
+		fmt.Printf("resource: %v\n", s.RootModule().Resources[resourceFullName])
+		rs, ok := s.RootModule().Resources[resourceFullName]
+		if !ok {
+			return fmt.Errorf("Resource Not found: %s", resourceFullName)
+		}
+
+		appCheck.SetID(rs.Primary.ID)
+		appCheck.SetName(rs.Primary.Attributes["name"])
+		appCheck.SetEnvironmentID(rs.Primary.Attributes["environment_id"])
+
+		res, err := client.ReadApplication(&appCheck.EnvironmentID, appCheck.ID)
+		if err != nil {
+			return err
+		}
+		if res.Name != appCheck.Name {
+			return fmt.Errorf("Application name does not match: %s != %s", res.Name, appCheck.Name)
+		}
+		return nil
+	}
 }
 
 func testAccGetResourceApplicationIDs(resourceName string, environmentID, resourceID *string) resource.TestCheckFunc {
