@@ -23,8 +23,9 @@ on:
   # we recommend testing at a regular interval not necessarily tied to code changes. This will 
   # ensure you are alerted to something breaking due to an API change, even if the code did not
   # change.
-  schedule:
-    - cron: '0 7 * * *'
+  # PAUSED: Uncomment the following lines to enable a cron schedule for regular testing.
+  # schedule:
+  #   - cron: '0 7 * * *'
 jobs:
   # ensure the code builds...
   build:
