@@ -12,7 +12,7 @@ require (
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.3.0
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.29.0
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.16.0
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.17.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.54
 	github.com/samir-gandhi/dvgenerate v0.0.7
