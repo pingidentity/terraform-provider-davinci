@@ -295,6 +295,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Asignio
+
+**Connector Display Name**: Asignio
+
+**Connector ID** - schema `connectorId`: connectorAsignio
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### AuthID
 
 **Connector Display Name**: AuthID
@@ -307,7 +324,7 @@ If the `value` type of a property is not defined it must be inferred.
 
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
-| OpenId Parameters | `openId` | `array` |  | 
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 
@@ -1051,9 +1068,9 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### Function
+### Functions
 
-**Connector Display Name**: Function
+**Connector Display Name**: Functions
 
 **Connector ID** - schema `connectorId`: functionsConnector
 
@@ -2136,7 +2153,7 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | Client ID | `clientId` | `string` | The Client ID of your PingOne Worker application |
 | Client Secret | `clientSecret` | `string` | The Client Secret of your PingOne Worker application |
-| Endpoint URL | `endpointURL` | `` | The url of the decision endpoint to submit a decision request to | 
+| Endpoint | `endpointURL` | `` | The url or the ID of the decision endpoint to submit a decision request to | 
 
 
 
@@ -2661,6 +2678,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Singpass Login
+
+**Connector Display Name**: Singpass Login
+
+**Connector ID** - schema `connectorId`: singpassLoginConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### Slack Login
 
 **Connector Display Name**: Slack Login
@@ -2886,9 +2920,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### TeleSign
+### Teleport
 
-**Connector Display Name**: TeleSign
+**Connector Display Name**: Teleport
+
+**Connector ID** - schema `connectorId`: nodeConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----| 
+
+
+
+
+### Telesign
+
+**Connector Display Name**: Telesign
 
 **Connector ID** - schema `connectorId`: telesignConnector
 
@@ -2912,22 +2962,6 @@ If the `value` type of a property is not defined it must be inferred.
 | Title | `title` | `string` |  |
 | Tooltip | `toolTip` | `string` |  |
 | Username | `username` | `string` |  | 
-
-
-
-
-### Teleport
-
-**Connector Display Name**: Teleport
-
-**Connector ID** - schema `connectorId`: nodeConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----| 
 
 
 
