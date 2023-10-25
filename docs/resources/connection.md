@@ -243,7 +243,7 @@ If the `value` type of a property is not defined it must be inferred.
 | AWS Access Key | `awsAccessKey` | `string` |  |
 | AWS Access Secret | `awsAccessSecret` | `string` |  |
 | AWS Region | `awsRegion` | `string` |  |
-| From | `from` | `` |  | 
+| From (Default) * | `from` | `` | The email address that the message appears to originate from, as registered with your AWS account, such as "support@mycompany.com". | 
 
 
 
@@ -302,6 +302,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Asignio
+
+**Connector Display Name**: Asignio
+
+**Connector ID** - schema `connectorId`: connectorAsignio
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### AuthID
 
 **Connector Display Name**: AuthID
@@ -314,7 +331,7 @@ If the `value` type of a property is not defined it must be inferred.
 
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
-| OpenId Parameters | `openId` | `array` |  | 
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 
@@ -413,7 +430,7 @@ If the `value` type of a property is not defined it must be inferred.
 | Base URL | `baseUrl` | `string` |  BambooHR Base URL |
 | Company Sub Domain | `companySubDomain` | `string` |  Your BambooHR subdomain |
 | Flow ID | `flowId` | `string` | Select ID of the flow to execute when BambooHR sends a webhook |
-| Singular Key Webhook URL | `skWebhookUri` | `string` | Use this url as the Webhook URL in the Third Party Integration's configuration |
+| DaVinci Webhook URL | `skWebhookUri` | `string` | Use this url as the Webhook URL in the Third Party Integration's configuration |
 | Webhook Token | `webhookToken` | `string` | Create a webhook token and configure it in the bambooHR webhook url. | 
 
 
@@ -470,6 +487,25 @@ If the `value` type of a property is not defined it must be inferred.
 | Client ID | `clientID` | `` | PRA API Client ID |
 | Client Secret | `clientSecret` | `string` | PRA API Client Secret |
 | PRA Web API Address | `praAPIurl` | `` | URL of PRA Appliance | 
+
+
+
+
+### BeyondTrust - Remote Support
+
+**Connector Display Name**: BeyondTrust - Remote Support
+
+**Connector ID** - schema `connectorId`: connectorBTrs
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientID` | `` | RS API Client ID |
+| Client Secret | `clientSecret` | `string` | RS API Client Secret |
+| RS Web API Address | `rsAPIurl` | `` | URL of RS Appliance | 
 
 
 
@@ -1039,9 +1075,9 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### Function
+### Functions
 
-**Connector Display Name**: Function
+**Connector Display Name**: Functions
 
 **Connector ID** - schema `connectorId`: functionsConnector
 
@@ -1090,9 +1126,9 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### Google Chrome Device Trust
+### Google Chrome Enterprise Device Trust
 
-**Connector Display Name**: Google Chrome Device Trust
+**Connector Display Name**: Google Chrome Enterprise Device Trust
 
 **Connector ID** - schema `connectorId`: connectorGoogleChromeEnterprise
 
@@ -1158,6 +1194,25 @@ If the `value` type of a property is not defined it must be inferred.
 | Select an OpenID token management connection for signed HTTP responses. | `connectionId` | `string` |  |
 | reCAPTCHA v2 Secret Key | `recaptchaSecretKey` | `string` | The Secret Key from reCAPTCHA Admin dashboard. |
 | reCAPTCHA v2 Site Key | `recaptchaSiteKey` | `string` | The Site Key from reCAPTCHA Admin dashboard. | 
+
+
+
+
+### HUMAN
+
+**Connector Display Name**: HUMAN
+
+**Connector ID** - schema `connectorId`: connectorHuman
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| HUMAN Authentication Token | `humanAuthenticationToken` | `` | Bearer Token from HUMAN |
+| HUMAN Customer ID | `humanCustomerID` | `` | Customer ID from HUMAN |
+| HUMAN Policy Name | `humanPolicyName` | `` | HUMAN mitigation policy name | 
 
 
 
@@ -2105,7 +2160,7 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | Client ID | `clientId` | `string` | The Client ID of your PingOne Worker application |
 | Client Secret | `clientSecret` | `string` | The Client Secret of your PingOne Worker application |
-| Endpoint URL | `endpointURL` | `` | The url of the decision endpoint to submit a decision request to | 
+| Endpoint | `endpointURL` | `` | The url or the ID of the decision endpoint to submit a decision request to | 
 
 
 
@@ -2630,6 +2685,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Singpass Login
+
+**Connector Display Name**: Singpass Login
+
+**Connector ID** - schema `connectorId`: singpassLoginConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### Slack Login
 
 **Connector Display Name**: Slack Login
@@ -2719,6 +2791,23 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 | Oauth2 Parameters | `oauth2` | `array` |  | 
+
+
+
+
+### SpyCloud Enterprise Protection
+
+**Connector Display Name**: SpyCloud Enterprise Protection
+
+**Connector ID** - schema `connectorId`: connectorSpycloud
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| SpyCloud Employee ATO Prevention API Key | `apiKey` | `string` | Contact SpyCloud to acquire an Employee ATO Prevention API Key that will work with DaVinci. | 
 
 
 
@@ -2838,9 +2927,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### TeleSign
+### Teleport
 
-**Connector Display Name**: TeleSign
+**Connector Display Name**: Teleport
+
+**Connector ID** - schema `connectorId`: nodeConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----| 
+
+
+
+
+### Telesign
+
+**Connector Display Name**: Telesign
 
 **Connector ID** - schema `connectorId`: telesignConnector
 
@@ -2864,22 +2969,6 @@ If the `value` type of a property is not defined it must be inferred.
 | Title | `title` | `string` |  |
 | Tooltip | `toolTip` | `string` |  |
 | Username | `username` | `string` |  | 
-
-
-
-
-### Teleport
-
-**Connector Display Name**: Teleport
-
-**Connector ID** - schema `connectorId`: nodeConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----| 
 
 
 
@@ -2954,6 +3043,24 @@ If the `value` type of a property is not defined it must be inferred.
 | Secret | `otpSecret` | `` | Secret for otp Verification, provided by TransUnion |
 | Site ID | `otpSiteId` | `` | Site ID for otp Verification, provided by TransUnion |
 | Username | `otpUsername` | `` | Username for otp Verification, provided by TransUnion | 
+
+
+
+
+### Trulioo
+
+**Connector Display Name**: Trulioo
+
+**Connector ID** - schema `connectorId`: connectorTrulioo
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientID` | `` | Trulioo Client ID |
+| Client Secret | `clientSecret` | `string` | Trulioo Client Secret | 
 
 
 
@@ -3077,6 +3184,23 @@ If the `value` type of a property is not defined it must be inferred.
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
 |  | `customAttributes` | `array` |  | 
+
+
+
+
+### ValidSoft
+
+**Connector Display Name**: ValidSoft
+
+**Connector ID** - schema `connectorId`: connectorValidsoft
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 

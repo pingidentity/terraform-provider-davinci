@@ -183,3 +183,65 @@ func TestAccResourceVariable_BadParameters(t *testing.T) {
 		},
 	})
 }
+
+func testAccGetResourceVariableIDs(resourceName string, environmentID, resourceID *string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("Resource Not found: %s", resourceName)
+		}
+
+		*resourceID = rs.Primary.ID
+		*environmentID = rs.Primary.Attributes["environment_id"]
+
+		return nil
+	}
+}
+
+func TestAccResourceVariable_RemovalDrift(t *testing.T) {
+
+	resourceBase := "davinci_variable"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	hcl := testAccResourceVariable_CompanyContext_Hcl(resourceName)
+
+	var resourceID, environmentID string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_variable"}),
+		Steps: []resource.TestStep{
+			// Configure
+			{
+				Config: hcl,
+				Check:  testAccGetResourceVariableIDs(resourceFullName, &environmentID, &resourceID),
+			},
+			// Replan after removal preconfig
+			{
+				PreConfig: func() {
+					c, err := acctest.TestClient()
+
+					if err != nil {
+						t.Fatalf("Failed to get API client: %v", err)
+					}
+
+					if environmentID == "" || resourceID == "" {
+						t.Fatalf("One of environment ID or resource ID cannot be determined. Environment ID: %s, Resource ID: %s", environmentID, resourceID)
+					}
+
+					_, err = c.DeleteVariable(&environmentID, resourceID)
+					if err != nil {
+						t.Fatalf("Failed to delete variable: %v", err)
+					}
+				},
+				RefreshState:       true,
+				ExpectNonEmptyPlan: true,
+			},
+		},
+	})
+}

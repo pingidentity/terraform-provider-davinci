@@ -23,8 +23,9 @@ on:
   # we recommend testing at a regular interval not necessarily tied to code changes. This will 
   # ensure you are alerted to something breaking due to an API change, even if the code did not
   # change.
-  schedule:
-    - cron: '0 7 * * *'
+  # PAUSED: Uncomment the following lines to enable a cron schedule for regular testing.
+  # schedule:
+  #   - cron: '0 7 * * *'
 jobs:
   # ensure the code builds...
   build:
@@ -34,7 +35,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -69,7 +70,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -112,7 +113,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -154,7 +155,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -189,7 +190,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -232,7 +233,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -274,7 +275,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -309,7 +310,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -352,7 +353,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -394,7 +395,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -429,7 +430,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -474,7 +475,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
@@ -517,7 +518,7 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
