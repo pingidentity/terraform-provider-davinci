@@ -1,0 +1,1 @@
+$ terraform import davinci_connection.example <environment_id>/<davinci_connection_id>
