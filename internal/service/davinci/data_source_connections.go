@@ -158,6 +158,10 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 					"name":  propi,
 					"value": "",
 				}
+				// In some properties, if the value is blank in the UI, the value is not returned in the API response
+				if _, ok := pMap["value"]; !ok {
+					continue
+				}
 				if pType, ok := pMap["type"].(string); ok {
 					thisProp["type"] = pType
 					switch pType {

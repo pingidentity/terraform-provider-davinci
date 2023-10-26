@@ -1,0 +1,3 @@
+```release-note:note
+Added `terraform import` documentation to all applicable resources.
+```

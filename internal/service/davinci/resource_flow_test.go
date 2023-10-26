@@ -133,6 +133,25 @@ func TestAccResourceFlow_SubFlows(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceAnotherSubflowFullName, "deploy"),
 				),
 			},
+			// Test importing the resource
+			{
+				ResourceName: resourceMainflowFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceMainflowFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceMainflowFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"deploy",
+				},
+			},
 		},
 	})
 }
@@ -233,6 +252,25 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 						return nil
 					}),
 				),
+			},
+			// Test importing the resource
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"deploy",
+				},
 			},
 		},
 	})
@@ -526,6 +564,48 @@ func TestAccResourceFlow_FlowContextVarFlow(t *testing.T) {
 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccResourceFlow_BadParameters(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	testFlows := acctest.FlowsForTests(resourceName)
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
+
+	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_flow"}),
+		Steps: []resource.TestStep{
+			// Configure
+			{
+				Config: hcl,
+			},
+			// Errors
+			{
+				ResourceName: resourceFullName,
+				ImportState:  true,
+				ExpectError:  regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_flow_id" and must match regex: .*`),
+			},
+			{
+				ResourceName:  resourceFullName,
+				ImportStateId: "/",
+				ImportState:   true,
+				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_flow_id" and must match regex: .*`),
+			},
+			{
+				ResourceName:  resourceFullName,
+				ImportStateId: "badformat/badformat",
+				ImportState:   true,
+				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_flow_id" and must match regex: .*`),
 			},
 		},
 	})

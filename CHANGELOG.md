@@ -1,3 +1,10 @@
+## 0.1.13
+
+BUG FIXES:
+
+* `datasource_connection`: update datasource to account for empty value ([#204](https://github.com/pingidentity/terraform-provider-davinci/issues/204))
+* `resource_connection`: handling for resource removed without terraform. ([#191](https://github.com/pingidentity/terraform-provider-davinci/issues/191))
+
 ## 0.1.12
 
 ENHANCEMENTS:

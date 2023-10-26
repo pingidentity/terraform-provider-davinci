@@ -1,0 +1,15 @@
+```release-note:bug
+`resource/davinci_variable`: Fixed error when attempting to import resource state.
+```
+
+```release-note:bug
+`resource/davinci_application`: Fixed error when attempting to import resource state.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fixed error when attempting to import resource state.
+```
+
+```release-note:bug
+`resource/davinci_connection`: Fixed error when attempting to import resource state.
+```

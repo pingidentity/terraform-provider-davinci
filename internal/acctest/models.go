@@ -1,6 +1,6 @@
 package acctest
 
-import ()
+import "fmt"
 
 type flowResource struct {
 	Name     string
@@ -66,4 +66,54 @@ type TestConnections struct {
 	Http        string
 	CrowdStrike string
 	Flow        string
+}
+
+type TestConnection struct {
+	ResourcePrefix string
+	Name           string
+	ConnectorId    string
+	Properties     []TestConnectionProperty
+}
+
+type TestConnectionProperty struct {
+	Name  string
+	Value string
+	Type  string
+}
+
+// Returns resource name for connection that should be used in hcl format: `<ResourceName>_<Name>`
+func (tc TestConnection) GetResourceName() (resourceName string) {
+	return fmt.Sprintf("%s_%s", tc.ResourcePrefix, tc.Name)
+}
+
+func TestAccResourceConnectionHcl(resourceName string, p1Services []string, connections []TestConnection) (hcl string) {
+	baseHcl := PingoneEnvrionmentServicesSsoHcl(resourceName, p1Services)
+	connectionsHcl := ""
+	for _, connection := range connections {
+		connectionsHcl += connection.MakeConnectionHcl()
+	}
+
+	return baseHcl + connectionsHcl
+}
+
+func (tcp TestConnection) MakeConnectionHcl() (hcl string) {
+	propertiesHcl := ""
+	for _, property := range tcp.Properties {
+		propertiesHcl += fmt.Sprintf(`
+	property {
+		name  = "%s"
+		value = "%s"
+	}
+`, property.Name, property.Value)
+	}
+	hcl = fmt.Sprintf(`
+resource "davinci_connection" "%[2]s" {
+	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+	depends_on     = [data.davinci_connections.read_all]
+	connector_id   = "%[3]s"
+	name           = "%[2]s"
+	%[4]s
+}
+`, tcp.ResourcePrefix, tcp.GetResourceName(), tcp.ConnectorId, propertiesHcl)
+	return hcl
 }

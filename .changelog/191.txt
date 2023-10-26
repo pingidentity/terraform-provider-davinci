@@ -1,0 +1,3 @@
+```release-note:bug
+`resource_connection`: handling for resource removed without terraform.
+```

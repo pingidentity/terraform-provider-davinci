@@ -3,6 +3,7 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
+	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -75,7 +77,7 @@ func ResourceConnection() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
+			StateContext: resourceConnectionImport,
 		},
 	}
 }
@@ -271,6 +273,36 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta 
 	d.SetId("")
 
 	return diags
+}
+
+func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+
+	idComponents := []utils.ImportComponent{
+		{
+			Label:  "environment_id",
+			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+		},
+		{
+			Label:     "davinci_connection_id",
+			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			PrimaryID: true,
+		},
+	}
+
+	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
+		return nil, err
+	}
+
+	d.SetId(attributes["davinci_connection_id"])
+
+	resourceConnectionRead(ctx, d, meta)
+
+	return []*schema.ResourceData{d}, nil
 }
 
 func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[string]interface{}, error) {
