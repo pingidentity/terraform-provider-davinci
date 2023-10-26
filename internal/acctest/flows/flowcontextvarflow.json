@@ -498,7 +498,7 @@
   "savedDate": 1679929895842,
   "variables": [
     {
-      "context": "flow",
+      "context": "Flow Connector",
       "createdDate": 1679929814557,
       "customerId": "ee728871d18a3b9b273c87192cee4a18",
       "fields": {

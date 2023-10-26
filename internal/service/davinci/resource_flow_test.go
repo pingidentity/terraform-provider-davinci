@@ -161,13 +161,6 @@ func testAccResourceFlow_SubFlows_Hcl(resourceName string, flowsHcl []string) (h
 	hcl = fmt.Sprintf(`
 %[1]s
 
-resource "davinci_connection" "%[2]s-flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-}
-
 
 `, baseHcl, resourceName)
 
@@ -218,7 +211,6 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.WithVariableConnector.Name)
 
 	hcl := testAccResourceFlow_VariableConnectorFlows_Hcl(resourceName, []acctest.FlowHcl{testFlows.WithVariableConnector})
-	fmt.Printf("hcl: %s\n", hcl)
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,

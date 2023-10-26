@@ -273,26 +273,6 @@ func testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName string) (hc
 	hcl = fmt.Sprintf(`
 %[1]s
 
-resource "davinci_connection" "%[2]s-pingoneauthentication" {
-  name           = "Ping One Authentication"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "pingOneAuthenticationConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-resource "davinci_connection" "%[2]s-node" {
-  name           = "Node"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "nodeConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-
-resource "davinci_connection" "%[2]s-flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-}
-
 resource "davinci_application" "%[2]s" {
   name           = "TF ACC Test-%[2]s"
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
@@ -333,26 +313,6 @@ func testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName strin
 	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlowUpdate.Hcl, flows.PingOneSessionSubFlow.Hcl})
 	hcl = fmt.Sprintf(`
 %[1]s
-
-resource "davinci_connection" "%[2]s-pingoneauthentication" {
-  name           = "Ping One Authentication"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "pingOneAuthenticationConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-resource "davinci_connection" "%[2]s-node" {
-  name           = "Node"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "nodeConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-
-resource "davinci_connection" "%[2]s-flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-}
 
 resource "davinci_application" "%[2]s" {
   name           = "TF ACC Test-%[2]s"
