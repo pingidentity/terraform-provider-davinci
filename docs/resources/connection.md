@@ -301,6 +301,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Asignio
+
+**Connector Display Name**: Asignio
+
+**Connector ID** - schema `connectorId`: connectorAsignio
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### AuthID
 
 **Connector Display Name**: AuthID
@@ -313,7 +330,7 @@ If the `value` type of a property is not defined it must be inferred.
 
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----|
-| OpenId Parameters | `openId` | `array` |  | 
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 
@@ -2142,7 +2159,7 @@ If the `value` type of a property is not defined it must be inferred.
 | ---- | ---- | ---- | ----|
 | Client ID | `clientId` | `string` | The Client ID of your PingOne Worker application |
 | Client Secret | `clientSecret` | `string` | The Client Secret of your PingOne Worker application |
-| Endpoint URL | `endpointURL` | `` | The url of the decision endpoint to submit a decision request to | 
+| Endpoint | `endpointURL` | `` | The url or the ID of the decision endpoint to submit a decision request to | 
 
 
 
