@@ -85,8 +85,6 @@ func testAccCheckApplication(appCheck acctest.TestApplication) resource.TestChec
 			return err
 		}
 		resourceFullName := appCheck.GetResourceFullName()
-		fmt.Printf("resources: %v\n", s.RootModule().Resources)
-		fmt.Printf("resource: %v\n", s.RootModule().Resources[resourceFullName])
 		rs, ok := s.RootModule().Resources[resourceFullName]
 		if !ok {
 			return fmt.Errorf("Resource Not found: %s", resourceFullName)

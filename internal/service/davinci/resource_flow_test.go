@@ -218,7 +218,6 @@ func TestAccResourceFlow_VariableConnectorFlow(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.WithVariableConnector.Name)
 
 	hcl := testAccResourceFlow_VariableConnectorFlows_Hcl(resourceName, []acctest.FlowHcl{testFlows.WithVariableConnector})
-	fmt.Printf("hcl: %s\n", hcl)
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,

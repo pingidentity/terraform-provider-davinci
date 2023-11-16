@@ -38,9 +38,9 @@ func TestAccResourceApplicationFlowPolicy_Base(t *testing.T) {
 
 	resourceBase := "davinci_application_flow_policy"
 	resourceName := acctest.ResourceNameGen()
-	// resourceNameB := fmt.Sprintf("%s-b", resourceName)
+	resourceNameB := fmt.Sprintf("%s-b", resourceName)
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
-	// resourceFullNameB := fmt.Sprintf("%s.%s", resourceBase, resourceNameB)
+	resourceFullNameB := fmt.Sprintf("%s.%s", resourceBase, resourceNameB)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
@@ -60,6 +60,20 @@ func TestAccResourceApplicationFlowPolicy_Base(t *testing.T) {
 					}),
 				),
 			},
+			{
+				Config: testAccResourceApplicationFlowPolicy_BaseUpdate_Hcl(resourceName, resourceNameB),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "name"),
+					resource.TestCheckResourceAttrSet(resourceFullName, "status"),
+					resource.TestCheckResourceAttrSet(resourceFullNameB, "id"),
+					resource.TestCheckResourceAttrSet(resourceFullNameB, "name"),
+					resource.TestCheckResourceAttrSet(resourceFullNameB, "status"),
+					testAccCheckApplicationFlowPolicy(acctest.TestApplicationFlowPolicy{
+						FlowPolicyResourceName: resourceName,
+					}),
+				),
+			},
 		},
 	})
 }
@@ -72,8 +86,6 @@ func testAccCheckApplicationFlowPolicy(polcheck acctest.TestApplicationFlowPolic
 			return err
 		}
 		resourceFullName := polcheck.GetResourceFullName()
-		fmt.Printf("resources: %v\n", s.RootModule().Resources)
-		fmt.Printf("resource: %v\n", s.RootModule().Resources[resourceFullName])
 		rs, ok := s.RootModule().Resources[resourceFullName]
 		if !ok {
 			return fmt.Errorf("Resource Not found: %s", resourceFullName)
