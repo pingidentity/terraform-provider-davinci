@@ -209,7 +209,7 @@ resource "davinci_application_flow_policy" "%[4]s" {
 	return hcl
 }
 
-func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
+func TestAccResourceApplicationFlowPolicy_P1SessionFlowPolicy(t *testing.T) {
 	resourceAppBase := "davinci_application"
 	resourceAppFlowPolicyBase := "davinci_application_flow_policy"
 	resourceName := acctest.ResourceNameGen()
@@ -223,7 +223,7 @@ func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
 		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName),
+				Config: testAccResourceApplicationFlowPolicy_P1SessionFlowPolicy_Hcl(resourceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "name"),
@@ -234,7 +234,7 @@ func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName),
+				Config: testAccResourceApplicationFlowPolicy_P1SessionFlowPolicyUpdate_Hcl(resourceName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "name"),
@@ -248,25 +248,12 @@ func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
 	})
 }
 
-func testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName string) (hcl string) {
+func testAccResourceApplicationFlowPolicy_P1SessionFlowPolicy_Hcl(resourceName string) (hcl string) {
 	flows := acctest.FlowsForTests(resourceName)
 
 	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlow.Hcl, flows.PingOneSessionSubFlow.Hcl})
 	hcl = fmt.Sprintf(`
 %[1]s
-
-resource "davinci_connection" "%[2]s-pingoneauthentication" {
-  name           = "Ping One Authentication"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "pingOneAuthenticationConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-resource "davinci_connection" "%[2]s-node" {
-  name           = "Node"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "nodeConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
 
 resource "davinci_connection" "%[2]s-flow" {
   name           = "Flow"
@@ -312,25 +299,12 @@ resource "davinci_application_flow_policy" "%[2]s" {
 	return hcl
 }
 
-func testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
+func testAccResourceApplicationFlowPolicy_P1SessionFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
 	flows := acctest.FlowsForTests(resourceName)
 
 	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlowUpdate.Hcl, flows.PingOneSessionSubFlow.Hcl})
 	hcl = fmt.Sprintf(`
 %[1]s
-
-resource "davinci_connection" "%[2]s-pingoneauthentication" {
-  name           = "Ping One Authentication"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "pingOneAuthenticationConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-resource "davinci_connection" "%[2]s-node" {
-  name           = "Node"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "nodeConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
 
 resource "davinci_connection" "%[2]s-flow" {
   name           = "Flow"

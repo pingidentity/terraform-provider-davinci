@@ -43,6 +43,23 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 					// 	}),
 				),
 			},
+			// Test importing the resource
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{},
+			},
 		},
 	})
 }
@@ -106,9 +123,7 @@ func testAccCheckApplication(appCheck acctest.TestApplication) resource.TestChec
 }
 
 func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
-	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
-	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
@@ -117,37 +132,9 @@ func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
 		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceApplication_WithFlowPolicy_Hcl(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
-					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
-				),
-			},
-			{
-				Config: testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.1.policy_id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
-				),
-			},
-			// Test importing the resource
-			{
-				ResourceName: resourceFullName,
-				ImportStateIdFunc: func() resource.ImportStateIdFunc {
-					return func(s *terraform.State) (string, error) {
-						rs, ok := s.RootModule().Resources[resourceFullName]
-						if !ok {
-							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
-						}
-
-						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
-					}
-				}(),
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{},
+				Config:      testAccResourceApplication_WithFlowPolicy_Hcl(resourceName),
+				Check:       resource.ComposeTestCheckFunc(),
+				ExpectError: regexp.MustCompile(`.*Blocks of type "policy" are not expected here.*`),
 			},
 		},
 	})
@@ -183,56 +170,6 @@ resource "davinci_application" "%[2]s" {
   }
   policy {
     name = "simpleflow"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[3]s.id
-      version_id = -1
-      weight     = 100
-    }
-    status = "enabled"
-  }
-}
-`, baseHcl, resourceName, flows.Simple.Name)
-	return hcl
-}
-
-func testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
-	flows := acctest.FlowsForTests(resourceName)
-
-	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.Simple.Hcl})
-	hcl = fmt.Sprintf(`
-%[1]s
-
-resource "davinci_application" "%[2]s" {
-  name           = "TF ACC Test"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-  oauth {
-    enabled = true
-    values {
-      allowed_grants                = ["authorizationCode"]
-      allowed_scopes                = ["openid", "profile"]
-      enabled                       = true
-      enforce_signed_request_openid = false
-      redirect_uris                 = ["https://auth.pingone.com/env-id/rp/callback/openid_connect"]
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
-  policy {
-    name = "simpleflow"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[3]s.id
-      version_id = -1
-      weight     = 100
-    }
-    status = "enabled"
-  }
-  policy {
-    name = "subsequentPolicy"
     policy_flow {
       flow_id    = resource.davinci_flow.%[3]s.id
       version_id = -1
