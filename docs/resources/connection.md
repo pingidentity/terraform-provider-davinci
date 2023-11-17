@@ -208,6 +208,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### Allthenticate
+
+**Connector Display Name**: Allthenticate
+
+**Connector ID** - schema `connectorId`: connectorAllthenticate
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### Amazon DynamoDB
 
 **Connector Display Name**: Amazon DynamoDB
@@ -1086,6 +1103,26 @@ If the `value` type of a property is not defined it must be inferred.
 
 | Display Name | `name` | `value` Type | Description |
 | ---- | ---- | ---- | ----| 
+
+
+
+
+### GBG
+
+**Connector Display Name**: GBG
+
+**Connector ID** - schema `connectorId`: gbgConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| GBG Password | `password` | `string` |  |
+| Request URL | `requestUrl` | `string` |  |
+| Soap Action URL | `soapAction` | `string` | SOAP Action is a header required for the soap request |
+| GBG Username | `username` | `string` |  | 
 
 
 
@@ -2491,6 +2528,7 @@ If the `value` type of a property is not defined it must be inferred.
 | Username | `adminUsername` | `` | The username of your Salesforce administrator account. |
 | Consumer Key | `consumerKey` | `` | The consumer key shown on your Salesforce connected app. |
 | Domain Name | `domainName` | `` | Your Salesforce domain name, such as "mycompany-dev-ed". |
+| Environment | `environment` | `string` | If the environment you specify in the Domain Name field is part of a sandbox organization, select Sandbox. Otherwise, select Production. |
 | Private Key | `privateKey` | `` | The private key that corresponds to the X.509 certificate you added to your Salesforce connected app. | 
 
 
