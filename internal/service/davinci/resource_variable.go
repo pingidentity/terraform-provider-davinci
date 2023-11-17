@@ -152,7 +152,14 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 	for _, res := range resp {
 		s := strings.Split(variableName, "##SK##")
 		name := s[0]
+		context := s[1]
 		if err := d.Set("name", name); err != nil {
+			return diag.FromErr(err)
+		}
+		if err := d.Set("context", context); err != nil {
+			return diag.FromErr(err)
+		}
+		if err := d.Set("environment_id", res.CompanyID); err != nil {
 			return diag.FromErr(err)
 		}
 		if err := d.Set("type", res.Type); err != nil {

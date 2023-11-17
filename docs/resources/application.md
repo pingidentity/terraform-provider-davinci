@@ -70,7 +70,6 @@ output "default_app_test_key" {
 
 - `api_key_enabled` (Boolean) Enabled by default in UI Defaults to `true`.
 - `oauth` (Block List, Max: 1) OIDC configuration (see [below for nested schema](#nestedblock--oauth))
-- `policy` (Block Set) Flow Policy Configuration (see [below for nested schema](#nestedblock--policy))
 - `user_portal` (Block List, Max: 1) This is deprecated in the UI and will be removed in a future release. (see [below for nested schema](#nestedblock--user_portal))
 
 ### Read-Only
@@ -127,32 +126,6 @@ Optional:
 Read-Only:
 
 - `client_secret` (String, Sensitive) The client secret for the OIDC application.
-
-
-
-<a id="nestedblock--policy"></a>
-### Nested Schema for `policy`
-
-Optional:
-
-- `name` (String) Policy friendly name
-- `policy_flow` (Block Set) Set of weighted flows that this application will use (see [below for nested schema](#nestedblock--policy--policy_flow))
-- `status` (String) Policy status. Valid values are: enabled, disabled Defaults to `enabled`.
-
-Read-Only:
-
-- `created_date` (Number) Creation epoch of policy.
-- `policy_id` (String) Generated identifier of a created policy.
-
-<a id="nestedblock--policy--policy_flow"></a>
-### Nested Schema for `policy.policy_flow`
-
-Optional:
-
-- `flow_id` (String) Identifier of the flow that this policy will use.
-- `success_nodes` (List of String) List of node ids used by analytics for tracking user interaction.
-- `version_id` (Number) Version of the flow that this policy will use. Use -1 for latest
-- `weight` (Number) If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100
 
 
 
