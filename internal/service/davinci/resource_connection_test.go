@@ -175,7 +175,6 @@ func TestAccResourceConnection_HeavyRead(t *testing.T) {
 	// resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
 	// hcl := testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
-	// fmt.Printf(`HCL: \n %s \n`, hcl)
 	testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
 
 	// resource.ParallelTest(t, resource.TestCase{

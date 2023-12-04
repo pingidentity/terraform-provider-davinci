@@ -3,7 +3,6 @@ package davinci_test
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
@@ -11,11 +10,6 @@ import (
 
 // TestAccDatasourceApplication_Slim - Depends on testAccResourceApplication_Slim_Hcl
 func TestAccDatasourceApplication_SlimByAppId(t *testing.T) {
-	// tflog.Info(ctx, "Rate limit hit, retrying...")
-	timeElapsed := 4 * time.Second
-	fmt.Println(timeElapsed)
-	fmt.Println(timeElapsed)
-
 	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)

@@ -795,17 +795,28 @@ func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 
 func expandSubFlowProps(subflowProps map[string]interface{}) (*dv.SubFlowProperties, error) {
 
-	sfp := subflowProps["subFlowId"].(map[string]interface{})
-	sfpVal := sfp["value"].(map[string]interface{})
+	sfp, ok := subflowProps["subFlowId"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Flow Validation Error: subFlowId key not found in subflow properties")
+	}
+	sfpVal, ok := sfp["value"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Flow Validation Error: subFlowId value not found in subflow properties")
+	}
 	sfId := dv.SubFlowID{
 		Value: dv.SubFlowValue{
 			Value: sfpVal["value"].(string),
 			Label: sfpVal["label"].(string),
 		},
 	}
-	subflowVersionId := subflowProps["subFlowVersionId"].(map[string]interface{})
+	subflowVersionId, ok := subflowProps["subFlowVersionId"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Flow Validation Error: subFlowVersionId not found in subflow properties")
+	}
 	var sfvidString string
-
+	if subflowVersionId["value"] == nil {
+		return nil, fmt.Errorf("Flow Validation Error: subFlowVersionId.value not found in subflow properties")
+	}
 	switch subflowVersionId["value"].(type) {
 	case int:
 		sfvidString = strconv.Itoa(subflowVersionId["value"].(int))
@@ -814,14 +825,14 @@ func expandSubFlowProps(subflowProps map[string]interface{}) (*dv.SubFlowPropert
 	case string:
 		sfvidString = subflowVersionId["value"].(string)
 	default:
-		return nil, fmt.Errorf("Error: subflow versionId is not a string or int")
+		return nil, fmt.Errorf("Flow Validation Error: subflow versionId is not a string or int")
 	}
 
 	sfv := dv.SubFlowVersionID{
 		Value: sfvidString,
 	}
 	if sfId.Value.Value == "" || sfv.Value == "" {
-		return nil, fmt.Errorf("Error: subflow value or versionId is empty")
+		return nil, fmt.Errorf("Flow Validation Error: subflow value or versionId is empty")
 	}
 	subflow := dv.SubFlowProperties{
 		SubFlowID:        sfId,
@@ -886,7 +897,15 @@ func validateFlowDeps(d *schema.ResourceData, diags *diag.Diagnostics) {
 			// validate subflows
 			if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
 				foundSubflow := false
-				sfProp, _ := expandSubFlowProps(v.Data.Properties)
+				sfProp, err := expandSubFlowProps(v.Data.Properties)
+				if err != nil {
+					*diags = append(*diags, diag.Diagnostic{
+						Severity: diag.Error,
+						Summary:  "Error Validating flow_json",
+						Detail:   err.Error(),
+					})
+					return
+				}
 				if subflows, ok := d.GetOk("subflow_link"); ok {
 					sfList := subflows.(*schema.Set).List()
 					for _, sfMap := range sfList {
