@@ -168,7 +168,6 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 	}
 
 	flatResp, err := flattenAppPolicy(resp, policyId)
-	// fmt.Printf("flatResp: %+v\n", flatResp)
 	if err != nil {
 		if strings.Contains(err.Error(), "Unable to find policy with id") {
 			d.SetId("")
