@@ -2,6 +2,7 @@ package davinci_test
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -17,7 +18,7 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 
 	hcl := testAccResourceApplication_Slim_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -29,6 +30,9 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					//TODO - test attributes in TypeSet.
 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+					testAccCheckApplication(acctest.TestApplication{
+						ApplicationResourceName: resourceName,
+					}),
 					// resource.TestCheckNoResourceAttr(resourceFullName, "application_id"),
 					// TODO - use this on integrated acc test
 					// resource.TestCheckTypeSetElemNestedAttrs(resourceFullName,
@@ -38,6 +42,23 @@ func TestAccResourceApplication_Slim(t *testing.T) {
 					// 		"weight":     "100",
 					// 	}),
 				),
+			},
+			// Test importing the resource
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{},
 			},
 		},
 	})
@@ -73,13 +94,38 @@ resource "davinci_application" "%[2]s" {
 	return hcl
 }
 
+// Looks at an application to validate certain properties are set.
+func testAccCheckApplication(appCheck acctest.TestApplication) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		client, err := acctest.TestClient()
+		if err != nil {
+			return err
+		}
+		resourceFullName := appCheck.GetResourceFullName()
+		rs, ok := s.RootModule().Resources[resourceFullName]
+		if !ok {
+			return fmt.Errorf("Resource Not found: %s", resourceFullName)
+		}
+
+		appCheck.SetID(rs.Primary.ID)
+		appCheck.SetName(rs.Primary.Attributes["name"])
+		appCheck.SetEnvironmentID(rs.Primary.Attributes["environment_id"])
+
+		res, err := client.ReadApplication(&appCheck.EnvironmentID, appCheck.ID)
+		if err != nil {
+			return err
+		}
+		if res.Name != appCheck.Name {
+			return fmt.Errorf("Application name does not match: %s != %s", res.Name, appCheck.Name)
+		}
+		return nil
+	}
+}
+
 func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
-
-	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
-	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -87,23 +133,13 @@ func TestAccResourceApplication_WithFlowPolicy(t *testing.T) {
 		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceApplication_WithFlowPolicy_Hcl(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
-					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
-				),
-			},
-			{
-				Config: testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.1.policy_id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
-				),
+				Config:      testAccResourceApplication_WithFlowPolicy_Hcl(resourceName),
+				Check:       resource.ComposeTestCheckFunc(),
+				ExpectError: regexp.MustCompile(`.*Blocks of type "policy" are not expected here.*`),
 			},
 		},
 	})
+
 }
 
 func testAccResourceApplication_WithFlowPolicy_Hcl(resourceName string) (hcl string) {
@@ -147,208 +183,45 @@ resource "davinci_application" "%[2]s" {
 	return hcl
 }
 
-func testAccResourceApplication_WithFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
-	flows := acctest.FlowsForTests(resourceName)
-
-	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.Simple.Hcl})
-	hcl = fmt.Sprintf(`
-%[1]s
-
-resource "davinci_application" "%[2]s" {
-  name           = "TF ACC Test"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-  oauth {
-    enabled = true
-    values {
-      allowed_grants                = ["authorizationCode"]
-      allowed_scopes                = ["openid", "profile"]
-      enabled                       = true
-      enforce_signed_request_openid = false
-      redirect_uris                 = ["https://auth.pingone.com/env-id/rp/callback/openid_connect"]
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
-  policy {
-    name = "simpleflow"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[3]s.id
-      version_id = -1
-      weight     = 100
-    }
-    status = "enabled"
-  }
-  policy {
-    name = "subsequentPolicy"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[3]s.id
-      version_id = -1
-      weight     = 100
-    }
-    status = "enabled"
-  }
-}
-`, baseHcl, resourceName, flows.Simple.Name)
-	return hcl
-}
-
-func TestAccResourceApplication_P1SessionFlowPolicy(t *testing.T) {
+func TestAccResourceApplication_BadParameters(t *testing.T) {
 
 	resourceBase := "davinci_application"
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
-	resource.Test(t, resource.TestCase{
+
+	hcl := testAccResourceApplication_Slim_Hcl(resourceName)
+
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
 		ErrorCheck:        acctest.ErrorCheck(t),
 		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
+			// Configure
 			{
-				Config: testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
-					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
-				),
+				Config: hcl,
+			},
+			// Errors
+			{
+				ResourceName: resourceFullName,
+				ImportState:  true,
+				ExpectError:  regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_application_id" and must match regex: .*`),
 			},
 			{
-				Config: testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "policy.0.policy_id"),
-					resource.TestCheckNoResourceAttr(resourceFullName, "policy.1.policy_id"),
-				),
+				ResourceName:  resourceFullName,
+				ImportStateId: "/",
+				ImportState:   true,
+				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_application_id" and must match regex: .*`),
+			},
+			{
+				ResourceName:  resourceFullName,
+				ImportStateId: "badformat/badformat",
+				ImportState:   true,
+				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_application_id" and must match regex: .*`),
 			},
 		},
 	})
-}
-
-func testAccResourceApplication_P1SessionFlowPolicy_Hcl(resourceName string) (hcl string) {
-	flows := acctest.FlowsForTests(resourceName)
-
-	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlow.Hcl, flows.PingOneSessionSubFlow.Hcl})
-	hcl = fmt.Sprintf(`
-%[1]s
-
-resource "davinci_connection" "%[2]s-pingoneauthentication" {
-  name           = "Ping One Authentication"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "pingOneAuthenticationConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-resource "davinci_connection" "%[2]s-node" {
-  name           = "Node"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "nodeConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-
-resource "davinci_connection" "%[2]s-flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-}
-
-resource "davinci_application" "%[2]s" {
-  name           = "TF ACC Test-%[2]s"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-  oauth {
-    enabled = true
-    values {
-      allowed_grants                = ["authorizationCode"]
-      allowed_scopes                = ["openid", "profile"]
-      enabled                       = true
-      enforce_signed_request_openid = false
-      redirect_uris                 = ["https://auth.pingone.com/env-id/rp/callback/openid_connect"]
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
-  policy {
-    name = "simpleflow"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[3]s.id
-      version_id = -1
-      weight     = 100
-    }
-    status = "enabled"
-  }
-}
-`, baseHcl, resourceName, flows.PingOneSessionMainFlow.Name)
-	return hcl
-}
-
-func testAccResourceApplication_P1SessionFlowPolicyUpdate_Hcl(resourceName string) (hcl string) {
-	flows := acctest.FlowsForTests(resourceName)
-
-	baseHcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{flows.PingOneSessionMainFlowUpdate.Hcl, flows.PingOneSessionSubFlow.Hcl})
-	hcl = fmt.Sprintf(`
-%[1]s
-
-resource "davinci_connection" "%[2]s-pingoneauthentication" {
-  name           = "Ping One Authentication"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "pingOneAuthenticationConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-resource "davinci_connection" "%[2]s-node" {
-  name           = "Node"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  connector_id   = "nodeConnector"
-  depends_on     = [data.davinci_connections.read_all]
-}
-
-resource "davinci_connection" "%[2]s-flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-}
-
-resource "davinci_application" "%[2]s" {
-  name           = "TF ACC Test-%[2]s"
-  environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
-  oauth {
-    enabled = true
-    values {
-      allowed_grants                = ["authorizationCode"]
-      allowed_scopes                = ["openid", "profile"]
-      enabled                       = true
-      enforce_signed_request_openid = false
-      redirect_uris                 = ["https://auth.pingone.com/env-id/rp/callback/openid_connect"]
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
-  policy {
-    name = "simpleflow"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[3]s.id
-      version_id = -1
-      weight     = 100
-    }
-    status = "enabled"
-  }
-}
-`, baseHcl, resourceName, flows.PingOneSessionMainFlow.Name)
-	return hcl
 }
 
 func testAccGetResourceApplicationIDs(resourceName string, environmentID, resourceID *string) resource.TestCheckFunc {
@@ -376,7 +249,7 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 
 	var resourceID, environmentID string
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

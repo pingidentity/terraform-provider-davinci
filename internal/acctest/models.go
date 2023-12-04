@@ -81,6 +81,57 @@ type TestConnectionProperty struct {
 	Type  string
 }
 
+type TestApplicationFlowPolicy struct {
+	FlowPolicyResourceName string
+	Name                   string
+	EnvironmentID          string
+	ApplicationID          string
+	ID                     string
+}
+
+type TestApplication struct {
+	ApplicationResourceName string
+	Name                    string
+	ID                      string
+	EnvironmentID           string
+}
+
+func (ta TestApplication) GetResourceFullName() (resourceName string) {
+	return fmt.Sprintf("davinci_application.%s", ta.ApplicationResourceName)
+}
+
+func (ta *TestApplication) SetName(name string) {
+	ta.Name = name
+}
+
+func (ta *TestApplication) SetID(id string) {
+	ta.ID = id
+}
+
+func (ta *TestApplication) SetEnvironmentID(environmentID string) {
+	ta.EnvironmentID = environmentID
+}
+
+func (tafp TestApplicationFlowPolicy) GetResourceFullName() (resourceName string) {
+	return fmt.Sprintf("davinci_application_flow_policy.%s", tafp.FlowPolicyResourceName)
+}
+
+func (tafp *TestApplicationFlowPolicy) SetName(name string) {
+	tafp.Name = name
+}
+
+func (tafp *TestApplicationFlowPolicy) SetEnvironmentID(environmentID string) {
+	tafp.EnvironmentID = environmentID
+}
+
+func (tafp *TestApplicationFlowPolicy) SetApplicationID(applicationID string) {
+	tafp.ApplicationID = applicationID
+}
+
+func (tafp *TestApplicationFlowPolicy) SetID(id string) {
+	tafp.ID = id
+}
+
 // Returns resource name for connection that should be used in hcl format: `<ResourceName>_<Name>`
 func (tc TestConnection) GetResourceName() (resourceName string) {
 	return fmt.Sprintf("%s_%s", tc.ResourcePrefix, tc.Name)

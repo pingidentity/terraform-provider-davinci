@@ -386,6 +386,7 @@ func TestClient() (*dv.APIClient, error) {
 	if environment_id == "" {
 		e = e + "PINGONE_ENVIRONMENT_ID "
 	}
+	host_url := os.Getenv("PINGONE_DAVINCI_HOST_URL")
 	if e != "" {
 		return nil, fmt.Errorf("missing environment variables: %s", e)
 	}
@@ -395,6 +396,7 @@ func TestClient() (*dv.APIClient, error) {
 		Password:        password,
 		PingOneRegion:   region,
 		PingOneSSOEnvId: environment_id,
+		HostURL:         host_url,
 	}
 	c, err := dv.NewClient(&cInput)
 	if err != nil {

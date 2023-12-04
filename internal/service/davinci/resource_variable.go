@@ -3,12 +3,14 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
+	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -74,7 +76,7 @@ func ResourceVariable() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			StateContext: schema.ImportStatePassthroughContext,
+			StateContext: resourceVariableImport,
 		},
 	}
 }
@@ -150,7 +152,14 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 	for _, res := range resp {
 		s := strings.Split(variableName, "##SK##")
 		name := s[0]
+		context := s[1]
 		if err := d.Set("name", name); err != nil {
+			return diag.FromErr(err)
+		}
+		if err := d.Set("context", context); err != nil {
+			return diag.FromErr(err)
+		}
+		if err := d.Set("environment_id", res.CompanyID); err != nil {
 			return diag.FromErr(err)
 		}
 		if err := d.Set("type", res.Type); err != nil {
@@ -233,6 +242,36 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta in
 	d.SetId("")
 
 	return diags
+}
+
+func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+
+	idComponents := []utils.ImportComponent{
+		{
+			Label:  "environment_id",
+			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+		},
+		{
+			Label:     "davinci_variable_id",
+			Regexp:    regexp.MustCompile(`.*`),
+			PrimaryID: true,
+		},
+	}
+
+	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
+		return nil, err
+	}
+
+	d.SetId(attributes["davinci_variable_id"])
+
+	resourceVariableRead(ctx, d, meta)
+
+	return []*schema.ResourceData{d}, nil
 }
 
 func getVariableAttributes(d *schema.ResourceData) dv.VariablePayload {

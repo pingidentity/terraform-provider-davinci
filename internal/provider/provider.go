@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -70,10 +71,11 @@ func New(version string) func() *schema.Provider {
 				},
 			},
 			ResourcesMap: map[string]*schema.Resource{
-				"davinci_application": davinci.ResourceApplication(),
-				"davinci_connection":  davinci.ResourceConnection(),
-				"davinci_flow":        davinci.ResourceFlow(),
-				"davinci_variable":    davinci.ResourceVariable(),
+				"davinci_application":             davinci.ResourceApplication(),
+				"davinci_application_flow_policy": davinci.ResourceApplicationFlowPolicy(),
+				"davinci_connection":              davinci.ResourceConnection(),
+				"davinci_flow":                    davinci.ResourceFlow(),
+				"davinci_variable":                davinci.ResourceVariable(),
 			},
 			DataSourcesMap: map[string]*schema.Resource{
 				"davinci_connections":  davinci.DataSourceConnections(),
@@ -120,8 +122,10 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			AccessToken:     accessToken,
 			UserAgent:       fmt.Sprintf("terraform-provider-davinci/%s/go", version),
 		}
-		c, err := client.NewClient(&cInput)
+		c, err := retryableClient(&cInput)
 		if err != nil {
+			// DELETE ME
+			tflog.Info(ctx, "Error initializing client")
 			return nil, diag.FromErr(err)
 		}
 		if environment_id != "" {
@@ -134,4 +138,34 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		// }
 		return c, diags
 	}
+}
+
+func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
+	var c *client.APIClient
+	var err error
+	ctx := context.Background()
+
+	for retries := 0; retries <= 2; retries++ {
+		c, err = client.NewClient(cInput)
+		if retries == 2 && err != nil {
+			return nil, err
+		}
+		switch {
+		case err == nil:
+			return c, nil
+			// These cases come from the davinci-client-go library and may be subject to change
+		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+			fmt.Printf("Sign in retryable Error: %s\n", err.Error())
+		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+			fmt.Printf("Sign in retryable Error: %s\n", err.Error())
+		case strings.Contains(err.Error(), "Auth Token not found, unsuccessful login, got: Found. Redirecting to https://console.pingone.com/davinci/index.html#/sso/callback/?error=AuthenticationFailed&error_description=unknownError2"):
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+			fmt.Printf("Sign in retryable Error: %s\n", err.Error())
+		default:
+			return nil, err
+		}
+	}
+	return nil, fmt.Errorf("Error initializing client. Please report this as a bug.")
 }

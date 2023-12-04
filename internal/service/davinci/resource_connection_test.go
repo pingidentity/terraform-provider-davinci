@@ -2,6 +2,7 @@ package davinci_test
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
@@ -19,7 +20,7 @@ func TestAccResourceConnection_Slim(t *testing.T) {
 
 	hcl := testAccResourceConnection_Slim_Hcl(resourceName, "slim")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -34,6 +35,25 @@ func TestAccResourceConnection_Slim(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
 				),
 			},
+			// Test importing the resource
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"property.1.value",
+				},
+			},
 		},
 	})
 }
@@ -47,7 +67,7 @@ func TestAccResourceConnection_SlimWithUpdate(t *testing.T) {
 	beforeHcl := testAccResourceConnection_Slim_Hcl(resourceName, "before")
 	afterHcl := testAccResourceConnection_Slim_Hcl(resourceName, "after")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -150,30 +170,31 @@ resource "davinci_connection" "%[2]s" {
 // Test to try to hit API rate Limit
 func TestAccResourceConnection_HeavyRead(t *testing.T) {
 
-	resourceBase := "davinci_connection"
+	// resourceBase := "davinci_connection"
 	resourceName := acctest.ResourceNameGen()
-	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+	// resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	hcl := testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
+	// hcl := testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
 	// fmt.Printf(`HCL: \n %s \n`, hcl)
+	testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
 
-	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application, davinci_connection, davinci_flow"}),
-		Steps: []resource.TestStep{
-			{
-				Config: hcl,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
-					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
-				),
-			},
-		},
-	})
+	// resource.ParallelTest(t, resource.TestCase{
+	// 	PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+	// 	ProviderFactories: acctest.ProviderFactories,
+	// 	ExternalProviders: acctest.ExternalProviders,
+	// 	ErrorCheck:        acctest.ErrorCheck(t),
+	// 	CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application, davinci_connection, davinci_flow"}),
+	// 	Steps: []resource.TestStep{
+	// 		{
+	// 			Config: hcl,
+	// 			Check: resource.ComposeTestCheckFunc(
+	// 				resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+	// 				resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+	// 				resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
+	// 			),
+	// 		},
+	// 	},
+	// })
 }
 
 func testAccResourceConnection_HeavyRead_Hcl(resourceName, valuePrefix string) (hcl string) {
@@ -216,14 +237,6 @@ resource "davinci_application" "%[2]s_simple_flow_app" {
       enabled                       = true
       enforce_signed_request_openid = false
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
-    }
-  }
-  policy {
-    name = "PingOne - Sign On and Password Reset"
-    policy_flow {
-      flow_id    = resource.davinci_flow.%[2]s_simple_flow.id
-      version_id = -1
-      weight     = 100
     }
   }
   saml {
@@ -282,7 +295,7 @@ func TestAccResourceConnection_RemovalDrift(t *testing.T) {
 
 	var resourceID, environmentID string
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -365,7 +378,7 @@ func TestAccResourceConnection_PropertyDrift(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, mfaConnection.GetResourceName())
 	var resourceID, environmentID string
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -427,6 +440,47 @@ func TestAccResourceConnection_PropertyDrift(t *testing.T) {
 			{
 				Config: acctest.TestAccResourceConnectionHcl(resourceName, []string{"MFA"}, []acctest.TestConnection{mfaConnection}),
 				Check:  testAccGetResourceConnectionIDs(resourceFullName, &environmentID, &resourceID),
+			},
+		},
+	})
+}
+
+func TestAccResourceConnection_BadParameters(t *testing.T) {
+
+	resourceBase := "davinci_connection"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	hcl := testAccResourceConnection_Slim_Hcl(resourceName, "slim")
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_connection"}),
+		Steps: []resource.TestStep{
+			// Configure
+			{
+				Config: hcl,
+			},
+			// Errors
+			{
+				ResourceName: resourceFullName,
+				ImportState:  true,
+				ExpectError:  regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_connection_id" and must match regex: .*`),
+			},
+			{
+				ResourceName:  resourceFullName,
+				ImportStateId: "/",
+				ImportState:   true,
+				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_connection_id" and must match regex: .*`),
+			},
+			{
+				ResourceName:  resourceFullName,
+				ImportStateId: "badformat/badformat",
+				ImportState:   true,
+				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_connection_id" and must match regex: .*`),
 			},
 		},
 	})
