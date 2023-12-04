@@ -15,7 +15,7 @@ func TestAccDataSourceConnection_AllConections(t *testing.T) {
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 	hcl := testAccDataSourceConnection_AllConections_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -52,7 +52,7 @@ func TestAccDataSourceConnection_FilteredConnections(t *testing.T) {
 	dataSourceFullName := fmt.Sprintf("data.%s.%s", resourceBase, resourceName)
 	hcl := testAccDataSourceConnection_FilteredConnections_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
