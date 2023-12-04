@@ -1270,6 +1270,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### HYPR Adapt
+
+**Connector Display Name**: HYPR Adapt
+
+**Connector ID** - schema `connectorId`: connectorHyprAdapt
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| HYPR Adapt Access Token | `accessToken` | `string` | Access Token | 
+
+
+
+
 ### Have I Been Pwned
 
 **Connector Display Name**: Have I Been Pwned
@@ -1428,6 +1445,23 @@ If the `value` type of a property is not defined it must be inferred.
 | DPPA | `dppa` | `string` |  |
 | GLBA | `glba` | `string` |  |
 | Search URL | `searchUrl` | `string` |  | 
+
+
+
+
+### IDmelon
+
+**Connector Display Name**: IDmelon
+
+**Connector ID** - schema `connectorId`: connectorIdmelon
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 

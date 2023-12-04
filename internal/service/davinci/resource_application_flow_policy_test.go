@@ -15,7 +15,7 @@ func TestAccResourceApplicationFlowPolicy_Slim(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -42,7 +42,7 @@ func TestAccResourceApplicationFlowPolicy_Base(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 	resourceFullNameB := fmt.Sprintf("%s.%s", resourceBase, resourceNameB)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -215,7 +215,7 @@ func TestAccResourceApplicationFlowPolicy_P1SessionFlowPolicy(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	resourceAppFullName := fmt.Sprintf("%s.%s", resourceAppBase, resourceName)
 	resourceAppFlowPolicyFullName := fmt.Sprintf("%s.%s", resourceAppFlowPolicyBase, resourceName)
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
