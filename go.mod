@@ -1,8 +1,6 @@
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.21
-
-toolchain go1.21.4
+go 1.20
 
 require (
 	github.com/bflad/tfproviderlint v0.29.0
