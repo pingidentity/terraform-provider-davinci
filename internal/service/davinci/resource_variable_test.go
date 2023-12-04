@@ -151,7 +151,7 @@ func TestAccResourceVariable_BadParameters(t *testing.T) {
 
 	hcl := testAccResourceVariable_FlowInstanceContext_Hcl(resourceName)
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

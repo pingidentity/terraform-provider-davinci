@@ -578,7 +578,7 @@ func TestAccResourceFlow_BadParameters(t *testing.T) {
 
 	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl})
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

@@ -1,6 +1,8 @@
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.20
+go 1.21
+
+toolchain go1.21.4
 
 require (
 	github.com/bflad/tfproviderlint v0.29.0
@@ -14,7 +16,7 @@ require (
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.32.0
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.0
 	github.com/pavius/impi v0.0.3
-	github.com/samir-gandhi/davinci-client-go v0.0.54
+	github.com/samir-gandhi/davinci-client-go v0.0.55
 	github.com/samir-gandhi/dvgenerate v0.0.7
 	github.com/terraform-linters/tflint v0.48.0
 	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678

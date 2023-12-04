@@ -30,7 +30,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 			return nil
 		}
 		timeout := 100
-		freshEnvTimeout := 50
+		freshEnvTimeout := 60
 		for i := 0; i <= timeout; {
 			// initially, test if auth is valid for the target environment
 			apps, err := c.ReadApplications(&envId, nil)
@@ -79,9 +79,9 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 
 // re-initialize auth, with optionial retry
 func initAuthRetryable(ctx context.Context, c *dv.APIClient) error {
-	for retries := 0; retries <= 2; retries++ {
+	for retries := 0; retries <= 3; retries++ {
 		err := c.InitAuth()
-		if retries == 2 && err != nil {
+		if retries == 3 && err != nil {
 			return err
 		}
 		switch {
@@ -90,8 +90,13 @@ func initAuthRetryable(ctx context.Context, c *dv.APIClient) error {
 			// These cases come from the davinci-client-go library and may be subject to change
 		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
 			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+			fmt.Printf("Sign in retryable Error: %s\n", err.Error())
 		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
 			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+			fmt.Printf("Sign in retryable Error: %s\n", err.Error())
+		case strings.Contains(err.Error(), "Auth Token not found, unsuccessful login, got: Found. Redirecting to https://console.pingone.com/davinci/index.html#/sso/callback/?error=AuthenticationFailed&error_description=unknownError2"):
+			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
+			fmt.Printf("Sign in retryable Error: %s\n", err.Error())
 		default:
 			tflog.Info(ctx, "Error re-initializing authorization.")
 			return err

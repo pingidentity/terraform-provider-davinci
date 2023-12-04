@@ -167,34 +167,35 @@ resource "davinci_connection" "%[2]s" {
 	return hcl
 }
 
-// // Test to try to hit API rate Limit
-// func TestAccResourceConnection_HeavyRead(t *testing.T) {
+// Test to try to hit API rate Limit
+func TestAccResourceConnection_HeavyRead(t *testing.T) {
 
-// 	resourceBase := "davinci_connection"
-// 	resourceName := acctest.ResourceNameGen()
-// 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+	// resourceBase := "davinci_connection"
+	resourceName := acctest.ResourceNameGen()
+	// resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-// 	hcl := testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
-// 	// fmt.Printf(`HCL: \n %s \n`, hcl)
+	// hcl := testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
+	// fmt.Printf(`HCL: \n %s \n`, hcl)
+	testAccResourceConnection_HeavyRead_Hcl(resourceName, "heavy")
 
-// 	resource.Test(t, resource.TestCase{
-// 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
-// 		ProviderFactories: acctest.ProviderFactories,
-// 		ExternalProviders: acctest.ExternalProviders,
-// 		ErrorCheck:        acctest.ErrorCheck(t),
-// 		CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application, davinci_connection, davinci_flow"}),
-// 		Steps: []resource.TestStep{
-// 			{
-// 				Config: hcl,
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "id"),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
-// 					resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
-// 				),
-// 			},
-// 		},
-// 	})
-// }
+	// resource.ParallelTest(t, resource.TestCase{
+	// 	PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
+	// 	ProviderFactories: acctest.ProviderFactories,
+	// 	ExternalProviders: acctest.ExternalProviders,
+	// 	ErrorCheck:        acctest.ErrorCheck(t),
+	// 	CheckDestroy:      acctest.CheckResourceDestroy([]string{"davinci_application, davinci_connection, davinci_flow"}),
+	// 	Steps: []resource.TestStep{
+	// 		{
+	// 			Config: hcl,
+	// 			Check: resource.ComposeTestCheckFunc(
+	// 				resource.TestCheckResourceAttrSet(resourceFullName, "id"),
+	// 				resource.TestCheckResourceAttrSet(resourceFullName, "environment_id"),
+	// 				resource.TestCheckResourceAttr(resourceFullName, "name", resourceName),
+	// 			),
+	// 		},
+	// 	},
+	// })
+}
 
 func testAccResourceConnection_HeavyRead_Hcl(resourceName, valuePrefix string) (hcl string) {
 	baseHcl := acctest.BaselineHcl(resourceName)
@@ -377,7 +378,7 @@ func TestAccResourceConnection_PropertyDrift(t *testing.T) {
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, mfaConnection.GetResourceName())
 	var resourceID, environmentID string
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,
@@ -452,7 +453,7 @@ func TestAccResourceConnection_BadParameters(t *testing.T) {
 
 	hcl := testAccResourceConnection_Slim_Hcl(resourceName, "slim")
 
-	resource.Test(t, resource.TestCase{
+	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:          func() { acctest.PreCheckPingOneAndTfVars(t) },
 		ProviderFactories: acctest.ProviderFactories,
 		ExternalProviders: acctest.ExternalProviders,

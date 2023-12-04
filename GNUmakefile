@@ -27,11 +27,7 @@ test:
 	
 testacc:
 	@echo "==> Running acceptance tests..."
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
-
-testaccparallel:
-	@echo "==> Running acceptance tests..."
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel 5
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel 15
 
 sweep:
 	@echo "==> Running sweep..."
@@ -105,4 +101,4 @@ terrafmtcheck:
 
 devcheck: build vet tools generate terrafmt docscategorycheck lint test sweep testacc
 
-.PHONY: tools build generate docscategorycheck test testacc sweep vet fmtcheck depscheck lint golangci-lint importlint providerlint tflint terrafmt terrafmtcheck
+.PHONY: tools build generate docscategorycheck test testacc sweep vet fmtcheck depscheck lint golangci-lint importlint providerlint tflint terrafmt terrafmtcheck testacc devcheck
