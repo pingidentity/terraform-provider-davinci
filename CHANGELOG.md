@@ -1,3 +1,22 @@
+## 0.2.0
+
+NOTES:
+
+* Added `terraform import` documentation to all applicable resources. ([#195](https://github.com/pingidentity/terraform-provider-davinci/issues/195))
+
+ENHANCEMENTS:
+
+* `resource/application_flow_policy`: separate application policies to have their own lifecycle and avoid affecting upstream apps. ([#214](https://github.com/pingidentity/terraform-provider-davinci/issues/214))
+
+BUG FIXES:
+
+* `internal/sdk`: capture additional retryable errors on flow sign-in ([#128](https://github.com/pingidentity/terraform-provider-davinci/issues/128))
+* `resource/davinci_application`: Fixed error when attempting to import resource state. ([#196](https://github.com/pingidentity/terraform-provider-davinci/issues/196))
+* `resource/davinci_connection`: Fixed error when attempting to import resource state. ([#196](https://github.com/pingidentity/terraform-provider-davinci/issues/196))
+* `resource/davinci_flow`: Fixed error when attempting to import resource state. ([#196](https://github.com/pingidentity/terraform-provider-davinci/issues/196))
+* `resource/davinci_flow`: additional error handling for misconfigured flows ([#230](https://github.com/pingidentity/terraform-provider-davinci/issues/230))
+* `resource/davinci_variable`: Fixed error when attempting to import resource state. ([#196](https://github.com/pingidentity/terraform-provider-davinci/issues/196))
+
 ## 0.1.13
 
 BUG FIXES:

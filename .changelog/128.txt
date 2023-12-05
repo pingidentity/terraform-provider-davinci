@@ -1,0 +1,3 @@
+```release-note:bug
+`internal/sdk`: capture additional retryable errors on flow sign-in
+```
