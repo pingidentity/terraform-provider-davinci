@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.30.0
 	github.com/katbyte/terrafmt v0.5.2
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.0
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.32.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.33.0
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.1
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.55
