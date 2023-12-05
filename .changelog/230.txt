@@ -1,3 +1,3 @@
 ```release-note:bug
-`resource_flow`: additional error handling for misconfigured flows
+`resource/davinci_flow`: additional error handling for misconfigured flows
 ```

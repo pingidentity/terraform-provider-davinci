@@ -1,3 +1,3 @@
 ```release-note:enhancement
-`application_flow_policy`: separate application policies to have their own lifecycle and avoid affecting upstream apps. 
+`resource/application_flow_policy`: separate application policies to have their own lifecycle and avoid affecting upstream apps. 
 ```
