@@ -7,17 +7,19 @@ description: |-
 
 # Migrate Application Flow Policies to Individual Resources
 
-The guide describes how to migrate application flow policies, configured with Terraform, from using being a sub-resource of applications to the new format as individual policies to provide better overall stability of downstream applications
+The guide describes how to migrate application flow policies, configured with Terraform, from using being a sub-resource of applications to the new format as individual policies to provide better overall stability of upstream applications
 
 This guide applies to users upgrading _from_ DaVinci provider < 0.2.0.
 
 ## Background
 
-A defect was discovered in the `policy` field of `resource.davinci_application` that causes policies to be replaced rather than updated when there is a change to be made. The replace behavious causes upstream breaks on pingone_applications that use DaVinci Policies.
+A defect was discovered in the `policy` field of `resource.davinci_application` that causes policies to be replaced rather than updated when there is a change to be made. The replace behaviour causes upstream breaks on pingone_applications that use DaVinci Policies.
+
+~> DaVinci Application Flow Policies must be managed in only _one_ resource format at any given time. It is important to not use the `policy` block within `davinci_application` wile also using `davinci_application_flow_policy`. This may cause a race condition and thus have actual configuration misaligned from what is desired.
 
 ## Migration Process
 
-In the DaVinci provider version 0.2.0 the `policy` field has been removed from `resource.davinci_application`. This functionality is now handled in the `davinci_application_flow_policy` resource.
+In the DaVinci provider version 0.2.1 the `policy` field has been deprecated in `resource.davinci_application`. This functionality should instead be handled in the `davinci_application_flow_policy` resource.
 
 It is important to follow these migration steps *in order*:
 

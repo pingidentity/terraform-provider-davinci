@@ -61,7 +61,6 @@ func DoRetryable(ctx context.Context, f func() (interface{}, error), timeout *ti
 	}
 	for timeElapsed < timeoutMax {
 		if timeElapsed > 1 {
-			fmt.Println("Sleeping for ", time.Duration(timeElapsed)*time.Second, " seconds")
 			time.Sleep(time.Duration(timeElapsed) * time.Second)
 		}
 		res, err := f()
@@ -78,7 +77,6 @@ func DoRetryable(ctx context.Context, f func() (interface{}, error), timeout *ti
 			switch dvErr.Body {
 			case "":
 				tflog.Info(ctx, "Rate limit hit, retrying...")
-				fmt.Println("Rate limit hit, retrying...")
 			default:
 				return nil, err
 			}

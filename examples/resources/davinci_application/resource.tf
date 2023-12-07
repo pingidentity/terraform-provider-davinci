@@ -12,6 +12,7 @@ resource "davinci_application" "use_default_flow" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
+  // `policy` is deprecated
   policy {
     name   = "PingOne - Authentication"
     status = "enabled"
@@ -21,6 +22,7 @@ resource "davinci_application" "use_default_flow" {
       weight     = 100
     }
   }
+  // `policy` is deprecated
   policy {
     name   = "PingOne - Registration"
     status = "enabled"
