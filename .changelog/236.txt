@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_application`: add policy block back with deprecation notice
+```
