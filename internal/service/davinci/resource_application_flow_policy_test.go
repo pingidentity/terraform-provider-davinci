@@ -227,7 +227,7 @@ func TestAccResourceApplicationFlowPolicy_P1SessionFlowPolicy(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "name"),
-					resource.TestCheckNoResourceAttr(resourceAppFullName, "policy"),
+					resource.TestCheckNoResourceAttr(resourceAppFullName, "policy.0.name"),
 					resource.TestCheckResourceAttrSet(resourceAppFlowPolicyFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAppFlowPolicyFullName, "name"),
 					resource.TestCheckResourceAttrSet(resourceAppFlowPolicyFullName, "status"),
@@ -238,7 +238,7 @@ func TestAccResourceApplicationFlowPolicy_P1SessionFlowPolicy(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAppFullName, "name"),
-					resource.TestCheckNoResourceAttr(resourceAppFullName, "policy"),
+					resource.TestCheckResourceAttrSet(resourceAppFullName, "policy.0.name"),
 					resource.TestCheckResourceAttrSet(resourceAppFlowPolicyFullName, "id"),
 					resource.TestCheckResourceAttrSet(resourceAppFlowPolicyFullName, "name"),
 					resource.TestCheckResourceAttrSet(resourceAppFlowPolicyFullName, "status"),

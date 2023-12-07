@@ -1,3 +1,9 @@
+## 0.2.1
+
+BUG FIXES:
+
+* `resource/davinci_application`: add policy block back with deprecation notice ([#236](https://github.com/pingidentity/terraform-provider-davinci/issues/236))
+
 ## 0.2.0
 
 NOTES:
