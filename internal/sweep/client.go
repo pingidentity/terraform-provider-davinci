@@ -2,11 +2,8 @@ package sweep
 
 import (
 	"context"
-	"regexp"
-	"time"
+	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone"
 )
 
@@ -15,38 +12,19 @@ type Client struct {
 	ForceDelete bool
 }
 
-func (c *Config) APIClient(ctx context.Context) (*Client, error) {
+func (c *Config) APIClient(ctx context.Context, version string) (*Client, error) {
+
+	userAgent := fmt.Sprintf("terraform-provider-davinci/%s (sweep)", version)
 
 	config := &pingone.Config{
-		ClientID:      &c.ClientID,
-		ClientSecret:  &c.ClientSecret,
-		EnvironmentID: &c.EnvironmentID,
-		AccessToken:   &c.AccessToken,
-		Region:        c.Region,
+		ClientID:          &c.ClientID,
+		ClientSecret:      &c.ClientSecret,
+		EnvironmentID:     &c.EnvironmentID,
+		Region:            c.Region,
+		UserAgentOverride: &userAgent,
 	}
 
-	var client *pingone.Client
-
-	defaultTimeout := 30
-
-	err := resource.RetryContext(ctx, time.Duration(defaultTimeout)*time.Second, func() *resource.RetryError {
-		var err error
-
-		client, err = config.APIClient(ctx)
-
-		if err != nil {
-
-			if isClientRetryable(ctx, err) {
-				tflog.Warn(ctx, "Client Retrying ... ")
-				return resource.RetryableError(err)
-			}
-
-			return resource.NonRetryableError(err)
-
-		}
-		return nil
-	})
-
+	client, err := config.APIClient(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -58,26 +36,3 @@ func (c *Config) APIClient(ctx context.Context) (*Client, error) {
 
 	return tfClient, nil
 }
-
-var (
-	isClientRetryable = func(ctx context.Context, err error) bool {
-
-		// Gateway errors
-		if m, mErr := regexp.MatchString("502 Bad Gateway", err.Error()); mErr == nil && m {
-			tflog.Warn(ctx, "Gateway error detected on retrieving client token, available for retry")
-			return true
-		}
-
-		if m, mErr := regexp.MatchString("503 Service Unavailable", err.Error()); mErr == nil && m {
-			tflog.Warn(ctx, "Service error detected on retrieving client token, available for retry")
-			return true
-		}
-
-		if m, mErr := regexp.MatchString("504 Gateway Timeout", err.Error()); mErr == nil && m {
-			tflog.Warn(ctx, "Gateway error detected on retrieving client token, available for retry")
-			return true
-		}
-
-		return false
-	}
-)
