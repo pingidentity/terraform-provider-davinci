@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -113,6 +114,12 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 
 		var diags diag.Diagnostics
 
+		userAgent := fmt.Sprintf("terraform-provider-davinci/%s", version)
+
+		if v := strings.TrimSpace(os.Getenv("DAVINCI_TF_APPEND_USER_AGENT")); v != "" {
+			userAgent += fmt.Sprintf(" %s", v)
+		}
+
 		cInput := client.ClientInput{
 			Username:        username,
 			Password:        password,
@@ -120,7 +127,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			PingOneSSOEnvId: environment_id,
 			HostURL:         host_url,
 			AccessToken:     accessToken,
-			UserAgent:       fmt.Sprintf("terraform-provider-davinci/%s/go", version),
+			UserAgent:       userAgent,
 		}
 		c, err := retryableClient(&cInput)
 		if err != nil {

@@ -24,7 +24,7 @@ The following examples demonstrate how to configure the DaVinci provider.
 
 If the PingOne Environment and Permissions are managed in:
   - **separate module** - use [static credentials](#authenticate-using-static-credentials) or [environment variable credentials](#authenticate-using-credentials-as-environment-variables).
-  - **same module as davinci configuration** - use the [full deployment example](#full-deployment-example-with-a-pingone-environment).\
+  - **same module as davinci configuration** - use the [full deployment example](#full-deployment-example-with-a-pingone-environment).
 
 For a more thorough example on how to set up PingOne for DaVinci API authentication see [getting started}(https://terraform.pingidentity.com/getting-started/davinci/)
 
@@ -43,5 +43,11 @@ For a more thorough example on how to set up PingOne for DaVinci API authenticat
 The following assumes that the PingOne worker app has been provided the `DaVinci Admin` role scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
 
 {{ tffile "examples/provider/provider-with-pingone.tf" }}
+
+### Custom User Agent information
+
+The DaVinci provider allows custom information to be appended to the default user agent string (that includes Terraform provider version information) by setting the `DAVINCI_TF_APPEND_USER_AGENT` environment variable.  This can be useful when troubleshooting issues with Ping Identity Support, or adding context to HTTP requests.
+
+{{ codefile "shell" (printf "%s" "examples/provider/provider-custom-user-agent.sh") }}
 
 {{ .SchemaMarkdown | trimspace }}
