@@ -10,9 +10,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
-	"github.com/patrickcping/pingone-go-sdk-v2/authorize"
 	"github.com/patrickcping/pingone-go-sdk-v2/management"
-	"github.com/patrickcping/pingone-go-sdk-v2/mfa"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone/model"
 )
 
@@ -100,42 +98,10 @@ func RetryWrapper(ctx context.Context, timeout time.Duration, f SDKInterfaceFunc
 			var err1 error
 
 			switch t := err.(type) {
-			case *authorize.GenericOpenAPIError:
-
-				if t.Model() != nil {
-					errorModel, err1 = model.RemarshalErrorObj(t.Model().(authorize.P1Error))
-					if err1 != nil {
-						tflog.Error(ctx, fmt.Sprintf("Cannot remarshal type %s", err1))
-						return retry.NonRetryableError(err)
-					}
-				}
-
-				err, err1 = model.RemarshalGenericOpenAPIErrorObj(t)
-				if err1 != nil {
-					tflog.Error(ctx, fmt.Sprintf("Cannot remarshal type %s", err1))
-					return retry.NonRetryableError(err)
-				}
-
 			case *management.GenericOpenAPIError:
 
 				if t.Model() != nil {
 					errorModel, err1 = model.RemarshalErrorObj(t.Model().(management.P1Error))
-					if err1 != nil {
-						tflog.Error(ctx, fmt.Sprintf("Cannot remarshal type %s", err1))
-						return retry.NonRetryableError(err)
-					}
-				}
-
-				err, err1 = model.RemarshalGenericOpenAPIErrorObj(t)
-				if err1 != nil {
-					tflog.Error(ctx, fmt.Sprintf("Cannot remarshal type %s", err1))
-					return retry.NonRetryableError(err)
-				}
-
-			case *mfa.GenericOpenAPIError:
-
-				if t.Model() != nil {
-					errorModel, err1 = model.RemarshalErrorObj(t.Model().(mfa.P1Error))
 					if err1 != nil {
 						tflog.Error(ctx, fmt.Sprintf("Cannot remarshal type %s", err1))
 						return retry.NonRetryableError(err)
