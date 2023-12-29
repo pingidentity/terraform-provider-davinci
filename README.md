@@ -1,13 +1,13 @@
 # Terraform Provider Davinci (Terraform Plugin SDK)
 
-This repository is for the PingOne DaVinci [Terraform](https://www.terraform.io) provider.
+This repository is for the PingOne DaVinci [Terraform](https://www.terraform.io) provider. This provider is maintained internally by the Ping Identity team.
 
  - Resources and Datasources are found in: `internal/service/davinci`
 
 ## Requirements
 
--	[Terraform](https://www.terraform.io/downloads.html) >= 0.13.x
--	[Go](https://golang.org/doc/install) >= 1.19
+-	[Terraform](https://www.terraform.io/downloads.html) 1.1+
+-	[Go](https://golang.org/doc/install) 1.21+
 
 ## Building The Provider
 

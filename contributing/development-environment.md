@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) 1.0+ (to run acceptance tests)
-- [Go](https://golang.org/doc/install) 1.18+ (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) 1.1+ (to run acceptance tests)
+- [Go](https://golang.org/doc/install) 1.21+ (to build the provider plugin)
 
 ## Quick Start
 
@@ -76,7 +76,7 @@ Occasionally, development may include changes to the [Davinci GO Client](https:/
 ```
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.18
+go 1.20
 
 replace github.com/samir-gandhi/davinci-client-go => ../davinci-go/davinci-client-go
 
