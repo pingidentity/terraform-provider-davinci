@@ -34,7 +34,7 @@ func TestAccDataSourceConnection_AllConections(t *testing.T) {
 }
 
 func testAccDataSourceConnection_AllConections_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	baseHcl := acctest.PingoneEnvironmentSsoHcl(resourceName, true)
 	hcl = fmt.Sprintf(`
 %[1]s
 
@@ -72,7 +72,7 @@ func TestAccDataSourceConnection_FilteredConnections(t *testing.T) {
 }
 
 func testAccDataSourceConnection_FilteredConnections_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	baseHcl := acctest.PingoneEnvironmentSsoHcl(resourceName, true)
 	hcl = fmt.Sprintf(`
 %[1]s
 

@@ -33,7 +33,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 		freshEnvTimeout := 60
 		for i := 0; i <= timeout; {
 			// initially, test if auth is valid for the target environment
-			apps, err := c.ReadApplications(&envId, nil)
+			_, err := c.ReadApplications(&envId, nil)
 			if err != nil {
 				httpErr, err := c.ParseDvHttpError(err)
 				if err == nil && httpErr.Status == 401 && strings.Contains(httpErr.Body, "Authorization failed") && i <= timeout {
@@ -59,17 +59,7 @@ func CheckAndRefreshAuth(ctx context.Context, c *dv.APIClient, d *schema.Resourc
 				}
 				return err
 			}
-			// If auth had to be initialized, check if the target environment is ready.
-			if i >= 1 {
-				// For new environments, need to wait for bootstrapping to complete.
-				// The final step is creation of the app.
-				if len(apps) == 0 {
-					tflog.Warn(ctx, "Waiting for bootstrap to complete... ")
-					i = i + 5
-					time.Sleep(5 * time.Second)
-					continue
-				}
-			}
+
 			c.CompanyID = envId
 			break
 		}

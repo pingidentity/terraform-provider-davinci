@@ -57,7 +57,7 @@ func TestAccResourceVariable_CompanyContext(t *testing.T) {
 }
 
 func testAccResourceVariable_CompanyContext_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	baseHcl := acctest.PingoneEnvironmentSsoHcl(resourceName, true)
 	hcl = fmt.Sprintf(`
 %[1]s
 
@@ -68,7 +68,6 @@ resource "davinci_variable" "%[2]s" {
   description    = "desc-%[2]s"
   value          = "val-%[2]s"
   type           = "string"
-  depends_on     = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl
@@ -124,7 +123,7 @@ func TestAccResourceVariable_FlowInstanceContext(t *testing.T) {
 }
 
 func testAccResourceVariable_FlowInstanceContext_Hcl(resourceName string) (hcl string) {
-	baseHcl := acctest.PingoneEnvrionmentSsoHcl(resourceName)
+	baseHcl := acctest.PingoneEnvironmentSsoHcl(resourceName, true)
 	hcl = fmt.Sprintf(`
 %[1]s
 
@@ -137,7 +136,6 @@ resource "davinci_variable" "%[2]s" {
   type           = "string"
   min            = 0
   max            = 1000
-  depends_on     = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl

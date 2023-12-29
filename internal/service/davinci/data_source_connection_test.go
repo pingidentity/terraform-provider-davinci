@@ -118,7 +118,6 @@ func testAccDataSourceConnection_Slim(resourceName string) (hcl string) {
 data "davinci_connection" "%[2]s"{
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 	id = tolist(data.davinci_connections.read_all.connections)[0].id
-	depends_on = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl
@@ -132,7 +131,6 @@ func testAccDataSourceConnection_SlimByName(resourceName string) (hcl string) {
 data "davinci_connection" "%[2]s"{
 	environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
 	name = "Http"
-	depends_on = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl

@@ -1,11 +1,9 @@
 package acctest
 
 import (
-	// "context"
-	// "encoding/json"
 	"fmt"
-	// "io"
-	// "log"
+	"strings"
+
 	"os"
 	"testing"
 
@@ -65,7 +63,7 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: "0.19.0",
+			VersionConstraint: "0.24.0",
 		},
 	}
 
@@ -102,9 +100,6 @@ func PreCheckPingOne(t *testing.T) {
 
 func PreCheckPingOneAndTfVars(t *testing.T) {
 	PreCheckPingOne(t)
-	// if v := os.Getenv("TF_VAR_environment_id"); v == "" {
-	// 	t.Fatal("TF_VAR_environment_id is missing and must be set")
-	// }
 }
 
 // func TestClient(ctx context.Context) (*client.APIClient, error) {
@@ -205,43 +200,41 @@ data "davinci_application" "%[1]s" {
 
 func MainTfHclUpdate() string {
 	return `				
-	resource "davinci_connection" "crowd_strike" {
-		connector_id = "crowdStrikeConnector"
-		name         = "CrowdStrike"
-		properties {
-			name  = "clientId"
-			value = "9876"
-		}
-		properties {
-			name  = "clientSecret"
-			value = "9876"
-		}
-	}
-	data "davinci_connection" "crowd_strike" {
-		id = davinci_connection.crowd_strike.id
-	}
+resource "davinci_connection" "crowd_strike" {
+  connector_id = "crowdStrikeConnector"
+  name         = "CrowdStrike"
+  properties {
+    name  = "clientId"
+    value = "9876"
+  }
+  properties {
+    name  = "clientSecret"
+    value = "9876"
+  }
+}
+data "davinci_connection" "crowd_strike" {
+  id = davinci_connection.crowd_strike.id
+}
 	`
 }
 
 func TfHclPingOneDavinci() string {
 	return `				
 resource "davinci_connection" "crowd_strike" {
-	connector_id = "crowdStrikeConnector"
-	name         = "CrowdStrike"
-	properties {
-		name  = "clientId"
-		value = "9876"
-	}
-	properties {
-		name  = "clientSecret"
-		value = "9876"
-	}
+  connector_id = "crowdStrikeConnector"
+  name         = "CrowdStrike"
+  properties {
+    name  = "clientId"
+    value = "9876"
+  }
+  properties {
+    name  = "clientSecret"
+    value = "9876"
+  }
 }
 data "davinci_connection" "crowd_strike" {
-	id = davinci_connection.crowd_strike.id
-}
-
-	`
+  id = davinci_connection.crowd_strike.id
+}`
 }
 
 // PingoneEnvrionmentSsoHcl returns hcl for a pingone environment and assigns roles used for SSO by davinci
@@ -254,60 +247,51 @@ data "davinci_connection" "crowd_strike" {
 // The `resourceName` input can be a random charset and will be used for the name of
 // each resource and datasource in the returned hcl.
 // p1services is a list of services besides SSO and DaVinci to enable on the environment
-func PingoneEnvrionmentServicesSsoHcl(resourceName string, p1Services []string) (hcl string) {
+func PingoneEnvironmentServicesSsoHcl(resourceName string, p1Services []string, minimalDaVinci bool) (hcl string) {
 	adminEnvID := os.Getenv("PINGONE_ENVIRONMENT_ID")
 	licenseID := os.Getenv("PINGONE_LICENSE_ID")
 	username := os.Getenv("PINGONE_USERNAME")
-	// loop through p1services for adding to hcl
-	p1ServicesHcl := ""
-	for _, s := range p1Services {
-		p1ServicesHcl = p1ServicesHcl + fmt.Sprintf(`
-	service {
-		type = "%s"
+
+	servicesString := ""
+	if len(p1Services) > 0 {
+		servicesString = fmt.Sprintf("\"%s\"", strings.Join(p1Services, "\", \""))
 	}
-	`, s)
+
+	daVinciTags := "null"
+	if minimalDaVinci {
+		daVinciTags = "[\"DAVINCI_MINIMAL\"]"
 	}
 
 	return fmt.Sprintf(`
+variable "services_%[1]s" {
+  type    = list(string)
+  default = [%[5]s]
+}
+
 resource "pingone_environment" "%[1]s" {
-	name = "tf-testacc-dv-dynamic-%[1]s"
-	type = "SANDBOX"
-	license_id = "%[2]s"
-  default_population {
-	}
-	service {
-		type = "SSO"
-	}
-	service {
-		type = "DaVinci"
-	}
-	%[5]s
+  name       = "tf-testacc-dv-dynamic-%[1]s"
+  license_id = "%[2]s"
+
+  service {
+    type = "SSO"
+  }
+  service {
+    type = "DaVinci"
+	tags = %[6]s
+  }
+
+  dynamic "service" {
+    for_each = toset(var.services_%[1]s)
+
+    content {
+      type = service.key
+    }
+  }
+}
+`, resourceName, licenseID, username, adminEnvID, servicesString, daVinciTags)
 }
 
-data "pingone_role" "%[1]s" {
-	name = "DaVinci Admin"
-}
-
-data "pingone_user" "%[1]s"{
-	username             = "%[3]s"
-	environment_id       = "%[4]s"
-}
-
-resource "pingone_role_assignment_user" "%[1]s" {
-	environment_id       = "%[4]s"
-	user_id              = data.pingone_user.%[1]s.id
-	role_id              = data.pingone_role.%[1]s.id
-	scope_environment_id = resource.pingone_environment.%[1]s.id
-}
-
-data "davinci_connections" "read_all" {
-	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-}
-
-`, resourceName, licenseID, username, adminEnvID, p1ServicesHcl)
-}
-
-// PingoneEnvrionmentSsoHcl returns hcl for a pingone environment and assigns roles used for SSO by davinci
+// PingoneEnvironmentSsoHcl returns hcl for a pingone environment and assigns roles used for SSO by davinci
 // The following environment vars must be set:
 // - PINGONE_ENVIRONMENT_ID
 // - PINGONE_LICENSE_ID
@@ -316,50 +300,12 @@ data "davinci_connections" "read_all" {
 //
 // The `resourceName` input can be a random charset and will be used for the name of
 // each resource and datasource in the returned hcl.
-func PingoneEnvrionmentSsoHcl(resourceName string) (hcl string) {
-	adminEnvID := os.Getenv("PINGONE_ENVIRONMENT_ID")
-	licenseID := os.Getenv("PINGONE_LICENSE_ID")
-	username := os.Getenv("PINGONE_USERNAME")
-	return fmt.Sprintf(`
-resource "pingone_environment" "%[1]s" {
-	name = "tf-testacc-dv-dynamic-%[1]s"
-	type = "SANDBOX"
-	license_id = "%[2]s"
-  default_population {
-  }
-	service {
-		type = "SSO"
-	}
-	service {
-		type = "DaVinci"
-	}
-}
-
-data "pingone_role" "%[1]s" {
-	name = "DaVinci Admin"
-}
-
-data "pingone_user" "%[1]s"{
-	username             = "%[3]s"
-	environment_id       = "%[4]s"
-}
-
-resource "pingone_role_assignment_user" "%[1]s" {
-	environment_id       = "%[4]s"
-	user_id              = data.pingone_user.%[1]s.id
-	role_id              = data.pingone_role.%[1]s.id
-	scope_environment_id = resource.pingone_environment.%[1]s.id
-}
-
-data "davinci_connections" "read_all" {
-	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-}
-
-`, resourceName, licenseID, username, adminEnvID)
+func PingoneEnvironmentSsoHcl(resourceName string, minimalDaVinci bool) (hcl string) {
+	return PingoneEnvironmentServicesSsoHcl(resourceName, nil, minimalDaVinci)
 }
 
 func BaselineHcl(resourceName string) string {
-	pingoneHcl := PingoneEnvrionmentSsoHcl(resourceName)
+	pingoneHcl := PingoneEnvironmentSsoHcl(resourceName, true)
 	bsConnectionsHcl := BsConnectionsHcl(resourceName)
 	return fmt.Sprintf(`
 %[1]s

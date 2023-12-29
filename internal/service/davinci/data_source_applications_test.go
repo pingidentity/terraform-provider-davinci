@@ -41,7 +41,6 @@ func testAccDataSourceApplications_AllApplications_Hcl(resourceName string) (hcl
 
 data "davinci_applications" "%[2]s" {
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
 }
 `, baseHcl, resourceName)
 	return hcl

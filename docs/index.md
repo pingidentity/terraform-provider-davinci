@@ -6,9 +6,7 @@ description: |-
 
 # DaVinci Provider
 
-The "davinci" provider allows operators to manage PingOne DaVinci infrastructure
-as code. This provider can be used along with the [PingOne provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs)
-to stand up fully orchestrated PingOne IAM Experiences.
+The "davinci" provider allows operators to manage PingOne DaVinci infrastructure as code. This provider can be used along with the [PingOne provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs) to stand up fully orchestrated PingOne IAM Experiences.
 
 ## Getting Started
 
@@ -36,7 +34,8 @@ For a more thorough example on how to set up PingOne for DaVinci API authenticat
 terraform {
   required_providers {
     davinci = {
-      source = "pingidentity/davinci"
+      source  = "pingidentity/davinci"
+      version = "~> 0.3"
     }
   }
 }
@@ -55,7 +54,8 @@ provider "davinci" {
 terraform {
   required_providers {
     davinci = {
-      source = "pingidentity/davinci"
+      source  = "pingidentity/davinci"
+      version = "~> 0.3"
     }
   }
 }
@@ -77,16 +77,18 @@ $ terraform plan
 
 ### Full deployment example with a PingOne environment
 
-The following assumes that the PingOne worker app has been provided the `Environment Admin` and `Identity Data Admin` roles scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
+The following assumes that the PingOne worker app has been provided the `DaVinci Admin` role scoped to the PingOne environment containing the Identity, and the `Organization Admin` role scoped to the organization.
 
 ```terraform
 terraform {
   required_providers {
     davinci = {
-      source = "pingidentity/davinci"
+      source  = "pingidentity/davinci"
+      version = "~> 0.3"
     }
     pingone = {
-      source = "pingidentity/pingone"
+      source  = "pingidentity/pingone"
+      version = "~> 0.24"
     }
   }
 }
@@ -109,112 +111,30 @@ provider "pingone" {
 
 // Create a new environment using the PingOne provider.  The organization must have the DaVinci feature flag enabled.
 resource "pingone_environment" "dv_example" {
-  name        = "DaVinci Example"
-  description = "A new trial environment for DaVinci configuration-as-code."
-  type        = "SANDBOX"
+  name        = "DaVinci Terraform Example"
+  description = "A new trial environment for DaVinci Terraform configuration-as-code."
   license_id  = var.license_id
-
-  default_population {
-    name        = "My Population"
-    description = "My new population for users"
-  }
 
   service {
     type = "SSO"
   }
+
   service {
     type = "MFA"
   }
+
   service {
     type = "DaVinci"
+    tags = ["DAVINCI_MINIMAL"]
   }
-
-}
-
-// Get the roles from the organization
-data "pingone_role" "davinci_admin" {
-  name = "DaVinci Admin"
-}
-
-// Get the ID of the DV admin user
-data "pingone_user" "dv_admin_user" {
-  environment_id = var.pingone_admin_environment_id
-  username       = var.pingone_dv_admin_username
-}
-
-// Assign the "DaVinci" role to the DV admin user
-resource "pingone_role_assignment_user" "davinci_admin_sso" {
-  environment_id       = var.pingone_admin_environment_id
-  user_id              = data.pingone_user.dv_admin_user.id
-  role_id              = data.pingone_role.davinci_admin.id
-  scope_environment_id = pingone_environment.dv_example.id
-}
-
-// This simple read action is used to as a precursor to all other data/resources
-// Every other data/resource should have a `depends_on` pointing to this read action
-data "davinci_connections" "read_all" {
-  // NOTICE: This read action has a dependency on the role assignment, not environment.
-  // Assigning this correctly ensures the role is not destroyed before DaVinci resources during `terraform destroy`.
-  depends_on = [
-    pingone_role_assignment_user.davinci_admin_sso,
-  ]
-  environment_id = pingone_environment.dv_example.id
 }
 
 resource "davinci_flow" "mainflow" {
-  // This depends_on relieves the client from multiple initial authentication attempts
-  depends_on = [
-    data.davinci_connections.read_all
-  ]
-
-  // pingone_sign_on_and_password_reset.json represents an export of the sample flow in a new environment
-  flow_json = file("pingone_sign_on_and_password_reset.json")
-  deploy    = true
-
   environment_id = pingone_environment.dv_example.id
 
-  // Dependent connections are defined in conection_link blocks. 
-  // It is typically required to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connection ids
-
-  // This sample uses bootstrapped connections and references the hardcoded default values of those connections.
-  connection_link {
-    id   = "6d8f6f706c45fd459a86b3f092602544"
-    name = "Error Customize"
-  }
-
-  connection_link {
-    id   = "de650ca45593b82c49064ead10b9fe17"
-    name = "Functions"
-  }
-
-  connection_link {
-    id   = "867ed4363b2bc21c860085ad2baa817d"
-    name = "Http"
-  }
-
-  connection_link {
-    id   = "94141bf2f1b9b59a5f5365ff135e02bb"
-    name = "PingOne"
-  }
-
-  connection_link {
-    id   = "3b55f2ca6689560c64cb5bed5afbe40f"
-    name = "Token Management"
-  }
-
-  connection_link {
-    id   = "4cb5e3465d718a84087ec9b6a6251e52"
-    name = "User Policy"
-  }
-
-  connection_link {
-    id   = "06922a684039827499bdbdd97f49827b"
-    name = "Variables"
-  }
+  # ...
 }
 ```
-
-> This above example was updated to reflect new DaVinci roles added on August 5th, 2023. The `DaVinci Admin` role is now required for user SSO and interaction with DaVinci APIs.
 
 <!-- schema generated by tfplugindocs -->
 ## Schema

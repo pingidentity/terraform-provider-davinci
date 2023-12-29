@@ -165,7 +165,6 @@ resource "davinci_connection" "%[2]s-flow" {
   name           = "Flow"
   connector_id   = "flowConnector"
   environment_id = resource.pingone_role_assignment_user.%[2]s.scope_environment_id
-  depends_on     = [data.davinci_connections.read_all]
 }
 
 

@@ -138,7 +138,7 @@ func (tc TestConnection) GetResourceName() (resourceName string) {
 }
 
 func TestAccResourceConnectionHcl(resourceName string, p1Services []string, connections []TestConnection) (hcl string) {
-	baseHcl := PingoneEnvrionmentServicesSsoHcl(resourceName, p1Services)
+	baseHcl := PingoneEnvironmentServicesSsoHcl(resourceName, p1Services, true)
 	connectionsHcl := ""
 	for _, connection := range connections {
 		connectionsHcl += connection.MakeConnectionHcl()
@@ -159,10 +159,9 @@ func (tcp TestConnection) MakeConnectionHcl() (hcl string) {
 	}
 	hcl = fmt.Sprintf(`
 resource "davinci_connection" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-	depends_on     = [data.davinci_connections.read_all]
-	connector_id   = "%[3]s"
-	name           = "%[2]s"
+  environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+  connector_id   = "%[3]s"
+  name           = "%[2]s"
 	%[4]s
 }
 `, tcp.ResourcePrefix, tcp.GetResourceName(), tcp.ConnectorId, propertiesHcl)
