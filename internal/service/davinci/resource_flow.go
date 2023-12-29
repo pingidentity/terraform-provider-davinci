@@ -777,7 +777,8 @@ func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
 						// sfProp.SubFlowVersionID.Value = sfValues["subflow_version"].(string)
 					}
 				}
-				err = mapstructure.Decode(sfProp, &v.Data.Properties)
+				properties := v.Data.Properties // G601 (CWE-118)
+				err = mapstructure.Decode(sfProp, &properties)
 				if err != nil {
 					return nil, err
 				}
