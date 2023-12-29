@@ -1,8 +1,7 @@
 ---
 name: Bug report
 about: If something isn't working as expected or documented
-title: "[BUG]"
-labels: ''
+labels: type/bug,status/needs-triage
 assignees: ''
 
 ---
