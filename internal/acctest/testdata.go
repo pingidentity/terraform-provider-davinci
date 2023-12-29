@@ -3,11 +3,9 @@ package acctest
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"runtime"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 func FlowsForTests(resourceName string) TestFlowsHcl {
@@ -216,7 +214,7 @@ func readFlowJsonFile(path string, resourceName string) string {
 	if !ok {
 		panic("could not get current file")
 	}
-	flowByte, err := ioutil.ReadFile(filepath.Join(filepath.Dir(currentPath), path))
+	flowByte, err := os.ReadFile(filepath.Join(filepath.Dir(currentPath), path))
 	if err != nil {
 		panic(err)
 	}
@@ -242,13 +240,6 @@ func readFlowJsonFile(path string, resourceName string) string {
 	return string(flowJson)
 }
 
-func FlowsForTestsMap(resourceName string) map[string]string {
-	var flowsMap map[string]string
-	testFlows := FlowsForTests(resourceName)
-	mapstructure.Decode(testFlows, &flowsMap)
-	return flowsMap
-}
-
 // Data read of bootstrapped connections to be used in davinci_flow connections blocks
 func BsConnectionsHcl(resourceName string) string {
 	var tc string
@@ -264,33 +255,6 @@ data "davinci_connection" "%[1]s-%[2]s" {
 		tc = tc + hcl
 	}
 	return tc
-}
-
-func KitchenSink(resourceName string) string {
-	var hcl string
-	baseHcl := PingoneEnvrionmentSsoHcl(resourceName)
-	flows := addAllTestFlows(resourceName, baseHcl)
-
-	return hcl + baseHcl + flows
-}
-
-func addAllTestFlows(resourceName string, hcl string) string {
-	testFlows := FlowsForTestsMap(resourceName)
-	var flowHcl string
-	for i, flow := range testFlows {
-		flowHcl += fmt.Sprintf(`
-resource "davinci_flow" "%[2]s-%[1]s" {
-	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-	depends_on = [data.davinci_connections.read_all]
-	flow_json = %[3]s
-	deploy = true
-}
-
-`, resourceName, i, flow)
-	}
-	hcl = hcl + flowHcl
-	return hcl
-
 }
 
 func makeSubflowsHcl(resourceName string, subflows []string) (subflowsHcl string) {
