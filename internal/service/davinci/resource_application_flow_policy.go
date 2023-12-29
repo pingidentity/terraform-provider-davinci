@@ -117,6 +117,7 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 	var resAppPolicy *dv.Policy
 	for _, v := range res.Policies {
 		if v.Name == appPolicy.Name {
+			v := v // G601 (CWE-118)
 			resAppPolicy = &v
 			break
 		}

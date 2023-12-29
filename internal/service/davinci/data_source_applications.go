@@ -396,6 +396,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, met
 
 	apps := make([]interface{}, len(resp))
 	for i, thisApp := range resp {
+		thisApp := thisApp // G601 (CWE-118)
 		app, err := flattenApp(&thisApp)
 		if err != nil {
 			return diag.FromErr(err)

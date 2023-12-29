@@ -1,41 +1,31 @@
-# Terraform Provider Davinci (Terraform Plugin SDK)
+# PingOne DaVinci Terraform Provider
 
-This repository is for the PingOne DaVinci [Terraform](https://www.terraform.io) provider.
+The PingOne DaVinci Terraform provider is a plugin for [Terraform](https://www.terraform.io/) that allows for the full lifecycle management of DaVinci configuration in a PingOne tenant. This provider is maintained internally by the Ping Identity team.
 
- - Resources and Datasources are found in: `internal/service/davinci`
+* [Terraform at Ping Identity documentation](https://terraform.pingidentity.com)
+* [Discuss the DaVinci Terraform Provider](https://support.pingidentity.com/s/topic/0TO1W000000IF30WAG/pingdevops)
+* [Ping Identity Home](https://www.pingidentity.com/en.html)
 
 ## Requirements
+* Terraform 1.1+
+* Go 1.21+ (for local development builds)
 
--	[Terraform](https://www.terraform.io/downloads.html) >= 0.13.x
--	[Go](https://golang.org/doc/install) >= 1.19
+## Quickstarts
 
-## Building The Provider
+* [Getting started - using the provider](https://registry.terraform.io/providers/pingidentity/davinci/latest/docs)
 
-1. Clone the repository
-1. Enter the repository directory
-1. Build the provider using the Go `install` command: 
-```sh
-$ go install
-```
+## Documentation
 
-## Adding Dependencies
+Extended documentation can be found at:
+* [Terraform Registry](https://registry.terraform.io/providers/pingidentity/davinci/latest/docs)
+* [Introduction to PingOne DaVinci](https://docs.pingidentity.com/r/en-us/davinci/davinci_introduction)
+* [Ping Identity Developer Portal](https://developer.pingidentity.com/en.html)
 
-This provider uses [Go modules](https://github.com/golang/go/wiki/Modules).
-Please see the Go documentation for the most up to date information about using Go modules.
+## Contributing
 
-To add a new dependency `github.com/author/dependency` to your Terraform provider:
+We appreciate your help!  We welcome contributions in the form of creating issues, but not pull requests at this time as the provider functionality is due to be migrated into the [PingOne Terraform provider](https://github.com/pingidentity/terraform-provider-pingone) in the near future.
 
-```
-go get github.com/author/dependency
-go mod tidy
-```
-
-Then commit the changes to `go.mod` and `go.sum`.
-
-## Using the provider
-
-Find readable documentation on registry.terraform.io
-
-## Developing the Provider
-
-See [development-environment](./contributing/development-environment.md)
+Know that:
+1. If you have any questions, please ask!  We'll help as best we can
+2. We may not be able to respond quickly, our development cycles are on a priority basis.
+3. We base our priorities on customer need and the number of votes on issues/PRs by the number of 👍 reactions.  If there is an existing issue or PR for something you'd like, please vote!

@@ -2,8 +2,8 @@
 
 ## Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) 1.0+ (to run acceptance tests)
-- [Go](https://golang.org/doc/install) 1.18+ (to build the provider plugin)
+- [Terraform](https://www.terraform.io/downloads.html) 1.1+ (to run acceptance tests)
+- [Go](https://golang.org/doc/install) 1.21+ (to build and test the provider plugin)
 
 ## Quick Start
 
@@ -25,10 +25,16 @@ Enter the provider directory and run `make tools`. This will install the needed 
 $ make tools
 ```
 
-To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
+To compile the provider, run `make build`.
 
 ```sh
 $ make build
+```
+
+To install the provider for local use, run `make install`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
+
+```sh
+$ make install
 ...
 $ $GOPATH/bin/terraform-provider-davinci
 ...
@@ -36,21 +42,17 @@ $ $GOPATH/bin/terraform-provider-davinci
 
 ## Testing the Provider
 
-In order to test the provider locally with no connection to PingOne, you can run `make test`.
+In order to test the provider locally with no connection to DaVinci, you can run `make test`.
 
 ```sh
 $ make test
 ```
 
-In order to run the full suite of Acceptance tests against a live PingOne tenant, run `make testacc`.
+In order to run the full suite of Acceptance tests against a live PingOne DaVinci tenant, run `make testacc`.
 
-*Note:* Acceptance tests create real configuration in PingOne.  Please ensure you have a trial PingOne account or licensed subscription to proceed with these tests.
+*Note:* Acceptance tests create real configuration in PingOne DaVinci.  Please ensure you have a trial PingOne account with the DaVinci service enabled or licensed subscription to proceed with these tests.
 
 ```sh
-export PINGONE_USERNAME="<fill>"
-export PINGONE_PASSWORD="<fill>"
-export PINGONE_REGION="<fill>"
-export PINGONE_ENVIRONMENT_ID="<fill>"
 $ make testacc
 ```
 
@@ -71,17 +73,17 @@ provider_installation {
 
 ## Local SDK Changes
 
-Occasionally, development may include changes to the [Davinci GO Client](https://github.com/samir-gandhi/davinci-client-go). If you'd like to develop this provider locally using a local, modified version of the SDK, this can be achieved by adding a `replace` directive in the `go.mod` file.  For example, the start of the `go.mod` file may look like the following example, where the local cloned SDK is in the `../davinci-go` relative path, and we substitute the `management` module:
+Occasionally, development may include changes to the [DaVinci GO SDK](https://github.com/samir-gandhi/davinci-client-go). If you'd like to develop this provider locally using a local, modified version of the SDK, this can be achieved by adding a `replace` directive in the `go.mod` file.  For example, the start of the `go.mod` file may look like the following example, where the local cloned SDK is in the `../davinci-go` relative path, and we substitute the `management` module:
 
 ```
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.18
+go 1.21
 
-replace github.com/samir-gandhi/davinci-client-go => ../davinci-go/davinci-client-go
+replace github.com/samir-gandhi/davinci-client-go => ../davinci-client-go
 
 require (
-	github.com/samir-gandhi/davinci-client-go v0.0.41
+	github.com/samir-gandhi/davinci-client-go v0.1.0
   
   ...
 )

@@ -694,6 +694,23 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### ConnectID
+
+**Connector Display Name**: ConnectID
+
+**Connector ID** - schema `connectorId`: connectIdConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
+
+
+
+
 ### Cookie
 
 **Connector Display Name**: Cookie

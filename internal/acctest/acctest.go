@@ -204,7 +204,7 @@ data "davinci_application" "%[1]s" {
 }
 
 func MainTfHclUpdate() string {
-	return fmt.Sprintf(`				
+	return `				
 	resource "davinci_connection" "crowd_strike" {
 		connector_id = "crowdStrikeConnector"
 		name         = "CrowdStrike"
@@ -220,11 +220,11 @@ func MainTfHclUpdate() string {
 	data "davinci_connection" "crowd_strike" {
 		id = davinci_connection.crowd_strike.id
 	}
-	`)
+	`
 }
 
 func TfHclPingOneDavinci() string {
-	return fmt.Sprintf(`				
+	return `				
 resource "davinci_connection" "crowd_strike" {
 	connector_id = "crowdStrikeConnector"
 	name         = "CrowdStrike"
@@ -241,7 +241,7 @@ data "davinci_connection" "crowd_strike" {
 	id = davinci_connection.crowd_strike.id
 }
 
-	`)
+	`
 }
 
 // PingoneEnvrionmentSsoHcl returns hcl for a pingone environment and assigns roles used for SSO by davinci

@@ -1,6 +1,6 @@
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.20
+go 1.21
 
 require (
 	github.com/bflad/tfproviderlint v0.29.0
@@ -17,7 +17,6 @@ require (
 	github.com/samir-gandhi/davinci-client-go v0.0.55
 	github.com/samir-gandhi/dvgenerate v0.0.7
 	github.com/terraform-linters/tflint v0.48.0
-	golang.org/x/exp v0.0.0-20231127185646-65229373498e
 )
 
 require (
@@ -237,6 +236,7 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
+	golang.org/x/exp v0.0.0-20231127185646-65229373498e // indirect
 	golang.org/x/exp/typeparams v0.0.0-20230307190834-24139beb5833 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/oauth2 v0.13.0 // indirect
