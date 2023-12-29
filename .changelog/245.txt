@@ -1,0 +1,15 @@
+```release-note:note
+`data-source/davinci_applications`: Address code scanning advisories.
+```
+
+```release-note:note
+`resource/davinci_application_flow_policy`: Address code scanning advisories.
+```
+
+```release-note:note
+Upgrade GO to `v1.21`.
+```
+
+```release-note:note
+`resource/davinci_connection`: Updated connector reference documentation.
+```

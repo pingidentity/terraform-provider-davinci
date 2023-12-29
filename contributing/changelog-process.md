@@ -46,7 +46,7 @@ davinci_flow
 ```
 
 ```release-note:new-guide
-How to configure a Davinci Flow
+How to configure a DaVinci Flow
 ```
 ``````
 
@@ -98,7 +98,7 @@ A new documentation guide has the `release-note:new-guide` header and the descri
 
 ``````markdown
 ```release-note:new-guide
-How to configure a Davinci Flow
+How to configure a DaVinci Flow
 ```
 ``````
 

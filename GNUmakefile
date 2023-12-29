@@ -4,32 +4,42 @@ DAVINCI_DIR=./internal/service/davinci
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
-VERSION=0.2.1
+VERSION=0.2.2
 OS_ARCH=linux_amd64
 
-default: build
+default: install
 
 tools:
 	@echo "==> Installing tools..."
 	go generate -tags tools tools/tools.go
 
-build: 
+fmtcheck:
+	@echo "==> Formatting Terraform documentation examples with terraform fmt..."
+	@terraform fmt -recursive ./examples/
+
+build:
 	@echo "==> Building..."
+	go mod tidy
+	go mod vendor
+	go build -v .
+
+install: build
+	@echo "==> Installing..."
 	go install -ldflags="-X main.version=$(VERSION)"
 
-generate: terrafmtcheck
+generate: build fmtcheck
 	@echo "==> Generating code..."
 	go generate ./...
 	
-test:
+test: build
 	@echo "==> Running tests..."
 	go test $(TEST) $(TESTARGS) -timeout=5m
 	
-testacc:
+testacc: build
 	@echo "==> Running acceptance tests..."
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel 15
 
-sweep:
+sweep: build
 	@echo "==> Running sweep..."
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
 	go test $(SWEEP_DIR) -v -sweep=all $(SWEEPARGS) -timeout 10m
@@ -59,10 +69,9 @@ depscheck:
 
 lint: golangci-lint providerlint importlint tflint terrafmtcheck
 
-# TODO: Update to cover all files
 golangci-lint:
-	@echo "==> Checking davinci service source code with golangci-lint..."
-	@golangci-lint run $(DAVINCI_DIR)
+	@echo "==> Checking source code with golangci-lint..."
+	@golangci-lint run ./...
 
 importlint:
 	@echo "==> Checking source code with importlint..."
@@ -99,6 +108,8 @@ terrafmtcheck:
 		exit 1; \
 	fi
 
-devcheck: build vet tools generate terrafmt docscategorycheck lint test sweep testacc
+fmt: terrafmt fmtcheck
 
-.PHONY: tools build generate docscategorycheck test testacc sweep vet fmtcheck depscheck lint golangci-lint importlint providerlint tflint terrafmt terrafmtcheck testacc devcheck
+devcheck: build vet tools fmt generate docscategorycheck lint test sweep testacc
+
+.PHONY: tools build generate docscategorycheck test testacc sweep vet fmtcheck depscheck lint golangci-lint importlint providerlint tflint terrafmt terrafmtcheck testacc devcheck fmt

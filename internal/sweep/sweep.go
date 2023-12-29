@@ -29,8 +29,16 @@ func SweepClient(ctx context.Context) (*Client, error) {
 		ForceDelete:   true,
 	}
 
-	return config.APIClient(ctx)
+	return config.APIClient(ctx, getProviderTestingVersion())
 
+}
+
+func getProviderTestingVersion() string {
+	returnVar := "dev"
+	if v := os.Getenv("PINGONE_TESTING_PROVIDER_VERSION"); v != "" {
+		returnVar = v
+	}
+	return returnVar
 }
 
 func FetchTaggedEnvironments(ctx context.Context, apiClient *management.APIClient) ([]management.Environment, error) {
@@ -97,7 +105,7 @@ func CreateTestEnvironment(ctx context.Context, apiClient *management.APIClient,
 		fmt.Sprintf("%sdynamic-%s", EnvironmentNamePrefix, index),
 		region,
 		management.ENUMENVIRONMENTTYPE_SANDBOX,
-	) // Environment |  (optional)
+	)
 
 	productBOMItems := make([]management.BillOfMaterialsProductsInner, 0)
 
