@@ -9,3 +9,7 @@
 ```release-note:note
 Upgrade GO to `v1.21`.
 ```
+
+```release-note:note
+`resource/davinci_connection`: Updated connector reference documentation.
+```
