@@ -851,8 +851,8 @@ github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.0 h1:OwtWDa+HIblEH1sHSq
 github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.0/go.mod h1:Ho9Glb1e+1zK+SLf/KE1FotRx8DWHSaypbBDZX5BuyE=
 github.com/patrickcping/pingone-go-sdk-v2/credentials v0.6.0 h1:phh9PwrL+Jos4wSxwKfDa/doJ/b4mCmd6l22y+w9JBA=
 github.com/patrickcping/pingone-go-sdk-v2/credentials v0.6.0/go.mod h1:AKeJsDcOJnBW98kpTxUuJfQlNWuFYVMH1LsOP69JC2Q=
-github.com/patrickcping/pingone-go-sdk-v2/management v0.32.0 h1:DMUPF8tOQjdUUAYpA7c6a7De6yF/8Py8dQx0MxqmKHo=
-github.com/patrickcping/pingone-go-sdk-v2/management v0.32.0/go.mod h1:dlT0695e+6GGU3F6ZFJgyZWEY1iR0rKSDoM5gEMTDEU=
+github.com/patrickcping/pingone-go-sdk-v2/management v0.34.0 h1:PmpEXoupuQzD+B1Atme7g02rW7hBZZRj7H20W2Cx5Xc=
+github.com/patrickcping/pingone-go-sdk-v2/management v0.34.0/go.mod h1:qxtrY9SpJyaFdXnmJsbyOopQbQIRbYjuxI5FECAuP4U=
 github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.1 h1:HCKxw8EZ/4qDJ0BC+UjehxQlpOzQ9K6VI2Ybe6qh+24=
 github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.1/go.mod h1:Sv6315t+EBp2OvMNNRPWRpcLYoQDDhG46nuTH0FlUCE=
 github.com/patrickcping/pingone-go-sdk-v2/risk v0.12.0 h1:Nskyotmf3S3tAWLl7uUsbW31oeeMTKh683BpE3v9/qA=
@@ -1136,8 +1136,8 @@ golang.org/x/exp v0.0.0-20191227195350-da58074b4299/go.mod h1:2RIsYlXP63K8oxa1u0
 golang.org/x/exp v0.0.0-20200119233911-0405dc783f0a/go.mod h1:2RIsYlXP63K8oxa1u096TMicItID8zy7Y6sNkU49FU4=
 golang.org/x/exp v0.0.0-20200207192155-f17229e696bd/go.mod h1:J/WKrq2StrnmMY6+EHIKF9dgMWnmCNThgcyBT1FY9mM=
 golang.org/x/exp v0.0.0-20200224162631-6cc2880d07d6/go.mod h1:3jZMyOhIsHpP37uCMkUooju7aAi5cS1Q23tOzKc+0MU=
-golang.org/x/exp v0.0.0-20231127185646-65229373498e h1:Gvh4YaCaXNs6dKTlfgismwWZKyjVZXwOPfIyUaqU3No=
-golang.org/x/exp v0.0.0-20231127185646-65229373498e/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=
+golang.org/x/exp v0.0.0-20231226003508-02704c960a9b h1:kLiC65FbiHWFAOu+lxwNPujcsl8VYyTYYEZnsOO1WK4=
+golang.org/x/exp v0.0.0-20231226003508-02704c960a9b/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=
 golang.org/x/exp/typeparams v0.0.0-20220428152302-39d4317da171/go.mod h1:AbB0pIl9nAr9wVwH+Z2ZpaocVmF5I4GyWCDIsVjR0bk=
 golang.org/x/exp/typeparams v0.0.0-20230203172020-98cc5a0785f9/go.mod h1:AbB0pIl9nAr9wVwH+Z2ZpaocVmF5I4GyWCDIsVjR0bk=
 golang.org/x/exp/typeparams v0.0.0-20230307190834-24139beb5833 h1:jWGQJV4niP+CCmFW9ekjA9Zx8vYORzOUH2/Nl5WPuLQ=
