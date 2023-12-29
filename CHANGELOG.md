@@ -1,5 +1,17 @@
 ## 0.2.2
 
+NOTES:
+
+* Upgrade GO to `v1.21`. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `data-source/davinci_applications`: Address code scanning advisories. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `resource/davinci_application_flow_policy`: Address code scanning advisories. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `resource/davinci_connection`: Updated connector reference documentation. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `resource/davinci_flow`: Address code scanning advisories. ([#247](https://github.com/pingidentity/terraform-provider-davinci/issues/247))
+* bump `github.com/go-git/go-git/v5` v5.9.0 => v5.11.0 ([#242](https://github.com/pingidentity/terraform-provider-davinci/issues/242))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` v2.30.0 => v2.31.0 ([#246](https://github.com/pingidentity/terraform-provider-davinci/issues/246))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` v0.32.0 => v0.34.0 ([#246](https://github.com/pingidentity/terraform-provider-davinci/issues/246))
+* bump `golang.org/x/crypto` v0.16.0 => v0.17.0 ([#241](https://github.com/pingidentity/terraform-provider-davinci/issues/241))
+
 ## 0.2.1
 
 BUG FIXES:
