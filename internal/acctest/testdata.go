@@ -214,7 +214,7 @@ func readFlowJsonFile(path string, resourceName string) string {
 	if !ok {
 		panic("could not get current file")
 	}
-	flowByte, err := os.ReadFile(filepath.Join(filepath.Dir(currentPath), path))
+	flowByte, err := os.ReadFile(filepath.Join(filepath.Dir(currentPath), filepath.Clean(path)))
 	if err != nil {
 		panic(err)
 	}
