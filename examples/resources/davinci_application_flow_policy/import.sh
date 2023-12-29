@@ -1,1 +1,1 @@
-$ terraform import davinci_application.example <environment_id>/<davinci_application_id>/<davinci_application_flow_policy_id>
+$ terraform import davinci_application_flow_policy.example <environment_id>/<davinci_application_id>/<davinci_application_flow_policy_id>
