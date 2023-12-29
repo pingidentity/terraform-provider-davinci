@@ -1,0 +1,3 @@
+```release-note:enhancement
+Added ability to append custom text information to the default User Agent.
+```
