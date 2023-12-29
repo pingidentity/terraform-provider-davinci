@@ -48,4 +48,10 @@ The following assumes that the PingOne worker app has been provided the `Environ
 
 > This above example was updated to reflect new DaVinci roles added on August 5th, 2023. The `DaVinci Admin` role is now required for user SSO and interaction with DaVinci APIs.
 
+### Custom User Agent information
+
+The DaVinci provider allows custom information to be appended to the default user agent string (that includes Terraform provider version information) by setting the `DAVINCI_TF_APPEND_USER_AGENT` environment variable.  This can be useful when troubleshooting issues with Ping Identity Support, or adding context to HTTP requests.
+
+{{ codefile "shell" (printf "%s" "examples/provider/provider-custom-user-agent.sh") }}
+
 {{ .SchemaMarkdown | trimspace }}
