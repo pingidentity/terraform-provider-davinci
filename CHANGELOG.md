@@ -5,6 +5,7 @@ NOTES:
 * Upgrade GO to `v1.21`. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
 * `data-source/davinci_applications`: Address code scanning advisories. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
 * `resource/davinci_application_flow_policy`: Address code scanning advisories. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `resource/davinci_application_flow_policy`: Fix import documentation example. ([#248](https://github.com/pingidentity/terraform-provider-davinci/issues/248))
 * `resource/davinci_connection`: Updated connector reference documentation. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
 * `resource/davinci_flow`: Address code scanning advisories. ([#247](https://github.com/pingidentity/terraform-provider-davinci/issues/247))
 * bump `github.com/go-git/go-git/v5` v5.9.0 => v5.11.0 ([#242](https://github.com/pingidentity/terraform-provider-davinci/issues/242))
