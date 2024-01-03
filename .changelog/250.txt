@@ -1,0 +1,8 @@
+```release-note:bug
+`resource/davinci_connection`: Fixed inconsistent plan when specifying a property data type.
+```
+
+```release-note:bug
+`resource/davinci_connection`: Fixed inability to update the connection name and ID once created (resource requires replacement).
+```
+

@@ -1,7 +1,9 @@
 package acctest
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"os"
@@ -11,6 +13,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/patrickcping/pingone-go-sdk-v2/management"
+	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/pingone"
 	"github.com/pingidentity/terraform-provider-davinci/internal/provider"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -47,7 +51,7 @@ func init() {
 	// ProviderConfigure() can overwrite configuration during concurrent testing.
 	ProviderFactories = map[string]func() (*schema.Provider, error){
 		"davinci": func() (*schema.Provider, error) {
-			testVersion := os.Getenv("PINGONE_TESTING_PROVIDER_VERSION")
+			testVersion := getProviderTestingVersion()
 			if testVersion == "" {
 				testVersion = "dev"
 			}
@@ -63,14 +67,22 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: "0.24.0",
+			VersionConstraint: "0.25.0",
 		},
 	}
 
 }
 
+func getProviderTestingVersion() string {
+	returnVar := "dev"
+	if v := os.Getenv("PINGONE_TESTING_PROVIDER_VERSION"); v != "" {
+		returnVar = v
+	}
+	return returnVar
+}
+
 // check required variabes are met for tests
-func PreCheck(t *testing.T) {
+func PreCheckDaVinciClient(t *testing.T) {
 	username := os.Getenv("PINGONE_USERNAME")
 	password := os.Getenv("PINGONE_PASSWORD")
 	accessToken := os.Getenv("PINGONE_DAVINCI_ACCESS_TOKEN")
@@ -85,21 +97,30 @@ func PreCheck(t *testing.T) {
 	}
 }
 
-func PreCheckPingOne(t *testing.T) {
-	PreCheck(t)
-	if v := os.Getenv("PINGONE_LICENSE_ID"); v == "" {
-		t.Fatal("PINGONE_LICENSE_ID is missing and must be set")
-	}
+func PreCheckPingOneClient(t *testing.T) {
 	if v := os.Getenv("PINGONE_CLIENT_ID"); v == "" {
 		t.Fatal("PINGONE_CLIENT_ID is missing and must be set")
 	}
 	if v := os.Getenv("PINGONE_CLIENT_SECRET"); v == "" {
 		t.Fatal("PINGONE_CLIENT_SECRET is missing and must be set")
 	}
+	if v := os.Getenv("PINGONE_REGION"); v == "" {
+		t.Fatal("PINGONE_REGION is missing and must be set")
+	}
+	if v := os.Getenv("PINGONE_ENVIRONMENT_ID"); v == "" {
+		t.Fatal("PINGONE_ENVIRONMENT_ID is missing and must be set")
+	}
 }
 
-func PreCheckPingOneAndTfVars(t *testing.T) {
-	PreCheckPingOne(t)
+func PreCheckClient(t *testing.T) {
+	PreCheckDaVinciClient(t)
+	PreCheckPingOneClient(t)
+}
+
+func PreCheckNewEnvironment(t *testing.T) {
+	if v := os.Getenv("PINGONE_LICENSE_ID"); v == "" {
+		t.Fatal("PINGONE_LICENSE_ID is missing and must be set")
+	}
 }
 
 // func TestClient(ctx context.Context) (*client.APIClient, error) {
@@ -247,7 +268,7 @@ data "davinci_connection" "crowd_strike" {
 // The `resourceName` input can be a random charset and will be used for the name of
 // each resource and datasource in the returned hcl.
 // p1services is a list of services besides SSO and DaVinci to enable on the environment
-func PingoneEnvironmentServicesSsoHcl(resourceName string, p1Services []string, minimalDaVinci bool) (hcl string) {
+func PingoneEnvironmentServicesSsoHcl(resourceName string, p1Services []string, withBootstrapConfig bool) (hcl string) {
 	adminEnvID := os.Getenv("PINGONE_ENVIRONMENT_ID")
 	licenseID := os.Getenv("PINGONE_LICENSE_ID")
 	username := os.Getenv("PINGONE_USERNAME")
@@ -258,7 +279,7 @@ func PingoneEnvironmentServicesSsoHcl(resourceName string, p1Services []string, 
 	}
 
 	daVinciTags := "null"
-	if minimalDaVinci {
+	if !withBootstrapConfig {
 		daVinciTags = "[\"DAVINCI_MINIMAL\"]"
 	}
 
@@ -300,8 +321,8 @@ resource "pingone_environment" "%[1]s" {
 //
 // The `resourceName` input can be a random charset and will be used for the name of
 // each resource and datasource in the returned hcl.
-func PingoneEnvironmentSsoHcl(resourceName string, minimalDaVinci bool) (hcl string) {
-	return PingoneEnvironmentServicesSsoHcl(resourceName, nil, minimalDaVinci)
+func PingoneEnvironmentSsoHcl(resourceName string, withBootstrapConfig bool) (hcl string) {
+	return PingoneEnvironmentServicesSsoHcl(resourceName, nil, withBootstrapConfig)
 }
 
 func BaselineHcl(resourceName string) string {
@@ -354,61 +375,44 @@ func TestClient() (*dv.APIClient, error) {
 	return c, nil
 }
 
-func CheckEnvDestroy(s *terraform.State) error {
-	c, err := TestClient()
-	if err != nil {
-		return err
+func PingOneTestClient(ctx context.Context) (*pingone.Client, error) {
+
+	config := &pingone.Config{
+		ClientID:      os.Getenv("PINGONE_CLIENT_ID"),
+		ClientSecret:  os.Getenv("PINGONE_CLIENT_SECRET"),
+		EnvironmentID: os.Getenv("PINGONE_ENVIRONMENT_ID"),
+		Region:        os.Getenv("PINGONE_REGION"),
+		ForceDelete:   false,
 	}
 
-	for _, resource := range s.RootModule().Resources {
-		if resource.Type != "davinci_application" {
-			continue
-		}
-		envId := resource.Primary.Attributes["environment_id"]
-		appId := resource.Primary.Attributes["id"]
-		res, err := c.ReadApplication(&envId, appId)
-		if res != nil {
-			fmt.Println(res)
-		}
-		if err == nil {
-			return fmt.Errorf("application still exists")
-		}
-	}
+	return config.APIClient(ctx, getProviderTestingVersion())
 
-	return nil
 }
 
-func CheckResourceDestroy(resourceTypes []string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		c, err := TestClient()
-		if err != nil {
-			return err
+func CheckParentEnvironmentDestroy(ctx context.Context, apiClient *management.APIClient, environmentID string) (bool, error) {
+	_, r, err := apiClient.EnvironmentsApi.ReadOneEnvironment(ctx, environmentID).Execute()
+
+	return CheckForResourceDestroy(r, err)
+}
+
+func CheckForResourceDestroy(r *http.Response, err error) (bool, error) {
+	defaultDestroyHttpCode := 404
+	return CheckForResourceDestroyCustomHTTPCode(r, err, defaultDestroyHttpCode)
+}
+
+func CheckForResourceDestroyCustomHTTPCode(r *http.Response, err error, customHttpCode int) (bool, error) {
+	if err != nil {
+
+		if r == nil {
+			return false, fmt.Errorf("Response object does not exist and no error detected")
 		}
-		for _, resource := range s.RootModule().Resources {
-			for _, rType := range resourceTypes {
-				if resource.Type != rType {
-					continue
-				}
-				envId := resource.Primary.Attributes["environment_id"]
-				rId := resource.Primary.Attributes["id"]
-				var err error
-				switch rType {
-				case "davinci_application":
-					_, err = c.ReadApplication(&envId, rId)
-				case "davinci_connection":
-					_, err = c.ReadConnection(&envId, rId)
-				case "davinci_flow":
-					_, err = c.ReadFlow(&envId, rId)
-				case "davinci_variable":
-					_, err = c.ReadVariable(&envId, rId)
-				default:
-					return fmt.Errorf("unknown resource type: %s", rType)
-				}
-				if err == nil {
-					return fmt.Errorf("%s still exists", rType)
-				}
-			}
+
+		if r.StatusCode == customHttpCode {
+			return true, nil
 		}
-		return nil
+
+		return false, err
 	}
+
+	return false, nil
 }

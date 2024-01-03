@@ -26,7 +26,8 @@ func ResourceConnection() *schema.Resource {
 			"connector_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value.",
+				Description: "The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value. This field is immutable and will trigger a replace plan if changed.",
+				ForceNew:    true,
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
@@ -44,7 +45,8 @@ func ResourceConnection() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments.",
+				Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments. This field is immutable and will trigger a replace plan if changed.",
+				ForceNew:    true,
 			},
 			"created_date": {
 				Type:        schema.TypeInt,
@@ -218,7 +220,8 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 		return diag.FromErr(err)
 	}
 	connId := d.Id()
-	if d.HasChanges("property", "name") {
+	// API only allows property changes
+	if d.HasChanges("property") {
 		connection := dv.Connection{
 			ConnectorID:  d.Get("connector_id").(string),
 			Name:         d.Get("name").(string),
@@ -239,6 +242,7 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 			err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
 			return diag.FromErr(err)
 		}
+
 		// Set properties based on incoming config after successful create
 		// not using reponse itself because it may contain obfuscated values
 		configProps := makePropsListMap(d)
@@ -335,10 +339,12 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 			case "string", "":
 				if _, ok := pMap["value"].(string); ok {
 					thisProp["value"] = pMap["value"].(string)
+					thisProp["type"] = "string"
 				}
 			case "boolean":
 				if pValue, ok := pMap["value"].(bool); ok {
 					thisProp["value"] = strconv.FormatBool(pValue)
+					thisProp["type"] = "boolean"
 				}
 			default:
 				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string or boolean is currently supported", thisProp["name"])
@@ -348,10 +354,12 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 			case string:
 				if _, ok := pMap["value"].(string); ok {
 					thisProp["value"] = pMap["value"].(string)
+					thisProp["type"] = "string"
 				}
 			case bool:
 				if pValue, ok := pMap["value"].(bool); ok {
 					thisProp["value"] = strconv.FormatBool(pValue)
+					thisProp["type"] = "boolean"
 				}
 			default:
 				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string or boolean is currently supported", thisProp["name"])

@@ -42,9 +42,9 @@ output "crowd_strike_id" {
 
 ### Required
 
-- `connector_id` (String) The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value.
+- `connector_id` (String) The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value. This field is immutable and will trigger a replace plan if changed.
 - `environment_id` (String) The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
-- `name` (String) Name of the connection displayed in UI. Also used for mapping id on flows between environments.
+- `name` (String) Name of the connection displayed in UI. Also used for mapping id on flows between environments. This field is immutable and will trigger a replace plan if changed.
 
 ### Optional
 
