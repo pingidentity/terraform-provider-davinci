@@ -42,18 +42,18 @@ output "crowd_strike_id" {
 
 ### Required
 
-- `connector_id` (String) DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')
-- `environment_id` (String) PingOne environment id
+- `connector_id` (String) The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value.
+- `environment_id` (String) The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
 - `name` (String) Name of the connection displayed in UI. Also used for mapping id on flows between environments.
 
 ### Optional
 
-- `property` (Block Set) Connection properties. These are specific to the connector type. Get connection properties from connection API read response. (see [below for nested schema](#nestedblock--property))
+- `property` (Block Set) Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate property name/value pairs for the connection. (see [below for nested schema](#nestedblock--property))
 
 ### Read-Only
 
-- `created_date` (Number) Resource creation date as epoch.
-- `customer_id` (String) Internal DaVinci id. Should not be set by user.
+- `created_date` (Number) Resource creation date as epoch timestamp.
+- `customer_id` (String) An ID that represents the customer tenant.
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--property"></a>
@@ -61,12 +61,12 @@ output "crowd_strike_id" {
 
 Required:
 
-- `name` (String) Name of the property.
-- `value` (String, Sensitive) Value of the property as string. If the property is an array, use a comma separated string.
+- `name` (String) The name of the property.
+- `value` (String, Sensitive) The value of the property as string. If the property is an array, use a comma separated string.
 
 Optional:
 
-- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array
+- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: `string` or `boolean`. Use `string` for array types. Defaults to `string`.
 
 ## Import
 

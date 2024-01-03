@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -25,17 +26,20 @@ func ResourceConnection() *schema.Resource {
 			"connector_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')",
+				Description: "The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value.",
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "PingOne environment id",
+				Description: "The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+
+				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
+				ForceNew:         true,
 			},
 			"customer_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Internal DaVinci id. Should not be set by user.",
+				Description: "An ID that represents the customer tenant.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -45,32 +49,32 @@ func ResourceConnection() *schema.Resource {
 			"created_date": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Resource creation date as epoch.",
+				Description: "Resource creation date as epoch timestamp.",
 			},
 			"property": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
-				// Not yet implemented
-				// ConflictsWith: []string{"custom_auth"},
+				Description: "Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate property name/value pairs for the connection.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Name of the property.",
+							Description: "The name of the property.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Sensitive:   true,
-							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
+							Description: "The value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
+							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: `string` or `boolean`. Use `string` for array types.",
 							ValidateFunc: validation.StringInSlice([]string{"string", "boolean"}, false),
+
+							Default: "string",
 						},
 					},
 				},
