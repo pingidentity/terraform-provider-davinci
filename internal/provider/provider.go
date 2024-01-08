@@ -93,23 +93,23 @@ func New(version string) func() *schema.Provider {
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		var username, password, region, accessToken, environment_id, host_url string
-		if _, ok := d.GetOk("username"); ok {
-			username = d.Get("username").(string)
+		if v, ok := d.GetOk("username"); ok {
+			username = v.(string)
 		}
-		if _, ok := d.GetOk("password"); ok {
-			password = d.Get("password").(string)
+		if v, ok := d.GetOk("password"); ok {
+			password = v.(string)
 		}
-		if _, ok := d.GetOk("region"); ok {
-			region = d.Get("region").(string)
+		if v, ok := d.GetOk("region"); ok {
+			region = v.(string)
 		}
-		if _, ok := d.GetOk("access_token"); ok {
-			accessToken = d.Get("access_token").(string)
+		if v, ok := d.GetOk("access_token"); ok {
+			accessToken = v.(string)
 		}
-		if _, ok := d.GetOk("environment_id"); ok {
-			environment_id = d.Get("environment_id").(string)
+		if v, ok := d.GetOk("environment_id"); ok {
+			environment_id = v.(string)
 		}
-		if _, ok := d.GetOk("host_url"); ok {
-			host_url = d.Get("host_url").(string)
+		if v, ok := d.GetOk("host_url"); ok {
+			host_url = v.(string)
 		}
 
 		var diags diag.Diagnostics
@@ -131,18 +131,9 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 		}
 		c, err := retryableClient(&cInput)
 		if err != nil {
-			// DELETE ME
-			tflog.Info(ctx, "Error initializing client")
 			return nil, diag.FromErr(err)
 		}
-		if environment_id != "" {
-			c.CompanyID = environment_id
-		}
-		//In case non-sso is desired in the future
-		// c, err := client.NewClient(nil)
-		// if err != nil {
-		// 	return nil, diag.FromErr(err)
-		// }
+
 		return c, diags
 	}
 }

@@ -67,7 +67,7 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: "0.25.0",
+			VersionConstraint: ">= 0.25, < 1.0",
 		},
 	}
 
@@ -358,20 +358,21 @@ func TestClient() (*dv.APIClient, error) {
 		return nil, fmt.Errorf("missing environment variables: %s", e)
 	}
 
+	userAgent := fmt.Sprintf("terraform-provider-davinci/%s", getProviderTestingVersion())
+
 	cInput := dv.ClientInput{
 		Username:        username,
 		Password:        password,
 		PingOneRegion:   region,
 		PingOneSSOEnvId: environment_id,
 		HostURL:         host_url,
+		UserAgent:       userAgent,
 	}
 	c, err := dv.NewClient(&cInput)
 	if err != nil {
 		return nil, err
 	}
-	if environment_id != "" {
-		c.CompanyID = environment_id
-	}
+
 	return c, nil
 }
 

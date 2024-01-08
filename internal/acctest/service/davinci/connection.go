@@ -3,13 +3,14 @@ package davinci
 import (
 	"context"
 	"fmt"
-	"strings"
+	"net/http"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
-	"github.com/samir-gandhi/davinci-client-go/davinci"
+	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
+	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 func Connection_CheckDestroy() resource.TestCheckFunc {
@@ -44,15 +45,21 @@ func Connection_CheckDestroy() resource.TestCheckFunc {
 
 			companyId := rs.Primary.Attributes["environment_id"]
 
-			_, err = c.ReadConnection(&companyId, rs.Primary.ID)
+			_, err = sdk.DoRetryable(
+				ctx,
+				c,
+				companyId,
+				func() (interface{}, *http.Response, error) {
+					return c.ReadConnectionWithResponse(&companyId, rs.Primary.ID)
+				},
+			)
 
 			if err != nil {
-				// currently a 400 (rather than 404) is returned if the connection is not found.
-				// The comparison is made to match the entire error message to avoid false positives
-				if strings.Contains(err.Error(), "status: 400, body: {\"cause\":null,\"logLevel\":\"error\",\"serviceName\":null,\"message\":\"Error retrieving connectors\",\"errorMessage\":\"Error retrieving connectors\",\"success\":false,\"httpResponseCode\":400,\"code\":7005}") {
-					shouldContinue = true
+				if dvError, ok := err.(dv.ErrorResponse); ok {
+					if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_CONNECTION_NOT_FOUND {
+						shouldContinue = true
+					}
 				}
-
 			}
 
 			if shouldContinue {
@@ -81,12 +88,26 @@ func Connection_GetIDs(resourceName string, environmentID, connectionID *string)
 	}
 }
 
-func Connection_RemovalDrift_PreConfig(c *davinci.APIClient, t *testing.T, environmentID, connectionID string) {
+func Connection_RemovalDrift_PreConfig(t *testing.T, environmentID, connectionID string) {
+	c, err := acctest.TestClient()
+	if err != nil {
+		t.Fatalf("Failed to get API client: %v", err)
+	}
+
 	if environmentID == "" || connectionID == "" {
 		t.Fatalf("One of environment ID or connection ID cannot be determined. Environment ID: %s, Connection ID: %s", environmentID, connectionID)
 	}
 
-	_, err := c.DeleteConnection(&environmentID, connectionID)
+	var ctx = context.Background()
+
+	_, err = sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteConnectionWithResponse(&environmentID, connectionID)
+		},
+	)
 	if err != nil {
 		t.Fatalf("Failed to delete connection: %v", err)
 	}

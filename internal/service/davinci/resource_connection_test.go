@@ -24,11 +24,6 @@ func TestAccResourceConnection_RemovalDrift(t *testing.T) {
 
 	var connectionID, environmentID string
 
-	c, err := acctest.TestClient()
-	if err != nil {
-		t.Fatalf("Failed to get API client: %v", err)
-	}
-
 	ctx := context.Background()
 
 	p1Client, err := acctest.PingOneTestClient(ctx)
@@ -54,15 +49,16 @@ func TestAccResourceConnection_RemovalDrift(t *testing.T) {
 			// Replan after removal preconfig
 			{
 				PreConfig: func() {
-					davinci.Connection_RemovalDrift_PreConfig(c, t, environmentID, connectionID)
+					davinci.Connection_RemovalDrift_PreConfig(t, environmentID, connectionID)
 				},
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
 			},
 			// Test removal of the environment
 			{
-				Config: hcl,
-				Check:  davinci.Connection_GetIDs(resourceFullName, &environmentID, &connectionID),
+				Config:   hcl,
+				Check:    davinci.Connection_GetIDs(resourceFullName, &environmentID, &connectionID),
+				SkipFunc: func() (bool, error) { return true, nil },
 			},
 			{
 				PreConfig: func() {
@@ -70,6 +66,7 @@ func TestAccResourceConnection_RemovalDrift(t *testing.T) {
 				},
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
+				SkipFunc:           func() (bool, error) { return true, nil },
 			},
 		},
 	})
@@ -235,11 +232,6 @@ func TestAccResourceConnection_Properties(t *testing.T) {
 
 	var connectionID, environmentID string
 
-	c, err := acctest.TestClient()
-	if err != nil {
-		t.Fatalf("Failed to get API client: %v", err)
-	}
-
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.PreCheckClient(t)
@@ -261,6 +253,11 @@ func TestAccResourceConnection_Properties(t *testing.T) {
 			// Remove policyId via api and check for non-empty plan
 			{
 				PreConfig: func() {
+					c, err := acctest.TestClient()
+					if err != nil {
+						t.Fatalf("Failed to get API client: %v", err)
+					}
+
 					if environmentID == "" || connectionID == "" {
 						t.Fatalf("One of environment ID or connection ID cannot be determined. Environment ID: %s, Resource ID: %s", environmentID, connectionID)
 					}

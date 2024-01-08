@@ -3,9 +3,9 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -92,11 +92,6 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	connection := dv.Connection{
 		ConnectorID: d.Get("connector_id").(string),
 		Name:        d.Get("name").(string),
@@ -104,9 +99,16 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 
 	connection.Properties = *makeProperties(d)
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateInitializedConnection(&c.CompanyID, &connection)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.CreateInitializedConnectionWithResponse(&environmentID, &connection)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -147,23 +149,26 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	connId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadConnection(&c.CompanyID, connId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.ReadConnectionWithResponse(&environmentID, connId)
+		},
+	)
 	if err != nil {
-		// currently a 400 (rather than 404) is returned if the connection is not found.
-		// The comparison is made to match the entire error message to avoid false positives
-		if strings.Contains(err.Error(), "status: 400, body: {\"cause\":null,\"logLevel\":\"error\",\"serviceName\":null,\"message\":\"Error retrieving connectors\",\"errorMessage\":\"Error retrieving connectors\",\"success\":false,\"httpResponseCode\":400,\"code\":7005}") {
-			d.SetId("")
-			return diags
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_CONNECTION_NOT_FOUND {
+				d.SetId("")
+				return diags
+			}
 		}
+
 		return diag.FromErr(err)
 	}
 
@@ -215,10 +220,6 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*dv.APIClient)
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 	connId := d.Id()
 	// API only allows property changes
 	if d.HasChanges("property") {
@@ -230,9 +231,16 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 
 		connection.Properties = *makeProperties(d)
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateConnection(&c.CompanyID, &connection)
-		}, nil)
+		environmentID := d.Get("environment_id").(string)
+
+		sdkRes, err := sdk.DoRetryable(
+			ctx,
+			c,
+			environmentID,
+			func() (interface{}, *http.Response, error) {
+				return c.UpdateConnectionWithResponse(&environmentID, &connection)
+			},
+		)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -258,27 +266,27 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta 
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	connId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteConnection(&c.CompanyID, connId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	_, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteConnectionWithResponse(&environmentID, connId)
+		},
+	)
 	if err != nil {
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			// Can indicate environment already deleted/missing
+			if dvError.HttpResponseCode == http.StatusNotFound && dvError.Code == dv.DV_ERROR_CODE_CONNECTION_NOT_FOUND {
+				return diags
+			}
+		}
 		return diag.FromErr(err)
 	}
-
-	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message == "" {
-		err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
-		return diag.FromErr(err)
-	}
-
-	d.SetId("")
 
 	return diags
 }
