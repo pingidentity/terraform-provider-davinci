@@ -3,6 +3,7 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -24,54 +26,57 @@ func ResourceVariable() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of the variable",
+				Description: "The name of the variable.  This field is immutable and will trigger a replace plan if changed.",
 				ForceNew:    true,
 			},
 			"context": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"company", "flowInstance", "user"}, false),
-				Description:  "Must be one of: company, flowInstance, user",
+				Description:  "The variable context.  Must be one of: `company`, `flowInstance`, `user`.   This field is immutable and will trigger a replace plan if changed.",
 				ForceNew:     true,
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "PingOne environment id",
+				Description: "The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+
+				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
+				ForceNew:         true,
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of variable",
+				Description: "A string that specifies the description of variable",
 			},
 			"type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice([]string{"string", "number", "boolean", "object"}, false),
-				Description:  "Must be one of: string, number, boolean, object",
+				Description:  "The variable's data type.  Must be one of `string`, `number`, `boolean`, `object`.",
 			},
 			"mutable": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow.",
+				Description: "A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.",
 			},
 			"value": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Variable value as string, type will be inferred",
+				Description: "Variable value as string, type will be inferred from the value specified in the `type` parameter.",
 				Sensitive:   true,
 			},
 			"min": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "",
+				Description: "The minimum value of the variable, if the `type` parameter is set as `number`.",
 				Default:     0,
 			},
 			"max": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "",
+				Description: "The maximum value of the variable, if the `type` parameter is set as `number`.",
 				Default:     2000,
 			},
 		},
@@ -85,15 +90,18 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, meta in
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 	variablePayload := getVariableAttributes(d)
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateVariable(&c.CompanyID, &variablePayload)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.CreateVariableWithResponse(&environmentID, &variablePayload)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -123,16 +131,18 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	variableName := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadVariable(&c.CompanyID, variableName)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.ReadVariableWithResponse(&environmentID, variableName)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -187,30 +197,30 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*dv.APIClient)
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	environmentID := d.Get("environment_id").(string)
+
 	if d.HasChanges("name", "context") {
 		return diag.Errorf(`Updates to name and context are not allowed`)
 	}
 
-	if d.HasChanges("value", "description", "mutable", "type") {
-		variablePayload := getVariableAttributes(d)
+	variablePayload := getVariableAttributes(d)
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateVariable(&c.CompanyID, &variablePayload)
-		}, nil)
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.UpdateVariableWithResponse(&environmentID, &variablePayload)
+		},
+	)
 
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		resp, ok := sdkRes.(map[string]dv.Variable)
-		if !ok || len(resp) != 1 {
-			err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %s", variablePayload.Name)
-			return diag.FromErr(err)
-		}
-
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	resp, ok := sdkRes.(map[string]dv.Variable)
+	if !ok || len(resp) != 1 {
+		err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %s", variablePayload.Name)
+		return diag.FromErr(err)
 	}
 
 	return resourceVariableRead(ctx, d, meta)
@@ -220,15 +230,18 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta in
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 	variableName := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteVariable(&c.CompanyID, variableName)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteVariableWithResponse(&environmentID, variableName)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)

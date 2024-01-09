@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"regexp"
 
 	// "strings"
 	"time"
@@ -70,8 +71,7 @@ func DoRetryableWithCustomTimeout(ctx context.Context, c *dv.APIClient, environm
 					"type": t,
 				})
 
-				if t.Error() == "Connection created with wrong companyId" {
-					c.CompanyID = "reset"
+				if res1, matchErr := regexp.MatchString(`^http: ContentLength=[0-9]+ with Body length [0-9]+$`, t.Error()); matchErr == nil && res1 {
 					return retry.RetryableError(err)
 				}
 			}

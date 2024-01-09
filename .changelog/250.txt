@@ -6,3 +6,10 @@
 `resource/davinci_connection`: Fixed inability to update the connection name and ID once created (resource requires replacement).
 ```
 
+```release-note:bug
+Fixed intermittent `Unable to retrieve access_token within 60s for environment` error.
+```
+
+```release-note:bug
+`resource/davinci_connection`: Fixed `Error retrieving connectors / 7005` error in certain conditions.
+```
