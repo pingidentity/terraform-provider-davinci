@@ -557,16 +557,16 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if new != "" {
 			newFlowJson, err := mapSubFlows(d, new)
 			if err != nil {
-				//lintignore:R009
-				panic(err)
+				log.Printf("Error mapping new subflows.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+				return false
 			}
 			new = *newFlowJson
 		}
 		if old != "" {
 			oldFlowJson, err := mapSubFlows(d, old)
 			if err != nil {
-				//lintignore:R009
-				panic(err)
+				log.Printf("Error mapping old subflows.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+				return false
 			}
 			old = *oldFlowJson
 		}
@@ -577,16 +577,16 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		if new != "" {
 			newFlowJson, err := mapFlowConnections(d, new)
 			if err != nil {
-				//lintignore:R009
-				panic(err)
+				log.Printf("Error mapping new flow connections.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+				return false
 			}
 			new = *newFlowJson
 		}
 		if old != "" {
 			oldFlowJson, err := mapFlowConnections(d, old)
 			if err != nil {
-				//lintignore:R009
-				panic(err)
+				log.Printf("Error mapping old flow connections.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+				return false
 			}
 			old = *oldFlowJson
 		}
@@ -600,8 +600,8 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		currentF := dv.Flow{}
 		err = json.Unmarshal([]byte(old), &currentFi)
 		if err != nil {
-			//lintignore:R009
-			panic(err)
+			log.Printf("Error unmarshalling old flow import.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+			return false
 		}
 		// convert to type Flow if needed
 		if currentFi.FlowInfo.Name != "" {
@@ -609,8 +609,8 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		err = json.Unmarshal([]byte(old), &currentF)
 		if err != nil {
-			//lintignore:R009
-			panic(err)
+			log.Printf("Error unmarshalling current flow.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+			return false
 		}
 		if currentF.GraphData.Elements.Nodes != nil {
 			current = currentF
@@ -621,8 +621,8 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		desiredF := dv.Flow{}
 		err = json.Unmarshal([]byte(new), &desiredFi)
 		if err != nil {
-			//lintignore:R009
-			panic(err)
+			log.Printf("Error unmarshalling desired flow import.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+			return false
 		}
 		// convert to type Flow if needed
 		if desiredFi.FlowInfo.Name != "" {
@@ -630,8 +630,8 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		err = json.Unmarshal([]byte(new), &desiredF)
 		if err != nil {
-			//lintignore:R009
-			panic(err)
+			log.Printf("Error unmarshalling desired flow.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+			return false
 		}
 		if desiredF.GraphData.Elements.Nodes != nil {
 			desired = desiredF
@@ -725,13 +725,13 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 		}
 		currentNodes, err := json.Marshal(current.GraphData.Elements.Nodes)
 		if err != nil {
-			//lintignore:R009
-			panic(err)
+			log.Printf("Error marshalling current nodes.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+			return false
 		}
 		desiredNodes, err := json.Marshal(desired.GraphData.Elements.Nodes)
 		if err != nil {
-			//lintignore:R009
-			panic(err)
+			log.Printf("Error marshalling desired nodes.  This is a bug in the provider, please raise with the provider maintainers.  Error: %v", err)
+			return false
 		}
 
 		// Nodes Diff - This is mainly to account for json null vs go nil
