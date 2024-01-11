@@ -3,14 +3,16 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
 	"regexp"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -24,28 +26,31 @@ func ResourceApplication() *schema.Resource {
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "PingOne environment id",
+				Description: "The ID of the PingOne environment to create the DaVinci application. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+
+				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
+				ForceNew:         true,
 			},
 			"customer_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Internal DaVinci id. Should not be set by user.",
+				Description: "An ID that represents the customer tenant.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Application name",
+				Description: "The application name",
 			},
 			"created_date": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Creation date as epoch.",
+				Description: "Resource creation date as epoch.",
 			},
 			"api_key_enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Enabled by default in UI",
+				Description: "A boolean that specifies whether the API key is enabled for the application.",
 			},
 			"api_keys": {
 				Type:        schema.TypeMap,
@@ -67,7 +72,7 @@ func ResourceApplication() *schema.Resource {
 			"user_pools": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Appplication User Pools. Not implemented",
+				Description: "Appplication User Pools.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -75,102 +80,122 @@ func ResourceApplication() *schema.Resource {
 			"user_portal": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "This is deprecated in the UI and will be removed in a future release.",
+				Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.  A single object that describes user portal settings.",
+				Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"up_title": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"add_auth_method_title": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"remove_auth_method_title": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"cred_page_title": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"cred_page_subtitle": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"name_auth_method_title": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"name_confirm_btn_text": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"update_message": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"update_body_message": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"remove_message": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"remove_body_message": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"remove_confirm_btn_text": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"remove_cancel_btn_text": {
-							Type:     schema.TypeString,
-							Optional: true, Description: "This is deprecated in the UI and will be removed in a future release.",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"flow_timeout_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"show_user_info": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"show_mfa_button": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"show_variables": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 						"show_logout_button": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     false,
-							Description: "This is deprecated in the UI and will be removed in a future release.",
+							Description: "**Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.",
+							Deprecated:  "This is now deprecated in the service and will be removed from the provider in the next major release.",
 						},
 					},
 				},
@@ -178,7 +203,8 @@ func ResourceApplication() *schema.Resource {
 			"oauth": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "OIDC configuration",
+				Computed:    true,
+				Description: "A single list item specifying OIDC/OAuth 2.0 configuration",
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -186,12 +212,12 @@ func ResourceApplication() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
-							Description: "Set to true if using oauth block",
+							Description: "A boolean that specifies whether OIDC/OAuth 2.0 settings are enabled for the application.",
 						},
 						"values": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "OIDC configuration",
+							Description: "A single list item specifying OIDC/OAuth 2.0 configuration values.",
 							MaxItems:    1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -263,11 +289,11 @@ func ResourceApplication() *schema.Resource {
 				},
 			},
 			"saml": {
-				Type: schema.TypeList,
-				//TODO - Remove the need for this
-				// requiring this to accound for returned nil values.
-				Required:    true,
-				Description: "SAML configuration. This is deprecated in the UI and will be removed in a future release.",
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "**Deprecation notice**: SAML configuration is now deprecated in the service and will be removed in the next major release.  A single list item that specifies SAML configuration.",
+				Deprecated:  "SAML configuration is now deprecated in the service and will be removed in the next major release.",
 				MaxItems:    1,
 				// DefaultFunc: func() (interface{}, error) {
 				// 	smap := []map[string]interface{}{{
@@ -290,28 +316,28 @@ func ResourceApplication() *schema.Resource {
 									"enabled": {
 										Type:        schema.TypeBool,
 										Optional:    true,
-										Description: "Set to true if using saml block. This is deprecated in the UI and will be removed in a future release.",
+										Description: "Set to true if using saml block. This is now deprecated in the service and will be removed from the provider in the next major release.",
 									},
 									"redirect_uri": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Sensitive:   true,
-										Description: "The redirect URI for the SAML application. This is deprecated in the UI and will be removed in a future release.",
+										Description: "The redirect URI for the SAML application. This is now deprecated in the service and will be removed from the provider in the next major release.",
 									},
 									"enforce_signed_request": {
 										Type:        schema.TypeBool,
 										Optional:    true,
-										Description: "Field: 'Enforce Receiving Signed Requests' in UI. This is deprecated in the UI and will be removed in a future release.",
+										Description: "Field: 'Enforce Receiving Signed Requests' in UI. This is now deprecated in the service and will be removed from the provider in the next major release.",
 									},
 									"audience": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Field: 'Audience' in UI. This is deprecated in the UI and will be removed in a future release.",
+										Description: "Field: 'Audience' in UI. This is now deprecated in the service and will be removed from the provider in the next major release.",
 									},
 									"sp_cert": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "This is deprecated in the UI and will be removed in a future release.",
+										Description: "This is now deprecated in the service and will be removed from the provider in the next major release.",
 									},
 								},
 							},
@@ -323,8 +349,8 @@ func ResourceApplication() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				Description: "**Deprecation Notice** Flow Policy Configuration",
-				Deprecated:  "The `policy` block should be removed from application and managed as a `davinci_application_flow_policy` resource. Review the migration guidance here: https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-application-flow-policy. This attribute will be removed on v1.0.0",
+				Description: "**Deprecation Notice** The `policy` block should be removed from application and managed as a `davinci_application_flow_policy` resource. Review the migration guidance here: https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-application-flow-policy. Flow Policy Configuration",
+				Deprecated:  "The `policy` block should be removed from application and managed as a `davinci_application_flow_policy` resource. Review the migration guidance here: https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-application-flow-policy. This attribute will be removed in the next major release.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"policy_flow": {
@@ -395,19 +421,21 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	app, err := expandApp(d)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateInitializedApplication(&c.CompanyID, app)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.CreateInitializedApplicationWithResponse(&environmentID, app)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -430,23 +458,26 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appId := d.Id()
 
-	skdRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadApplication(&c.CompanyID, appId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	skdRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.ReadApplicationWithResponse(&environmentID, appId)
+		},
+	)
 	if err != nil {
-		ep, err := c.ParseDvHttpError(err)
-		if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
-			d.SetId("")
-			// diags = append(diags, diag.Diagnostic{})
-			return diags
-		}
+		log.Printf("Error!! %v", err)
+		// ep, err := c.ParseDvHttpError(err)
+		// if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
+		// 	d.SetId("")
+		// 	// diags = append(diags, diag.Diagnostic{})
+		// 	return diags
+		// }
 		return diag.FromErr(err)
 	}
 
@@ -461,9 +492,6 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 		return diag.FromErr(err)
 	}
 	for i, v := range flatResp {
-		// if i == "policy" {
-		// 	continue
-		// }
 		if err = d.Set(i, v); err != nil {
 			return diag.FromErr(err)
 		}
@@ -475,12 +503,9 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*dv.APIClient)
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appId := d.Id()
+
+	environmentID := d.Get("environment_id").(string)
 
 	// Policy CRUD
 	// if policies have changes, compare changes. if new policy is added, create it. if old policy is removed, delete it. if policy is updated, update it.
@@ -496,9 +521,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 			oldPol, exists := oldPolicyMap[newPol.PolicyID]
 			if exists {
 				//update policy
-				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.UpdateFlowPolicy(&c.CompanyID, appId, newPol)
-				}, nil)
+				sdkRes, err := sdk.DoRetryable(
+					ctx,
+					c,
+					environmentID,
+					func() (interface{}, *http.Response, error) {
+						return c.UpdateFlowPolicyWithResponse(&environmentID, appId, newPol)
+					},
+				)
 				if err != nil {
 					return diag.FromErr(err)
 				}
@@ -510,9 +540,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 				delete(oldPolicyMap, oldPol.PolicyID)
 			} else {
 				// create policy
-				sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.CreateFlowPolicy(&c.CompanyID, appId, newPol)
-				}, nil)
+				sdkRes, err := sdk.DoRetryable(
+					ctx,
+					c,
+					environmentID,
+					func() (interface{}, *http.Response, error) {
+						return c.CreateFlowPolicyWithResponse(&environmentID, appId, newPol)
+					},
+				)
 				if err != nil {
 					return diag.FromErr(err)
 				}
@@ -526,9 +561,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 		}
 		//delete old policies that are not in new policies
 		for _, oldPol := range oldPolicyMap {
-			_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-				return c.DeleteFlowPolicy(&c.CompanyID, appId, oldPol.PolicyID)
-			}, nil)
+			_, err := sdk.DoRetryable(
+				ctx,
+				c,
+				environmentID,
+				func() (interface{}, *http.Response, error) {
+					return c.DeleteFlowPolicyWithResponse(&environmentID, appId, oldPol.PolicyID)
+				},
+			)
 			if err != nil {
 				return diag.FromErr(err)
 			}
@@ -542,9 +582,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 		}
 		app.AppID = d.Id()
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateApplication(&c.CompanyID, app)
-		}, nil)
+		sdkRes, err := sdk.DoRetryable(
+			ctx,
+			c,
+			environmentID,
+			func() (interface{}, *http.Response, error) {
+				return c.UpdateApplicationWithResponse(&environmentID, app)
+			},
+		)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -562,16 +607,18 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteApplication(&c.CompanyID, appId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteApplicationWithResponse(&environmentID, appId)
+		},
+	)
 	if err != nil {
 		return diag.FromErr(err)
 	}

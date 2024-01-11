@@ -13,3 +13,7 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```release-note:bug
 `resource/davinci_connection`: Fixed `Error retrieving connectors / 7005` error in certain conditions.
 ```
+
+```release-note:bug
+`resource/davinci_application`: Fixed inability to set `api_key_enabled`, `oauth.enabled` and `oauth.values.enabled` to `false`.
+```
