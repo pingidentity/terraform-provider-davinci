@@ -12,28 +12,28 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "davinci_connection" "annotation" {
-  name           = "myAnnotationConnector"
-  connector_id   = "annotationConnector"
+resource "davinci_connection" "my_awesome_annotation_connection" {
   environment_id = var.pingone_environment_id
+
+  name         = "myAnnotationConnector"
+  connector_id = "annotationConnector"
 }
 
-resource "davinci_connection" "crowd_strike" {
-  connector_id   = "crowdStrikeConnector"
+resource "davinci_connection" "my_awesome_crowdstrike_connection" {
   environment_id = var.pingone_environment_id
-  name           = "CrowdStrike"
+
+  connector_id = "crowdStrikeConnector"
+  name         = "CrowdStrike"
+
   property {
     name  = "clientId"
-    value = "12345678"
+    value = var.crowdstrike_client_id
   }
+
   property {
     name  = "clientSecret"
-    value = "12345"
+    value = var.crowdstrike_client_secret
   }
-}
-
-output "crowd_strike_id" {
-  value = resource.davinci_connection.crowd_strike.id
 }
 ```
 

@@ -1,6 +1,6 @@
 ---
 page_title: "davinci_applications Data Source - terraform-provider-davinci"
-subcategory: "Connection"
+subcategory: "Application"
 description: |-
   
 ---

@@ -14,12 +14,12 @@ description: |-
 ## Example Usage
 
 ```terraform
-// example of bootstrapped application
-resource "davinci_application" "use_default_flow" {
-  name           = "PingOne SSO Connection"
+resource "davinci_application" "my_awesome_application" {
   environment_id = var.pingone_environment_id
+
+  name = "My Awesome Application"
+
   oauth {
-    enabled = true
     values {
       allowed_grants                = ["authorizationCode"]
       allowed_scopes                = ["openid", "profile"]
@@ -28,36 +28,34 @@ resource "davinci_application" "use_default_flow" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  // `policy` is deprecated
-  policy {
-    name   = "PingOne - Authentication"
-    status = "enabled"
-    policy_flow {
-      flow_id    = var.davinci_flow_id
-      version_id = -1
-      weight     = 100
-    }
-  }
-  // `policy` is deprecated
-  policy {
-    name   = "PingOne - Registration"
-    status = "enabled"
-    policy_flow {
-      flow_id    = resource.davinci_flow.registration.id
-      version_id = -1
-      weight     = 100
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
+}
+
+resource "davinci_application_flow_policy" "authentication_flow_policy" {
+  environment_id = var.pingone_environment_id
+  application_id = davinci_application.my_awesome_application.id
+
+  name   = "PingOne - Authentication"
+  status = "enabled"
+
+  policy_flow {
+    flow_id    = davinci_flow.authentication.id
+    version_id = -1
+    weight     = 100
   }
 }
 
-output "default_app_test_key" {
-  value = resource.davinci_application.use_default_flow.api_keys.test
+resource "davinci_application_flow_policy" "registration_flow_policy" {
+  environment_id = var.pingone_environment_id
+  application_id = davinci_application.my_awesome_application.id
+
+  name   = "PingOne - Authentication"
+  status = "enabled"
+
+  policy_flow {
+    flow_id    = davinci_flow.authentication.id
+    version_id = -1
+    weight     = 100
+  }
 }
 ```
 
@@ -66,53 +64,32 @@ output "default_app_test_key" {
 
 ### Required
 
-- `environment_id` (String) PingOne environment id
-- `name` (String) Application name
-- `saml` (Block List, Min: 1, Max: 1) SAML configuration. This is deprecated in the UI and will be removed in a future release. (see [below for nested schema](#nestedblock--saml))
+- `environment_id` (String) The ID of the PingOne environment to create the DaVinci application. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
+- `name` (String) The application name
 
 ### Optional
 
-- `api_key_enabled` (Boolean) Enabled by default in UI Defaults to `true`.
-- `oauth` (Block List, Max: 1) OIDC configuration (see [below for nested schema](#nestedblock--oauth))
-- `policy` (Block Set, Deprecated) **Deprecation Notice** Flow Policy Configuration (see [below for nested schema](#nestedblock--policy))
-- `user_portal` (Block List, Max: 1) This is deprecated in the UI and will be removed in a future release. (see [below for nested schema](#nestedblock--user_portal))
+- `api_key_enabled` (Boolean) A boolean that specifies whether the API key is enabled for the application. Defaults to `true`.
+- `oauth` (Block List, Max: 1) A single list item specifying OIDC/OAuth 2.0 configuration (see [below for nested schema](#nestedblock--oauth))
+- `policy` (Block Set, Deprecated) **Deprecation Notice** The `policy` block should be removed from application and managed as a `davinci_application_flow_policy` resource. Review the migration guidance here: https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-application-flow-policy. Flow Policy Configuration (see [below for nested schema](#nestedblock--policy))
+- `saml` (Block List, Max: 1, Deprecated) **Deprecation notice**: SAML configuration is now deprecated in the service and will be removed in the next major release.  A single list item that specifies SAML configuration. (see [below for nested schema](#nestedblock--saml))
+- `user_portal` (Block List, Max: 1, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.  A single object that describes user portal settings. (see [below for nested schema](#nestedblock--user_portal))
 
 ### Read-Only
 
 - `api_keys` (Map of String) Appplication Api Key. Returned value for prod field is most commonly used.
-- `created_date` (Number) Creation date as epoch.
-- `customer_id` (String) Internal DaVinci id. Should not be set by user.
+- `created_date` (Number) Resource creation date as epoch.
+- `customer_id` (String) An ID that represents the customer tenant.
 - `id` (String) The ID of this resource.
 - `metadata` (Map of String) Appplication Metadata
-- `user_pools` (Map of String) Appplication User Pools. Not implemented
-
-<a id="nestedblock--saml"></a>
-### Nested Schema for `saml`
-
-Optional:
-
-- `values` (Block List, Max: 1) SAML configuration (see [below for nested schema](#nestedblock--saml--values))
-
-<a id="nestedblock--saml--values"></a>
-### Nested Schema for `saml.values`
-
-Optional:
-
-- `audience` (String) Field: 'Audience' in UI. This is deprecated in the UI and will be removed in a future release.
-- `enabled` (Boolean) Set to true if using saml block. This is deprecated in the UI and will be removed in a future release.
-- `enforce_signed_request` (Boolean) Field: 'Enforce Receiving Signed Requests' in UI. This is deprecated in the UI and will be removed in a future release.
-- `redirect_uri` (String, Sensitive) The redirect URI for the SAML application. This is deprecated in the UI and will be removed in a future release.
-- `sp_cert` (String) This is deprecated in the UI and will be removed in a future release.
-
-
 
 <a id="nestedblock--oauth"></a>
 ### Nested Schema for `oauth`
 
 Optional:
 
-- `enabled` (Boolean) Set to true if using oauth block Defaults to `true`.
-- `values` (Block List, Max: 1) OIDC configuration (see [below for nested schema](#nestedblock--oauth--values))
+- `enabled` (Boolean) A boolean that specifies whether OIDC/OAuth 2.0 settings are enabled for the application. Defaults to `true`.
+- `values` (Block List, Max: 1) A single list item specifying OIDC/OAuth 2.0 configuration values. (see [below for nested schema](#nestedblock--oauth--values))
 
 <a id="nestedblock--oauth--values"></a>
 ### Nested Schema for `oauth.values`
@@ -160,29 +137,49 @@ Optional:
 
 
 
+<a id="nestedblock--saml"></a>
+### Nested Schema for `saml`
+
+Optional:
+
+- `values` (Block List, Max: 1) SAML configuration (see [below for nested schema](#nestedblock--saml--values))
+
+<a id="nestedblock--saml--values"></a>
+### Nested Schema for `saml.values`
+
+Optional:
+
+- `audience` (String) Field: 'Audience' in UI. This is now deprecated in the service and will be removed from the provider in the next major release.
+- `enabled` (Boolean) Set to true if using saml block. This is now deprecated in the service and will be removed from the provider in the next major release.
+- `enforce_signed_request` (Boolean) Field: 'Enforce Receiving Signed Requests' in UI. This is now deprecated in the service and will be removed from the provider in the next major release.
+- `redirect_uri` (String, Sensitive) The redirect URI for the SAML application. This is now deprecated in the service and will be removed from the provider in the next major release.
+- `sp_cert` (String) This is now deprecated in the service and will be removed from the provider in the next major release.
+
+
+
 <a id="nestedblock--user_portal"></a>
 ### Nested Schema for `user_portal`
 
 Optional:
 
-- `add_auth_method_title` (String) This is deprecated in the UI and will be removed in a future release.
-- `cred_page_subtitle` (String) This is deprecated in the UI and will be removed in a future release.
-- `cred_page_title` (String) This is deprecated in the UI and will be removed in a future release.
-- `flow_timeout_seconds` (Number) This is deprecated in the UI and will be removed in a future release.
-- `name_auth_method_title` (String) This is deprecated in the UI and will be removed in a future release.
-- `name_confirm_btn_text` (String) This is deprecated in the UI and will be removed in a future release.
-- `remove_auth_method_title` (String) This is deprecated in the UI and will be removed in a future release.
-- `remove_body_message` (String) This is deprecated in the UI and will be removed in a future release.
-- `remove_cancel_btn_text` (String) This is deprecated in the UI and will be removed in a future release.
-- `remove_confirm_btn_text` (String) This is deprecated in the UI and will be removed in a future release.
-- `remove_message` (String) This is deprecated in the UI and will be removed in a future release.
-- `show_logout_button` (Boolean) This is deprecated in the UI and will be removed in a future release. Defaults to `false`.
-- `show_mfa_button` (Boolean) This is deprecated in the UI and will be removed in a future release. Defaults to `false`.
-- `show_user_info` (Boolean) This is deprecated in the UI and will be removed in a future release. Defaults to `false`.
-- `show_variables` (Boolean) This is deprecated in the UI and will be removed in a future release. Defaults to `false`.
-- `up_title` (String) This is deprecated in the UI and will be removed in a future release.
-- `update_body_message` (String) This is deprecated in the UI and will be removed in a future release.
-- `update_message` (String) This is deprecated in the UI and will be removed in a future release.
+- `add_auth_method_title` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `cred_page_subtitle` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `cred_page_title` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `flow_timeout_seconds` (Number, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `name_auth_method_title` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `name_confirm_btn_text` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `remove_auth_method_title` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `remove_body_message` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `remove_cancel_btn_text` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `remove_confirm_btn_text` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `remove_message` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `show_logout_button` (Boolean, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release. Defaults to `false`.
+- `show_mfa_button` (Boolean, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release. Defaults to `false`.
+- `show_user_info` (Boolean, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release. Defaults to `false`.
+- `show_variables` (Boolean, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release. Defaults to `false`.
+- `up_title` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `update_body_message` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
+- `update_message` (String, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.
 
 ## Import
 
