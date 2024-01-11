@@ -6,9 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"regexp"
 
-	// "strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -16,9 +14,8 @@ import (
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
-// DoRetryable wraps the given function with a rery loop that doubles the timeout each time.
-// This is used to catch and handle common errors that may be due to rate limiting or an issue in the API.
-// Error functions in this list should be safe to retry and have a TODO to remove them if the issue is resolved.
+// DoRetryable wraps the given function with a retry loop
+// This is used to catch and handle common Terraform-level functional errors such as race conditions.
 func DoRetryable(ctx context.Context, c *dv.APIClient, environmentID string, f func() (interface{}, *http.Response, error)) (interface{}, error) {
 	defaultTimeout := 10
 	return DoRetryableWithCustomTimeout(ctx, c, environmentID, f, time.Duration(defaultTimeout)*time.Minute)
@@ -70,10 +67,6 @@ func DoRetryableWithCustomTimeout(ctx context.Context, c *dv.APIClient, environm
 				tflog.Warn(ctx, "Detected unknown error (retry)", map[string]interface{}{
 					"type": t,
 				})
-
-				if res1, matchErr := regexp.MatchString(`^http: ContentLength=[0-9]+ with Body length [0-9]+$`, t.Error()); matchErr == nil && res1 {
-					return retry.RetryableError(err)
-				}
 			}
 
 			if err == nil {
