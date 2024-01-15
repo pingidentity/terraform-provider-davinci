@@ -17,3 +17,7 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```release-note:bug
 `resource/davinci_application`: Fixed inability to set `api_key_enabled`, `oauth.enabled` and `oauth.values.enabled` to `false`.
 ```
+
+```release-note:bug
+`resource/davinci_application`: Fixed panic crash when defining an application with an `oauth` block, but without `oauth.values`.
+```

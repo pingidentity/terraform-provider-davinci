@@ -469,9 +469,9 @@ resource "davinci_variable" "%[2]s" {
   description    = "desc-%[3]s"
   value          = "7"
   type           = "number"
-  min           = "5"
-  max           = "10"
-  mutable = false
+  min            = "5"
+  max            = "10"
+  mutable        = false
 }
 `, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, context)
 }

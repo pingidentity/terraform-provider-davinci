@@ -3,7 +3,6 @@ package davinci
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"regexp"
 
@@ -39,7 +38,7 @@ func ResourceApplication() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The application name",
+				Description: "The application name.",
 			},
 			"created_date": {
 				Type:        schema.TypeInt,
@@ -55,7 +54,7 @@ func ResourceApplication() *schema.Resource {
 			"api_keys": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Appplication Api Key. Returned value for prod field is most commonly used.",
+				Description: "A map of strings that represents the application's API Key.",
 				Elem: &schema.Schema{
 					Type:      schema.TypeString,
 					Sensitive: true,
@@ -217,6 +216,7 @@ func ResourceApplication() *schema.Resource {
 						"values": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "A single list item specifying OIDC/OAuth 2.0 configuration values.",
 							MaxItems:    1,
 							Elem: &schema.Resource{
@@ -225,7 +225,7 @@ func ResourceApplication() *schema.Resource {
 										Type:        schema.TypeBool,
 										Optional:    true,
 										Default:     true,
-										Description: "Set to true if using oauth block",
+										Description: "A boolean that enables/disables the OAuth 2.0 configuration for the application.",
 									},
 									"client_secret": {
 										Type:        schema.TypeString,
@@ -236,22 +236,22 @@ func ResourceApplication() *schema.Resource {
 									"enforce_signed_request_openid": {
 										Type:        schema.TypeBool,
 										Optional:    true,
-										Description: "Field: 'Enforce Receiving Signed Requests' in UI.",
+										Description: "A boolean that specifies whether to enforce receiving signed requests.",
 									},
 									"sp_jwks_url": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Field: 'Service Provider (SP) JWKS URL' in UI.",
+										Description: "A string that specifies a service provider (SP) JWKS URL.",
 									},
 									"sp_jwks_openid": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Field: 'Service Provider (SP) JWKS Keys to Verify Authorization Request Signature' in UI. ",
+										Description: "A string that specifies service provider (SP) JWKS keys to verify the authorization request signature.",
 									},
 									"redirect_uris": {
 										Type:        schema.TypeSet,
 										Optional:    true,
-										Description: "Redirect URLs for the application",
+										Description: "Redirect URLs for the application.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
@@ -259,7 +259,7 @@ func ResourceApplication() *schema.Resource {
 									"logout_uris": {
 										Type:        schema.TypeSet,
 										Optional:    true,
-										Description: "Logout URLs for the application",
+										Description: "Logout URLs for the application.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
@@ -267,7 +267,7 @@ func ResourceApplication() *schema.Resource {
 									"allowed_scopes": {
 										Type:        schema.TypeSet,
 										Optional:    true,
-										Description: "Allowed scopes for the application. Available scopes are: openid, profile, flow_analytics.",
+										Description: "Allowed scopes for the application. Available scopes are `openid`, `profile`, `flow_analytics`.",
 										Elem: &schema.Schema{
 											Type:             schema.TypeString,
 											ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"openid", "profile", "flow_analytics"}, false)),
@@ -276,7 +276,7 @@ func ResourceApplication() *schema.Resource {
 									"allowed_grants": {
 										Type:        schema.TypeSet,
 										Optional:    true,
-										Description: "Allowed grants for the application. Available grants are: authorizationCode, clientCredentials, implicit. ",
+										Description: "Allowed grants for the application. Available grants are `authorizationCode`, `clientCredentials`, `implicit`.",
 										Elem: &schema.Schema{
 											Type:             schema.TypeString,
 											ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"authorizationCode", "clientCredentials", "implicit"}, false)),
@@ -471,13 +471,12 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 		},
 	)
 	if err != nil {
-		log.Printf("Error!! %v", err)
-		// ep, err := c.ParseDvHttpError(err)
-		// if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
-		// 	d.SetId("")
-		// 	// diags = append(diags, diag.Diagnostic{})
-		// 	return diags
-		// }
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_APPLICATION_NOT_FOUND {
+				d.SetId("")
+				return diags
+			}
+		}
 		return diag.FromErr(err)
 	}
 
@@ -620,6 +619,11 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 		},
 	)
 	if err != nil {
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_APPLICATION_NOT_FOUND {
+				return diags
+			}
+		}
 		return diag.FromErr(err)
 	}
 	res, ok := sdkRes.(*dv.Message)
