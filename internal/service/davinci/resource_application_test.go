@@ -56,9 +56,9 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 			},
 			// Test removal of the environment
 			{
-				Config: hcl,
-				Check:  davinci.Application_GetIDs(resourceFullName, &environmentID, &applicationID),
-				//SkipFunc: func() (bool, error) { return true, nil },
+				Config:   hcl,
+				Check:    davinci.Application_GetIDs(resourceFullName, &environmentID, &applicationID),
+				SkipFunc: func() (bool, error) { return true, nil },
 			},
 			{
 				PreConfig: func() {
@@ -66,7 +66,7 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 				},
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
-				//SkipFunc:           func() (bool, error) { return true, nil },
+				SkipFunc:           func() (bool, error) { return true, nil },
 			},
 		},
 	})

@@ -65,7 +65,7 @@ resource "davinci_application_flow_policy" "registration_flow_policy" {
 ### Required
 
 - `environment_id` (String) The ID of the PingOne environment to create the DaVinci application. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
-- `name` (String) The application name
+- `name` (String) The application name.
 
 ### Optional
 
@@ -77,11 +77,12 @@ resource "davinci_application_flow_policy" "registration_flow_policy" {
 
 ### Read-Only
 
-- `api_keys` (Map of String) Appplication Api Key. Returned value for prod field is most commonly used.
+- `api_keys` (Map of String) A map of strings that represents the application's API Key.
 - `created_date` (Number) Resource creation date as epoch.
 - `customer_id` (String) An ID that represents the customer tenant.
 - `id` (String) The ID of this resource.
 - `metadata` (Map of String) Appplication Metadata
+- `user_pools` (Map of String) Appplication User Pools.
 
 <a id="nestedblock--oauth"></a>
 ### Nested Schema for `oauth`
@@ -96,14 +97,14 @@ Optional:
 
 Optional:
 
-- `allowed_grants` (Set of String) Allowed grants for the application. Available grants are: authorizationCode, clientCredentials, implicit.
-- `allowed_scopes` (Set of String) Allowed scopes for the application. Available scopes are: openid, profile, flow_analytics.
-- `enabled` (Boolean) Set to true if using oauth block Defaults to `true`.
-- `enforce_signed_request_openid` (Boolean) Field: 'Enforce Receiving Signed Requests' in UI.
-- `logout_uris` (Set of String) Logout URLs for the application
-- `redirect_uris` (Set of String) Redirect URLs for the application
-- `sp_jwks_openid` (String) Field: 'Service Provider (SP) JWKS Keys to Verify Authorization Request Signature' in UI.
-- `sp_jwks_url` (String) Field: 'Service Provider (SP) JWKS URL' in UI.
+- `allowed_grants` (Set of String) Allowed grants for the application. Available grants are `authorizationCode`, `clientCredentials`, `implicit`.
+- `allowed_scopes` (Set of String) Allowed scopes for the application. Available scopes are `openid`, `profile`, `flow_analytics`.
+- `enabled` (Boolean) A boolean that enables/disables the OAuth 2.0 configuration for the application. Defaults to `true`.
+- `enforce_signed_request_openid` (Boolean) A boolean that specifies whether to enforce receiving signed requests.
+- `logout_uris` (Set of String) Logout URLs for the application.
+- `redirect_uris` (Set of String) Redirect URLs for the application.
+- `sp_jwks_openid` (String) A string that specifies service provider (SP) JWKS keys to verify the authorization request signature.
+- `sp_jwks_url` (String) A string that specifies a service provider (SP) JWKS URL.
 
 Read-Only:
 
