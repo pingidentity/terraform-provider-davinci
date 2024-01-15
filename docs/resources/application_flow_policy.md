@@ -48,18 +48,18 @@ resource "davinci_application_flow_policy" "my_awesome_registration_flow_applica
 
 ### Required
 
-- `application_id` (String) Id of the application this policy is associated with
-- `environment_id` (String) PingOne environment id
-- `name` (String) Policy Name
+- `application_id` (String) The ID of the DaVinci application to manage the flow policy for. Must be a valid DaVinci resource ID. This field is immutable and will trigger a replace plan if changed.
+- `environment_id` (String) The ID of the PingOne environment to manage the flow policy in. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
+- `name` (String) A string that specifies the name of the policy.
 
 ### Optional
 
-- `policy_flow` (Block Set) Set of weighted flows that this application will use (see [below for nested schema](#nestedblock--policy_flow))
-- `status` (String) If Policy should be enabled. Valid values are: enabled, disabled Defaults to `enabled`.
+- `policy_flow` (Block Set) Set of weighted flows that this application will use. (see [below for nested schema](#nestedblock--policy_flow))
+- `status` (String) A boolan that specifies whether the policy should be enabled. Valid values are: `enabled`, `disabled`. Defaults to `enabled`.
 
 ### Read-Only
 
-- `created_date` (Number) Creation epoch of policy.
+- `created_date` (Number) Resource creation date as epoch.
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--policy_flow"></a>
@@ -68,9 +68,9 @@ resource "davinci_application_flow_policy" "my_awesome_registration_flow_applica
 Optional:
 
 - `flow_id` (String) Identifier of the flow that this policy will use.
-- `success_nodes` (List of String) List of node ids used by analytics for tracking user interaction.
-- `version_id` (Number) Version of the flow that this policy will use. Use -1 for latest
-- `weight` (Number) If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100
+- `success_nodes` (List of String) A list of node ids used by analytics for tracking user interaction.
+- `version_id` (Number) Version of the flow that this policy will use. Use `-1` for the latest version.
+- `weight` (Number) If multiple flows are specified, the weight determines the probability of the flow being used. The weights across all policy flows must add up to `100`.
 
 ## Import
 
