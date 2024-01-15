@@ -24,7 +24,7 @@ func DoRetryable(ctx context.Context, c *dv.APIClient, environmentID string, f f
 func DoRetryableWithCustomTimeout(ctx context.Context, c *dv.APIClient, environmentID string, f func() (interface{}, *http.Response, error), timeout time.Duration) (interface{}, error) {
 
 	var res interface{}
-	authRetryLimit := 10
+	authRetryLimit := 20
 	authRetryCount := 1
 
 	err := retry.RetryContext(ctx, timeout, func() *retry.RetryError {
