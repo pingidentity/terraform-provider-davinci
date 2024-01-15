@@ -3,6 +3,8 @@ package davinci
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
 	"regexp"
 	"strings"
 
@@ -24,22 +26,24 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "PingOne environment id",
+				Description: "The ID of the PingOne environment to manage the flow policy in. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+				ForceNew:    true,
 			},
 			"application_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the application this policy is associated with",
+				Description: "The ID of the DaVinci application to manage the flow policy for. Must be a valid DaVinci resource ID. This field is immutable and will trigger a replace plan if changed.",
+				ForceNew:    true,
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Policy Name",
+				Description: "A string that specifies the name of the policy.",
 			},
 			"policy_flow": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Set of weighted flows that this application will use",
+				Description: "Set of weighted flows that this application will use.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"flow_id": {
@@ -50,17 +54,17 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 						"version_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Version of the flow that this policy will use. Use -1 for latest",
+							Description: "Version of the flow that this policy will use. Use `-1` for the latest version.",
 						},
 						"weight": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100",
+							Description: "If multiple flows are specified, the weight determines the probability of the flow being used. The weights across all policy flows must add up to `100`.",
 						},
 						"success_nodes": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "List of node ids used by analytics for tracking user interaction.",
+							Description: "A list of node ids used by analytics for tracking user interaction.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -72,13 +76,13 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Default:          "enabled",
-				Description:      "If Policy should be enabled. Valid values are: enabled, disabled",
+				Description:      "A boolan that specifies whether the policy should be enabled. Valid values are: `enabled`, `disabled`.",
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"enabled", "disabled"}, false)),
 			},
 			"created_date": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Creation epoch of policy.",
+				Description: "Resource creation date as epoch.",
 			},
 		},
 		Importer: &schema.ResourceImporter{
@@ -91,19 +95,21 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appPolicy, err := expandAppPolicy(d)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateFlowPolicy(&c.CompanyID, d.Get("application_id").(string), *appPolicy)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.CreateFlowPolicyWithResponse(&environmentID, d.Get("application_id").(string), *appPolicy)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -138,27 +144,30 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appId := d.Get("application_id").(string)
 	policyId := d.Id()
 
-	skdRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadApplication(&c.CompanyID, appId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	skdRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.ReadApplicationWithResponse(&environmentID, appId)
+		},
+	)
 	if err != nil {
-		ep, errErr := c.ParseDvHttpError(err)
-		if errErr != nil {
-			return diag.FromErr(errErr)
-		}
-		if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
-			d.SetId("")
-			// diags = append(diags, diag.Diagnostic{})
-			return diags
-		}
+		log.Printf("Error!! %v", err)
+		// ep, errErr := c.ParseDvHttpError(err)
+		// if errErr != nil {
+		// 	return diag.FromErr(errErr)
+		// }
+		// if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
+		// 	d.SetId("")
+		// 	// diags = append(diags, diag.Diagnostic{})
+		// 	return diags
+		// }
 		return diag.FromErr(err)
 	}
 
@@ -188,11 +197,6 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 func resourceApplicationFlowPolicyUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*dv.APIClient)
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appId := d.Get("application_id").(string)
 	appPolicy, err := expandAppPolicy(d)
 	if err != nil {
@@ -200,9 +204,16 @@ func resourceApplicationFlowPolicyUpdate(ctx context.Context, d *schema.Resource
 	}
 	appPolicy.PolicyID = d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.UpdateFlowPolicy(&c.CompanyID, appId, *appPolicy)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.UpdateFlowPolicyWithResponse(&environmentID, appId, *appPolicy)
+		},
+	)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -219,17 +230,19 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	appId := d.Get("application_id").(string)
 	policyId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteFlowPolicy(&c.CompanyID, appId, policyId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteFlowPolicyWithResponse(&environmentID, appId, policyId)
+		},
+	)
 	if err != nil {
 		return diag.FromErr(err)
 	}

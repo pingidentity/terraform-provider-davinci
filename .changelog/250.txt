@@ -21,3 +21,7 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```release-note:bug
 `resource/davinci_application`: Fixed panic crash when defining an application with an `oauth` block, but without `oauth.values`.
 ```
+
+```release-note:bug
+`resource/davinci_application_flow_policy`: (resource requires replacement).
+```
