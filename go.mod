@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.31.0
 	github.com/katbyte/terrafmt v0.5.2
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.34.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.35.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.0.55
 	github.com/samir-gandhi/dvgenerate v0.0.7
