@@ -92,8 +92,12 @@ resource "davinci_flow" "subflow" {
 
 Required:
 
-- `id` (String) Connection ID that will be used when flow is imported.
-- `name` (String) Connection Name to match when updating flow_json connectionId.
+- `id` (String) A string that specifies the connector ID that will be used when flow is imported.
+- `name` (String) The connector name.  If `replace_import_connection_id` is also specified, this value is used when the flow is imported.  If `replace_import_connection_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.
+
+Optional:
+
+- `replace_import_connection_id` (String) Connection ID of the connector in the import to replace with the connector described in `id` and `name`.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
 
 
 <a id="nestedblock--subflow_link"></a>

@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 	"reflect"
 	"regexp"
 	"sort"
@@ -58,12 +60,17 @@ func ResourceFlow() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Connection ID that will be used when flow is imported.",
+							Description: "A string that specifies the connector ID that will be used when flow is imported.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Connection Name to match when updating flow_json connectionId.",
+							Description: "The connector name.  If `replace_import_connection_id` is also specified, this value is used when the flow is imported.  If `replace_import_connection_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.",
+						},
+						"replace_import_connection_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Connection ID of the connector in the import to replace with the connector described in `id` and `name`.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
 						},
 					},
 				},
@@ -160,12 +167,9 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, meta interf
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	validateFlowDeps(d, &diags)
+
+	environmentID := d.Get("environment_id").(string)
 
 	var flowJson string
 	if fj, ok := d.GetOk("flow_json"); ok {
@@ -186,9 +190,14 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, meta interf
 		return diag.FromErr(fmt.Errorf("Error: flow_json not found"))
 	}
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateFlowWithJson(&c.CompanyID, &flowJson)
-	}, nil)
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.CreateFlowWithJsonWithResponse(&environmentID, &flowJson)
+		},
+	)
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -211,9 +220,14 @@ func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, meta interf
 			Summary:  "Error deploying flow",
 			Detail:   fmt.Sprintf(`This may indicate flow '%s' contains unconfigured nodes.`, res.Name),
 		})
-		_, deleteErr := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.DeleteFlow(&c.CompanyID, res.FlowID)
-		}, nil)
+		_, deleteErr := sdk.DoRetryable(
+			ctx,
+			c,
+			environmentID,
+			func() (interface{}, *http.Response, error) {
+				return c.DeleteFlowWithResponse(&environmentID, res.FlowID)
+			},
+		)
 		if deleteErr != nil {
 			return diag.FromErr(deleteErr)
 		}
@@ -231,22 +245,25 @@ func resourceFlowRead(ctx context.Context, d *schema.ResourceData, meta interfac
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	flowId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadFlowVersion(&c.CompanyID, flowId, nil)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.ReadFlowVersionWithResponse(&environmentID, flowId, nil)
+		},
+	)
 	if err != nil {
-		httpErr, _ := dv.ParseDvHttpError(err)
-		if strings.Contains(httpErr.Body, "Error retrieving flow version") {
-			d.SetId("")
-			return diags
-		}
+		log.Printf("Error!! %v", err)
+		//httpErr, _ := dv.ParseDvHttpError(err)
+		// if strings.Contains(httpErr.Body, "Error retrieving flow version") {
+		// 	d.SetId("")
+		// 	return diags
+		// }
 		return diag.FromErr(err)
 	}
 	res, ok := sdkRes.(*dv.FlowInfo)
@@ -374,12 +391,9 @@ func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
 func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	c := meta.(*dv.APIClient)
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	flowId := d.Id()
+
+	environmentID := d.Get("environment_id").(string)
 
 	// If changes are detected:
 	// 1. Map subflows
@@ -404,9 +418,14 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 			return diag.FromErr(err)
 		}
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateFlowWithJson(&c.CompanyID, &flowJson, flowId)
-		}, nil)
+		sdkRes, err := sdk.DoRetryable(
+			ctx,
+			c,
+			environmentID,
+			func() (interface{}, *http.Response, error) {
+				return c.UpdateFlowWithJsonWithResponse(&environmentID, &flowJson, flowId)
+			},
+		)
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -439,9 +458,14 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 						variablePayload.Name = stateVarMap["name"].(string)
 						existsInState = true
 						// Update SHOULD be safe because the variable should exist if the flow exists.
-						_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-							return c.UpdateVariable(&c.CompanyID, &variablePayload)
-						}, nil)
+						_, err := sdk.DoRetryable(
+							ctx,
+							c,
+							environmentID,
+							func() (interface{}, *http.Response, error) {
+								return c.UpdateVariableWithResponse(&environmentID, &variablePayload)
+							},
+						)
 						if err != nil {
 							return diag.FromErr(err)
 						}
@@ -452,22 +476,33 @@ func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 			if !existsInState {
 				variablePayload.Name = varSimpleName[0]
 
-				_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.CreateVariable(&c.CompanyID, &variablePayload)
-				}, nil)
+				_, err := sdk.DoRetryable(
+					ctx,
+					c,
+					environmentID,
+					func() (interface{}, *http.Response, error) {
+						return c.CreateVariableWithResponse(&environmentID, &variablePayload)
+					},
+				)
 				if err != nil {
 					// In rare scenarios, the variable may exist in the environment but not in state, if so it should update instead.
-					httpErr, _ := dv.ParseDvHttpError(err)
-					if httpErr != nil && strings.Contains(httpErr.Body, "Record already exists") {
-						_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-							return c.UpdateVariable(&c.CompanyID, &variablePayload)
-						}, nil)
-						if err != nil {
-							return diag.FromErr(err)
-						}
-					} else {
-						return diag.FromErr(err)
-					}
+					log.Printf("Error!! %v", err)
+					// httpErr, _ := dv.ParseDvHttpError(err)
+					// if httpErr != nil && strings.Contains(httpErr.Body, "Record already exists") {
+					// 	_, err := sdk.DoRetryable(
+					// 		ctx,
+					// 		c,
+					// 		environmentID,
+					// 		func() (interface{}, *http.Response, error) {
+					// 			return c.UpdateVariableWithResponse(&environmentID, &variablePayload)
+					// 		},
+					// 	)
+					// 	if err != nil {
+					// 		return diag.FromErr(err)
+					// 	}
+					// } else {
+					// 	return diag.FromErr(err)
+					// }
 				}
 			}
 		}
@@ -490,16 +525,18 @@ func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, meta interf
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	flowId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteFlow(&c.CompanyID, flowId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteFlowWithResponse(&environmentID, flowId)
+		},
+	)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -745,8 +782,11 @@ func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
 
 func deployIfNeeded(ctx context.Context, c *dv.APIClient, d *schema.ResourceData, flowId string) error {
 	isDeploy := d.Get("deploy").(bool)
+
+	environmentID := d.Get("environment_id").(string)
+
 	if isDeploy {
-		_, err := c.DeployFlow(&c.CompanyID, flowId)
+		_, err := c.DeployFlow(&environmentID, flowId)
 		if err != nil {
 			return fmt.Errorf("Possible misconfigured flow: %v", err)
 		}
@@ -851,9 +891,18 @@ func mapFlowConnections(d *schema.ResourceData, flowJson string) (*string, error
 		connList := conns.(*schema.Set).List()
 		for i, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
 			for _, connMap := range connList {
+
 				connValues := connMap.(map[string]interface{})
-				if connValues["name"].(string) == v.Data.Name {
-					v.Data.ConnectionID = connValues["id"].(string)
+
+				if replaceId, ok := connValues["replace_import_connection_id"].(string); ok {
+					if replaceId == v.Data.ConnectionID {
+						v.Data.ConnectionID = connValues["id"].(string)
+						v.Data.Name = connValues["name"].(string)
+					}
+				} else {
+					if connValues["name"].(string) == v.Data.Name {
+						v.Data.ConnectionID = connValues["id"].(string)
+					}
 				}
 			}
 			fjMap.FlowInfo.GraphData.Elements.Nodes[i] = v
