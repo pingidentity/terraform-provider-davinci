@@ -25,3 +25,23 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```release-note:bug
 `resource/davinci_application_flow_policy`: (resource requires replacement).
 ```
+
+```release-note:bug
+`resource/davinci_application_flow_policy`: Fixed error when specifying a flow policy without any `policy_flow` blocks.  The `policy_flow` block is now a required field.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Added the ability to replace the name of connectors in a flow import.
+```
+
+```release-note:bug
+`resource/davinci_application_flow_policy`: Fixed error when specifying a flow policy without `policy_flow.name` or `policy_flow.version` parameters.  The `policy_flow.name` and `policy_flow.version` are now required fields.
+```
+
+```release-note:bug
+`resource/davinci_application_flow_policy`: Fixed inability to set `policy_flow.success_nodes`.
+```
+
+```release-note:enhancement
+`resource/davinci_application_flow_policy`: Added `policy_flow.allowed_ip_list` to be able to configure an allowed IP list for policy flows.
+```

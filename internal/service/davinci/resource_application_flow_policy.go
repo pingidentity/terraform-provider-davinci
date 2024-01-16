@@ -3,7 +3,6 @@ package davinci
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -42,18 +41,18 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 			},
 			"policy_flow": {
 				Type:        schema.TypeSet,
-				Optional:    true,
+				Required:    true,
 				Description: "Set of weighted flows that this application will use.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"flow_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "Identifier of the flow that this policy will use.",
 						},
 						"version_id": {
 							Type:        schema.TypeInt,
-							Optional:    true,
+							Required:    true,
 							Description: "Version of the flow that this policy will use. Use `-1` for the latest version.",
 						},
 						"weight": {
@@ -62,9 +61,17 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 							Description: "If multiple flows are specified, the weight determines the probability of the flow being used. The weights across all policy flows must add up to `100`.",
 						},
 						"success_nodes": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Optional:    true,
 							Description: "A list of node ids used by analytics for tracking user interaction.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"allowed_ip_list": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "A list of IP CIDR entries that are allowed use of the application policy flow.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -158,16 +165,12 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 		},
 	)
 	if err != nil {
-		log.Printf("Error!! %v", err)
-		// ep, errErr := c.ParseDvHttpError(err)
-		// if errErr != nil {
-		// 	return diag.FromErr(errErr)
-		// }
-		// if ep.Status == 404 && strings.Contains(ep.Body, "App not found") {
-		// 	d.SetId("")
-		// 	// diags = append(diags, diag.Diagnostic{})
-		// 	return diags
-		// }
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_APPLICATION_NOT_FOUND {
+				d.SetId("")
+				return diags
+			}
+		}
 		return diag.FromErr(err)
 	}
 
@@ -244,6 +247,11 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 		},
 	)
 	if err != nil {
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_APPLICATION_NOT_FOUND {
+				return diags
+			}
+		}
 		return diag.FromErr(err)
 	}
 
@@ -273,6 +281,20 @@ func expandAppPolicy(d *schema.ResourceData) (*dv.Policy, error) {
 				VersionID: policyFlowMap["version_id"].(int),
 				Weight:    policyFlowMap["weight"].(int),
 			}
+
+			successNodes := make([]string, 0)
+			for _, successNode := range policyFlowMap["success_nodes"].(*schema.Set).List() {
+				successNodes = append(successNodes, successNode.(string))
+			}
+
+			ips := make([]string, 0)
+			for _, ip := range policyFlowMap["allowed_ip_list"].(*schema.Set).List() {
+				ips = append(ips, ip.(string))
+			}
+
+			thisPolicyFlow.SuccessNodes = successNodes
+			thisPolicyFlow.IP = ips
+
 			policyFlows = append(policyFlows, thisPolicyFlow)
 		}
 		policy.PolicyFlows = policyFlows
@@ -302,9 +324,11 @@ func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, err
 	polFlows := []interface{}{}
 	for _, w := range policy.PolicyFlows {
 		thisPolFlow := map[string]interface{}{
-			"flow_id":    w.FlowID,
-			"weight":     w.Weight,
-			"version_id": w.VersionID,
+			"flow_id":         w.FlowID,
+			"weight":          w.Weight,
+			"version_id":      w.VersionID,
+			"success_nodes":   w.SuccessNodes,
+			"allowed_ip_list": w.IP,
 		}
 		polFlows = append(polFlows, thisPolFlow)
 	}
