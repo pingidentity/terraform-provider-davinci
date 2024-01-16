@@ -3186,23 +3186,6 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
-### Twitter Login
-
-**Connector Display Name**: Twitter Login
-
-**Connector ID** - schema `connectorId`: twitterIdpConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----|
-| Custom Parameters | `customAuth` | `array` |  | 
-
-
-
-
 ### UnifyID
 
 **Connector Display Name**: UnifyID
@@ -3452,6 +3435,23 @@ If the `value` type of a property is not defined it must be inferred.
 | Client ID | `clientId` | `string` | Client ID from WireWheel Channel settings |
 | Client Secret | `clientSecret` | `string` | Client Secret from WireWheel Channel settings |
 | Issuer URL | `issuerId` | `` | Issuer URL from WireWheel Channel settings | 
+
+
+
+
+### X Login
+
+**Connector Display Name**: X Login
+
+**Connector ID** - schema `connectorId`: twitterIdpConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Custom Parameters | `customAuth` | `array` |  | 
 
 
 
