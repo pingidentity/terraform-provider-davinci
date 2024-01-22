@@ -3,11 +3,16 @@ package davinci
 import (
 	"context"
 	"fmt"
-	"strconv"
+	"net/http"
+	"slices"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -15,31 +20,47 @@ func DataSourceConnections() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceConnectionsRead,
 		Schema: map[string]*schema.Schema{
+			"environment_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The ID of the PingOne environment to retrieve connections for. Must be a valid PingOne resource ID.",
+
+				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
+			},
+			"connector_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "A list of connector IDs to filter from the returned connections.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"connections": {
 				Type:        schema.TypeSet,
 				Computed:    true,
-				Description: "Returned set of connections matching environment and/or the filter criteria.",
+				Description: "The returned set of connections matching the environment and the optional filter criteria.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "connection_id for this connection.",
+							Description: "The ID for this connection, otherwise known as the \"Connection ID\".",
 						},
 						"connector_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')",
+							Description: "The DaVinci internal connector type ID, which can be found in the [DaVinci Connection Definitions](../../resources/connection#davinci-connection-definitions) documentation.",
 						},
 						"company_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "PingOne environment id. Matches environment_id and will be deprecated in the future.",
+							Deprecated:  "This attribute is deprecated and will be removed in the next major release.",
+							Description: "**Deprecation Notice** This attribute is deprecated and will be removed in the next major release.  The PingOne environment ID.",
 						},
 						"customer_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Internal DaVinci id. Should not be set by user.",
+							Description: "An ID that represents the customer tenant.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -49,28 +70,28 @@ func DataSourceConnections() *schema.Resource {
 						"created_date": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Resource creation date as epoch.",
+							Description: "Resource creation date as epoch timestamp.",
 						},
 						"property": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
+							Description: "Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate property name/value pairs for the connection.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Name of the property.",
+										Description: "The name of the property.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Value of the property as string. If the property is an array, use a comma separated string.",
+										Description: "The value of the property as string. If the property is an array, the value will be a comma separated string.",
 									},
 									"type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
+										Description: "Type of the property. This is used to cast the value to the correct type. Will be either: `string` or `boolean`. `string` is used for array types.",
 									},
 								},
 							},
@@ -78,19 +99,9 @@ func DataSourceConnections() *schema.Resource {
 					},
 				},
 			},
-			"environment_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "PingOne environment id",
-			},
-			"connector_ids": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Filters list of returned connections",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Read: schema.DefaultTimeout(20 * time.Minute),
 		},
 	}
 }
@@ -99,12 +110,6 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	//TODO: clean this up
 	var cIdsFilter []string
 	if cIds, ok := d.GetOk("connector_ids"); ok {
 		cIdsInterface := cIds.([]interface{})
@@ -113,10 +118,54 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 		}
 	}
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadConnections(&c.CompanyID, nil)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
 
+	connections := -1
+
+	stateConf := &retry.StateChangeConf{
+		Pending: []string{
+			"false",
+		},
+		Target: []string{
+			"true",
+			"err",
+		},
+		Refresh: func() (interface{}, string, error) {
+
+			// Run the API call
+			sdkRes, err := sdk.DoRetryable(
+				ctx,
+				c,
+				environmentID,
+				func() (interface{}, *http.Response, error) {
+					return c.ReadConnectionsWithResponse(&environmentID, nil)
+				},
+			)
+
+			if err != nil {
+				return nil, "err", err
+			}
+
+			res, ok := sdkRes.([]dv.Connection)
+			if !ok {
+				err = fmt.Errorf("Unable to parse connections response from Davinci API")
+				return nil, "err", err
+			}
+
+			// If the number of connections has changed since last time, we need to keep waiting
+			if len(res) != connections {
+				connections = len(res)
+				return res, "false", nil
+			}
+
+			return res, "true", nil
+		},
+		Timeout:                   d.Timeout(schema.TimeoutRead) - time.Minute,
+		Delay:                     10 * time.Second,
+		MinTimeout:                2 * time.Second,
+		ContinuousTargetOccurence: 5, // we want five consecutive successful reads of the same number of connections
+	}
+	sdkRes, err := stateConf.WaitForStateContext(ctx)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -126,10 +175,11 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 		err = fmt.Errorf("Unable to parse connections response from Davinci API")
 		return diag.FromErr(err)
 	}
+
 	resp := []dv.Connection{}
 	if cIdsFilter != nil {
 		for _, resItem := range res {
-			cIdFound := contains(cIdsFilter, resItem.ConnectorID)
+			cIdFound := slices.Contains(cIdsFilter, resItem.ConnectorID)
 			if !cIdFound {
 				continue
 			}
@@ -146,53 +196,15 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 			"name":         connItem.Name,
 			"created_date": connItem.CreatedDate,
 			"company_id":   connItem.CompanyID,
+			"customer_id":  connItem.CustomerID,
 		}
-		if connItem.Properties != nil {
-			connProps := []map[string]interface{}{}
-			for propi, propv := range connItem.Properties {
-				pMap := propv.(map[string]interface{})
-				if pMap == nil {
-					return diag.Errorf("Unable to assert Property to map interface")
-				}
-				thisProp := map[string]interface{}{
-					"name":  propi,
-					"value": "",
-				}
-				// In some properties, if the value is blank in the UI, the value is not returned in the API response
-				if _, ok := pMap["value"]; !ok {
-					continue
-				}
-				if pType, ok := pMap["type"].(string); ok {
-					thisProp["type"] = pType
-					switch pType {
-					case "string", "":
-						if _, ok := pMap["value"].(string); ok {
-							thisProp["value"] = pMap["value"].(string)
-						}
-					case "boolean":
-						if pValue, ok := pMap["value"].(bool); ok {
-							thisProp["value"] = strconv.FormatBool(pValue)
-						}
-					default:
-						return diag.Errorf("For Connection '%v' and Property '%v': unable to identify value type, only string or boolean is currently supported", connItem.Name, thisProp["name"])
-					}
-				} else {
-					switch pMap["value"].(type) {
-					case string:
-						if _, ok := pMap["value"].(string); ok {
-							thisProp["value"] = pMap["value"].(string)
-						}
-					case bool:
-						if pValue, ok := pMap["value"].(bool); ok {
-							thisProp["value"] = strconv.FormatBool(pValue)
-						}
-					default:
-						return diag.Errorf("For Connection '%v' and Property '%v': unable to identify value type, only string or boolean is currently supported", connItem.Name, thisProp["name"])
-					}
-				}
-				connProps = append(connProps, thisProp)
+		if v := connItem.Properties; v != nil {
+			props, err := flattenConnectionProperties(&v)
+			if err != nil {
+				return diag.FromErr(err)
 			}
-			conn["property"] = connProps
+
+			conn["property"] = props
 		}
 		conns[i] = conn
 	}
@@ -206,13 +218,4 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 
 	d.SetId(fmt.Sprintf("id-%s-connections", c.CompanyID))
 	return diags
-}
-
-func contains(s []string, str string) bool {
-	for _, a := range s {
-		if a == str {
-			return true
-		}
-	}
-	return false
 }

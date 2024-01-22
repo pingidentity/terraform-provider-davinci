@@ -45,3 +45,11 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```release-note:enhancement
 `resource/davinci_application_flow_policy`: Added `policy_flow.allowed_ip_list` to be able to configure an allowed IP list for policy flows.
 ```
+
+```release-note:bug
+`data-source/davinci_connections`: Fixed the `connections.customer_id` attribute not being retrieved into state.
+```
+
+```release-note:bug
+`data-source/davinci_connections`: Fixed bug where not all connections are returned for a new environment where connections are still provisioning in the service
+```
