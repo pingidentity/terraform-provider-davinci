@@ -1,7 +1,3 @@
-data "davinci_applications" "all" {
+data "davinci_applications" "all_applications" {
   environment_id = var.environment_id
-}
-
-output "davinci_applications" {
-  value = data.davinci_applications.all.applications
 }

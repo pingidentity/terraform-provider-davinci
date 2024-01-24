@@ -6,18 +6,16 @@ terraform {
     }
     pingone = {
       source  = "pingidentity/pingone"
-      version = "~> 0.24"
+      version = "~> 0.25"
     }
   }
 }
 
 provider "davinci" {
-  //Must be Identity Data Admin for Environment
-  username = var.pingone_dv_admin_username
-  password = var.pingone_dv_admin_password
-  region   = var.pingone_region
-  // User should exist in Identities of this environment
+  username       = var.pingone_dv_admin_username
+  password       = var.pingone_dv_admin_password
   environment_id = var.pingone_admin_environment_id
+  region         = var.pingone_region
 }
 
 provider "pingone" {
@@ -27,7 +25,6 @@ provider "pingone" {
   region         = var.pingone_region
 }
 
-// Create a new environment using the PingOne provider.  The organization must have the DaVinci feature flag enabled.
 resource "pingone_environment" "dv_example" {
   name        = "DaVinci Terraform Example"
   description = "A new trial environment for DaVinci Terraform configuration-as-code."

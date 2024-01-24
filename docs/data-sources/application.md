@@ -13,8 +13,8 @@ description: |-
 
 ```terraform
 data "davinci_application" "by_app_id" {
-  application_id = var.application_id
   environment_id = var.environment_id
+  application_id = var.application_id
 }
 
 output "davinci_app_one_key" {
