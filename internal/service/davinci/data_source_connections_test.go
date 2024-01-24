@@ -10,15 +10,15 @@ import (
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 )
 
-func TestAccDataSourceConnection_AllConnections_Clean(t *testing.T) {
-	testAccDataSourceConnection_AllConnections(t, false)
+func TestAccDataSourceConnections_AllConnections_Clean(t *testing.T) {
+	testAccDataSourceConnections_AllConnections(t, false)
 }
 
-func TestAccDataSourceConnection_AllConnections_WithBootstrap(t *testing.T) {
-	testAccDataSourceConnection_AllConnections(t, true)
+func TestAccDataSourceConnections_AllConnections_WithBootstrap(t *testing.T) {
+	testAccDataSourceConnections_AllConnections(t, true)
 }
 
-func testAccDataSourceConnection_AllConnections(t *testing.T, withBootstrapConfig bool) {
+func testAccDataSourceConnections_AllConnections(t *testing.T, withBootstrapConfig bool) {
 
 	resourceBase := "davinci_connections"
 	resourceName := acctest.ResourceNameGen()
@@ -26,7 +26,7 @@ func testAccDataSourceConnection_AllConnections(t *testing.T, withBootstrapConfi
 
 	name := resourceName
 
-	hcl := testAccDataSourceConnection_AllConnections_Hcl(resourceName, name, withBootstrapConfig)
+	hcl := testAccDataSourceConnections_AllConnections_Hcl(resourceName, name, withBootstrapConfig)
 
 	var connectionsCountRegex *regexp.Regexp
 	if withBootstrapConfig {
@@ -100,15 +100,15 @@ func testAccDataSourceConnection_AllConnections(t *testing.T, withBootstrapConfi
 	})
 }
 
-func TestAccDataSourceConnection_FilteredConnections_Clean(t *testing.T) {
-	testAccDataSourceConnection_FilteredConnections(t, false)
+func TestAccDataSourceConnections_FilteredConnections_Clean(t *testing.T) {
+	testAccDataSourceConnections_FilteredConnections(t, false)
 }
 
-func TestAccDataSourceConnection_FilteredConnections_WithBootstrap(t *testing.T) {
-	testAccDataSourceConnection_FilteredConnections(t, true)
+func TestAccDataSourceConnections_FilteredConnections_WithBootstrap(t *testing.T) {
+	testAccDataSourceConnections_FilteredConnections(t, true)
 }
 
-func testAccDataSourceConnection_FilteredConnections(t *testing.T, withBootstrapConfig bool) {
+func testAccDataSourceConnections_FilteredConnections(t *testing.T, withBootstrapConfig bool) {
 
 	resourceBase := "davinci_connections"
 	resourceName := acctest.ResourceNameGen()
@@ -116,7 +116,7 @@ func testAccDataSourceConnection_FilteredConnections(t *testing.T, withBootstrap
 
 	name := resourceName
 
-	hcl := testAccDataSourceConnection_FilteredConnections_Hcl(resourceName, name, withBootstrapConfig)
+	hcl := testAccDataSourceConnections_FilteredConnections_Hcl(resourceName, name, withBootstrapConfig)
 
 	var connectionsCountRegex *regexp.Regexp
 	if withBootstrapConfig {
@@ -172,90 +172,90 @@ func testAccDataSourceConnection_FilteredConnections(t *testing.T, withBootstrap
 	})
 }
 
-func testAccDataSourceConnection_AllConnections_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccDataSourceConnections_AllConnections_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
 	return fmt.Sprintf(`
 %[1]s
 
 resource "davinci_connection" "%[2]s-1" {
-	environment_id = pingone_environment.%[2]s.id
-	connector_id   = "httpConnector"
-	name           = "%[3]s-1"
-	property {
-	  name  = "recaptchaSecretKey"
-	  value = "test"
-	}
-	property {
-	  name  = "recaptchaSiteKey"
-	  value = "test2"
-	}
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "httpConnector"
+  name           = "%[3]s-1"
+  property {
+    name  = "recaptchaSecretKey"
+    value = "test"
   }
+  property {
+    name  = "recaptchaSiteKey"
+    value = "test2"
+  }
+}
 
-  resource "davinci_connection" "%[2]s-2" {
-	environment_id = pingone_environment.%[2]s.id
-	connector_id   = "httpConnector"
-	name           = "%[3]s-2"
-  }
+resource "davinci_connection" "%[2]s-2" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "httpConnector"
+  name           = "%[3]s-2"
+}
 
-  resource "davinci_connection" "%[2]s-3" {
-	environment_id = pingone_environment.%[2]s.id
-	connector_id   = "annotationConnector"
-	name           = "%[3]s-3"
-  }
+resource "davinci_connection" "%[2]s-3" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "annotationConnector"
+  name           = "%[3]s-3"
+}
 
 data "davinci_connections" "%[2]s" {
   environment_id = resource.pingone_environment.%[2]s.id
 
   depends_on = [
-	davinci_connection.%[2]s-1,
-	davinci_connection.%[2]s-2,
-	davinci_connection.%[2]s-3,
-	  ]
+    davinci_connection.%[2]s-1,
+    davinci_connection.%[2]s-2,
+    davinci_connection.%[2]s-3,
+  ]
 }
 `, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
 }
 
-func testAccDataSourceConnection_FilteredConnections_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccDataSourceConnections_FilteredConnections_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
 	return fmt.Sprintf(`
 %[1]s
 
 resource "davinci_connection" "%[2]s-1" {
-	environment_id = pingone_environment.%[2]s.id
-	connector_id   = "httpConnector"
-	name           = "%[3]s-1"
-	property {
-	  name  = "recaptchaSecretKey"
-	  value = "test"
-	}
-	property {
-	  name  = "recaptchaSiteKey"
-	  value = "test2"
-	}
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "httpConnector"
+  name           = "%[3]s-1"
+  property {
+    name  = "recaptchaSecretKey"
+    value = "test"
   }
+  property {
+    name  = "recaptchaSiteKey"
+    value = "test2"
+  }
+}
 
-  resource "davinci_connection" "%[2]s-2" {
-	environment_id = pingone_environment.%[2]s.id
-	connector_id   = "httpConnector"
-	name           = "%[3]s-2"
-  }
+resource "davinci_connection" "%[2]s-2" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "httpConnector"
+  name           = "%[3]s-2"
+}
 
-  resource "davinci_connection" "%[2]s-3" {
-	environment_id = pingone_environment.%[2]s.id
-	connector_id   = "annotationConnector"
-	name           = "%[3]s-3"
-  }
+resource "davinci_connection" "%[2]s-3" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "annotationConnector"
+  name           = "%[3]s-3"
+}
 
 data "davinci_connections" "%[2]s" {
   environment_id = resource.pingone_environment.%[2]s.id
 
   connector_ids = [
-	"httpConnector",
+    "httpConnector",
   ]
 
   depends_on = [
-	davinci_connection.%[2]s-1,
-	davinci_connection.%[2]s-2,
-	davinci_connection.%[2]s-3,
-	  ]
+    davinci_connection.%[2]s-1,
+    davinci_connection.%[2]s-2,
+    davinci_connection.%[2]s-3,
+  ]
 }
 `, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
 }

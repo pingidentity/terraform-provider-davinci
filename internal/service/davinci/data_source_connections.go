@@ -75,7 +75,7 @@ func DataSourceConnections() *schema.Resource {
 						"property": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							Description: "Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate property name/value pairs for the connection.",
+							Description: "Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) document to find the appropriate property name/value pairs for the connection.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
@@ -120,59 +120,8 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 
 	environmentID := d.Get("environment_id").(string)
 
-	connections := -1
-
-	stateConf := &retry.StateChangeConf{
-		Pending: []string{
-			"false",
-		},
-		Target: []string{
-			"true",
-			"err",
-		},
-		Refresh: func() (interface{}, string, error) {
-
-			// Run the API call
-			sdkRes, err := sdk.DoRetryable(
-				ctx,
-				c,
-				environmentID,
-				func() (interface{}, *http.Response, error) {
-					return c.ReadConnectionsWithResponse(&environmentID, nil)
-				},
-			)
-
-			if err != nil {
-				return nil, "err", err
-			}
-
-			res, ok := sdkRes.([]dv.Connection)
-			if !ok {
-				err = fmt.Errorf("Unable to parse connections response from Davinci API")
-				return nil, "err", err
-			}
-
-			// If the number of connections has changed since last time, we need to keep waiting
-			if len(res) != connections {
-				connections = len(res)
-				return res, "false", nil
-			}
-
-			return res, "true", nil
-		},
-		Timeout:                   d.Timeout(schema.TimeoutRead) - time.Minute,
-		Delay:                     10 * time.Second,
-		MinTimeout:                2 * time.Second,
-		ContinuousTargetOccurence: 5, // we want five consecutive successful reads of the same number of connections
-	}
-	sdkRes, err := stateConf.WaitForStateContext(ctx)
+	res, err := readAllConnections(ctx, c, environmentID, d.Timeout(schema.TimeoutRead))
 	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	res, ok := sdkRes.([]dv.Connection)
-	if !ok {
-		err = fmt.Errorf("Unable to parse connections response from Davinci API")
 		return diag.FromErr(err)
 	}
 
@@ -218,4 +167,66 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 
 	d.SetId(fmt.Sprintf("id-%s-connections", c.CompanyID))
 	return diags
+}
+
+func readAllConnections(ctx context.Context, c *dv.APIClient, environmentID string, timeout time.Duration) ([]dv.Connection, error) {
+
+	connections := -1
+
+	stateConf := &retry.StateChangeConf{
+		Pending: []string{
+			"false",
+		},
+		Target: []string{
+			"true",
+			"err",
+		},
+		Refresh: func() (interface{}, string, error) {
+
+			// Run the API call
+			sdkRes, err := sdk.DoRetryable(
+				ctx,
+				c,
+				environmentID,
+				func() (interface{}, *http.Response, error) {
+					return c.ReadConnectionsWithResponse(&environmentID, nil)
+				},
+			)
+
+			if err != nil {
+				return nil, "err", err
+			}
+
+			res, ok := sdkRes.([]dv.Connection)
+			if !ok {
+				err = fmt.Errorf("Unable to parse connections response from Davinci API")
+				return nil, "err", err
+			}
+
+			// If the number of connections has changed since last time, we need to keep waiting
+			if len(res) != connections {
+				connections = len(res)
+				return res, "false", nil
+			}
+
+			return res, "true", nil
+		},
+		Timeout:                   timeout - time.Minute,
+		Delay:                     2 * time.Second,
+		MinTimeout:                2 * time.Second,
+		ContinuousTargetOccurence: 5, // we want five consecutive successful reads of the same number of connections
+	}
+	sdkRes, err := stateConf.WaitForStateContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	res, ok := sdkRes.([]dv.Connection)
+	if !ok {
+		err = fmt.Errorf("Unable to parse connections response from Davinci API")
+		return nil, err
+	}
+
+	return res, nil
+
 }
