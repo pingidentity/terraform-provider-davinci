@@ -53,3 +53,7 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```release-note:bug
 `data-source/davinci_connections`: Fixed bug where not all connections are returned for a new environment where connections are still provisioning in the service
 ```
+
+```release-note:bug
+Fixed bug where resources may be created in the incorrect PingOne environment when multiple DaVinci environments are being configured in the same `apply` routine.
+```
