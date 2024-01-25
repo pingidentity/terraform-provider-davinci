@@ -70,7 +70,7 @@ resource "davinci_application_flow_policy" "registration_flow_policy" {
 ### Optional
 
 - `api_key_enabled` (Boolean) A boolean that specifies whether the API key is enabled for the application. Defaults to `true`.
-- `oauth` (Block List, Max: 1) A single list item specifying OIDC/OAuth 2.0 configuration (see [below for nested schema](#nestedblock--oauth))
+- `oauth` (Block List, Max: 1) A single list item specifying OIDC/OAuth 2.0 configuration. (see [below for nested schema](#nestedblock--oauth))
 - `policy` (Block Set, Deprecated) **Deprecation Notice** The `policy` block should be removed from application and managed as a `davinci_application_flow_policy` resource. Review the migration guidance here: https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-application-flow-policy. Flow Policy Configuration (see [below for nested schema](#nestedblock--policy))
 - `saml` (Block List, Max: 1, Deprecated) **Deprecation notice**: SAML configuration is now deprecated in the service and will be removed in the next major release.  A single list item that specifies SAML configuration. (see [below for nested schema](#nestedblock--saml))
 - `user_portal` (Block List, Max: 1, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.  A single object that describes user portal settings. (see [below for nested schema](#nestedblock--user_portal))
@@ -81,8 +81,8 @@ resource "davinci_application_flow_policy" "registration_flow_policy" {
 - `created_date` (Number) Resource creation date as epoch.
 - `customer_id` (String) An ID that represents the customer tenant.
 - `id` (String) The ID of this resource.
-- `metadata` (Map of String) Appplication Metadata
-- `user_pools` (Map of String) Appplication User Pools.
+- `metadata` (Map of String) Application Metadata.
+- `user_pools` (Map of String) Application User Pools.
 
 <a id="nestedblock--oauth"></a>
 ### Nested Schema for `oauth`

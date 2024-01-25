@@ -63,7 +63,7 @@ func ResourceApplication() *schema.Resource {
 			"metadata": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Appplication Metadata",
+				Description: "Application Metadata.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -71,7 +71,7 @@ func ResourceApplication() *schema.Resource {
 			"user_pools": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Appplication User Pools.",
+				Description: "Application User Pools.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -203,7 +203,7 @@ func ResourceApplication() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
-				Description: "A single list item specifying OIDC/OAuth 2.0 configuration",
+				Description: "A single list item specifying OIDC/OAuth 2.0 configuration.",
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
