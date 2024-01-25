@@ -34,7 +34,8 @@ data "davinci_connection" "example_by_id" {
 
 ### Optional
 
-- `id` (String) A string that specifies the ID of the connection to retrieve. Either `id` or `name` must be specified.
+- `connection_id` (String) A string that specifies the ID of the connection to retrieve. Either `connection_id` or `name` must be specified.
+- `id` (String) A string that specifies the ID of the connection to retrieve.  This field is deprecated for retrieving the connection and will be made read only in a future release, use `connection_id` instead.
 - `name` (String) A string that specifies the name of the connection to retrieve. Either `id` or `name` must be specified.
 - `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
 

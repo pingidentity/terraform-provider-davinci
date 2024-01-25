@@ -61,3 +61,7 @@ Fixed bug where resources may be created in the incorrect PingOne environment wh
 ```release-note:bug
 `data-source/davinci_applications`: Fixed bug where not all applications are returned for an environment.
 ```
+
+```release-note:bug
+`resource/davinci_flow`: Fixed inability to update the environment ID after initial configuration (resource requires replacement).
+```

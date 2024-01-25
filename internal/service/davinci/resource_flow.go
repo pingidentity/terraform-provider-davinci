@@ -14,9 +14,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/mitchellh/mapstructure"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -27,6 +29,14 @@ func ResourceFlow() *schema.Resource {
 		UpdateContext: resourceFlowUpdate,
 		DeleteContext: resourceFlowDelete,
 		Schema: map[string]*schema.Schema{
+			"environment_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The ID of the PingOne environment to import the DaVinci flow in to. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+
+				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
+				ForceNew:         true,
+			},
 			"flow_json": {
 				Type:             schema.TypeString,
 				Required:         true,
@@ -38,29 +48,24 @@ func ResourceFlow() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Deploy Flow after import. Flows must be deployed to be used.",
+				Description: "A boolean that specifies whether to deploy the flow after import. Flows must be deployed to become active.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Computed Flow Name after import. Matches 'name' in flow_json",
-			},
-			"environment_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "PingOne Environment to import flow into.",
+				Description: "A string that identifies the flow name after import.",
 			},
 			"connection_link": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				Description: "Connections this flow depends on. flow_json connectionId will be updated to id matching name .",
+				Description: "Mappings to connections that this flow depends on.  Connections should be managed (with the `davinci_connection` resource) or retrieved (with the `davinci_connection` data source) to provide the mappings needed for this configuration block.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "A string that specifies the connector ID that will be used when flow is imported.",
+							Description: "A string that specifies the connector ID that will be applied when flow is imported.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -70,7 +75,7 @@ func ResourceFlow() *schema.Resource {
 						"replace_import_connection_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Connection ID of the connector in the import to replace with the connector described in `id` and `name`.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
+							Description: "Connection ID of the connector in the import to replace with the connector described in `id` and `name` parameters.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
 						},
 					},
 				},
@@ -79,18 +84,23 @@ func ResourceFlow() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				Description: "Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1).",
+				Description: "Child flows of this resource, where the `flow_json` contains reference to subflows.  If the `flow_json` contains subflows, this one `subflow_link` block is required per contained subflow.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Subflow Flow ID that will be used when flow is imported.",
+							Description: "Subflow Flow ID that will be applied when flow is imported.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Subflow Name to match when updating flow_json subflowId.",
+							Description: "The subflow name.  If `replace_import_subflow_id` is also specified, this value is used when the flow is imported.  If `replace_import_subflow_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.",
+						},
+						"replace_import_subflow_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
 						},
 						//TODO implement subflow version
 						// "subflow_version": {
@@ -105,53 +115,53 @@ func ResourceFlow() *schema.Resource {
 			"flow_variables": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Returned list of Flow Context variables. These are Variable resources that are created and managed by the Flow resource via flow_json",
+				Description: "Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via flow_json.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "DaVinci internal name of variable",
+							Description: "The DaVinci internal ID of the variable.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Friendly Name of Variable in UI",
+							Description: "The user friendly name of the variable in the UI.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Description of Variable in UI",
+							Description: "A string that specifies the description of the variable.",
 						},
 						"flow_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Should match id of this davinci_flow",
+							Computed:    true,
+							Description: "The flow ID that the variable belongs to, which should match the ID of this resource.",
 						},
 						"context": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Should always return 'flow'",
+							Description: "The variable context.  Should always return `flow`.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Underlying type of variable",
+							Description: "The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.",
 						},
 						"mutable": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow.",
+							Description: "A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.",
 						},
 						"min": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "",
+							Description: "The minimum value of the variable, if the `type` parameter is set as `number`.",
 						},
 						"max": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "",
+							Description: "The maximum value of the variable, if the `type` parameter is set as `number`.",
 						},
 					},
 				},
