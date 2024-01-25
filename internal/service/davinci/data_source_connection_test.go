@@ -274,6 +274,32 @@ func TestAccDataSourceConnection_BootstrapConnection_ByName_WithBootstrap(t *tes
 	})
 }
 
+func TestAccDataSourceConnection_NotFound(t *testing.T) {
+	t.Parallel()
+
+	resourceName := acctest.ResourceNameGen()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProviderFactories: acctest.ProviderFactories,
+		ExternalProviders: acctest.ExternalProviders,
+		ErrorCheck:        acctest.ErrorCheck(t),
+		Steps: []resource.TestStep{
+			{
+				Config:      testAccDataSourceConnection_NotFoundByName(resourceName),
+				ExpectError: regexp.MustCompile("Connection not found"),
+			},
+			{
+				Config:      testAccDataSourceConnection_NotFoundByID(resourceName),
+				ExpectError: regexp.MustCompile("Connection not found"),
+			},
+		},
+	})
+}
+
 func testAccDataSourceConnection_DefinedConnection_ByID_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
 	return fmt.Sprintf(`
 %[1]s
@@ -360,4 +386,26 @@ data "davinci_connection" "%[2]s" {
   name           = "PingOne" // the PingOne connector
 }
 `, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
+}
+
+func testAccDataSourceConnection_NotFoundByName(resourceName string) string {
+	return fmt.Sprintf(`
+	%[1]s
+
+data "davinci_connection" "%[2]s" {
+	environment_id = pingone_environment.%[2]s.id
+
+  name = "doesnotexist"
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName)
+}
+
+func testAccDataSourceConnection_NotFoundByID(resourceName string) string {
+	return fmt.Sprintf(`
+	%[1]s
+
+data "davinci_connection" "%[2]s" {
+	environment_id = pingone_environment.%[2]s.id
+
+  connection_id = "9c052a8a-14be-44e4-8f07-2662569994ce" // dummy ID that conforms to UUID v4
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName)
 }

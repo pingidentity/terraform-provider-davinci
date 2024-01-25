@@ -24,15 +24,22 @@ func DataSourceConnection() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				Description:  "A string that specifies the ID of the connection to retrieve. Either `id` or `name` must be specified.",
-				ExactlyOneOf: []string{"id", "name"},
+				Description:  "A string that specifies the ID of the connection to retrieve.  This field is deprecated for retrieving the connection and will be made read only in a future release, use `connection_id` instead.",
+				ExactlyOneOf: []string{"id", "connection_id", "name"},
+			},
+			"connection_id": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "A string that specifies the ID of the connection to retrieve. Either `connection_id` or `name` must be specified.",
+				ExactlyOneOf: []string{"id", "connection_id", "name"},
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				Description:  "A string that specifies the name of the connection to retrieve. Either `id` or `name` must be specified.",
-				ExactlyOneOf: []string{"id", "name"},
+				ExactlyOneOf: []string{"id", "connection_id", "name"},
 			},
 			"connector_id": {
 				Type:        schema.TypeString,
@@ -114,6 +121,17 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta 
 
 	// prep case where id is provided
 	if v, ok := d.GetOk("id"); ok {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "Use of `id` to select a connection is deprecated, please use `connection_id` instead",
+			Detail:   "The use of `id` is deprecated and will be made a computed attribute in a future release, please use `connection_id` instead",
+		})
+		value := v.(string)
+		connId = &value
+	}
+
+	// prep case where id is provided
+	if v, ok := d.GetOk("connection_id"); ok {
 		value := v.(string)
 		connId = &value
 	}
