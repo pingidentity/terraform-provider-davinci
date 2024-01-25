@@ -72,32 +72,32 @@ resource "davinci_flow" "subflow" {
 
 ### Required
 
-- `environment_id` (String) PingOne Environment to import flow into.
+- `environment_id` (String) The ID of the PingOne environment to import the DaVinci flow in to. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
 - `flow_json` (String, Sensitive) DaVinci Flow in raw json format.
 
 ### Optional
 
-- `connection_link` (Block Set) Connections this flow depends on. flow_json connectionId will be updated to id matching name . (see [below for nested schema](#nestedblock--connection_link))
-- `deploy` (Boolean) Deploy Flow after import. Flows must be deployed to be used. Defaults to `true`.
-- `subflow_link` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflow_link))
+- `connection_link` (Block Set) Mappings to connections that this flow depends on.  Connections should be managed (with the `davinci_connection` resource) or retrieved (with the `davinci_connection` data source) to provide the mappings needed for this configuration block. (see [below for nested schema](#nestedblock--connection_link))
+- `deploy` (Boolean) A boolean that specifies whether to deploy the flow after import. Flows must be deployed to become active. Defaults to `true`.
+- `subflow_link` (Block Set) Child flows of this resource, where the `flow_json` contains reference to subflows.  If the `flow_json` contains subflows, this one `subflow_link` block is required per contained subflow. (see [below for nested schema](#nestedblock--subflow_link))
 
 ### Read-Only
 
-- `flow_variables` (List of Object) Returned list of Flow Context variables. These are Variable resources that are created and managed by the Flow resource via flow_json (see [below for nested schema](#nestedatt--flow_variables))
+- `flow_variables` (List of Object) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via flow_json. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
-- `name` (String) Computed Flow Name after import. Matches 'name' in flow_json
+- `name` (String) A string that identifies the flow name after import.
 
 <a id="nestedblock--connection_link"></a>
 ### Nested Schema for `connection_link`
 
 Required:
 
-- `id` (String) A string that specifies the connector ID that will be used when flow is imported.
+- `id` (String) A string that specifies the connector ID that will be applied when flow is imported.
 - `name` (String) The connector name.  If `replace_import_connection_id` is also specified, this value is used when the flow is imported.  If `replace_import_connection_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.
 
 Optional:
 
-- `replace_import_connection_id` (String) Connection ID of the connector in the import to replace with the connector described in `id` and `name`.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
+- `replace_import_connection_id` (String) Connection ID of the connector in the import to replace with the connector described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
 
 
 <a id="nestedblock--subflow_link"></a>
@@ -105,8 +105,12 @@ Optional:
 
 Required:
 
-- `id` (String) Subflow Flow ID that will be used when flow is imported.
-- `name` (String) Subflow Name to match when updating flow_json subflowId.
+- `id` (String) Subflow Flow ID that will be applied when flow is imported.
+- `name` (String) The subflow name.  If `replace_import_subflow_id` is also specified, this value is used when the flow is imported.  If `replace_import_subflow_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.
+
+Optional:
+
+- `replace_import_subflow_id` (String) Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
 
 
 <a id="nestedatt--flow_variables"></a>
