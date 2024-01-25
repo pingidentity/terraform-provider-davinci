@@ -137,8 +137,8 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 	} else {
 		resp = res
 	}
-	conns := make([]interface{}, len(resp))
-	for i, connItem := range resp {
+	conns := make([]map[string]interface{}, 0)
+	for _, connItem := range resp {
 		conn := map[string]interface{}{
 			"id":           connItem.ConnectionID,
 			"connector_id": connItem.ConnectorID,
@@ -155,7 +155,7 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 
 			conn["property"] = props
 		}
-		conns[i] = conn
+		conns = append(conns, conn)
 	}
 
 	if err := d.Set("connections", conns); err != nil {
