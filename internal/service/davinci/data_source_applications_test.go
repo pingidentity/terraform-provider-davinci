@@ -168,50 +168,50 @@ func testAccDataSourceApplications_AllApplications_Hcl(resourceName, name string
 %[1]s
 
 resource "davinci_application" "%[2]s-1" {
-	environment_id  = pingone_environment.%[2]s.id
-	name            = "%[3]s-1"
-	api_key_enabled = false
-  
-	oauth {
-	  enabled = false
-	  values {
-		enabled                       = false
-		allowed_grants                = ["implicit", "authorizationCode"]
-		allowed_scopes                = ["openid", "profile"]
-		enforce_signed_request_openid = false
-		redirect_uris = [
-		  "https://auth.ping-eng.com/env-id/rp/callback/openid_connect",
-		  "https://auth.ping-eng.com/env-id/rp/callback/oidc",
-		  "https://auth.ping-eng.com/env-id/rp/callback/1",
-		]
-		logout_uris = [
-		  "https://auth.ping-eng.com/env-id/logout1",
-		  "https://auth.ping-eng.com/env-id/logout"
-		]
-		sp_jwks_url = "https://www.ping-eng.com/testjwks"
-	  }
-	}
-  }
+  environment_id  = pingone_environment.%[2]s.id
+  name            = "%[3]s-1"
+  api_key_enabled = false
 
-  resource "davinci_application" "%[2]s-2" {
-	environment_id = pingone_environment.%[2]s.id
-	name           = "%[3]s-2"
+  oauth {
+    enabled = false
+    values {
+      enabled                       = false
+      allowed_grants                = ["implicit", "authorizationCode"]
+      allowed_scopes                = ["openid", "profile"]
+      enforce_signed_request_openid = false
+      redirect_uris = [
+        "https://auth.ping-eng.com/env-id/rp/callback/openid_connect",
+        "https://auth.ping-eng.com/env-id/rp/callback/oidc",
+        "https://auth.ping-eng.com/env-id/rp/callback/1",
+      ]
+      logout_uris = [
+        "https://auth.ping-eng.com/env-id/logout1",
+        "https://auth.ping-eng.com/env-id/logout"
+      ]
+      sp_jwks_url = "https://www.ping-eng.com/testjwks"
+    }
   }
+}
 
-  resource "davinci_application" "%[2]s-3" {
-	environment_id = pingone_environment.%[2]s.id
-	name           = "%[3]s-3"
-  
-	oauth {
-	  values {
-		allowed_grants = ["authorizationCode"]
-		allowed_scopes = ["openid", "profile"]
-		redirect_uris = [
-		  "https://auth.ping-eng.com/env-id/rp/callback/openid_connect",
-		]
-	  }
-	}
+resource "davinci_application" "%[2]s-2" {
+  environment_id = pingone_environment.%[2]s.id
+  name           = "%[3]s-2"
+}
+
+resource "davinci_application" "%[2]s-3" {
+  environment_id = pingone_environment.%[2]s.id
+  name           = "%[3]s-3"
+
+  oauth {
+    values {
+      allowed_grants = ["authorizationCode"]
+      allowed_scopes = ["openid", "profile"]
+      redirect_uris = [
+        "https://auth.ping-eng.com/env-id/rp/callback/openid_connect",
+      ]
+    }
   }
+}
 
 data "davinci_applications" "%[2]s" {
   environment_id = resource.pingone_environment.%[2]s.id

@@ -400,27 +400,27 @@ resource "davinci_application_flow_policy" "%[2]s" {
   status = "disabled"
 
   policy_flow {
-    flow_id    = davinci_flow.%[2]s-1.id
-    version_id = -1
-    weight     = 35
-	success_nodes = ["node-1", "node-2"]
-	allowed_ip_list = ["10.1.2.3/23", "10.1.2.4/23"]
+    flow_id         = davinci_flow.%[2]s-1.id
+    version_id      = -1
+    weight          = 35
+    success_nodes   = ["node-1", "node-2"]
+    allowed_ip_list = ["10.1.2.3/23", "10.1.2.4/23"]
   }
 
   policy_flow {
-    flow_id    = davinci_flow.%[2]s-2.id
-    version_id = -1
-    weight     = 45
-	success_nodes = ["node-1", "node-2"]
-	allowed_ip_list = ["10.1.2.6/23", "10.1.2.5/23"]
+    flow_id         = davinci_flow.%[2]s-2.id
+    version_id      = -1
+    weight          = 45
+    success_nodes   = ["node-1", "node-2"]
+    allowed_ip_list = ["10.1.2.6/23", "10.1.2.5/23"]
   }
 
   policy_flow {
-    flow_id    = davinci_flow.%[2]s-3.id
-    version_id = -1
-    weight     = 20
-	success_nodes = ["node-1", "node-2"]
-	allowed_ip_list = ["10.1.2.3/23"]
+    flow_id         = davinci_flow.%[2]s-3.id
+    version_id      = -1
+    weight          = 20
+    success_nodes   = ["node-1", "node-2"]
+    allowed_ip_list = ["10.1.2.3/23"]
   }
 }
 
@@ -454,9 +454,9 @@ resource "davinci_application_flow_policy" "%[2]s" {
   name = "%[3]s"
 
   policy_flow {
-	flow_id    = davinci_flow.%[2]s-1.id
-    version_id = -1
-	success_nodes = ["node-3"]
+    flow_id       = davinci_flow.%[2]s-1.id
+    version_id    = -1
+    success_nodes = ["node-3"]
   }
 }
 
@@ -520,17 +520,17 @@ resource "davinci_flow" "%[1]s-%[2]d" {
   deploy = true
 
   connection_link {
-	replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
+    replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
 
     id   = davinci_connection.%[1]s.id
     name = davinci_connection.%[1]s.name
   }
 
   lifecycle {
-	// For this resource's tests, we don't need to deal with import drift here
+    // For this resource's tests, we don't need to deal with import drift here
     ignore_changes = [
       flow_json,
-	  connection_link,
+      connection_link,
     ]
   }
 }
