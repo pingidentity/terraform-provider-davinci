@@ -408,7 +408,8 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, met
 
 	res, err := readAllApplications(ctx, c, environmentID, d.Timeout(schema.TimeoutRead))
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	apps := make([]map[string]interface{}, 0)
@@ -416,14 +417,16 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, met
 		thisApp := thisApp // G601 (CWE-118)
 		app, err := flattenApp(&thisApp)
 		if err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		app["id"] = thisApp.AppID
 		apps = append(apps, app)
 	}
 
 	if err := d.Set("applications", apps); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(fmt.Sprintf("id-%s-applications", c.CompanyID))

@@ -423,7 +423,8 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 
 	app, err := expandApp(d)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	environmentID := d.Get("environment_id").(string)
@@ -438,13 +439,15 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	res, ok := sdkRes.(*dv.App)
 	if !ok || res.Name == "" {
 		err = fmt.Errorf("Unable to parse created app response from Davinci API")
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(res.AppID)
@@ -477,22 +480,26 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 				return diags
 			}
 		}
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resp, ok := skdRes.(*dv.App)
 	if !ok {
 		err = fmt.Errorf("failed to cast App type to response on Application with id: %s", appId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	flatResp, err := flattenApp(resp)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	for i, v := range flatResp {
 		if err = d.Set(i, v); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 	d.SetId(resp.AppID)
@@ -500,6 +507,8 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 }
 
 func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	c := meta.(*dv.APIClient)
 
 	appId := d.Id()
@@ -529,12 +538,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					},
 				)
 				if err != nil {
-					return diag.FromErr(err)
+					diags = append(diags, diag.FromErr(err)...)
+					return diags
 				}
 				res, ok := sdkRes.(*dv.App)
 				if !ok || res.Name == "" {
 					err = fmt.Errorf("failed to cast update policy response to Application on id: %s", appId)
-					return diag.FromErr(err)
+					diags = append(diags, diag.FromErr(err)...)
+					return diags
 				}
 				delete(oldPolicyMap, oldPol.PolicyID)
 			} else {
@@ -548,12 +559,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					},
 				)
 				if err != nil {
-					return diag.FromErr(err)
+					diags = append(diags, diag.FromErr(err)...)
+					return diags
 				}
 				res, ok := sdkRes.(*dv.App)
 				if !ok || res.Name == "" {
 					err = fmt.Errorf("failed to cast create policy response to Application on id: %s", appId)
-					return diag.FromErr(err)
+					diags = append(diags, diag.FromErr(err)...)
+					return diags
 				}
 				delete(oldPolicyMap, oldPol.PolicyID)
 			}
@@ -569,7 +582,8 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 				},
 			)
 			if err != nil {
-				return diag.FromErr(err)
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
 			}
 		}
 	}
@@ -577,7 +591,8 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 	if d.HasChangesExcept("policy") {
 		app, err := expandApp(d)
 		if err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		app.AppID = d.Id()
 
@@ -590,12 +605,14 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 			},
 		)
 		if err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		res, ok := sdkRes.(*dv.App)
 		if !ok || res.Name == "" {
 			err = fmt.Errorf("failed to cast update application response to Application on id: %s", app.AppID)
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 
@@ -624,12 +641,14 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 				return diags
 			}
 		}
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	res, ok := sdkRes.(*dv.Message)
 	if !ok || res.Message == "" {
 		err = fmt.Errorf("failed to delete update application response to Application on id: %s", appId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId("")

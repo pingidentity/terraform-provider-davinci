@@ -106,7 +106,8 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta 
 	// Make sure we have all connections propagated
 	_, err = readAllConnections(ctx, c, environmentID, d.Timeout(schema.TimeoutRead))
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	// prep case where name is provided
@@ -115,7 +116,8 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta 
 		connId, err = getConnectionIdByName(ctx, c, environmentID, connName.(string))
 		if err != nil {
 			err = fmt.Errorf("Connection not found")
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 
@@ -150,42 +152,52 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta 
 		if dvError, ok := err.(dv.ErrorResponse); ok {
 			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_CONNECTION_NOT_FOUND {
 				err = fmt.Errorf("Connection not found")
-				return diag.FromErr(err)
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
 			}
 		}
 
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	res, ok := sdkRes.(*dv.Connection)
 	if !ok {
 		err = fmt.Errorf("Unable to parse response from Davinci API on connection id: %v", connId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(res.ConnectionID)
 
 	if err := d.Set("name", res.Name); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("connector_id", res.ConnectorID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("created_date", res.CreatedDate); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("environment_id", res.CompanyID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("customer_id", res.CustomerID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	props, err := flattenConnectionProperties(&res.Properties)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("property", props); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	return diags

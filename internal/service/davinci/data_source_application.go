@@ -422,28 +422,33 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta
 		},
 	)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resp, ok := sdkRes.(*dv.App)
 	if !ok {
 		err = fmt.Errorf("failed to cast response to Application for id: %s", appId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	flatResp, err := flattenApp(resp)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	for i, v := range flatResp {
 		err := d.Set(i, v)
 		if err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 
 	if err = d.Set("application_id", resp.AppID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(resp.AppID)

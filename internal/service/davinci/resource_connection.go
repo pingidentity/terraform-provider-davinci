@@ -111,13 +111,15 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resp, ok := sdkRes.(*dv.Connection)
 	if !ok || resp.Name == "" {
 		err = fmt.Errorf("failed to cast created response to Connection")
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(resp.ConnectionID)
@@ -126,7 +128,8 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 	// not using reponse itself because it may contain obfuscated values
 	configProps := makePropsListMap(d)
 	if err := d.Set("property", configProps); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resourceConnectionRead(ctx, d, meta)
@@ -169,35 +172,43 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 			}
 		}
 
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	res, ok := sdkRes.(*dv.Connection)
 	if !ok {
 		err = fmt.Errorf("Unable to cast Connection type to response from Davinci API on connection id: %v", connId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(res.ConnectionID)
 
 	if err := d.Set("name", res.Name); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("connector_id", res.ConnectorID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("created_date", res.CreatedDate); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("environment_id", res.CompanyID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("customer_id", res.CustomerID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	props, err := flattenConnectionProperties(&res.Properties)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	// // override props with state props if obfuscated
 	stateProps := makePropsListMap(d)
@@ -212,12 +223,15 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	if err := d.Set("property", props); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	return diags
 }
 
 func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	c := meta.(*dv.APIClient)
 
 	connId := d.Id()
@@ -242,20 +256,23 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 			},
 		)
 		if err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 
 		res, ok := sdkRes.(*dv.Connection)
 		if !ok || res.Name == "" {
 			err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 
 		// Set properties based on incoming config after successful create
 		// not using reponse itself because it may contain obfuscated values
 		configProps := makePropsListMap(d)
 		if err := d.Set("property", configProps); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 
@@ -285,7 +302,8 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta 
 				return diags
 			}
 		}
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	return diags

@@ -122,7 +122,8 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 
 	res, err := readAllConnections(ctx, c, environmentID, d.Timeout(schema.TimeoutRead))
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resp := []dv.Connection{}
@@ -150,7 +151,8 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 		if v := connItem.Properties; v != nil {
 			props, err := flattenConnectionProperties(&v)
 			if err != nil {
-				return diag.FromErr(err)
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
 			}
 
 			conn["property"] = props
@@ -159,10 +161,12 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 
 	if err := d.Set("connections", conns); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("environment_id", c.CompanyID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(fmt.Sprintf("id-%s-connections", c.CompanyID))

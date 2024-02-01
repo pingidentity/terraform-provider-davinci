@@ -47,7 +47,7 @@ func ResourceVariable() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "A string that specifies the description of variable",
+				Description: "A string that specifies the description of the variable.",
 			},
 			"type": {
 				Type:         schema.TypeString,
@@ -104,16 +104,19 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	res, ok := sdkRes.(map[string]dv.Variable)
 	if !ok {
 		err = fmt.Errorf("Unable to parse response from Davinci API for variable")
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if len(res) != 1 {
 		return diag.Errorf("Received error while attempting to create variable")
@@ -145,12 +148,14 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	resp, ok := sdkRes.(map[string]dv.Variable)
 	if !ok {
 		err = fmt.Errorf("Unable to cast variable type to response from Davinci API for variable with name: %s", variableName)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	//variable not found
@@ -164,37 +169,48 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 		name := s[0]
 		context := s[1]
 		if err := d.Set("name", name); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("context", context); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("environment_id", res.CompanyID); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("type", res.Type); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("mutable", res.Mutable); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("description", res.DisplayName); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("value", res.Value); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("min", res.Min); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 		if err := d.Set("max", res.Max); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 	return diags
 }
 
 func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	c := meta.(*dv.APIClient)
 
 	environmentID := d.Get("environment_id").(string)
@@ -215,12 +231,14 @@ func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	resp, ok := sdkRes.(map[string]dv.Variable)
 	if !ok || len(resp) != 1 {
 		err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %s", variablePayload.Name)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	return resourceVariableRead(ctx, d, meta)
@@ -244,12 +262,14 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta in
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	resp, ok := sdkRes.(*dv.Message)
 	if !ok || resp.Message == "" {
 		err = fmt.Errorf("Unable to parse delete response from Davinci API for variable with name: %s", variableName)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId("")

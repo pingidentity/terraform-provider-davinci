@@ -104,7 +104,8 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 
 	appPolicy, err := expandAppPolicy(d)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	environmentID := d.Get("environment_id").(string)
@@ -119,13 +120,15 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	res, ok := sdkRes.(*dv.App)
 	if !ok || res.Name == "" {
 		err = fmt.Errorf("Unable to parse created policy response from Davinci API")
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	var resAppPolicy *dv.Policy
 	for _, v := range res.Policies {
@@ -137,7 +140,8 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 	}
 	if resAppPolicy.PolicyID == "" {
 		err = fmt.Errorf("Unable to find created policy in response from Davinci API")
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId(resAppPolicy.PolicyID)
@@ -171,13 +175,15 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 				return diags
 			}
 		}
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resp, ok := skdRes.(*dv.App)
 	if !ok {
 		err = fmt.Errorf("failed to cast App type to response on Application with id: %s", appId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	flatResp, err := flattenAppPolicy(resp, policyId)
@@ -186,11 +192,13 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 			d.SetId("")
 			return diags
 		}
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	for i, v := range flatResp {
 		if err = d.Set(i, v); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 	d.SetId(policyId)
@@ -198,12 +206,15 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 }
 
 func resourceApplicationFlowPolicyUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	c := meta.(*dv.APIClient)
 
 	appId := d.Get("application_id").(string)
 	appPolicy, err := expandAppPolicy(d)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	appPolicy.PolicyID = d.Id()
 
@@ -218,12 +229,14 @@ func resourceApplicationFlowPolicyUpdate(ctx context.Context, d *schema.Resource
 		},
 	)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	res, ok := sdkRes.(*dv.App)
 	if !ok || res.Name == "" {
 		err = fmt.Errorf("failed to cast update policy response to Application on id: %s", appId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	return resourceApplicationFlowPolicyRead(ctx, d, meta)
@@ -252,13 +265,15 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 				return diags
 			}
 		}
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	res, ok := sdkRes.(*dv.Message)
 	if !ok || res.Message != "" {
 		err = fmt.Errorf("failed to delete application policy with id: %s", appId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	d.SetId("")
