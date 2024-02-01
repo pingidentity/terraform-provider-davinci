@@ -1,0 +1,633 @@
+{
+  "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb",
+  "authTokenExpireIds": [],
+  "connectorIds": [
+    "httpConnector",
+    "functionsConnector",
+    "errorConnector",
+    "flowConnector",
+    "variablesConnector"
+  ],
+  "createdDate": 1706708769850,
+  "currentVersion": 8,
+  "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+  "deployedDate": 1706709739837,
+  "description": "",
+  "flowStatus": "enabled",
+  "isOutputSchemaSaved": false,
+  "name": "full-basic",
+  "publishedVersion": 8,
+  "timeouts": "null",
+  "updatedDate": 1706709739837,
+  "flowId": "c7062a8857740ee2185694bb855f8f21",
+  "versionId": 8,
+  "graphData": {
+    "elements": {
+      "nodes": [
+        {
+          "data": {
+            "id": "1u2m5vzr49",
+            "nodeType": "CONNECTION",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
+            "connectorId": "httpConnector",
+            "name": "Http",
+            "label": "Http",
+            "status": "configured",
+            "capabilityName": "customHtmlMessage",
+            "type": "trigger",
+            "properties": {
+              "message": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"Hello, world?\"\n      }\n    ]\n  }\n]"
+              }
+            }
+          },
+          "position": {
+            "x": 277,
+            "y": 336
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "8fvg7tfr8j",
+            "nodeType": "EVAL",
+            "label": "Evaluator"
+          },
+          "position": {
+            "x": 426.5,
+            "y": 337.25
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "nx0o1b2cmw",
+            "nodeType": "CONNECTION",
+            "connectionId": "de650ca45593b82c49064ead10b9fe17",
+            "connectorId": "functionsConnector",
+            "name": "Functions",
+            "label": "Functions",
+            "status": "configured",
+            "capabilityName": "AEqualsB",
+            "type": "trigger",
+            "properties": {
+              "leftValueA": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"1\"\n      }\n    ]\n  }\n]"
+              },
+              "rightValueB": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"1\"\n      }\n    ]\n  }\n]"
+              }
+            }
+          },
+          "position": {
+            "x": 576,
+            "y": 338.5
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "cdcw8k7dnx",
+            "nodeType": "EVAL",
+            "label": "Evaluator",
+            "properties": {
+              "vsp1ewtr9m": {
+                "value": "allTriggersFalse"
+              },
+              "xb74p6rkd8": {
+                "value": "anyTriggersFalse"
+              }
+            }
+          },
+          "position": {
+            "x": 717,
+            "y": 326
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "ikt13crnhy",
+            "nodeType": "CONNECTION",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
+            "connectorId": "httpConnector",
+            "name": "Http",
+            "label": "Http",
+            "status": "configured",
+            "capabilityName": "createSuccessResponse",
+            "type": "action",
+            "properties": {}
+          },
+          "position": {
+            "x": 1197,
+            "y": 266
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "vsp1ewtr9m",
+            "nodeType": "CONNECTION",
+            "connectionId": "53ab83a4a4ab919d9f2cb02d9e111ac8",
+            "connectorId": "errorConnector",
+            "name": "Error Message",
+            "label": "Error Message",
+            "status": "configured",
+            "capabilityName": "customErrorMessage",
+            "type": "action",
+            "properties": {
+              "errorMessage": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"Error\"\n      }\n    ]\n  }\n]"
+              }
+            }
+          },
+          "position": {
+            "x": 1197,
+            "y": 416
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "xb74p6rkd8",
+            "nodeType": "CONNECTION",
+            "connectionId": "33329a264e268ab31fb19637debf1ea3",
+            "connectorId": "flowConnector",
+            "name": "Flow Conductor",
+            "label": "Flow Conductor",
+            "status": "configured",
+            "capabilityName": "startUiSubFlow",
+            "type": "trigger",
+            "properties": {
+              "subFlowId": {
+                "value": {
+                  "label": "subflow 2",
+                  "value": "07503fed5c02849dbbd5ee932da654b2"
+                }
+              },
+              "subFlowVersionId": {
+                "value": -1
+              }
+            }
+          },
+          "position": {
+            "x": 867,
+            "y": 446
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "kq5ybvwvro",
+            "nodeType": "CONNECTION",
+            "connectionId": "33329a264e268ab31fb19637debf1ea3",
+            "connectorId": "flowConnector",
+            "name": "Flow Conductor",
+            "label": "Flow Conductor",
+            "status": "configured",
+            "capabilityName": "startUiSubFlow",
+            "type": "trigger",
+            "properties": {
+              "subFlowId": {
+                "value": {
+                  "label": "subflow 1",
+                  "value": "00f66e8926ced6ef5b83619fde4a314a"
+                }
+              },
+              "subFlowVersionId": {
+                "value": -1
+              }
+            }
+          },
+          "position": {
+            "x": 867,
+            "y": 236
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "j74pmg6577",
+            "nodeType": "EVAL"
+          },
+          "position": {
+            "x": 1017,
+            "y": 236
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "pensvkew7y",
+            "nodeType": "EVAL"
+          },
+          "position": {
+            "x": 1032,
+            "y": 431
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "3zvjdgdljx",
+            "nodeType": "CONNECTION",
+            "connectionId": "06922a684039827499bdbdd97f49827b",
+            "connectorId": "variablesConnector",
+            "name": "Variables",
+            "label": "Variables",
+            "status": "configured",
+            "capabilityName": "saveFlowValue",
+            "type": "trigger",
+            "properties": {
+              "saveFlowVariables": {
+                "value": [
+                  {
+                    "name": "fdgdfgfdg",
+                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"test124\"\n      }\n    ]\n  }\n]",
+                    "key": 0.8936786494474329,
+                    "label": "fdgdfgfdg (string - flow)",
+                    "type": "string"
+                  },
+                  {
+                    "name": "test123",
+                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"test456\"\n      }\n    ]\n  }\n]",
+                    "key": 0.379286774724122,
+                    "label": "test123 (number - flow)",
+                    "type": "number"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 270,
+            "y": 180
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "bbemfztdyk",
+            "nodeType": "EVAL"
+          },
+          "position": {
+            "x": 273.5,
+            "y": 258
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        }
+      ],
+      "edges": [
+        {
+          "data": {
+            "id": "hseww5vtf0",
+            "source": "1u2m5vzr49",
+            "target": "8fvg7tfr8j"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "ljavni2nky",
+            "source": "8fvg7tfr8j",
+            "target": "nx0o1b2cmw"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "0o2fqy3mf3",
+            "source": "nx0o1b2cmw",
+            "target": "cdcw8k7dnx"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "493yd0jbi6",
+            "source": "cdcw8k7dnx",
+            "target": "kq5ybvwvro"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "pn2kixnzms",
+            "source": "j74pmg6577",
+            "target": "ikt13crnhy"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "0sb4quzlgx",
+            "source": "kq5ybvwvro",
+            "target": "j74pmg6577"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "v5p4i55lt9",
+            "source": "cdcw8k7dnx",
+            "target": "xb74p6rkd8"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "k0trrhjqt6",
+            "source": "xb74p6rkd8",
+            "target": "pensvkew7y"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "2g0chago4l",
+            "source": "pensvkew7y",
+            "target": "vsp1ewtr9m"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "gs1fx4x303",
+            "source": "3zvjdgdljx",
+            "target": "bbemfztdyk"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "cum544luro",
+            "source": "bbemfztdyk",
+            "target": "1u2m5vzr49"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        }
+      ]
+    },
+    "data": {},
+    "zoomingEnabled": true,
+    "userZoomingEnabled": true,
+    "zoom": 1,
+    "minZoom": 1e-50,
+    "maxZoom": 1e+50,
+    "panningEnabled": true,
+    "userPanningEnabled": true,
+    "pan": {
+      "x": 0,
+      "y": 0
+    },
+    "boxSelectionEnabled": true,
+    "renderer": {
+      "name": "null"
+    }
+  },
+  "flowColor": "#E3F0FF",
+  "savedDate": 1706708769645,
+  "variables": [
+    {
+      "context": "flow",
+      "createdDate": 1706708735989,
+      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+      "fields": {
+        "type": "string",
+        "displayName": "",
+        "mutable": true,
+        "min": 0,
+        "max": 2000
+      },
+      "flowId": "c7062a8857740ee2185694bb855f8f21",
+      "type": "property",
+      "visibility": "private",
+      "name": "fdgdfgfdg##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
+      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
+    },
+    {
+      "context": "flow",
+      "createdDate": 1706708761083,
+      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+      "fields": {
+        "type": "number",
+        "displayName": "test123",
+        "value": "10",
+        "mutable": true,
+        "min": 4,
+        "max": 20
+      },
+      "flowId": "c7062a8857740ee2185694bb855f8f21",
+      "type": "property",
+      "visibility": "private",
+      "name": "test123##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
+      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
+    }
+  ],
+  "connections": []
+}
