@@ -393,7 +393,7 @@ func testAccDataSourceConnection_NotFoundByName(resourceName string) string {
 	%[1]s
 
 data "davinci_connection" "%[2]s" {
-	environment_id = pingone_environment.%[2]s.id
+  environment_id = pingone_environment.%[2]s.id
 
   name = "doesnotexist"
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName)
@@ -404,7 +404,7 @@ func testAccDataSourceConnection_NotFoundByID(resourceName string) string {
 	%[1]s
 
 data "davinci_connection" "%[2]s" {
-	environment_id = pingone_environment.%[2]s.id
+  environment_id = pingone_environment.%[2]s.id
 
   connection_id = "9c052a8a-14be-44e4-8f07-2662569994ce" // dummy ID that conforms to UUID v4
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName)
