@@ -50,7 +50,7 @@ func Variable_CheckDestroy() resource.TestCheckFunc {
 				c,
 				companyId,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadVariableWithResponse(&companyId, rs.Primary.ID)
+					return c.ReadVariableWithResponse(companyId, rs.Primary.ID)
 				},
 			)
 
@@ -105,7 +105,7 @@ func Variable_RemovalDrift_PreConfig(t *testing.T, environmentID, variableID str
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteVariableWithResponse(&environmentID, variableID)
+			return c.DeleteVariableWithResponse(environmentID, variableID)
 		},
 	)
 	if err != nil {

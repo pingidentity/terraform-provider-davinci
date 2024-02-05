@@ -50,7 +50,7 @@ func ApplicationFlowPolicy_CheckDestroy() resource.TestCheckFunc {
 				c,
 				companyId,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadApplicationWithResponse(&companyId, rs.Primary.ID)
+					return c.ReadApplicationWithResponse(companyId, rs.Primary.ID)
 				},
 			)
 
@@ -106,7 +106,7 @@ func ApplicationFlowPolicy_RemovalDrift_PreConfig(t *testing.T, environmentID, a
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteFlowPolicyWithResponse(&environmentID, applicationID, applicationFlowPolicyID)
+			return c.DeleteFlowPolicyWithResponse(environmentID, applicationID, applicationFlowPolicyID)
 		},
 	)
 	if err != nil {

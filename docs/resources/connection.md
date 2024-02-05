@@ -488,6 +488,25 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### BeyondTrust - Password Safe
+
+**Connector Display Name**: BeyondTrust - Password Safe
+
+**Connector ID** - schema `connectorId`: connectorBTps
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| API Key | `apiKey` | `string` | API Key from your Password Safe environment |
+| API User | `apiUser` | `` | API User from your Password Safe environment |
+| PasswordSafe Hostname | `domain` | `string` | Domain of your Password Safe environment | 
+
+
+
+
 ### BeyondTrust - Privileged Remote Access
 
 **Connector Display Name**: BeyondTrust - Privileged Remote Access
@@ -1255,24 +1274,6 @@ If the `value` type of a property is not defined it must be inferred.
 
 **Connector Display Name**: HUMAN
 
-**Connector ID** - schema `connectorId`: humanCompromisedConnector
-
-**Properties Table:** 
-
-
-
-| Display Name | `name` | `value` Type | Description |
-| ---- | ---- | ---- | ----|
-| HUMAN App ID | `appId` | `` | App ID from your HUMAN Tenant |
-| HUMAN Auth Token | `authToken` | `` | Auth Token from your HUMAN Tenant | 
-
-
-
-
-### HUMAN
-
-**Connector Display Name**: HUMAN
-
 **Connector ID** - schema `connectorId`: connectorHuman
 
 **Properties Table:** 
@@ -1284,6 +1285,24 @@ If the `value` type of a property is not defined it must be inferred.
 | HUMAN Authentication Token | `humanAuthenticationToken` | `` | Bearer Token from HUMAN |
 | HUMAN Customer ID | `humanCustomerID` | `` | Customer ID from HUMAN |
 | HUMAN Policy Name | `humanPolicyName` | `` | HUMAN mitigation policy name | 
+
+
+
+
+### HUMAN
+
+**Connector Display Name**: HUMAN
+
+**Connector ID** - schema `connectorId`: humanCompromisedConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| HUMAN App ID | `appId` | `` | App ID from your HUMAN Tenant |
+| HUMAN Auth Token | `authToken` | `` | Auth Token from your HUMAN Tenant | 
 
 
 

@@ -3,6 +3,9 @@ package verify
 import (
 	"fmt"
 	"regexp"
+
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 )
 
 var P1ResourceIDRegexp = regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`)
@@ -34,4 +37,13 @@ func ValidP1ResourceID(v interface{}, k string) (ws []string, errors []error) {
 	}
 
 	return
+}
+
+// Framework
+func P1ResourceIDValidator() validator.String {
+	return stringvalidator.RegexMatches(P1ResourceIDRegexpFullString, fmt.Sprintf("The PingOne resource ID is malformed.  Must match regex %q", P1ResourceIDRegexpFullString))
+}
+
+func P1DVResourceIDValidator() validator.String {
+	return stringvalidator.RegexMatches(P1DVResourceIDRegexpFullString, fmt.Sprintf("The PingOne DaVinci resource ID is malformed.  Must match regex %q", P1DVResourceIDRegexpFullString))
 }

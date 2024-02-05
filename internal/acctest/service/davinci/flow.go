@@ -50,7 +50,7 @@ func Flow_CheckDestroy() resource.TestCheckFunc {
 				c,
 				companyId,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadFlowWithResponse(&companyId, rs.Primary.ID)
+					return c.ReadFlowWithResponse(companyId, rs.Primary.ID)
 				},
 			)
 
@@ -105,7 +105,7 @@ func Flow_RemovalDrift_PreConfig(t *testing.T, environmentID, flowID string) {
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteFlowWithResponse(&environmentID, flowID)
+			return c.DeleteFlowWithResponse(environmentID, flowID)
 		},
 	)
 	if err != nil {

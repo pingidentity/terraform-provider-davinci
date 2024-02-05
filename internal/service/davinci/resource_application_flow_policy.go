@@ -4,14 +4,14 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
-	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -115,7 +115,7 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.CreateFlowPolicyWithResponse(&environmentID, d.Get("application_id").(string), *appPolicy)
+			return c.CreateFlowPolicyWithResponse(environmentID, d.Get("application_id").(string), *appPolicy)
 		},
 	)
 
@@ -165,7 +165,7 @@ func resourceApplicationFlowPolicyRead(ctx context.Context, d *schema.ResourceDa
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.ReadApplicationWithResponse(&environmentID, appId)
+			return c.ReadApplicationWithResponse(environmentID, appId)
 		},
 	)
 	if err != nil {
@@ -225,7 +225,7 @@ func resourceApplicationFlowPolicyUpdate(ctx context.Context, d *schema.Resource
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.UpdateFlowPolicyWithResponse(&environmentID, appId, *appPolicy)
+			return c.UpdateFlowPolicyWithResponse(environmentID, appId, *appPolicy)
 		},
 	)
 	if err != nil {
@@ -256,7 +256,7 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteFlowPolicyWithResponse(&environmentID, appId, policyId)
+			return c.DeleteFlowPolicyWithResponse(environmentID, appId, policyId)
 		},
 	)
 	if err != nil {
@@ -355,22 +355,22 @@ func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, err
 }
 
 func resourceApplicaionFlowPolicyImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	idComponents := []utils.ImportComponent{
+	idComponents := []framework.ImportComponent{
 		{
 			Label:  "environment_id",
-			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
 			Label:  "davinci_application_id",
-			Regexp: regexp.MustCompile(`[a-f0-9]{32}`),
+			Regexp: verify.P1DVResourceIDRegexp,
 		},
 		{
 			Label:     "davinci_application_flow_policy_id",
-			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			Regexp:    verify.P1DVResourceIDRegexp,
 			PrimaryID: true,
 		},
 	}
-	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(d.Id(), idComponents...)
 	if err != nil {
 		return nil, err
 	}

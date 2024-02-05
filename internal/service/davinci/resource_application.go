@@ -4,13 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
-	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -434,7 +433,7 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.CreateInitializedApplicationWithResponse(&environmentID, app)
+			return c.CreateInitializedApplicationWithResponse(environmentID, app)
 		},
 	)
 
@@ -470,7 +469,7 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.ReadApplicationWithResponse(&environmentID, appId)
+			return c.ReadApplicationWithResponse(environmentID, appId)
 		},
 	)
 	if err != nil {
@@ -534,7 +533,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					c,
 					environmentID,
 					func() (interface{}, *http.Response, error) {
-						return c.UpdateFlowPolicyWithResponse(&environmentID, appId, newPol)
+						return c.UpdateFlowPolicyWithResponse(environmentID, appId, newPol)
 					},
 				)
 				if err != nil {
@@ -555,7 +554,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					c,
 					environmentID,
 					func() (interface{}, *http.Response, error) {
-						return c.CreateFlowPolicyWithResponse(&environmentID, appId, newPol)
+						return c.CreateFlowPolicyWithResponse(environmentID, appId, newPol)
 					},
 				)
 				if err != nil {
@@ -578,7 +577,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 				c,
 				environmentID,
 				func() (interface{}, *http.Response, error) {
-					return c.DeleteFlowPolicyWithResponse(&environmentID, appId, oldPol.PolicyID)
+					return c.DeleteFlowPolicyWithResponse(environmentID, appId, oldPol.PolicyID)
 				},
 			)
 			if err != nil {
@@ -601,7 +600,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 			c,
 			environmentID,
 			func() (interface{}, *http.Response, error) {
-				return c.UpdateApplicationWithResponse(&environmentID, app)
+				return c.UpdateApplicationWithResponse(environmentID, app)
 			},
 		)
 		if err != nil {
@@ -632,7 +631,7 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteApplicationWithResponse(&environmentID, appId)
+			return c.DeleteApplicationWithResponse(environmentID, appId)
 		},
 	)
 	if err != nil {
@@ -658,19 +657,19 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 
 func resourceApplicationImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
-	idComponents := []utils.ImportComponent{
+	idComponents := []framework.ImportComponent{
 		{
 			Label:  "environment_id",
-			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
 			Label:     "davinci_application_id",
-			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			Regexp:    verify.P1DVResourceIDRegexp,
 			PrimaryID: true,
 		},
 	}
 
-	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(d.Id(), idComponents...)
 	if err != nil {
 		return nil, err
 	}

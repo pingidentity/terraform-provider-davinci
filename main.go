@@ -1,23 +1,20 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/hashicorp/terraform-plugin-go/tfprotov6/tf6server"
 	"github.com/pingidentity/terraform-provider-davinci/internal/provider"
 )
-
-// Run "go generate" to format example terraform files and generate the docs for the registry/website
-
-// If you do not have terraform installed, you can remove the formatting command, but its suggested to
-// ensure the documentation is formatted properly.
-//go:generate terraform fmt -recursive ./examples/
 
 // Run the docs generation tool, check its repository for more information on how it works and how docs
 // can be customized.
 //
 //go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 //go:generate go run github.com/samir-gandhi/dvgenerate/cmd/generate
+
 var (
 	// these will be set by the goreleaser configuration
 	// to appropriate values for the compiled binary
@@ -28,19 +25,29 @@ var (
 )
 
 func main() {
-	var debugMode bool
-
-	flag.BoolVar(&debugMode, "debug", false, "set to true to run the provider with support for debuggers like delve")
+	debugFlag := flag.Bool("debug", false, "Start provider in debug mode.")
 	flag.Parse()
 
-	opts := &plugin.ServeOpts{
-		Debug: debugMode,
+	ctx := context.Background()
 
-		// TODO: update this string with the full name of your provider as used in your configs
-		ProviderAddr: "registry.terraform.io/pingidentity/davinci",
-
-		ProviderFunc: provider.New(version),
+	muxServer, err := provider.ProviderServerFactoryV6(ctx, version)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	plugin.Serve(opts)
+	var serveOpts []tf6server.ServeOpt
+
+	if *debugFlag {
+		serveOpts = append(serveOpts, tf6server.WithManagedDebug())
+	}
+
+	err = tf6server.Serve(
+		"registry.terraform.io/pingidentity/davinci",
+		muxServer,
+		serveOpts...,
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }

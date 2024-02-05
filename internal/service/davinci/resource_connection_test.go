@@ -262,7 +262,7 @@ func TestAccResourceConnection_Properties(t *testing.T) {
 						t.Fatalf("One of environment ID or connection ID cannot be determined. Environment ID: %s, Resource ID: %s", environmentID, connectionID)
 					}
 
-					connection, err := c.ReadConnection(&environmentID, connectionID)
+					connection, err := c.ReadConnection(environmentID, connectionID)
 					if err != nil {
 						t.Fatalf("Failed to read connection: - wut %v", err)
 					}
@@ -274,7 +274,7 @@ func TestAccResourceConnection_Properties(t *testing.T) {
 						t.Fatalf("Failed to read connection property: policyId")
 					}
 
-					_, err = c.UpdateConnection(&environmentID, connection)
+					_, err = c.UpdateConnection(environmentID, connection)
 					if err != nil {
 						t.Fatalf("Failed to update connection: %v", err)
 					}

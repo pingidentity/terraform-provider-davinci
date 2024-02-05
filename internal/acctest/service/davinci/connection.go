@@ -50,7 +50,7 @@ func Connection_CheckDestroy() resource.TestCheckFunc {
 				c,
 				companyId,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadConnectionWithResponse(&companyId, rs.Primary.ID)
+					return c.ReadConnectionWithResponse(companyId, rs.Primary.ID)
 				},
 			)
 
@@ -105,7 +105,7 @@ func Connection_RemovalDrift_PreConfig(t *testing.T, environmentID, connectionID
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteConnectionWithResponse(&environmentID, connectionID)
+			return c.DeleteConnectionWithResponse(environmentID, connectionID)
 		},
 	)
 	if err != nil {

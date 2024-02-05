@@ -35,7 +35,7 @@ import (
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
@@ -97,8 +97,10 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-			resource.TestCheckResourceAttr(resourceFullName, "name", "full-basic"),
+			resource.TestCheckResourceAttr(resourceFullName, "name", "my awesome flow"),
+			resource.TestCheckResourceAttr(resourceFullName, "description", "my awesome flow description"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fullStepJson),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json_response", fullStepJson),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "5"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "connection_link.*", map[string]*regexp.Regexp{
 				"id":                           verify.P1DVResourceIDRegexpFullString,
@@ -125,7 +127,7 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 				"replace_import_connection_id": verify.P1DVResourceIDRegexpFullString,
 				"name":                         regexp.MustCompile(fmt.Sprintf(`^%s-error$`, name)),
 			}),
-			resource.TestCheckResourceAttr(resourceFullName, "deploy", "false"),
+			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
 			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "2"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "subflow_link.*", map[string]*regexp.Regexp{
 				"id":                        verify.P1DVResourceIDRegexpFullString,
@@ -173,7 +175,8 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-			resource.TestCheckResourceAttr(resourceFullName, "name", ""),
+			resource.TestCheckResourceAttr(resourceFullName, "name", "full-basic"),
+			resource.TestCheckResourceAttr(resourceFullName, "description", "Imported on blah blah"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", minimalStepJson),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "0"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
@@ -187,10 +190,10 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Flow_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Flow_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -244,7 +247,7 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
@@ -287,7 +290,7 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
@@ -464,11 +467,12 @@ func testAccResourceFlow_Full_HCL(resourceName, name string, withBootstrapConfig
 resource "davinci_flow" "%[3]s" {
   environment_id = pingone_environment.%[3]s.id
 
+  name = "my awesome flow"
+  description = "my awesome flow description"
+
   flow_json = <<EOT
 %[4]s
 EOT
-
-  deploy    = false
 
   // Variables connector
   connection_link {
@@ -580,7 +584,7 @@ resource "davinci_flow" "%[3]s" {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
 // 		ErrorCheck:        acctest.ErrorCheck(t),
@@ -649,7 +653,7 @@ resource "davinci_flow" "%[3]s" {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
@@ -675,7 +679,7 @@ resource "davinci_flow" "%[3]s" {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
@@ -921,7 +925,7 @@ resource "davinci_flow" "%[3]s" {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),
@@ -952,7 +956,7 @@ resource "davinci_flow" "%[3]s" {
 // 			acctest.PreCheckClient(t)
 // 			acctest.PreCheckNewEnvironment(t)
 // 		},
-// 		ProviderFactories: acctest.ProviderFactories,
+// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
 // 		ExternalProviders: acctest.ExternalProviders,
 // 		ErrorCheck:        acctest.ErrorCheck(t),
 // 		CheckDestroy:      davinci.Flow_CheckDestroy(),

@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,6 +17,7 @@ import (
 	"github.com/patrickcping/pingone-go-sdk-v2/management"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/pingone"
 	"github.com/pingidentity/terraform-provider-davinci/internal/provider"
+	"github.com/pingidentity/terraform-provider-davinci/internal/provider/sdkv2"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -37,6 +39,8 @@ var Provider *schema.Provider
 // The factory function will be invoked for every Terraform CLI command executed
 // to create a provider server to which the CLI can reattach.
 
+var ProtoV6ProviderFactories map[string]func() (tfprotov6.ProviderServer, error) = protoV6ProviderFactoriesInit(context.Background(), "davinci")
+
 // ExternalProviders is a map of additional providers that may be used during
 // testing.
 var ExternalProviders map[string]resource.ExternalProvider
@@ -45,17 +49,13 @@ var ExternalProviders map[string]resource.ExternalProvider
 var TestCheckFunc func(*terraform.State) error
 
 func init() {
-	Provider = provider.New("dev")()
+	Provider = sdkv2.New(getProviderTestingVersion())()
 
 	// Always allocate a new provider instance each invocation, otherwise gRPC
 	// ProviderConfigure() can overwrite configuration during concurrent testing.
 	ProviderFactories = map[string]func() (*schema.Provider, error){
 		"davinci": func() (*schema.Provider, error) {
-			testVersion := getProviderTestingVersion()
-			if testVersion == "" {
-				testVersion = "dev"
-			}
-			provider := provider.New(testVersion)()
+			provider := sdkv2.New(getProviderTestingVersion())()
 
 			if provider == nil {
 				return nil, fmt.Errorf("Cannot initiate provider factory")
@@ -71,6 +71,25 @@ func init() {
 		},
 	}
 
+}
+
+func protoV6ProviderFactoriesInit(ctx context.Context, providerNames ...string) map[string]func() (tfprotov6.ProviderServer, error) {
+	factories := make(map[string]func() (tfprotov6.ProviderServer, error), len(providerNames))
+
+	for _, name := range providerNames {
+
+		factories[name] = func() (tfprotov6.ProviderServer, error) {
+			providerServerFactory, err := provider.ProviderServerFactoryV6(ctx, getProviderTestingVersion())
+
+			if err != nil {
+				return nil, err
+			}
+
+			return providerServerFactory(), nil
+		}
+	}
+
+	return factories
 }
 
 func getProviderTestingVersion() string {

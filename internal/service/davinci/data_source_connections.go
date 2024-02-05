@@ -149,7 +149,7 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 			"customer_id":  connItem.CustomerID,
 		}
 		if v := connItem.Properties; v != nil {
-			props, err := flattenConnectionProperties(&v)
+			props, err := flattenConnectionProperties(v)
 			if err != nil {
 				diags = append(diags, diag.FromErr(err)...)
 				return diags
@@ -193,7 +193,7 @@ func readAllConnections(ctx context.Context, c *dv.APIClient, environmentID stri
 				c,
 				environmentID,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadConnectionsWithResponse(&environmentID, nil)
+					return c.ReadConnectionsWithResponse(environmentID, nil)
 				},
 			)
 

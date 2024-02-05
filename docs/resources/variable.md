@@ -35,7 +35,7 @@ resource "davinci_variable" "my_awesome_region_variable" {
 
 ### Optional
 
-- `description` (String) A string that specifies the description of variable
+- `description` (String) A string that specifies the description of the variable.
 - `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`. Defaults to `2000`.
 - `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`. Defaults to `0`.
 - `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow. Defaults to `true`.

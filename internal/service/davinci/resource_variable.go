@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
-	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -99,7 +99,7 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, meta in
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.CreateVariableWithResponse(&environmentID, &variablePayload)
+			return c.CreateVariableWithResponse(environmentID, &variablePayload)
 		},
 	)
 
@@ -143,7 +143,7 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.ReadVariableWithResponse(&environmentID, variableName)
+			return c.ReadVariableWithResponse(environmentID, variableName)
 		},
 	)
 
@@ -226,7 +226,7 @@ func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta in
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.UpdateVariableWithResponse(&environmentID, &variablePayload)
+			return c.UpdateVariableWithResponse(environmentID, &variablePayload)
 		},
 	)
 
@@ -257,7 +257,7 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta in
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteVariableWithResponse(&environmentID, variableName)
+			return c.DeleteVariableWithResponse(environmentID, variableName)
 		},
 	)
 
@@ -279,10 +279,10 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta in
 
 func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
-	idComponents := []utils.ImportComponent{
+	idComponents := []framework.ImportComponent{
 		{
 			Label:  "environment_id",
-			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
 			Label:     "davinci_variable_id",
@@ -291,7 +291,7 @@ func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta in
 		},
 	}
 
-	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(d.Id(), idComponents...)
 	if err != nil {
 		return nil, err
 	}

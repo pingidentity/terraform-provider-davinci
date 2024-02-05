@@ -1,53 +1,40 @@
-//Read all connections - This is a good first call to make
-data "davinci_connections" "all" {
+resource "davinci_connection" "my_awesome_flow_connector" {
+  environment_id = var.environment_id
+
+  name         = "Flow"
+  connector_id = "flowConnector"
 }
 
-resource "davinci_connection" "flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
+resource "davinci_flow" "my_awesome_subflow" {
   environment_id = var.environment_id
-  // Forcing dependency on the inital connection provides better consistency when waiting for bootstrap to complete
-  depends_on = [data.davinci_connections.all]
+
+  flow_json = jsondecode(file("./path/to/example-subflow.json"))
+  name      = "My Awesome Subflow"
+  deploy    = true
+
+  connection_link {
+    id                           = davinci_connection.my_awesome_flow_connector.id
+    name                         = davinci_connection.my_awesome_flow_connector.name
+    replace_import_connection_id = "33329a264e268ab31fb19637debf1ea3"
+  }
 }
 
-resource "davinci_flow" "mainflow" {
+resource "davinci_flow" "my_awesome_main_flow" {
   environment_id = var.environment_id
-  flow_json      = "{\"customerId\":\"1234\",\"name\":\"mainflow\",\"description\":\"\",\"flowStatus\":\"enabled\",\"createdDate...\"\"connectorIds\":[\"httpConnector\",\"flowConnector\"],\"savedDate\":1662961640542,\"variables\":[]}"
-  deploy         = true
 
-  // Dependent subflows are defined in subflows blocks.
-  // These should always point to managed subflows
+  flow_json = jsondecode(file("./path/to/example-mainflow.json"))
+  name      = "My Awesome Main Flow"
+  deploy    = true
+
   subflow_link {
-    id   = resource.davinci_flow.subflow.id
-    name = resource.davinci_flow.subflow.name
-  }
-  // Dependent connections are defined in conections blocks. 
-  // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
-
-  // This sample references a managed connection
-  connection_link {
-    id   = davinci_connection.flow.id
-    name = davinci_connection.flow.name
-  }
-  // This sample uses a bootstrapped connection
-  connection_link {
-    name = "Http"
-    // default connection id for the bootstrapped Http connector
-    id = "867ed4363b2bc21c860085ad2baa817d"
+    id                        = resource.davinci_flow.my_awesome_subflow.id
+    name                      = resource.davinci_flow.my_awesome_subflow.name
+    replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
   }
 
-}
-
-resource "davinci_flow" "subflow" {
-  environment_id = var.environment_id
-  flow_json      = file("subflow.json")
-  deploy         = true
   connection_link {
-    id   = "867ed4363b2bc21c860085ad2baa817d"
-    name = "Http"
-  }
-  connection_link {
-    id   = davinci_connection.flow.id
-    name = davinci_connection.flow.name
+    id                           = davinci_connection.my_awesome_flow_connector.id
+    name                         = davinci_connection.my_awesome_flow_connector.name
+    replace_import_connection_id = "33329a264e268ab31fb19637debf1ea3"
   }
 }

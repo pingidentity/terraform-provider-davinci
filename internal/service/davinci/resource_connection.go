@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"regexp"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
-	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -97,7 +96,7 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 		Name:        d.Get("name").(string),
 	}
 
-	connection.Properties = *makeProperties(d)
+	connection.Properties = makeProperties(d)
 
 	environmentID := d.Get("environment_id").(string)
 
@@ -106,7 +105,7 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.CreateInitializedConnectionWithResponse(&environmentID, &connection)
+			return c.CreateInitializedConnectionWithResponse(environmentID, &connection)
 		},
 	)
 
@@ -161,7 +160,7 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.ReadConnectionWithResponse(&environmentID, connId)
+			return c.ReadConnectionWithResponse(environmentID, connId)
 		},
 	)
 	if err != nil {
@@ -205,7 +204,7 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	props, err := flattenConnectionProperties(&res.Properties)
+	props, err := flattenConnectionProperties(res.Properties)
 	if err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
@@ -243,7 +242,7 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 			ConnectionID: connId,
 		}
 
-		connection.Properties = *makeProperties(d)
+		connection.Properties = makeProperties(d)
 
 		environmentID := d.Get("environment_id").(string)
 
@@ -252,7 +251,7 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 			c,
 			environmentID,
 			func() (interface{}, *http.Response, error) {
-				return c.UpdateConnectionWithResponse(&environmentID, &connection)
+				return c.UpdateConnectionWithResponse(environmentID, &connection)
 			},
 		)
 		if err != nil {
@@ -292,7 +291,7 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta 
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteConnectionWithResponse(&environmentID, connId)
+			return c.DeleteConnectionWithResponse(environmentID, connId)
 		},
 	)
 	if err != nil {
@@ -311,19 +310,19 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta 
 
 func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
-	idComponents := []utils.ImportComponent{
+	idComponents := []framework.ImportComponent{
 		{
 			Label:  "environment_id",
-			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
 			Label:     "davinci_connection_id",
-			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			Regexp:    verify.P1DVResourceIDRegexp,
 			PrimaryID: true,
 		},
 	}
 
-	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(d.Id(), idComponents...)
 	if err != nil {
 		return nil, err
 	}
@@ -339,12 +338,12 @@ func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta 
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[string]interface{}, error) {
+func flattenConnectionProperties(connectionProperties map[string]interface{}) ([]map[string]interface{}, error) {
 	if connectionProperties == nil {
 		return nil, fmt.Errorf("no properties")
 	}
 	connProps := []map[string]interface{}{}
-	for propName, propVal := range *connectionProperties {
+	for propName, propVal := range connectionProperties {
 		pMap := propVal.(map[string]interface{})
 		if pMap == nil {
 			return nil, fmt.Errorf("Unable to assert property values for %v\n", propName)
@@ -396,8 +395,8 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 	return connProps, nil
 }
 
-func makeProperties(d *schema.ResourceData) *dv.Properties {
-	connProps := dv.Properties{}
+func makeProperties(d *schema.ResourceData) map[string]interface{} {
+	connProps := map[string]interface{}{}
 	props := d.Get("property").(*schema.Set).List()
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
@@ -405,5 +404,5 @@ func makeProperties(d *schema.ResourceData) *dv.Properties {
 			"value": prop["value"].(string),
 		}
 	}
-	return &connProps
+	return connProps
 }

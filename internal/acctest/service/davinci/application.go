@@ -50,7 +50,7 @@ func Application_CheckDestroy() resource.TestCheckFunc {
 				c,
 				companyId,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadApplicationWithResponse(&companyId, rs.Primary.ID)
+					return c.ReadApplicationWithResponse(companyId, rs.Primary.ID)
 				},
 			)
 
@@ -105,7 +105,7 @@ func Application_RemovalDrift_PreConfig(t *testing.T, environmentID, application
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.DeleteApplicationWithResponse(&environmentID, applicationID)
+			return c.DeleteApplicationWithResponse(environmentID, applicationID)
 		},
 	)
 	if err != nil {

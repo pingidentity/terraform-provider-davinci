@@ -406,7 +406,8 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta
 	if !ok {
 		appIdInt, ok = d.GetOk("application_id")
 		if !ok {
-			return diag.FromErr(fmt.Errorf("application_id must be set"))
+			diags = append(diags, diag.FromErr(fmt.Errorf("application_id must be set"))...)
+			return diags
 		}
 	}
 	appId := appIdInt.(string)
@@ -418,7 +419,7 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.ReadApplicationWithResponse(&environmentID, appId)
+			return c.ReadApplicationWithResponse(environmentID, appId)
 		},
 	)
 	if err != nil {

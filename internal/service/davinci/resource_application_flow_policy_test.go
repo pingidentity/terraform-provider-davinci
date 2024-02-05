@@ -18,7 +18,10 @@ func TestAccResourceApplicationFlowPolicy_RemovalDrift(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	hcl := testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, resourceName, true)
+	hcl, err := testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, resourceName, true)
+	if err != nil {
+		t.Fatalf("Failed to generate HCL: %v", err)
+	}
 
 	var applicationFlowPolicyID, applicationID, environmentID string
 
@@ -93,8 +96,13 @@ func TestAccResourceApplicationFlowPolicy_Full(t *testing.T) {
 
 	name := resourceName
 
+	fullStepHcl, err := testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, fmt.Sprintf("%s-1", name), withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to generate HCL: %v", err)
+	}
+
 	fullStep := resource.TestStep{
-		Config: testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, fmt.Sprintf("%s-1", name), withBootstrapConfig),
+		Config: fullStepHcl,
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
@@ -107,8 +115,13 @@ func TestAccResourceApplicationFlowPolicy_Full(t *testing.T) {
 		),
 	}
 
+	minimalStepHcl, err := testAccResourceApplicationFlowPolicy_Minimal_HCL(resourceName, fmt.Sprintf("%s-2", name), withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to generate HCL: %v", err)
+	}
+
 	minimalStep := resource.TestStep{
-		Config: testAccResourceApplicationFlowPolicy_Minimal_HCL(resourceName, fmt.Sprintf("%s-2", name), withBootstrapConfig),
+		Config: minimalStepHcl,
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
@@ -134,13 +147,13 @@ func TestAccResourceApplicationFlowPolicy_Full(t *testing.T) {
 			// Create from scratch
 			fullStep,
 			{
-				Config:  testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, fmt.Sprintf("%s-1", name), withBootstrapConfig),
+				Config:  fullStepHcl,
 				Destroy: true,
 			},
 			// Create from scratch
 			minimalStep,
 			{
-				Config:  testAccResourceApplicationFlowPolicy_Minimal_HCL(resourceName, fmt.Sprintf("%s-2", name), withBootstrapConfig),
+				Config:  minimalStepHcl,
 				Destroy: true,
 			},
 			// Test updates
@@ -177,8 +190,13 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 
 	name := resourceName
 
+	fullStepHcl, err := testAccResourceApplicationFlowPolicy_WithPolicyFlow_Full_HCL(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to generate HCL: %v", err)
+	}
+
 	fullStep := resource.TestStep{
-		Config: testAccResourceApplicationFlowPolicy_WithPolicyFlow_Full_HCL(resourceName, name, withBootstrapConfig),
+		Config: fullStepHcl,
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestCheckResourceAttr(resourceFullName, "policy_flow.#", "3"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "policy_flow.*", map[string]*regexp.Regexp{
@@ -210,8 +228,13 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 		),
 	}
 
+	minimalStep1Hcl, err := testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal1_HCL(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to generate HCL: %v", err)
+	}
+
 	minimalStep1 := resource.TestStep{
-		Config: testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal1_HCL(resourceName, name, withBootstrapConfig),
+		Config: minimalStep1Hcl,
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestCheckResourceAttr(resourceFullName, "policy_flow.#", "1"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "policy_flow.*", map[string]*regexp.Regexp{
@@ -222,8 +245,13 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 		),
 	}
 
+	minimalStep2Hcl, err := testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal2_HCL(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to generate HCL: %v", err)
+	}
+
 	minimalStep2 := resource.TestStep{
-		Config: testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal2_HCL(resourceName, name, withBootstrapConfig),
+		Config: minimalStep2Hcl,
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestCheckResourceAttr(resourceFullName, "policy_flow.#", "1"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "policy_flow.*", map[string]*regexp.Regexp{
@@ -247,19 +275,19 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 			// Create from scratch
 			fullStep,
 			{
-				Config:  testAccResourceApplicationFlowPolicy_WithPolicyFlow_Full_HCL(resourceName, name, withBootstrapConfig),
+				Config:  fullStepHcl,
 				Destroy: true,
 			},
 			// Create from scratch
 			minimalStep1,
 			{
-				Config:  testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal1_HCL(resourceName, name, withBootstrapConfig),
+				Config:  minimalStep1Hcl,
 				Destroy: true,
 			},
 			// Create from scratch
 			minimalStep2,
 			{
-				Config:  testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal2_HCL(resourceName, name, withBootstrapConfig),
+				Config:  minimalStep2Hcl,
 				Destroy: true,
 			},
 			// Test updates
@@ -288,7 +316,12 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 	})
 }
 
-func testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+	flowResources, err := flowResources(resourceName, name, 3)
+	if err != nil {
+		return "", err
+	}
+
 	return fmt.Sprintf(`
 %[1]s
 
@@ -334,10 +367,15 @@ resource "davinci_application_flow_policy" "%[2]s" {
 }
 
 %[4]s
-`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources(resourceName, name, 3))
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources), nil
 }
 
-func testAccResourceApplicationFlowPolicy_Minimal_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccResourceApplicationFlowPolicy_Minimal_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+	flowResources, err := flowResources(resourceName, name, 3)
+	if err != nil {
+		return "", err
+	}
+
 	return fmt.Sprintf(`
 %[1]s
 
@@ -370,10 +408,15 @@ resource "davinci_application_flow_policy" "%[2]s" {
 }
 
 %[4]s
-`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources(resourceName, name, 3))
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources), nil
 }
 
-func testAccResourceApplicationFlowPolicy_WithPolicyFlow_Full_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccResourceApplicationFlowPolicy_WithPolicyFlow_Full_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+	flowResources, err := flowResources(resourceName, name, 3)
+	if err != nil {
+		return "", err
+	}
+
 	return fmt.Sprintf(`
 %[1]s
 
@@ -425,10 +468,15 @@ resource "davinci_application_flow_policy" "%[2]s" {
 }
 
 %[4]s
-`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources(resourceName, name, 3))
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources), nil
 }
 
-func testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal1_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal1_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+	flowResources, err := flowResources(resourceName, name, 3)
+	if err != nil {
+		return "", err
+	}
+
 	return fmt.Sprintf(`
 %[1]s
 
@@ -461,10 +509,15 @@ resource "davinci_application_flow_policy" "%[2]s" {
 }
 
 %[4]s
-`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources(resourceName, name, 3))
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources), nil
 }
 
-func testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal2_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccResourceApplicationFlowPolicy_WithPolicyFlow_Minimal2_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+	flowResources, err := flowResources(resourceName, name, 3)
+	if err != nil {
+		return "", err
+	}
+
 	return fmt.Sprintf(`
 %[1]s
 
@@ -497,11 +550,13 @@ resource "davinci_application_flow_policy" "%[2]s" {
 }
 
 %[4]s
-`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources(resourceName, name, 3))
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, flowResources), nil
 }
 
-func flowResources(resourceName, name string, count int) string {
-	var hcl string
+func flowResources(resourceName, name string, count int) (hcl string, err error) {
+
+	mainFlowHcl, err := acctest.ReadFlowJsonFile("flows/simple.json")
+
 	hcl += fmt.Sprintf(`
 resource "davinci_connection" "%[1]s" {
   environment_id = pingone_environment.%[1]s.id
@@ -534,8 +589,8 @@ resource "davinci_flow" "%[1]s-%[2]d" {
     ]
   }
 }
-`, resourceName, i, acctest.ReadFlowJsonFile("flows/simple.json"))
+`, resourceName, i, mainFlowHcl)
 	}
 
-	return hcl
+	return hcl, nil
 }

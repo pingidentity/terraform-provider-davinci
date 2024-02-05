@@ -565,7 +565,7 @@ func readAllApplications(ctx context.Context, c *dv.APIClient, environmentID str
 				c,
 				environmentID,
 				func() (interface{}, *http.Response, error) {
-					return c.ReadApplicationsWithResponse(&environmentID, nil)
+					return c.ReadApplicationsWithResponse(environmentID, nil)
 				},
 			)
 
