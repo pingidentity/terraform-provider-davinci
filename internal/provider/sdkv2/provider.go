@@ -47,14 +47,14 @@ func New(version string) func() *schema.Provider {
 				},
 				"region": {
 					Type:             schema.TypeString,
-					Required:         true,
+					Optional:         true,
 					DefaultFunc:      schema.EnvDefaultFunc("PINGONE_REGION", nil),
 					Description:      "The PingOne region to use.  Options are `AsiaPacific` `Canada` `Europe` and `NorthAmerica`.  Default value can be set with the `PINGONE_REGION` environment variable.",
 					ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(model.RegionsAvailableList(), false)),
 				},
 				"environment_id": {
 					Type:        schema.TypeString,
-					Required:    true,
+					Optional:    true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_ENVIRONMENT_ID", nil),
 					Description: "Environment ID PingOne User Login. Default value can be set with the `PINGONE_ENVIRONMENT_ID` environment variable.",
 				},

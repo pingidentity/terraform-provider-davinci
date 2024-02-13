@@ -99,8 +99,9 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "my awesome flow"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", "my awesome flow description"),
-			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fullStepJson),
-			resource.TestCheckResourceAttr(resourceFullName, "flow_json_response", fullStepJson),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", fullStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "5"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "connection_link.*", map[string]*regexp.Regexp{
 				"id":                           verify.P1DVResourceIDRegexpFullString,
@@ -132,35 +133,33 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "subflow_link.*", map[string]*regexp.Regexp{
 				"id":                        verify.P1DVResourceIDRegexpFullString,
 				"replace_import_subflow_id": verify.P1DVResourceIDRegexpFullString,
-				"name":                      regexp.MustCompile(fmt.Sprintf(`^%subflow 1$`, name)),
+				"name":                      regexp.MustCompile(fmt.Sprintf(`^%s-subflow-1$`, name)),
 			}),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "subflow_link.*", map[string]*regexp.Regexp{
 				"id":                        verify.P1DVResourceIDRegexpFullString,
 				"replace_import_subflow_id": verify.P1DVResourceIDRegexpFullString,
-				"name":                      regexp.MustCompile(fmt.Sprintf(`^%subflow 2$`, name)),
+				"name":                      regexp.MustCompile(fmt.Sprintf(`^%s-subflow-2$`, name)),
 			}),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
-				"context":     regexp.MustCompile(`^flow$`),
-				"description": regexp.MustCompile(`^$`),
-				"flow_id":     regexp.MustCompile(`^c7062a8857740ee2185694bb855f8f21$`),
-				"id":          regexp.MustCompile(`^$`),
-				"max":         regexp.MustCompile(`^$`),
-				"min":         regexp.MustCompile(`^$`),
-				"mutable":     regexp.MustCompile(`^true$`),
-				"name":        regexp.MustCompile(`^fdgdfgfdg##SK##flow##SK##c7062a8857740ee2185694bb855f8f21$`),
-				"type":        regexp.MustCompile(`^property$`),
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"max":     regexp.MustCompile(`^2000$`),
+				"min":     regexp.MustCompile(`^0$`),
+				"mutable": regexp.MustCompile(`^true$`),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^property$`),
 			}),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
-				"context":     regexp.MustCompile(`^flow$`),
-				"description": regexp.MustCompile(`^$`),
-				"flow_id":     regexp.MustCompile(`^c7062a8857740ee2185694bb855f8f21$`),
-				"id":          regexp.MustCompile(`^$`),
-				"max":         regexp.MustCompile(`^20$`),
-				"min":         regexp.MustCompile(`^4$`),
-				"mutable":     regexp.MustCompile(`^true$`),
-				"name":        regexp.MustCompile(`^test123##SK##flow##SK##c7062a8857740ee2185694bb855f8f21$`),
-				"type":        regexp.MustCompile(`^property$`),
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"max":     regexp.MustCompile(`^20$`),
+				"min":     regexp.MustCompile(`^4$`),
+				"mutable": regexp.MustCompile(`^true$`),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^property$`),
 			}),
 		),
 	}
@@ -175,10 +174,15 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-			resource.TestCheckResourceAttr(resourceFullName, "name", "full-basic"),
-			resource.TestCheckResourceAttr(resourceFullName, "description", "Imported on blah blah"),
-			resource.TestCheckResourceAttr(resourceFullName, "flow_json", minimalStepJson),
-			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
+			resource.TestMatchResourceAttr(resourceFullName, "description", regexp.MustCompile(`^Imported on`)),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", minimalStepJson)),
+			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "connection_link.*", map[string]*regexp.Regexp{
+				"id":                           verify.P1DVResourceIDRegexpFullString,
+				"replace_import_connection_id": verify.P1DVResourceIDRegexpFullString,
+				"name":                         regexp.MustCompile(fmt.Sprintf(`^%s-error$`, name)),
+			}),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
 			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "0"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "0"),
@@ -421,6 +425,8 @@ resource "davinci_connection" "%[1]s-error" {
 resource "davinci_flow" "%[1]s-subflow-1" {
   environment_id = pingone_environment.%[1]s.id
 
+  name = "%[2]s-subflow-1"
+
   flow_json = <<EOT
 %[3]s
 EOT
@@ -435,6 +441,8 @@ EOT
 
 resource "davinci_flow" "%[1]s-subflow-2" {
   environment_id = pingone_environment.%[1]s.id
+
+  name = "%[2]s-subflow-2"
 
   flow_json = <<EOT
 %[4]s
@@ -513,17 +521,24 @@ EOT
   subflow_link {
     id   = davinci_flow.%[3]s-subflow-2.id
     name = davinci_flow.%[3]s-subflow-2.name
+	replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
   }
 
   // Subflow 1
   subflow_link {
     id   = davinci_flow.%[3]s-subflow-1.id
     name = davinci_flow.%[3]s-subflow-1.name
+	replace_import_subflow_id = "00f66e8926ced6ef5b83619fde4a314a"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
 }
 
 func testAccResourceFlow_Minimal_HCL(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-minimal.json")
+	if err != nil {
+		return "", "", err
+	}
 
 	commonHcl, err := testAccResourceFlow_Common_HCL(resourceName, name)
 
@@ -535,7 +550,16 @@ func testAccResourceFlow_Minimal_HCL(resourceName, name string, withBootstrapCon
 resource "davinci_flow" "%[3]s" {
   environment_id = pingone_environment.%[3]s.id
 
-  flow_json = "%[4]s"
+  flow_json = <<EOT
+%[4]s
+EOT
+
+// Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
 }
 

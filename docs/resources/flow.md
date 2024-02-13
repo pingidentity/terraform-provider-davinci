@@ -60,7 +60,7 @@ resource "davinci_flow" "my_awesome_main_flow" {
 ### Required
 
 - `environment_id` (String) The ID of the PingOne environment to import the DaVinci flow to.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
-- `flow_json` (String, Sensitive) The DaVinci Flow export in raw json format.  Must be a valid JSON string.
+- `flow_json` (String, Sensitive) The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.
 
 ### Optional
 
@@ -72,8 +72,9 @@ resource "davinci_flow" "my_awesome_main_flow" {
 
 ### Read-Only
 
-- `flow_json_response` (String, Sensitive) The DaVinci Flow export in raw json format following successful import, including target environment metadata.
-- `flow_variables` (Block Set) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`. (see [below for nested schema](#nestedblock--flow_variables))
+- `flow_configuration_json` (String) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
+- `flow_export_json` (String, Sensitive) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
+- `flow_variables` (Attributes Set) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--connection_link"></a>
@@ -102,7 +103,7 @@ Optional:
 - `replace_import_subflow_id` (String) Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
 
 
-<a id="nestedblock--flow_variables"></a>
+<a id="nestedatt--flow_variables"></a>
 ### Nested Schema for `flow_variables`
 
 Read-Only:

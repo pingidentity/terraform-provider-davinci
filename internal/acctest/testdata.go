@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 // func FlowsForTests(resourceName string) TestFlowsHcl {
@@ -231,12 +233,21 @@ func ReadFlowJsonFile(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	// flowJson, err := json.Marshal(string(flowByte))
-	// if err != nil {
-	// 	panic(err)
-	// }
 
-	return string(flowByte), nil
+	// Form up to object
+	var flow davinci.Flow
+	err = json.Unmarshal([]byte(flowByte), &flow)
+	if err != nil {
+		return "", err
+	}
+
+	// Back to string
+	mainFlowJsonBytes, err := json.Marshal(flow)
+	if err != nil {
+		return "", err
+	}
+
+	return string(mainFlowJsonBytes), nil
 }
 
 // Data read of bootstrapped connections to be used in davinci_flow connections blocks

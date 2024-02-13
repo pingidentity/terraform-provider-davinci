@@ -73,6 +73,10 @@ func Float32OkToTF(i *float32, ok bool) basetypes.Float64Value {
 	}
 }
 
+func BoolToTF(b bool) basetypes.BoolValue {
+	return types.BoolValue(b)
+}
+
 func BoolOkToTF(b *bool, ok bool) basetypes.BoolValue {
 	if !ok || b == nil {
 		return types.BoolNull()
