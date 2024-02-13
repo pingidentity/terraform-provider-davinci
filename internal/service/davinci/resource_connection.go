@@ -340,7 +340,7 @@ func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta 
 
 func flattenConnectionProperties(connectionProperties map[string]interface{}) ([]map[string]interface{}, error) {
 	if connectionProperties == nil {
-		return nil, fmt.Errorf("no properties")
+		return nil, nil
 	}
 	connProps := []map[string]interface{}{}
 	for propName, propVal := range connectionProperties {

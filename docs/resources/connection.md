@@ -2421,6 +2421,26 @@ If the `value` type of a property is not defined it must be inferred.
 
 
 
+### PingOne Scope Consent
+
+**Connector Display Name**: PingOne Scope Consent
+
+**Connector ID** - schema `connectorId`: pingOneScopeConsentConnector
+
+**Properties Table:** 
+
+
+
+| Display Name | `name` | `value` Type | Description |
+| ---- | ---- | ---- | ----|
+| Client ID | `clientId` | `string` | The Client ID of your PingOne Worker application. |
+| Client Secret | `clientSecret` | `string` | The Client Secret of your PingOne Worker application. |
+| Environment ID | `envId` | `string` | Your PingOne Environment ID. |
+| Region | `region` | `string` | The region in which your PingOne environment exists. | 
+
+
+
+
 ### PingOne Verify
 
 **Connector Display Name**: PingOne Verify
