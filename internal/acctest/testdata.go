@@ -236,7 +236,7 @@ func ReadFlowJsonFile(path string) (string, error) {
 
 	// Form up to object
 	var flow davinci.Flow
-	err = json.Unmarshal([]byte(flowByte), &flow)
+	err = json.Unmarshal(flowByte, &flow)
 	if err != nil {
 		return "", err
 	}

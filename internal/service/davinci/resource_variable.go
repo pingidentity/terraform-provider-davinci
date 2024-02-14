@@ -236,7 +236,7 @@ func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta in
 	}
 	resp, ok := sdkRes.(map[string]dv.Variable)
 	if !ok || len(resp) != 1 {
-		err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %s", variablePayload.Name)
+		err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %v", *variablePayload.Name)
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
@@ -266,7 +266,7 @@ func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta in
 		return diags
 	}
 	resp, ok := sdkRes.(*dv.Message)
-	if !ok || resp.Message == "" {
+	if !ok || resp.Message == nil || *resp.Message == "" {
 		err = fmt.Errorf("Unable to parse delete response from Davinci API for variable with name: %s", variableName)
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
@@ -309,27 +309,43 @@ func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta in
 
 func getVariableAttributes(d *schema.ResourceData) dv.VariablePayload {
 	variablePayload := dv.VariablePayload{
-		Name:    d.Get("name").(string),
 		Context: d.Get("context").(string),
 		Type:    d.Get("type").(string),
 	}
+
+	if v, ok := d.Get("name").(string); ok {
+		variablePayload.Name = &v
+	}
+
 	if flowId, ok := d.GetOk("flow_id"); ok {
-		variablePayload.FlowId = flowId.(string)
+		if v, ok := flowId.(string); ok {
+			variablePayload.FlowId = &v
+		}
 	}
 	if mutable, ok := d.GetOk("mutable"); ok {
-		variablePayload.Mutable = mutable.(bool)
+		if v, ok := mutable.(bool); ok {
+			variablePayload.Mutable = &v
+		}
 	}
 	if description, ok := d.GetOk("description"); ok {
-		variablePayload.Description = description.(string)
+		if v, ok := description.(string); ok {
+			variablePayload.Description = &v
+		}
 	}
 	if value, ok := d.GetOk("value"); ok {
-		variablePayload.Value = value.(string)
+		if v, ok := value.(string); ok {
+			variablePayload.Value = &v
+		}
 	}
 	if min, ok := d.GetOk("min"); ok {
-		variablePayload.Min = min.(int)
+		if v, ok := min.(int); ok {
+			variablePayload.Min = &v
+		}
 	}
 	if max, ok := d.GetOk("max"); ok {
-		variablePayload.Max = max.(int)
+		if v, ok := max.(int); ok {
+			variablePayload.Max = &v
+		}
 	}
 	return variablePayload
 }

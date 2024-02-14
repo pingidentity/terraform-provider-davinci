@@ -175,7 +175,7 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
-			resource.TestMatchResourceAttr(resourceFullName, "description", regexp.MustCompile(`^Imported on`)),
+			resource.TestMatchResourceAttr(resourceFullName, "description", regexp.MustCompile(`^$`)),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", minimalStepJson)),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "connection_link.*", map[string]*regexp.Regexp{

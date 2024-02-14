@@ -452,7 +452,7 @@ func dataSourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta
 		return diags
 	}
 
-	d.SetId(resp.AppID)
+	d.SetId(*resp.AppID)
 
 	return diags
 }

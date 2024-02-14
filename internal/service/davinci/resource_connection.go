@@ -91,9 +91,14 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	connection := dv.Connection{
-		ConnectorID: d.Get("connector_id").(string),
-		Name:        d.Get("name").(string),
+	connection := dv.Connection{}
+
+	if v, ok := d.Get("connector_id").(string); ok {
+		connection.ConnectorID = &v
+	}
+
+	if v, ok := d.Get("name").(string); ok {
+		connection.Name = &v
 	}
 
 	connection.Properties = makeProperties(d)
@@ -115,13 +120,13 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 	}
 
 	resp, ok := sdkRes.(*dv.Connection)
-	if !ok || resp.Name == "" {
+	if !ok || resp.Name == nil || *resp.Name == "" {
 		err = fmt.Errorf("failed to cast created response to Connection")
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
 
-	d.SetId(resp.ConnectionID)
+	d.SetId(*resp.ConnectionID)
 
 	// Set properties based on incoming config after successful create
 	// not using reponse itself because it may contain obfuscated values
@@ -182,7 +187,7 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 		return diags
 	}
 
-	d.SetId(res.ConnectionID)
+	d.SetId(*res.ConnectionID)
 
 	if err := d.Set("name", res.Name); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
@@ -192,7 +197,7 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	if err := d.Set("created_date", res.CreatedDate); err != nil {
+	if err := d.Set("created_date", res.CreatedDate.UnixMilli()); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
@@ -237,9 +242,15 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 	// API only allows property changes
 	if d.HasChanges("property") {
 		connection := dv.Connection{
-			ConnectorID:  d.Get("connector_id").(string),
-			Name:         d.Get("name").(string),
-			ConnectionID: connId,
+			ConnectionID: &connId,
+		}
+
+		if v, ok := d.Get("connector_id").(string); ok {
+			connection.ConnectorID = &v
+		}
+
+		if v, ok := d.Get("name").(string); ok {
+			connection.Name = &v
 		}
 
 		connection.Properties = makeProperties(d)
@@ -260,7 +271,7 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 		}
 
 		res, ok := sdkRes.(*dv.Connection)
-		if !ok || res.Name == "" {
+		if !ok || res.Name == nil || *res.Name == "" {
 			err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
 			diags = append(diags, diag.FromErr(err)...)
 			return diags

@@ -449,7 +449,7 @@ func resourceApplicationCreate(ctx context.Context, d *schema.ResourceData, meta
 		return diags
 	}
 
-	d.SetId(res.AppID)
+	d.SetId(*res.AppID)
 
 	resourceApplicationRead(ctx, d, meta)
 
@@ -501,7 +501,7 @@ func resourceApplicationRead(ctx context.Context, d *schema.ResourceData, meta i
 			return diags
 		}
 	}
-	d.SetId(resp.AppID)
+	d.SetId(*resp.AppID)
 	return diags
 }
 
@@ -522,10 +522,10 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 		newPolsList := expandFlowPolicies(newPols)
 		oldPolicyMap := make(map[string]dv.Policy)
 		for _, v := range oldPolsList {
-			oldPolicyMap[v.PolicyID] = v
+			oldPolicyMap[*v.PolicyID] = v
 		}
 		for _, newPol := range newPolsList {
-			oldPol, exists := oldPolicyMap[newPol.PolicyID]
+			oldPol, exists := oldPolicyMap[*newPol.PolicyID]
 			if exists {
 				//update policy
 				sdkRes, err := sdk.DoRetryable(
@@ -546,7 +546,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					diags = append(diags, diag.FromErr(err)...)
 					return diags
 				}
-				delete(oldPolicyMap, oldPol.PolicyID)
+				delete(oldPolicyMap, *oldPol.PolicyID)
 			} else {
 				// create policy
 				sdkRes, err := sdk.DoRetryable(
@@ -567,7 +567,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 					diags = append(diags, diag.FromErr(err)...)
 					return diags
 				}
-				delete(oldPolicyMap, oldPol.PolicyID)
+				delete(oldPolicyMap, *oldPol.PolicyID)
 			}
 		}
 		//delete old policies that are not in new policies
@@ -577,7 +577,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 				c,
 				environmentID,
 				func() (interface{}, *http.Response, error) {
-					return c.DeleteFlowPolicyWithResponse(environmentID, appId, oldPol.PolicyID)
+					return c.DeleteFlowPolicyWithResponse(environmentID, appId, *oldPol.PolicyID)
 				},
 			)
 			if err != nil {
@@ -593,7 +593,8 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 			diags = append(diags, diag.FromErr(err)...)
 			return diags
 		}
-		app.AppID = d.Id()
+		appId := d.Id()
+		app.AppID = &appId
 
 		sdkRes, err := sdk.DoRetryable(
 			ctx,
@@ -609,7 +610,7 @@ func resourceApplicationUpdate(ctx context.Context, d *schema.ResourceData, meta
 		}
 		res, ok := sdkRes.(*dv.App)
 		if !ok || res.Name == "" {
-			err = fmt.Errorf("failed to cast update application response to Application on id: %s", app.AppID)
+			err = fmt.Errorf("failed to cast update application response to Application on id: %v", *app.AppID)
 			diags = append(diags, diag.FromErr(err)...)
 			return diags
 		}
@@ -644,7 +645,7 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 		return diags
 	}
 	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message == "" {
+	if !ok || res.Message == nil || *res.Message != "" {
 		err = fmt.Errorf("failed to delete update application response to Application on id: %s", appId)
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
@@ -708,12 +709,25 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 		if len(oamValues) == 1 {
 			oamValuesMap := oamValues[0].(map[string]interface{})
 			oaUpdate.Values = &dv.OauthValues{
-				Enabled:                    oamValuesMap["enabled"].(bool),
-				ClientSecret:               oamValuesMap["client_secret"].(string),
-				EnforceSignedRequestOpenid: oamValuesMap["enforce_signed_request_openid"].(bool),
-				SpjwksUrl:                  oamValuesMap["sp_jwks_url"].(string),
-				SpJwksOpenid:               oamValuesMap["sp_jwks_openid"].(string),
+				Enabled: oamValuesMap["enabled"].(bool),
 			}
+
+			if v, ok := oamValuesMap["client_secret"].(string); ok {
+				oaUpdate.Values.ClientSecret = &v
+			}
+
+			if v, ok := oamValuesMap["enforce_signed_request_openid"].(bool); ok {
+				oaUpdate.Values.EnforceSignedRequestOpenid = &v
+			}
+
+			if v, ok := oamValuesMap["sp_jwks_url"].(string); ok {
+				oaUpdate.Values.SpjwksUrl = &v
+			}
+
+			if v, ok := oamValuesMap["sp_jwks_openid"].(string); ok {
+				oaUpdate.Values.SpJwksOpenid = &v
+			}
+
 			slist := expandStringList(oamValuesMap["redirect_uris"].(*schema.Set).List())
 			oaUpdate.Values.RedirectUris = slist
 			slist = expandStringList(oamValuesMap["logout_uris"].(*schema.Set).List())
@@ -741,12 +755,25 @@ func expandApp(d *schema.ResourceData) (*dv.AppUpdate, error) {
 			if len(samlValues) == 1 {
 				svMap := samlValues[0].(map[string]interface{})
 				svUpdate.Values = &dv.SamlValues{
-					Enabled:              svMap["enabled"].(bool),
-					EnforceSignedRequest: svMap["enforce_signed_request"].(bool),
-					RedirectURI:          svMap["redirect_uri"].(string),
-					Audience:             svMap["audience"].(string),
-					SpCert:               svMap["sp_cert"].(string),
+					Enabled: svMap["enabled"].(bool),
 				}
+
+				if v, ok := svMap["enforce_signed_request"].(bool); ok {
+					svUpdate.Values.EnforceSignedRequest = &v
+				}
+
+				if v, ok := svMap["redirect_uri"].(string); ok {
+					svUpdate.Values.RedirectURI = &v
+				}
+
+				if v, ok := svMap["audience"].(string); ok {
+					svUpdate.Values.Audience = &v
+				}
+
+				if v, ok := svMap["sp_cert"].(string); ok {
+					svUpdate.Values.SpCert = &v
+				}
+
 				a.Saml = svUpdate
 			}
 			if len(samlValues) > 1 {
@@ -795,24 +822,37 @@ func expandStringList(configured []interface{}) []string {
 }
 
 func expandFlowPolicies(fp interface{}) []dv.Policy {
-	fl := fp.(*schema.Set).List()
+	policyList := fp.(*schema.Set).List()
 	fvUpdate := []dv.Policy{}
-	if len(fl) > 0 {
-		for _, v := range fl {
-			flMap := v.(map[string]interface{})
-			thisFvUpdate := dv.Policy{
-				Name:     flMap["name"].(string),
-				Status:   flMap["status"].(string),
-				PolicyID: flMap["policy_id"].(string),
+	if len(policyList) > 0 {
+		for _, policy := range policyList {
+			flMap := policy.(map[string]interface{})
+			thisFvUpdate := dv.Policy{}
+
+			if v, ok := flMap["name"].(string); ok {
+				thisFvUpdate.Name = &v
 			}
+
+			if v, ok := flMap["status"].(string); ok {
+				thisFvUpdate.Status = &v
+			}
+
+			if v, ok := flMap["policy_id"].(string); ok {
+				thisFvUpdate.PolicyID = &v
+			}
+
 			thisPolicyFlows := flMap["policy_flow"].(*schema.Set).List()
 			for _, w := range thisPolicyFlows {
 				flPMap := w.(map[string]interface{})
 				thisFvPUpdate := dv.PolicyFlow{
 					FlowID:    flPMap["flow_id"].(string),
 					VersionID: flPMap["version_id"].(int),
-					Weight:    flPMap["weight"].(int),
 				}
+
+				if v, ok := flPMap["weight"].(int); ok {
+					thisFvPUpdate.Weight = &v
+				}
+
 				thisFvUpdate.PolicyFlows = append(thisFvUpdate.PolicyFlows, thisFvPUpdate)
 			}
 

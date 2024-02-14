@@ -129,7 +129,7 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 	resp := []dv.Connection{}
 	if cIdsFilter != nil {
 		for _, resItem := range res {
-			cIdFound := slices.Contains(cIdsFilter, resItem.ConnectorID)
+			cIdFound := slices.Contains(cIdsFilter, *resItem.ConnectorID)
 			if !cIdFound {
 				continue
 			}

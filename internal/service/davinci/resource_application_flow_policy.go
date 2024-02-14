@@ -138,13 +138,13 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 			break
 		}
 	}
-	if resAppPolicy.PolicyID == "" {
+	if resAppPolicy.PolicyID == nil || *resAppPolicy.PolicyID == "" {
 		err = fmt.Errorf("Unable to find created policy in response from Davinci API")
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
 
-	d.SetId(resAppPolicy.PolicyID)
+	d.SetId(*resAppPolicy.PolicyID)
 
 	resourceApplicationFlowPolicyRead(ctx, d, meta)
 
@@ -216,7 +216,8 @@ func resourceApplicationFlowPolicyUpdate(ctx context.Context, d *schema.Resource
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	appPolicy.PolicyID = d.Id()
+	policyId := d.Id()
+	appPolicy.PolicyID = &policyId
 
 	environmentID := d.Get("environment_id").(string)
 
@@ -270,7 +271,7 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 	}
 
 	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message != "" {
+	if !ok || res.Message != nil || *res.Message != "" {
 		err = fmt.Errorf("failed to delete application policy with id: %s", appId)
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
@@ -282,9 +283,11 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 }
 
 func expandAppPolicy(d *schema.ResourceData) (*dv.Policy, error) {
+	policyName := d.Get("name").(string)
+	policyStatus := d.Get("status").(string)
 	policy := dv.Policy{
-		Name:   d.Get("name").(string),
-		Status: d.Get("status").(string),
+		Name:   &policyName,
+		Status: &policyStatus,
 	}
 
 	if v, ok := d.GetOk("policy_flow"); ok {
@@ -294,7 +297,10 @@ func expandAppPolicy(d *schema.ResourceData) (*dv.Policy, error) {
 			thisPolicyFlow := dv.PolicyFlow{
 				FlowID:    policyFlowMap["flow_id"].(string),
 				VersionID: policyFlowMap["version_id"].(int),
-				Weight:    policyFlowMap["weight"].(int),
+			}
+
+			if v, ok := policyFlowMap["weight"].(int); ok {
+				thisPolicyFlow.Weight = &v
 			}
 
 			successNodes := make([]string, 0)
@@ -321,12 +327,12 @@ func expandAppPolicy(d *schema.ResourceData) (*dv.Policy, error) {
 func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, error) {
 	var policy dv.Policy
 	for _, v := range app.Policies {
-		if v.PolicyID == policyId {
+		if *v.PolicyID == policyId {
 			policy = v
 			break
 		}
 	}
-	if policy.PolicyID == "" {
+	if policy.PolicyID == nil || *policy.PolicyID == "" {
 		return nil, fmt.Errorf("Unable to find policy with id: %s", policyId)
 	}
 	a := map[string]interface{}{

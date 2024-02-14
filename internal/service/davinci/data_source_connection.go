@@ -168,7 +168,7 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta 
 		return diags
 	}
 
-	d.SetId(res.ConnectionID)
+	d.SetId(*res.ConnectionID)
 
 	if err := d.Set("name", res.Name); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
@@ -223,8 +223,8 @@ func getConnectionIdByName(ctx context.Context, c *dv.APIClient, environmentID, 
 	}
 
 	for _, conn := range res {
-		if conn.Name == connName {
-			return &conn.ConnectionID, nil
+		if *conn.Name == connName {
+			return conn.ConnectionID, nil
 		}
 	}
 	return nil, fmt.Errorf("Unable to find connection with name: %v", connName)
