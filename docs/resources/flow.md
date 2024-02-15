@@ -73,7 +73,6 @@ resource "davinci_flow" "my_awesome_main_flow" {
 ### Read-Only
 
 - `flow_configuration_json` (String) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
-- `flow_export_json` (String, Sensitive) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
 - `flow_variables` (Attributes Set) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 

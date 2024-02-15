@@ -175,6 +175,26 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
+			resource.TestMatchResourceAttr(resourceFullName, "description", regexp.MustCompile(`^Imported on `)),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", minimalStepJson)),
+			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "connection_link.*", map[string]*regexp.Regexp{
+				"id":                           verify.P1DVResourceIDRegexpFullString,
+				"replace_import_connection_id": verify.P1DVResourceIDRegexpFullString,
+				"name":                         regexp.MustCompile(fmt.Sprintf(`^%s-error$`, name)),
+			}),
+			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
+			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "0"),
+		),
+	}
+
+	updateStep := resource.TestStep{
+		Config: minimalStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
 			resource.TestMatchResourceAttr(resourceFullName, "description", regexp.MustCompile(`^$`)),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", minimalStepJson)),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
@@ -213,7 +233,7 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 			},
 			// Test updates
 			fullStep,
-			minimalStep,
+			updateStep,
 			fullStep,
 			// Test importing the resource
 			{

@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -21,11 +19,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
-	stringvalidatorinternal "github.com/pingidentity/terraform-provider-davinci/internal/framework/stringvalidator"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework/customtypes/davinciexporttype"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
-	cmpoptsdv "github.com/samir-gandhi/davinci-client-go/davinci/cmpopts"
 )
 
 // Types
@@ -36,13 +33,13 @@ type FlowResourceModel struct {
 	EnvironmentId         types.String `tfsdk:"environment_id"`
 	FlowJSON              types.String `tfsdk:"flow_json"`
 	FlowConfigurationJSON types.String `tfsdk:"flow_configuration_json"`
-	FlowExportJSON        types.String `tfsdk:"flow_export_json"`
-	Deploy                types.Bool   `tfsdk:"deploy"`
-	Name                  types.String `tfsdk:"name"`
-	Description           types.String `tfsdk:"description"`
-	ConnectionLinks       types.Set    `tfsdk:"connection_link"`
-	SubFlowLinks          types.Set    `tfsdk:"subflow_link"`
-	FlowVariables         types.Set    `tfsdk:"flow_variables"`
+	// FlowExportJSON        types.String `tfsdk:"flow_export_json"`
+	Deploy          types.Bool   `tfsdk:"deploy"`
+	Name            types.String `tfsdk:"name"`
+	Description     types.String `tfsdk:"description"`
+	ConnectionLinks types.Set    `tfsdk:"connection_link"`
+	SubFlowLinks    types.Set    `tfsdk:"subflow_link"`
+	FlowVariables   types.Set    `tfsdk:"flow_variables"`
 }
 
 type FlowConnectionLinkResourceModel struct {
@@ -202,22 +199,24 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Required:    true,
 				Sensitive:   true,
 
-				Validators: []validator.String{
-					stringvalidatorinternal.IsParseableJSON(),
-				},
+				CustomType: davinciexporttype.ParsedType{},
 			},
 
 			"flow_configuration_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.").Description,
 				Computed:    true,
 				//Sensitive:   true,
+
+				CustomType: davinciexporttype.ParsedType{},
 			},
 
-			"flow_export_json": schema.StringAttribute{
-				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
-				Computed:    true,
-				Sensitive:   true,
-			},
+			// "flow_export_json": schema.StringAttribute{
+			// 	Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
+			// 	Computed:    true,
+			// 	Sensitive:   true,
+
+			// 	CustomType: davinciexport.ParsedType{},
+			// },
 
 			"deploy": schema.BoolAttribute{
 				Description:         deployDescription.Description,
@@ -469,7 +468,6 @@ func (p *FlowResource) ValidateConfig(ctx context.Context, req resource.Validate
 	}
 
 	resp.Diagnostics.Append(validateConnectionSubflowLinkMappings(ctx, config.FlowJSON, config.ConnectionLinks, config.SubFlowLinks, true)...)
-	resp.Diagnostics.Append(validateAdditionalProperties(config.FlowJSON, true)...)
 
 }
 
@@ -834,7 +832,6 @@ func (r *FlowResource) ImportState(ctx context.Context, req resource.ImportState
 func (p *FlowResourceModel) validate(ctx context.Context) (diags diag.Diagnostics) {
 
 	diags.Append(validateConnectionSubflowLinkMappings(ctx, p.FlowConfigurationJSON, p.ConnectionLinks, p.SubFlowLinks, false)...)
-	diags.Append(validateAdditionalProperties(p.FlowJSON, false)...)
 
 	return diags
 }
@@ -965,16 +962,16 @@ func (p *FlowResourceModel) toState(apiObject *dv.Flow) diag.Diagnostics {
 
 	p.FlowConfigurationJSON = framework.StringToTF(string(jsonConfigurationBytes[:]))
 
-	jsonBytes, err := json.Marshal(apiObject)
-	if err != nil {
-		diags.AddError(
-			"Error converting the flow object to JSON",
-			fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
-		)
-		return diags
-	}
+	// jsonBytes, err := json.Marshal(apiObject)
+	// if err != nil {
+	// 	diags.AddError(
+	// 		"Error converting the flow object to JSON",
+	// 		fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+	// 	)
+	// 	return diags
+	// }
 
-	p.FlowExportJSON = framework.StringToTF(string(jsonBytes[:]))
+	// p.FlowExportJSON = framework.StringToTF(string(jsonBytes[:]))
 
 	if apiObject.DeployedDate != nil {
 		p.Deploy = types.BoolValue(true)
@@ -1175,57 +1172,6 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON basetyp
 	}
 
 	return diags
-}
-
-// Warn in case there are AdditionalProperties in the import file (since these aren't cleanly handled in the SDK, while they are preserved on import, there may be unpredictable results in diff calculation)
-// TODO: Schema update to allow for additional properties
-func validateAdditionalProperties(flowJSON basetypes.StringValue, allowUnknownValues bool) (diags diag.Diagnostics) {
-
-	var flowObject dv.Flow
-	err := json.Unmarshal([]byte(flowJSON.ValueString()), &flowObject)
-	if err != nil {
-		diags.AddError(
-			"Error parsing flow_json",
-			fmt.Sprintf("Error parsing `flow_json` into flow object: %s", err),
-		)
-		return diags
-	}
-
-	emptyFlow := dv.Flow{}
-
-	cmpOptions := make([]cmp.Option, 0)
-
-	// BUG - doesn't handle additional properties nested in ignored properties
-	cmpOptions = append(cmpOptions, cmpoptsdv.ExportCmpFilters(cmpoptsdv.ExportCmpOpts{
-		IgnoreUnmappedProperties:  false,
-		IgnoreEnvironmentMetadata: true,
-		IgnoreConfig:              true,
-		IgnoreDesignerCues:        true,
-	})...)
-
-	cmpOptions = append(cmpOptions, cmpopts.EquateEmpty())
-
-	if !cmp.Equal(flowObject, emptyFlow, cmpOptions...) {
-
-		unknownPropertiesDiff := cmp.Diff(flowObject, emptyFlow, cmpOptions...)
-
-		diags.AddAttributeWarning(
-			path.Root("flow_json"),
-			"Flow JSON contains unknown properties",
-			fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains properties that cannot be evaluated in Terraform plan calculation.  These parameters will be preserved on import to the DaVinci service, but there may be unpredictable results in difference calculation.\n\nDifference (-want +got): %s\n\n", unknownPropertiesDiff),
-		)
-	}
-
-	if !allowUnknownValues && flowJSON.IsUnknown() {
-		diags.AddAttributeError(
-			path.Root("flow_json"),
-			"Unknown Flow Import",
-			"The `flow_json` parameter is unknown.  Cannot validate the unknown import properties.",
-		)
-	}
-
-	return diags
-
 }
 
 // Modify the plan for connector and subflow re-mapping
