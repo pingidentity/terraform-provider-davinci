@@ -29,17 +29,17 @@ import (
 type FlowResource serviceClientType
 
 type FlowResourceModel struct {
-	Id                    types.String `tfsdk:"id"`
-	EnvironmentId         types.String `tfsdk:"environment_id"`
-	FlowJSON              types.String `tfsdk:"flow_json"`
-	FlowConfigurationJSON types.String `tfsdk:"flow_configuration_json"`
-	// FlowExportJSON        types.String `tfsdk:"flow_export_json"`
-	Deploy          types.Bool   `tfsdk:"deploy"`
-	Name            types.String `tfsdk:"name"`
-	Description     types.String `tfsdk:"description"`
-	ConnectionLinks types.Set    `tfsdk:"connection_link"`
-	SubFlowLinks    types.Set    `tfsdk:"subflow_link"`
-	FlowVariables   types.Set    `tfsdk:"flow_variables"`
+	Id                    types.String                  `tfsdk:"id"`
+	EnvironmentId         types.String                  `tfsdk:"environment_id"`
+	FlowJSON              davinciexporttype.ParsedValue `tfsdk:"flow_json"`
+	FlowConfigurationJSON davinciexporttype.ParsedValue `tfsdk:"flow_configuration_json"`
+	FlowExportJSON        davinciexporttype.ParsedValue `tfsdk:"flow_export_json"`
+	Deploy                types.Bool                    `tfsdk:"deploy"`
+	Name                  types.String                  `tfsdk:"name"`
+	Description           types.String                  `tfsdk:"description"`
+	ConnectionLinks       types.Set                     `tfsdk:"connection_link"`
+	SubFlowLinks          types.Set                     `tfsdk:"subflow_link"`
+	FlowVariables         types.Set                     `tfsdk:"flow_variables"`
 }
 
 type FlowConnectionLinkResourceModel struct {
@@ -199,7 +199,9 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Required:    true,
 				Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{},
+				CustomType: davinciexporttype.ParsedType{
+					ImportFile: true,
+				},
 			},
 
 			"flow_configuration_json": schema.StringAttribute{
@@ -207,16 +209,20 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{},
+				CustomType: davinciexporttype.ParsedType{
+					ImportFile: false,
+				},
 			},
 
-			// "flow_export_json": schema.StringAttribute{
-			// 	Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
-			// 	Computed:    true,
-			// 	Sensitive:   true,
+			"flow_export_json": schema.StringAttribute{
+				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
+				Computed:    true,
+				Sensitive:   true,
 
-			// 	CustomType: davinciexport.ParsedType{},
-			// },
+				CustomType: davinciexporttype.ParsedType{
+					ImportFile: false,
+				},
+			},
 
 			"deploy": schema.BoolAttribute{
 				Description:         deployDescription.Description,
@@ -388,7 +394,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 	if err != nil {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("flow_json"),
-			"Error parsing flow_json",
+			"Error parsing `flow_json`",
 			fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
 		)
 		return
@@ -419,19 +425,24 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			return
 		}
 
-		// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
-		var flowConfigStateObject dv.FlowConfiguration
-		err = json.Unmarshal([]byte(state.FlowJSON.ValueString()), &flowConfigStateObject)
-		if err != nil {
-			resp.Diagnostics.AddAttributeError(
-				path.Root("flow_json"),
-				"Error parsing `flow_json` in state",
-				fmt.Sprintf("Error parsing `flow_json` in state into flow configuration object: %s", err),
-			)
-			return
-		}
+		if !state.FlowConfigurationJSON.IsNull() {
+			// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
+			var flowConfigStateObject dv.FlowConfiguration
+			err = json.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &flowConfigStateObject)
+			if err != nil {
+				resp.Diagnostics.AddAttributeError(
+					path.Root("flow_json"),
+					"Error parsing `flow_configuration_json` in state",
+					fmt.Sprintf("Error parsing `flow_configuration_json` in state into flow configuration object: %s", err),
+				)
+				return
+			}
 
-		modifyPlanForMergedProperties(ctx, &flowConfigObject, flowConfigStateObject)
+			resp.Diagnostics.Append(modifyPlanForMergedProperties(ctx, &flowConfigObject.FlowUpdateConfiguration, flowConfigStateObject.FlowUpdateConfiguration)...)
+			if resp.Diagnostics.HasError() {
+				return
+			}
+		}
 	}
 
 	var flowConfigurationJSON basetypes.StringValue
@@ -668,13 +679,13 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 
-	// // Read Terraform state data into the model
-	// resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
-	// if resp.Diagnostics.HasError() {
-	// 	return
-	// }
+	// Read Terraform state data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	daVinciUpdate, d := plan.expandUpdate(ctx)
+	daVinciUpdate, d := plan.expandUpdate(ctx, state)
 	resp.Diagnostics.Append(d...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -804,8 +815,9 @@ func (r *FlowResource) ImportState(ctx context.Context, req resource.ImportState
 			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
-			Label:  "davinci_flow_id",
-			Regexp: verify.P1DVResourceIDRegexp,
+			Label:     "davinci_flow_id",
+			Regexp:    verify.P1DVResourceIDRegexp,
+			PrimaryID: true,
 		},
 	}
 
@@ -831,7 +843,7 @@ func (r *FlowResource) ImportState(ctx context.Context, req resource.ImportState
 
 func (p *FlowResourceModel) validate(ctx context.Context) (diags diag.Diagnostics) {
 
-	diags.Append(validateConnectionSubflowLinkMappings(ctx, p.FlowConfigurationJSON, p.ConnectionLinks, p.SubFlowLinks, false)...)
+	diags.Append(validateConnectionSubflowLinkMappings(ctx, p.FlowJSON, p.ConnectionLinks, p.SubFlowLinks, false)...)
 
 	return diags
 }
@@ -847,8 +859,8 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 	err := json.Unmarshal([]byte(p.FlowJSON.ValueString()), &data.FlowInfo)
 	if err != nil {
 		diags.AddError(
-			"Error parsing flow_json",
-			fmt.Sprintf("Error parsing flow_json: %s", err),
+			"Error parsing `flow_json`",
+			fmt.Sprintf("Error parsing `flow_json`: %s", err),
 		)
 		return nil, diags
 	}
@@ -857,33 +869,47 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 		data.FlowInfo.FlowID: p.Name.ValueString(),
 	}
 
-	// Connection and subflow links
 	var flowConfigObject dv.FlowConfiguration
-	err = json.Unmarshal([]byte(p.FlowJSON.ValueString()), &flowConfigObject)
-	if err != nil {
-		diags.AddError(
-			"Error parsing flow_json",
-			fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
-		)
-		return nil, diags
-	}
+	if !p.FlowConfigurationJSON.IsUnknown() && !p.FlowConfigurationJSON.IsNull() {
 
-	unknownFlowConfigPlan, d := modifyPlanForConnectionSubflowLinkMappings(ctx, &flowConfigObject, p.ConnectionLinks, p.SubFlowLinks)
-	diags.Append(d...)
-	if diags.HasError() {
-		return nil, diags
-	}
+		err = json.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &flowConfigObject)
+		if err != nil {
+			diags.AddError(
+				"Error parsing `flow_configuration_json`",
+				fmt.Sprintf("Error parsing `flow_configuration_json` into flow configuration object: %s", err),
+			)
+			return nil, diags
+		}
 
-	var flowConfigurationJSON basetypes.StringValue
-	if unknownFlowConfigPlan {
-
-		diags.AddError(
-			"Unknown Flow Import",
-			"The `flow_configuration_json` parameter is unknown.  Cannot complete the plan calculation.",
-		)
-		return nil, diags
+		data.FlowInfo.FlowConfiguration = flowConfigObject
 
 	} else {
+
+		// Connection and subflow links
+		err = json.Unmarshal([]byte(p.FlowJSON.ValueString()), &flowConfigObject)
+		if err != nil {
+			diags.AddError(
+				"Error parsing `flow_json`",
+				fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
+			)
+			return nil, diags
+		}
+
+		unknownFlowConfigPlan, d := modifyPlanForConnectionSubflowLinkMappings(ctx, &flowConfigObject, p.ConnectionLinks, p.SubFlowLinks)
+		diags.Append(d...)
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		if unknownFlowConfigPlan {
+
+			diags.AddError(
+				"Unknown Flow Import",
+				"The `flow_configuration_json` parameter is unknown.  Cannot complete the plan calculation.",
+			)
+			return nil, diags
+
+		}
 
 		jsonFlowConfigBytes, err := json.Marshal(flowConfigObject)
 		if err != nil {
@@ -894,31 +920,29 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 			return nil, diags
 		}
 
-		flowConfigurationJSON = framework.StringToTF(string(jsonFlowConfigBytes[:]))
-	}
-
-	err = json.Unmarshal([]byte(flowConfigurationJSON.ValueString()), &data.FlowInfo.FlowConfiguration)
-	if err != nil {
-		diags.AddError(
-			"Error parsing flow_configuration_json",
-			fmt.Sprintf("Error parsing flow_configuration_json: %s", err),
-		)
-		return nil, diags
+		err = json.Unmarshal(jsonFlowConfigBytes, &data.FlowInfo.FlowConfiguration)
+		if err != nil {
+			diags.AddError(
+				"Error parsing `flow_configuration_json`",
+				fmt.Sprintf("Error parsing `flow_configuration_json`: %s", err),
+			)
+			return nil, diags
+		}
 	}
 
 	return &data, diags
 }
 
-func (p *FlowResourceModel) expandUpdate(ctx context.Context) (*dv.FlowUpdate, diag.Diagnostics) {
+func (p *FlowResourceModel) expandUpdate(ctx context.Context, state FlowResourceModel) (*dv.FlowUpdate, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var data dv.FlowUpdate
+	var data, stateData dv.FlowUpdate
 
 	err := json.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &data)
 	if err != nil {
 		diags.AddError(
-			"Error parsing flow_json",
-			fmt.Sprintf("Error parsing flow_json: %s", err),
+			"Error parsing `flow_json`",
+			fmt.Sprintf("Error parsing `flow_json`: %s", err),
 		)
 		return nil, diags
 	}
@@ -931,6 +955,20 @@ func (p *FlowResourceModel) expandUpdate(ctx context.Context) (*dv.FlowUpdate, d
 	if !p.Description.IsNull() {
 		description := p.Description.ValueString()
 		data.Description = &description
+	}
+
+	err = json.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData)
+	if err != nil {
+		diags.AddError(
+			"Error parsing `flow_configuration_json`",
+			fmt.Sprintf("Error parsing `flow_configuration_json`: %s", err),
+		)
+		return nil, diags
+	}
+
+	diags.Append(modifyPlanForMergedProperties(ctx, &data.FlowUpdateConfiguration, stateData.FlowUpdateConfiguration)...)
+	if diags.HasError() {
+		return nil, diags
 	}
 
 	return &data, diags
@@ -960,18 +998,22 @@ func (p *FlowResourceModel) toState(apiObject *dv.Flow) diag.Diagnostics {
 		return diags
 	}
 
-	p.FlowConfigurationJSON = framework.StringToTF(string(jsonConfigurationBytes[:]))
+	p.FlowConfigurationJSON = framework.DaVinciExportTypeToTF(string(jsonConfigurationBytes[:]))
 
-	// jsonBytes, err := json.Marshal(apiObject)
-	// if err != nil {
-	// 	diags.AddError(
-	// 		"Error converting the flow object to JSON",
-	// 		fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
-	// 	)
-	// 	return diags
-	// }
+	jsonBytes, err := json.Marshal(apiObject)
+	if err != nil {
+		diags.AddError(
+			"Error converting the flow object to JSON",
+			fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+		)
+		return diags
+	}
 
-	// p.FlowExportJSON = framework.StringToTF(string(jsonBytes[:]))
+	p.FlowExportJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]))
+
+	if p.FlowJSON.IsNull() {
+		p.FlowJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]))
+	}
 
 	if apiObject.DeployedDate != nil {
 		p.Deploy = types.BoolValue(true)
@@ -1042,7 +1084,7 @@ func flowVariablesToTF(apiObject []dv.FlowVariable) (types.Set, diag.Diagnostics
 }
 
 // Validate if there are connections in the flow that should have a connection mapping, and flow connector instances that should have a subflow mapping
-func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON basetypes.StringValue, connectionLinks basetypes.SetValue, subFlowLinks basetypes.SetValue, allowUnknownValues bool) (diags diag.Diagnostics) {
+func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinciexporttype.ParsedValue, connectionLinks basetypes.SetValue, subFlowLinks basetypes.SetValue, allowUnknownValues bool) (diags diag.Diagnostics) {
 
 	if !flowJSON.IsUnknown() && !connectionLinks.IsUnknown() && !subFlowLinks.IsUnknown() {
 
@@ -1050,7 +1092,7 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON basetyp
 		err := json.Unmarshal([]byte(flowJSON.ValueString()), &flowConfigObject)
 		if err != nil {
 			diags.AddError(
-				"Error parsing flow_json",
+				"Error parsing `flow_json`",
 				fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
 			)
 			return
@@ -1258,11 +1300,19 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 	return unknownFlowConfigPlan, diags
 }
 
-func modifyPlanForMergedProperties(ctx context.Context, flowConfigObject *dv.FlowConfiguration, stateFlowConfigObject dv.FlowConfiguration) {
+func modifyPlanForMergedProperties(ctx context.Context, flowConfigObject *dv.FlowUpdateConfiguration, stateFlowConfigObject dv.FlowUpdateConfiguration) (diags diag.Diagnostics) {
 
 	// Must merge settings back into flow import if it's missing
 	if stateFlowConfigObject.Settings != nil && flowConfigObject.Settings == nil {
 		flowConfigObject.Settings = stateFlowConfigObject.Settings
+
+		diags.AddAttributeWarning(
+			path.Root("flow_configuration_json"),
+			"Implicitly merged settings",
+			"The `flow_json` import does not contain flow settings, but the existing state does.  The settings from the state have been merged into the import.\n\nIf this is not the desired behaviour, please update the DaVinci flow in the source environment to include flow settings and re-export.",
+		)
 	}
+
+	return diags
 
 }

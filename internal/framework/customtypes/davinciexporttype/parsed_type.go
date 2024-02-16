@@ -144,7 +144,7 @@ func (t ParsedType) Validate(ctx context.Context, in tftypes.Value, path path.Pa
 		IgnoreConfig:              true,
 		IgnoreDesignerCues:        true,
 		IgnoreEnvironmentMetadata: true,
-		IgnoreUnmappedProperties:  false,
+		IgnoreUnmappedProperties:  !t.ImportFile,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
 	}); !ok {

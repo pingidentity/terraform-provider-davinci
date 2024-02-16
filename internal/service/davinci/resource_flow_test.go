@@ -250,6 +250,11 @@ func testAccResourceFlow_Full(t *testing.T, withBootstrapConfig bool) {
 				}(),
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"connection_link",
+					"subflow_link",
+					"flow_json",
+				},
 			},
 		},
 	})

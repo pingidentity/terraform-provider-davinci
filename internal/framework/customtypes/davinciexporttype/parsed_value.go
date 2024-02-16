@@ -84,3 +84,27 @@ func (v ParsedValue) StringSemanticEquals(ctx context.Context, newValuable baset
 		IgnoreFlowMetadata:        true,
 	}), diags
 }
+
+func NewParsedNull() ParsedValue {
+	return ParsedValue{
+		StringValue: basetypes.NewStringNull(),
+	}
+}
+
+func NewParsedUnknown() ParsedValue {
+	return ParsedValue{
+		StringValue: basetypes.NewStringUnknown(),
+	}
+}
+
+func NewParsedValue(value string) ParsedValue {
+	return ParsedValue{
+		StringValue: basetypes.NewStringValue(value),
+	}
+}
+
+func NewParsedPointerValue(value *string) ParsedValue {
+	return ParsedValue{
+		StringValue: basetypes.NewStringPointerValue(value),
+	}
+}
