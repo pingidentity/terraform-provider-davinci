@@ -145,8 +145,13 @@ func (p *davinciProvider) Configure(ctx context.Context, req provider.ConfigureR
 	if data.Password.IsNull() {
 		v := os.Getenv("PINGONE_PASSWORD")
 		tflog.Debug(ctx, fmt.Sprintf(debugLogMessage, "password"), map[string]interface{}{
-			"env_var":       "PINGONE_PASSWORD",
-			"env_var_value": v,
+			"env_var": "PINGONE_PASSWORD",
+			"env_var_value": func() string {
+				if v == "" {
+					return ""
+				}
+				return "*******"
+			}(),
 		})
 		data.Password = basetypes.NewStringValue(v)
 	}
@@ -181,8 +186,13 @@ func (p *davinciProvider) Configure(ctx context.Context, req provider.ConfigureR
 	if data.AccessToken.IsNull() {
 		v := os.Getenv("PINGONE_DAVINCI_ACCESS_TOKEN")
 		tflog.Debug(ctx, fmt.Sprintf(debugLogMessage, "access_token"), map[string]interface{}{
-			"env_var":       "PINGONE_DAVINCI_ACCESS_TOKEN",
-			"env_var_value": v,
+			"env_var": "PINGONE_DAVINCI_ACCESS_TOKEN",
+			"env_var_value": func() string {
+				if v == "" {
+					return ""
+				}
+				return "*******"
+			}(),
 		})
 		data.AccessToken = basetypes.NewStringValue(v)
 	}
