@@ -144,7 +144,7 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 			"id":           connItem.ConnectionID,
 			"connector_id": connItem.ConnectorID,
 			"name":         connItem.Name,
-			"created_date": connItem.CreatedDate,
+			"created_date": connItem.CreatedDate.UnixMilli(),
 			"company_id":   connItem.CompanyID,
 			"customer_id":  connItem.CustomerID,
 		}

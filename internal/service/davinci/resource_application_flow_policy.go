@@ -340,7 +340,7 @@ func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, err
 		"application_id": app.AppID,
 		"name":           policy.Name,
 		"status":         policy.Status,
-		"created_date":   policy.CreatedDate,
+		"created_date":   policy.CreatedDate.UnixMilli(),
 	}
 	polFlows := []interface{}{}
 	for _, w := range policy.PolicyFlows {

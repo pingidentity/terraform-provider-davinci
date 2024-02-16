@@ -438,7 +438,7 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 		"environment_id":  app.CompanyID,
 		"customer_id":     app.CustomerID,
 		"name":            app.Name,
-		"created_date":    app.CreatedDate,
+		"created_date":    app.CreatedDate.UnixMilli(),
 		"api_key_enabled": app.APIKeyEnabled,
 
 		"api_keys": map[string]interface{}{
@@ -536,7 +536,7 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 			"name":         v.Name,
 			"status":       v.Status,
 			"policy_id":    v.PolicyID,
-			"created_date": v.CreatedDate,
+			"created_date": v.CreatedDate.UnixMilli(),
 		})
 	}
 	a["policy"] = pols

@@ -178,7 +178,7 @@ func dataSourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta 
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	if err := d.Set("created_date", res.CreatedDate); err != nil {
+	if err := d.Set("created_date", res.CreatedDate.UnixMilli()); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
