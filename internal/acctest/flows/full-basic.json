@@ -193,9 +193,9 @@
           "data": {
             "id": "xb74p6rkd8",
             "nodeType": "CONNECTION",
-            "connectionId": "33329a264e268ab31fb19637debf1ea3",
+            "connectionId": "2581eb287bb1d9bd29ae9886d675f89f",
             "connectorId": "flowConnector",
-            "name": "Flow Conductor",
+            "name": "Flow Connector",
             "label": "Flow Conductor",
             "status": "configured",
             "capabilityName": "startUiSubFlow",
@@ -229,9 +229,9 @@
           "data": {
             "id": "kq5ybvwvro",
             "nodeType": "CONNECTION",
-            "connectionId": "33329a264e268ab31fb19637debf1ea3",
+            "connectionId": "2581eb287bb1d9bd29ae9886d675f89f",
             "connectorId": "flowConnector",
-            "name": "Flow Conductor",
+            "name": "Flow Connector",
             "label": "Flow Conductor",
             "status": "configured",
             "capabilityName": "startUiSubFlow",

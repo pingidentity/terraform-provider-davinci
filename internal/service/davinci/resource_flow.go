@@ -103,7 +103,7 @@ func (r *FlowResource) Metadata(ctx context.Context, req resource.MetadataReques
 func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 
 	const attrMinLength = 1
-	const minimumConnections = 1
+	const minimumConnectionMappings = 1
 
 	nameDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"A string that identifies the flow name after import.  If the field is left blank, a flow name will be derived by the service from the name in the import JSON (the `flow_json` parameter).",
@@ -197,7 +197,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
 				Required:    true,
-				Sensitive:   true,
+				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ImportFile: true,
@@ -217,7 +217,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_export_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
 				Computed:    true,
-				Sensitive:   true,
+				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ImportFile: false,
@@ -329,7 +329,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 
 				Validators: []validator.Set{
-					setvalidator.SizeAtLeast(minimumConnections),
+					setvalidator.SizeAtLeast(minimumConnectionMappings),
 				},
 			},
 
@@ -547,9 +547,21 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		},
 	)
 	if err != nil {
+
+		additionalText := ""
+
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+
+			additionalText = "This error may indicate the flow is not fully configured."
+
+			if dvError.Code == dv.DV_ERROR_CODE_ERROR_CREATING_CONNECTOR {
+				additionalText = "This error may indicate that a node in the flow is not fully configured."
+			}
+		}
+
 		resp.Diagnostics.AddError(
 			"Error importing flow",
-			fmt.Sprintf("Error creating flow: %s", err),
+			fmt.Sprintf("Error creating flow: %s. %s", err, additionalText),
 		)
 	}
 	if resp.Diagnostics.HasError() {
@@ -560,7 +572,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 	if !ok || createFlow.Name == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
-			fmt.Sprintf("Unable to parse create response from Davinci API on flow"),
+			"Unable to parse create response from Davinci API on flow",
 		)
 	}
 	if resp.Diagnostics.HasError() {
@@ -577,15 +589,20 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 			return r.Client.ReadFlowVersionWithResponse(environmentID, createFlow.FlowID, nil)
 		},
 	)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error reading flow",
+			fmt.Sprintf("Error reading flow: %s", err),
+		)
+		return
+	}
 
 	response, ok := sdkRes.(*dv.FlowInfo)
 	if !ok || response.Flow.Name == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
-			fmt.Sprintf("Unable to parse create export response from Davinci API on flow"),
+			"Unable to parse create export response from Davinci API on flow",
 		)
-	}
-	if resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -627,11 +644,6 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	)
 
 	if err != nil {
-		//httpErr, _ := dv.ParseDvHttpError(err)
-		// if strings.Contains(httpErr.Body, "Error retrieving flow version") {
-		// 	d.SetId("")
-		// 	return diags
-		// }
 		resp.Diagnostics.AddError(
 			"Error reading flow",
 			fmt.Sprintf("Error reading flow: %s", err),
@@ -685,49 +697,52 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 
-	daVinciUpdate, d := plan.expandUpdate(ctx, state)
-	resp.Diagnostics.Append(d...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
 	environmentID := plan.EnvironmentId.ValueString()
 	flowID := plan.Id.ValueString()
 
-	_, err := sdk.DoRetryable(
-		ctx,
-		r.Client,
-		environmentID,
-		func() (any, *http.Response, error) {
-			return r.Client.UpdateFlowWithResponse(environmentID, flowID, *daVinciUpdate)
-		},
-	)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error importing flow",
-			fmt.Sprintf("Error updating flow: %s", err),
-		)
-	}
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	if !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) {
 
-	_, err = sdk.DoRetryable(
-		ctx,
-		r.Client,
-		environmentID,
-		func() (any, *http.Response, error) {
-			return r.Client.DeployFlowWithResponse(environmentID, flowID)
-		},
-	)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error deploying flow",
-			fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow: %s", err),
+		daVinciUpdate, d := plan.expandUpdate(ctx, state)
+		resp.Diagnostics.Append(d...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		_, err := sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.UpdateFlowWithResponse(environmentID, flowID, *daVinciUpdate)
+			},
 		)
-	}
-	if resp.Diagnostics.HasError() {
-		return
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error importing flow",
+				fmt.Sprintf("Error updating flow: %s", err),
+			)
+		}
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		_, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.DeployFlowWithResponse(environmentID, flowID)
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error deploying flow",
+				fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow: %s", err),
+			)
+		}
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Do an export for state
@@ -740,15 +755,20 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
 		},
 	)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error reading flow",
+			fmt.Sprintf("Error reading flow: %s", err),
+		)
+		return
+	}
 
 	response, ok := sdkRes.(*dv.FlowInfo)
 	if !ok || response.Flow.Name == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
-			fmt.Sprintf("Unable to parse update export response from Davinci API on flow"),
+			"Unable to parse update export response from Davinci API on flow",
 		)
-	}
-	if resp.Diagnostics.HasError() {
 		return
 	}
 
