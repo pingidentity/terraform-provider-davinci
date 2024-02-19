@@ -1,7 +1,6 @@
 package davinci_test
 
 import (
-	"context"
 	"fmt"
 	"regexp"
 	"testing"
@@ -9,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
-	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/service/base"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/service/davinci"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 )
@@ -24,12 +22,12 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 
 	var applicationID, environmentID string
 
-	ctx := context.Background()
+	// ctx := context.Background()
 
-	p1Client, err := acctest.PingOneTestClient(ctx)
-	if err != nil {
-		t.Fatalf("Failed to get API client: %v", err)
-	}
+	// p1Client, err := acctest.PingOneTestClient(ctx)
+	// if err != nil {
+	// 	t.Fatalf("Failed to get API client: %v", err)
+	// }
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
@@ -61,9 +59,9 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 				SkipFunc: func() (bool, error) { return true, nil },
 			},
 			{
-				PreConfig: func() {
-					base.Environment_RemovalDrift_PreConfig(ctx, p1Client.API.ManagementAPIClient, t, environmentID)
-				},
+				// PreConfig: func() {
+				// 	base.Environment_RemovalDrift_PreConfig(ctx, p1Client.API.ManagementAPIClient, t, environmentID)
+				// },
 				RefreshState:       true,
 				ExpectNonEmptyPlan: true,
 				SkipFunc:           func() (bool, error) { return true, nil },

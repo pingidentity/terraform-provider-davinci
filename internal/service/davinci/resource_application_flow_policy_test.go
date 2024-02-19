@@ -556,6 +556,9 @@ resource "davinci_application_flow_policy" "%[2]s" {
 func flowResources(resourceName, name string, count int) (hcl string, err error) {
 
 	mainFlowHcl, err := acctest.ReadFlowJsonFile("flows/simple.json")
+	if err != nil {
+		return "", err
+	}
 
 	hcl += fmt.Sprintf(`
 resource "davinci_connection" "%[1]s" {
