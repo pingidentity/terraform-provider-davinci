@@ -199,9 +199,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Required:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{
-					ImportFile: true,
-				},
+				CustomType: davinciexporttype.ParsedType{},
 			},
 
 			"flow_configuration_json": schema.StringAttribute{
@@ -209,9 +207,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{
-					ImportFile: false,
-				},
+				CustomType: davinciexporttype.ParsedType{},
 			},
 
 			"flow_export_json": schema.StringAttribute{
@@ -219,9 +215,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{
-					ImportFile: false,
-				},
+				CustomType: davinciexporttype.ParsedType{},
 			},
 
 			"deploy": schema.BoolAttribute{

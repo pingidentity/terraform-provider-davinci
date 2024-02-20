@@ -19,8 +19,8 @@ var _ xattr.TypeWithValidate = ParsedType{}
 
 type ParsedType struct {
 	basetypes.StringType
-	ImportFile bool
 	// ... potentially other fields ...
+	davinci.ExportCmpOpts
 }
 
 func (t ParsedType) Equal(o attr.Type) bool {
@@ -40,8 +40,8 @@ func (t ParsedType) String() string {
 func (t ParsedType) ValueFromString(ctx context.Context, in basetypes.StringValue) (basetypes.StringValuable, diag.Diagnostics) {
 	// ParsedValue defined in the value type section
 	value := ParsedValue{
-		StringValue: in,
-		ImportFile:  t.ImportFile,
+		StringValue:   in,
+		ExportCmpOpts: t.ExportCmpOpts,
 	}
 
 	return value, nil
@@ -144,7 +144,7 @@ func (t ParsedType) Validate(ctx context.Context, in tftypes.Value, path path.Pa
 		IgnoreConfig:              true,
 		IgnoreDesignerCues:        true,
 		IgnoreEnvironmentMetadata: true,
-		IgnoreUnmappedProperties:  !t.ImportFile,
+		IgnoreUnmappedProperties:  false,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
 	}); !ok {

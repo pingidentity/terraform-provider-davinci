@@ -18,7 +18,7 @@ var _ basetypes.StringValuableWithSemanticEquals = ParsedValue{}
 type ParsedValue struct {
 	basetypes.StringValue
 	// ... potentially other fields ...
-	ImportFile bool
+	davinci.ExportCmpOpts
 }
 
 func (v ParsedValue) Equal(o attr.Value) bool {
@@ -76,12 +76,12 @@ func (v ParsedValue) StringSemanticEquals(ctx context.Context, newValuable baset
 
 	// Check whether the flows are equal, ignoring environment metadata and designer UI cues.  Just the flow configuration
 	return davinci.FlowEqual(priorFlow, newFlow, davinci.ExportCmpOpts{
-		IgnoreConfig:              false,
-		IgnoreDesignerCues:        true,
-		IgnoreEnvironmentMetadata: !v.ImportFile,
-		IgnoreUnmappedProperties:  true,
-		IgnoreVersionMetadata:     true,
-		IgnoreFlowMetadata:        true,
+		IgnoreConfig:              v.IgnoreConfig,
+		IgnoreDesignerCues:        v.IgnoreDesignerCues,
+		IgnoreEnvironmentMetadata: v.IgnoreEnvironmentMetadata,
+		IgnoreUnmappedProperties:  v.IgnoreUnmappedProperties,
+		IgnoreVersionMetadata:     v.IgnoreVersionMetadata,
+		IgnoreFlowMetadata:        v.IgnoreFlowMetadata,
 	}), diags
 }
 
