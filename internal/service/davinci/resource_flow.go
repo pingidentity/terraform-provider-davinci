@@ -199,7 +199,16 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Required:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{},
+				CustomType: davinciexporttype.ParsedType{
+					ExportCmpOpts: dv.ExportCmpOpts{
+						IgnoreConfig:              false,
+						IgnoreDesignerCues:        false,
+						IgnoreEnvironmentMetadata: true,
+						IgnoreUnmappedProperties:  false,
+						IgnoreVersionMetadata:     true,
+						IgnoreFlowMetadata:        false,
+					},
+				},
 			},
 
 			"flow_configuration_json": schema.StringAttribute{
@@ -207,7 +216,16 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{},
+				CustomType: davinciexporttype.ParsedType{
+					ExportCmpOpts: dv.ExportCmpOpts{
+						IgnoreConfig:              false,
+						IgnoreDesignerCues:        false,
+						IgnoreEnvironmentMetadata: true,
+						IgnoreUnmappedProperties:  false,
+						IgnoreVersionMetadata:     true,
+						IgnoreFlowMetadata:        true,
+					},
+				},
 			},
 
 			"flow_export_json": schema.StringAttribute{
@@ -215,7 +233,16 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:    true,
 				//Sensitive:   true,
 
-				CustomType: davinciexporttype.ParsedType{},
+				CustomType: davinciexporttype.ParsedType{
+					ExportCmpOpts: dv.ExportCmpOpts{
+						IgnoreConfig:              false,
+						IgnoreDesignerCues:        false,
+						IgnoreEnvironmentMetadata: false,
+						IgnoreUnmappedProperties:  false,
+						IgnoreVersionMetadata:     false,
+						IgnoreFlowMetadata:        false,
+					},
+				},
 			},
 
 			"deploy": schema.BoolAttribute{
