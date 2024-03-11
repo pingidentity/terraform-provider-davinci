@@ -2,8 +2,8 @@ package davinci
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -15,6 +15,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -22,7 +24,7 @@ import (
 	"github.com/pingidentity/terraform-provider-davinci/internal/framework/customtypes/davinciexporttype"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
-	dv "github.com/samir-gandhi/davinci-client-go/davinci"
+	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 // Types
@@ -77,6 +79,17 @@ var (
 		"mutable":     types.BoolType,
 		"min":         types.Int64Type,
 		"max":         types.Int64Type,
+	}
+)
+
+var (
+	flowExportCmpOptsConfiguration = davinci.ExportCmpOpts{
+		IgnoreConfig:              false,
+		IgnoreDesignerCues:        false,
+		IgnoreEnvironmentMetadata: true,
+		IgnoreUnmappedProperties:  false,
+		IgnoreVersionMetadata:     true,
+		IgnoreFlowMetadata:        true,
 	}
 )
 
@@ -200,7 +213,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
-					ExportCmpOpts: dv.ExportCmpOpts{
+					ExportCmpOpts: davinci.ExportCmpOpts{
 						IgnoreConfig:              false,
 						IgnoreDesignerCues:        false,
 						IgnoreEnvironmentMetadata: true,
@@ -217,14 +230,11 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
-					ExportCmpOpts: dv.ExportCmpOpts{
-						IgnoreConfig:              false,
-						IgnoreDesignerCues:        false,
-						IgnoreEnvironmentMetadata: true,
-						IgnoreUnmappedProperties:  false,
-						IgnoreVersionMetadata:     true,
-						IgnoreFlowMetadata:        true,
-					},
+					ExportCmpOpts: flowExportCmpOptsConfiguration,
+				},
+
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 
@@ -234,11 +244,11 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
-					ExportCmpOpts: dv.ExportCmpOpts{
+					ExportCmpOpts: davinci.ExportCmpOpts{
 						IgnoreConfig:              false,
 						IgnoreDesignerCues:        false,
 						IgnoreEnvironmentMetadata: false,
-						IgnoreUnmappedProperties:  false,
+						IgnoreUnmappedProperties:  true, // because we don't do calculation with this object
 						IgnoreVersionMetadata:     false,
 						IgnoreFlowMetadata:        false,
 					},
@@ -403,15 +413,15 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 		return
 	}
 
-	// Read Terraform plan data into the model
+	// Read Terraform config data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
-	var flowObject dv.Flow
-	err := json.Unmarshal([]byte(plan.FlowJSON.ValueString()), &flowObject)
+	var flowObject davinci.Flow
+	err := davinci.Unmarshal([]byte(plan.FlowJSON.ValueString()), &flowObject, davinci.ExportCmpOpts{})
 	if err != nil {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("flow_json"),
@@ -438,6 +448,8 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 	if !unknownFlowConfigPlan && !req.State.Raw.IsNull() {
 
+		log.Printf("HEREE!!!! NOT UNKNOWN PLAN WIT STATE")
+
 		var state FlowResourceModel
 
 		// Read Terraform state data into the model
@@ -448,8 +460,8 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 		if !state.FlowConfigurationJSON.IsNull() {
 			// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
-			var flowConfigStateObject dv.FlowConfiguration
-			err = json.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &flowConfigStateObject)
+			var flowConfigStateObject davinci.FlowConfiguration
+			err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &flowConfigStateObject, davinci.ExportCmpOpts{})
 			if err != nil {
 				resp.Diagnostics.AddAttributeError(
 					path.Root("flow_json"),
@@ -459,7 +471,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 				return
 			}
 
-			resp.Diagnostics.Append(modifyPlanForMergedProperties(ctx, &flowConfigObject.FlowUpdateConfiguration, flowConfigStateObject.FlowUpdateConfiguration)...)
+			resp.Diagnostics.Append(modifyPlanForMergedProperties(&flowConfigObject.FlowUpdateConfiguration, flowConfigStateObject.FlowUpdateConfiguration)...)
 			if resp.Diagnostics.HasError() {
 				return
 			}
@@ -470,11 +482,13 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 	if unknownFlowConfigPlan {
 
+		log.Printf("HEREE!!!! UNKNOWN PLAN")
+
 		flowConfigurationJSON = types.StringUnknown()
 
 	} else {
 
-		jsonFlowConfigBytes, err := json.Marshal(flowConfigObject)
+		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
 		if err != nil {
 			resp.Diagnostics.AddError(
 				"Error converting the flow object to JSON",
@@ -483,6 +497,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			return
 		}
 
+		log.Printf("HEREE!!!! KNOWN PLAN %s", string(jsonFlowConfigBytes[:]))
 		flowConfigurationJSON = framework.StringToTF(string(jsonFlowConfigBytes[:]))
 	}
 
@@ -571,11 +586,11 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 		additionalText := ""
 
-		if dvError, ok := err.(dv.ErrorResponse); ok {
+		if dvError, ok := err.(davinci.ErrorResponse); ok {
 
 			additionalText = "This error may indicate the flow is not fully configured."
 
-			if dvError.Code == dv.DV_ERROR_CODE_ERROR_CREATING_CONNECTOR {
+			if dvError.Code == davinci.DV_ERROR_CODE_ERROR_CREATING_CONNECTOR {
 				additionalText = "This error may indicate that a node in the flow is not fully configured."
 			}
 		}
@@ -589,7 +604,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 
-	createFlow, ok := createResponse.(*dv.Flow)
+	createFlow, ok := createResponse.(*davinci.Flow)
 	if !ok || createFlow.Name == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
@@ -618,7 +633,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 
-	response, ok := sdkRes.(*dv.FlowInfo)
+	response, ok := sdkRes.(*davinci.FlowInfo)
 	if !ok || response.Flow.Name == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
@@ -674,7 +689,7 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		return
 	}
 
-	response, ok := sdkRes.(*dv.FlowInfo)
+	response, ok := sdkRes.(*davinci.FlowInfo)
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
@@ -723,7 +738,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	if !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) {
 
-		daVinciUpdate, d := plan.expandUpdate(ctx, state)
+		daVinciUpdate, d := plan.expandUpdate(state)
 		resp.Diagnostics.Append(d...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -784,7 +799,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		return
 	}
 
-	response, ok := sdkRes.(*dv.FlowInfo)
+	response, ok := sdkRes.(*davinci.FlowInfo)
 	if !ok || response.Flow.Name == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected response",
@@ -835,7 +850,7 @@ func (r *FlowResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 			fmt.Sprintf("Error deleting flow: %s", err),
 		)
 	}
-	res, ok := sdkRes.(*dv.Message)
+	res, ok := sdkRes.(*davinci.Message)
 	if !ok || res.Message == nil || *res.Message == "" {
 		resp.Diagnostics.AddWarning(
 			"Unexpected response",
@@ -889,15 +904,15 @@ func (p *FlowResourceModel) validate(ctx context.Context) (diags diag.Diagnostic
 	return diags
 }
 
-func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Diagnostics) {
+func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	data := dv.FlowImport{
+	data := davinci.FlowImport{
 		Name:        p.Name.ValueStringPointer(),
 		Description: p.Description.ValueStringPointer(),
 	}
 
-	err := json.Unmarshal([]byte(p.FlowJSON.ValueString()), &data.FlowInfo)
+	err := davinci.Unmarshal([]byte(p.FlowJSON.ValueString()), &data.FlowInfo, davinci.ExportCmpOpts{})
 	if err != nil {
 		diags.AddError(
 			"Error parsing `flow_json`",
@@ -910,10 +925,10 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 		data.FlowInfo.FlowID: p.Name.ValueString(),
 	}
 
-	var flowConfigObject dv.FlowConfiguration
+	var flowConfigObject davinci.FlowConfiguration
 	if !p.FlowConfigurationJSON.IsUnknown() && !p.FlowConfigurationJSON.IsNull() {
 
-		err = json.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &flowConfigObject)
+		err = davinci.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &flowConfigObject, davinci.ExportCmpOpts{})
 		if err != nil {
 			diags.AddError(
 				"Error parsing `flow_configuration_json`",
@@ -927,7 +942,7 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 	} else {
 
 		// Connection and subflow links
-		err = json.Unmarshal([]byte(p.FlowJSON.ValueString()), &flowConfigObject)
+		err = davinci.Unmarshal([]byte(p.FlowJSON.ValueString()), &flowConfigObject, davinci.ExportCmpOpts{})
 		if err != nil {
 			diags.AddError(
 				"Error parsing `flow_json`",
@@ -952,7 +967,7 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 
 		}
 
-		jsonFlowConfigBytes, err := json.Marshal(flowConfigObject)
+		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
 		if err != nil {
 			diags.AddError(
 				"Error converting the flow object to JSON",
@@ -961,7 +976,7 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 			return nil, diags
 		}
 
-		err = json.Unmarshal(jsonFlowConfigBytes, &data.FlowInfo.FlowConfiguration)
+		err = davinci.Unmarshal(jsonFlowConfigBytes, &data.FlowInfo.FlowConfiguration, flowExportCmpOptsConfiguration)
 		if err != nil {
 			diags.AddError(
 				"Error parsing `flow_configuration_json`",
@@ -974,12 +989,12 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*dv.FlowImport, diag.Di
 	return &data, diags
 }
 
-func (p *FlowResourceModel) expandUpdate(ctx context.Context, state FlowResourceModel) (*dv.FlowUpdate, diag.Diagnostics) {
+func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.FlowUpdate, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var data, stateData dv.FlowUpdate
+	var data, stateData davinci.FlowUpdate
 
-	err := json.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &data)
+	err := davinci.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &data, davinci.ExportCmpOpts{})
 	if err != nil {
 		diags.AddError(
 			"Error parsing `flow_json`",
@@ -998,7 +1013,7 @@ func (p *FlowResourceModel) expandUpdate(ctx context.Context, state FlowResource
 		data.Description = &description
 	}
 
-	err = json.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData)
+	err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData, davinci.ExportCmpOpts{})
 	if err != nil {
 		diags.AddError(
 			"Error parsing `flow_configuration_json`",
@@ -1007,7 +1022,7 @@ func (p *FlowResourceModel) expandUpdate(ctx context.Context, state FlowResource
 		return nil, diags
 	}
 
-	diags.Append(modifyPlanForMergedProperties(ctx, &data.FlowUpdateConfiguration, stateData.FlowUpdateConfiguration)...)
+	diags.Append(modifyPlanForMergedProperties(&data.FlowUpdateConfiguration, stateData.FlowUpdateConfiguration)...)
 	if diags.HasError() {
 		return nil, diags
 	}
@@ -1015,7 +1030,7 @@ func (p *FlowResourceModel) expandUpdate(ctx context.Context, state FlowResource
 	return &data, diags
 }
 
-func (p *FlowResourceModel) toState(apiObject *dv.Flow) diag.Diagnostics {
+func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	if apiObject == nil {
@@ -1030,7 +1045,7 @@ func (p *FlowResourceModel) toState(apiObject *dv.Flow) diag.Diagnostics {
 	p.Id = framework.StringToTF(apiObject.FlowID)
 	p.EnvironmentId = framework.StringToTF(apiObject.CompanyID)
 
-	jsonConfigurationBytes, err := json.Marshal(apiObject.FlowConfiguration)
+	jsonConfigurationBytes, err := davinci.Marshal(apiObject.FlowConfiguration, flowExportCmpOptsConfiguration)
 	if err != nil {
 		diags.AddError(
 			"Error converting the flow object configuration to JSON",
@@ -1041,7 +1056,7 @@ func (p *FlowResourceModel) toState(apiObject *dv.Flow) diag.Diagnostics {
 
 	p.FlowConfigurationJSON = framework.DaVinciExportTypeToTF(string(jsonConfigurationBytes[:]))
 
-	jsonBytes, err := json.Marshal(apiObject)
+	jsonBytes, err := davinci.Marshal(apiObject, davinci.ExportCmpOpts{})
 	if err != nil {
 		diags.AddError(
 			"Error converting the flow object to JSON",
@@ -1075,7 +1090,7 @@ func (p *FlowResourceModel) toState(apiObject *dv.Flow) diag.Diagnostics {
 	return diags
 }
 
-func flowVariablesToTF(apiObject []dv.FlowVariable) (types.Set, diag.Diagnostics) {
+func flowVariablesToTF(apiObject []davinci.FlowVariable) (types.Set, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
 	tfObjType := types.ObjectType{AttrTypes: flowVariablesTFObjectTypes}
@@ -1129,8 +1144,8 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 
 	if !flowJSON.IsUnknown() && !connectionLinks.IsUnknown() && !subFlowLinks.IsUnknown() {
 
-		var flowConfigObject dv.FlowConfiguration
-		err := json.Unmarshal([]byte(flowJSON.ValueString()), &flowConfigObject)
+		var flowConfigObject davinci.FlowConfiguration
+		err := davinci.Unmarshal([]byte(flowJSON.ValueString()), &flowConfigObject, davinci.ExportCmpOpts{})
 		if err != nil {
 			diags.AddError(
 				"Error parsing `flow_json`",
@@ -1258,7 +1273,7 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 }
 
 // Modify the plan for connector and subflow re-mapping
-func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigObject *dv.FlowConfiguration, connectionLinks basetypes.SetValue, subflowLinks basetypes.SetValue) (unknownFlowConfigPlan bool, diags diag.Diagnostics) {
+func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigObject *davinci.FlowConfiguration, connectionLinks basetypes.SetValue, subflowLinks basetypes.SetValue) (unknownFlowConfigPlan bool, diags diag.Diagnostics) {
 
 	// Update connectors if we know the config of connection links
 	unknownFlowConfigPlan = connectionLinks.IsUnknown() || subflowLinks.IsUnknown()
@@ -1271,7 +1286,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 		var subflowLinksPlan []FlowSubflowLinkResourceModel
 		diags.Append(subflowLinks.ElementsAs(ctx, &subflowLinksPlan, false)...)
 
-		newNodes := make([]dv.Node, 0)
+		newNodes := make([]davinci.Node, 0)
 		for _, node := range flowConfigObject.GraphData.Elements.Nodes {
 
 			if !unknownFlowConfigPlan && ((node.Data.NodeType != nil && *node.Data.NodeType == "CONNECTION") || (node.Data.ConnectorID != nil && *node.Data.ConnectorID != "")) {
@@ -1341,7 +1356,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 	return unknownFlowConfigPlan, diags
 }
 
-func modifyPlanForMergedProperties(ctx context.Context, flowConfigObject *dv.FlowUpdateConfiguration, stateFlowConfigObject dv.FlowUpdateConfiguration) (diags diag.Diagnostics) {
+func modifyPlanForMergedProperties(flowConfigObject *davinci.FlowUpdateConfiguration, stateFlowConfigObject davinci.FlowUpdateConfiguration) (diags diag.Diagnostics) {
 
 	// Must merge settings back into flow import if it's missing
 	if stateFlowConfigObject.Settings != nil && flowConfigObject.Settings == nil {

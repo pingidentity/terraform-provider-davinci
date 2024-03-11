@@ -109,7 +109,7 @@ func (t ParsedType) Validate(ctx context.Context, in tftypes.Value, path path.Pa
 		return diags
 	}
 
-	if ok := davinci.ValidFlowsInfoJSON([]byte(valueString), davinci.ExportCmpOpts{}); ok {
+	if ok := davinci.ValidFlowsInfoExport([]byte(valueString), davinci.ExportCmpOpts{}); ok {
 		diags.AddAttributeError(
 			path,
 			"Invalid DaVinci Flow Export String Value",
@@ -121,13 +121,13 @@ func (t ParsedType) Validate(ctx context.Context, in tftypes.Value, path path.Pa
 	}
 
 	// Validate just the config of the export
-	if ok := davinci.ValidFlowJSON([]byte(valueString), davinci.ExportCmpOpts{
-		IgnoreConfig:              false,
-		IgnoreDesignerCues:        true,
-		IgnoreEnvironmentMetadata: true,
+	if ok := davinci.ValidFlowExport([]byte(valueString), davinci.ExportCmpOpts{
+		IgnoreConfig:              t.IgnoreConfig,
+		IgnoreDesignerCues:        t.IgnoreDesignerCues,
+		IgnoreEnvironmentMetadata: t.IgnoreEnvironmentMetadata,
 		IgnoreUnmappedProperties:  true,
-		IgnoreVersionMetadata:     true,
-		IgnoreFlowMetadata:        true,
+		IgnoreVersionMetadata:     t.IgnoreVersionMetadata,
+		IgnoreFlowMetadata:        t.IgnoreFlowMetadata,
 	}); !ok {
 		diags.AddAttributeError(
 			path,
@@ -140,14 +140,14 @@ func (t ParsedType) Validate(ctx context.Context, in tftypes.Value, path path.Pa
 	}
 
 	// Warn in case there are AdditionalProperties in the import file (since these aren't cleanly handled in the SDK, while they are preserved on import, there may be unpredictable results in diff calculation)
-	if ok := davinci.ValidFlowJSON([]byte(valueString), davinci.ExportCmpOpts{
+	if ok := davinci.ValidFlowExport([]byte(valueString), davinci.ExportCmpOpts{
 		IgnoreConfig:              true,
 		IgnoreDesignerCues:        true,
 		IgnoreEnvironmentMetadata: true,
 		IgnoreUnmappedProperties:  false,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
-	}); !ok {
+	}); !t.IgnoreUnmappedProperties && !ok {
 		diags.AddAttributeWarning(
 			path,
 			"DaVinci Export JSON contains unknown properties",

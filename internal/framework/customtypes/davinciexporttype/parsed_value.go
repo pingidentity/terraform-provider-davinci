@@ -75,7 +75,7 @@ func (v ParsedValue) StringSemanticEquals(ctx context.Context, newValuable baset
 	}
 
 	// Check whether the flows are equal, ignoring environment metadata and designer UI cues.  Just the flow configuration
-	return davinci.FlowEqual(priorFlow, newFlow, davinci.ExportCmpOpts{
+	return davinci.Equal(priorFlow, newFlow, davinci.ExportCmpOpts{
 		IgnoreConfig:              v.IgnoreConfig,
 		IgnoreDesignerCues:        v.IgnoreDesignerCues,
 		IgnoreEnvironmentMetadata: v.IgnoreEnvironmentMetadata,
