@@ -22,9 +22,8 @@ resource "davinci_connection" "my_awesome_flow_connector" {
 resource "davinci_flow" "my_awesome_subflow" {
   environment_id = var.environment_id
 
-  flow_json = jsondecode(file("./path/to/example-subflow.json"))
   name      = "My Awesome Subflow"
-  deploy    = true
+  flow_json = file("./path/to/example-subflow.json")
 
   connection_link {
     id                           = davinci_connection.my_awesome_flow_connector.id
@@ -36,9 +35,8 @@ resource "davinci_flow" "my_awesome_subflow" {
 resource "davinci_flow" "my_awesome_main_flow" {
   environment_id = var.environment_id
 
-  flow_json = jsondecode(file("./path/to/example-mainflow.json"))
   name      = "My Awesome Main Flow"
-  deploy    = true
+  flow_json = file("./path/to/example-mainflow.json")
 
   subflow_link {
     id                        = resource.davinci_flow.my_awesome_subflow.id
@@ -60,7 +58,7 @@ resource "davinci_flow" "my_awesome_main_flow" {
 ### Required
 
 - `environment_id` (String) The ID of the PingOne environment to import the DaVinci flow to.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
-- `flow_json` (String) The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.
+- `flow_json` (String, Sensitive) The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.
 
 ### Optional
 
@@ -72,8 +70,8 @@ resource "davinci_flow" "my_awesome_main_flow" {
 
 ### Read-Only
 
-- `flow_configuration_json` (String) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
-- `flow_export_json` (String) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
+- `flow_configuration_json` (String, Sensitive) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
+- `flow_export_json` (String, Sensitive) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
 - `flow_variables` (Attributes Set) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 

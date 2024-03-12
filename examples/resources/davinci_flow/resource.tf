@@ -8,9 +8,8 @@ resource "davinci_connection" "my_awesome_flow_connector" {
 resource "davinci_flow" "my_awesome_subflow" {
   environment_id = var.environment_id
 
-  flow_json = jsondecode(file("./path/to/example-subflow.json"))
   name      = "My Awesome Subflow"
-  deploy    = true
+  flow_json = file("./path/to/example-subflow.json")
 
   connection_link {
     id                           = davinci_connection.my_awesome_flow_connector.id
@@ -22,9 +21,8 @@ resource "davinci_flow" "my_awesome_subflow" {
 resource "davinci_flow" "my_awesome_main_flow" {
   environment_id = var.environment_id
 
-  flow_json = jsondecode(file("./path/to/example-mainflow.json"))
   name      = "My Awesome Main Flow"
-  deploy    = true
+  flow_json = file("./path/to/example-mainflow.json")
 
   subflow_link {
     id                        = resource.davinci_flow.my_awesome_subflow.id
