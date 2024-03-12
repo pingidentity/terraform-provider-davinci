@@ -3,7 +3,6 @@ package davinci
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -15,8 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -210,7 +207,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
 				Required:    true,
-				//Sensitive:   true,
+				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: davinci.ExportCmpOpts{
@@ -227,21 +224,17 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_configuration_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.").Description,
 				Computed:    true,
-				//Sensitive:   true,
+				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowExportCmpOptsConfiguration,
-				},
-
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 
 			"flow_export_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
 				Computed:    true,
-				//Sensitive:   true,
+				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: davinci.ExportCmpOpts{
@@ -448,8 +441,6 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 	if !unknownFlowConfigPlan && !req.State.Raw.IsNull() {
 
-		log.Printf("HEREE!!!! NOT UNKNOWN PLAN WIT STATE")
-
 		var state FlowResourceModel
 
 		// Read Terraform state data into the model
@@ -482,8 +473,6 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 	if unknownFlowConfigPlan {
 
-		log.Printf("HEREE!!!! UNKNOWN PLAN")
-
 		flowConfigurationJSON = types.StringUnknown()
 
 	} else {
@@ -492,12 +481,11 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 		if err != nil {
 			resp.Diagnostics.AddError(
 				"Error converting the flow object to JSON",
-				fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+				fmt.Sprintf("Error converting the flow object (from the API response) to JSON in plan modification.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
 			)
 			return
 		}
 
-		log.Printf("HEREE!!!! KNOWN PLAN %s", string(jsonFlowConfigBytes[:]))
 		flowConfigurationJSON = framework.StringToTF(string(jsonFlowConfigBytes[:]))
 	}
 
@@ -971,7 +959,7 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, di
 		if err != nil {
 			diags.AddError(
 				"Error converting the flow object to JSON",
-				fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+				fmt.Sprintf("Error converting the flow object (from the API response) to JSON in API model parsing.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
 			)
 			return nil, diags
 		}
@@ -1060,7 +1048,7 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 	if err != nil {
 		diags.AddError(
 			"Error converting the flow object to JSON",
-			fmt.Sprintf("Error converting the flow object (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+			fmt.Sprintf("Error converting the flow object (from the API response) to JSON in recording state.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
 		)
 		return diags
 	}
