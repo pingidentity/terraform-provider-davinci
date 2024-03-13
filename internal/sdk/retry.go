@@ -3,7 +3,6 @@ package sdk
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -24,8 +23,6 @@ func DoRetryable(ctx context.Context, c *dv.APIClient, environmentID string, f f
 func DoRetryableWithCustomTimeout(ctx context.Context, c *dv.APIClient, environmentID string, f func() (interface{}, *http.Response, error), timeout time.Duration) (interface{}, error) {
 
 	var res interface{}
-	authRetryLimit := 20
-	authRetryCount := 1
 
 	err := retry.RetryContext(ctx, timeout, func() *retry.RetryError {
 
@@ -42,21 +39,6 @@ func DoRetryableWithCustomTimeout(ctx context.Context, c *dv.APIClient, environm
 					"http_response_code": t.HttpResponseCode,
 					"environmentID":      environmentID,
 				})
-
-				if authRetryCount <= authRetryLimit && t.HttpResponseCode == http.StatusUnauthorized && t.Code == dv.DV_ERROR_CODE_INVALID_TOKEN_FOR_ENVIRONMENT {
-					log.Printf("Client unauthorized for the environment, retrying auth (%d/%d)...", authRetryCount, authRetryLimit)
-
-					signOnErr := c.DoSignIn(&environmentID)
-					if signOnErr != nil {
-						log.Printf("Sign in failed...%s..", signOnErr)
-						return retry.NonRetryableError(signOnErr)
-					}
-					log.Printf("Sign in success.  Handing back to retrier..")
-
-					authRetryCount++
-
-					return retry.RetryableError(err)
-				}
 
 			case *url.Error:
 				tflog.Warn(ctx, "Detected HTTP error", map[string]interface{}{
