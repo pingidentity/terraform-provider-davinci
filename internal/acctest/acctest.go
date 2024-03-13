@@ -17,7 +17,6 @@ import (
 	"github.com/patrickcping/pingone-go-sdk-v2/management"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/pingone"
 	"github.com/pingidentity/terraform-provider-davinci/internal/provider"
-	"github.com/pingidentity/terraform-provider-davinci/internal/provider/sdkv2"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -49,28 +48,12 @@ var ExternalProviders map[string]resource.ExternalProvider
 var TestCheckFunc func(*terraform.State) error
 
 func init() {
-	Provider = sdkv2.New(getProviderTestingVersion())()
-
-	// Always allocate a new provider instance each invocation, otherwise gRPC
-	// ProviderConfigure() can overwrite configuration during concurrent testing.
-	ProviderFactories = map[string]func() (*schema.Provider, error){
-		"davinci": func() (*schema.Provider, error) {
-			provider := sdkv2.New(getProviderTestingVersion())()
-
-			if provider == nil {
-				return nil, fmt.Errorf("Cannot initiate provider factory")
-			}
-			return provider, nil
-		},
-	}
-
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
 			VersionConstraint: ">= 0.25, < 1.0",
 		},
 	}
-
 }
 
 func protoV6ProviderFactoriesInit(ctx context.Context, providerNames ...string) map[string]func() (tfprotov6.ProviderServer, error) {
