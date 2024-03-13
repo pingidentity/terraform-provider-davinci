@@ -34,9 +34,9 @@ func testAccDataSourceApplication_DefinedApplication_ByID(t *testing.T, withBoot
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
@@ -78,9 +78,9 @@ func TestAccDataSourceApplication_BootstrapApplication_ByID_WithBootstrap(t *tes
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{
@@ -118,9 +118,9 @@ func TestAccDataSourceApplication_NotFound(t *testing.T) {
 		PreCheck: func() {
 			acctest.PreCheckClient(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_application"}),
 		Steps: []resource.TestStep{
 			{

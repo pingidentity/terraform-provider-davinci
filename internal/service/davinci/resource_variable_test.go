@@ -34,10 +34,10 @@ func TestAccResourceVariable_RemovalDrift(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Variable_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Configure
 			{
@@ -122,10 +122,10 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Variable_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -223,10 +223,10 @@ func testAccResourceVariable_Full_FlowInstanceContext(t *testing.T, withBootstra
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Variable_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -324,10 +324,10 @@ func testAccResourceVariable_Full_UserContext(t *testing.T, withBootstrapConfig 
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Variable_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -400,10 +400,10 @@ func TestAccResourceVariable_ChangeDataType(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Variable_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
 		Steps: []resource.TestStep{
 			numberStep,
 			stringStep,
@@ -425,10 +425,10 @@ func TestAccResourceVariable_BadParameters(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Variable_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Configure
 			{

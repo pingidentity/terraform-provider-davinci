@@ -645,8 +645,8 @@ func resourceApplicationDelete(ctx context.Context, d *schema.ResourceData, meta
 		return diags
 	}
 	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message == nil || *res.Message != "" {
-		err = fmt.Errorf("failed to delete update application response to Application on id: %s", appId)
+	if !ok || res.Message == nil || *res.Message == "" {
+		err = fmt.Errorf("Error when deleting application with id %s, no response message found.", appId)
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}

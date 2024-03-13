@@ -34,10 +34,10 @@ func TestAccResourceApplication_RemovalDrift(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Application_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Application_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Configure
 			{
@@ -137,10 +137,10 @@ func testAccResourceApplication_Full(t *testing.T, withBootstrapConfig bool) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Application_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Application_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -281,10 +281,10 @@ func TestAccResourceApplication_WithOAuth_Full(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Application_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Application_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -352,10 +352,10 @@ func TestAccResourceApplication_BadParameters(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.Application_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Application_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Configure
 			{

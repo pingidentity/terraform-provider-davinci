@@ -40,9 +40,9 @@ func testAccDataSourceConnections_AllConnections(t *testing.T, withBootstrapConf
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -130,9 +130,9 @@ func testAccDataSourceConnections_FilteredConnections(t *testing.T, withBootstra
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{

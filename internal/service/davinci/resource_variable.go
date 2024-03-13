@@ -114,10 +114,6 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, meta in
 		return diags
 	}
 
-	if err != nil {
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
-	}
 	if len(res) != 1 {
 		return diag.Errorf("Received error while attempting to create variable")
 	}
@@ -138,12 +134,17 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 
 	environmentID := d.Get("environment_id").(string)
 
+	params := dv.Params{
+		Page:  "0",
+		Limit: "100",
+	}
+
 	sdkRes, err := sdk.DoRetryable(
 		ctx,
 		c,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.ReadVariableWithResponse(environmentID, variableName)
+			return c.ReadVariablesWithResponse(environmentID, &params)
 		},
 	)
 
@@ -159,52 +160,63 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	//variable not found
-	if len(resp) != 1 {
+	if len(resp) == 0 {
 		d.SetId("")
 		return diags
 	}
 
-	for _, res := range resp {
-		s := strings.Split(variableName, "##SK##")
-		name := s[0]
-		context := s[1]
-		if err := d.Set("name", name); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("context", context); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("environment_id", res.CompanyID); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("type", res.Type); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("mutable", res.Mutable); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("description", res.DisplayName); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("value", res.Value); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("min", res.Min); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
-		}
-		if err := d.Set("max", res.Max); err != nil {
-			diags = append(diags, diag.FromErr(err)...)
-			return diags
+	found := false
+
+	for key, res := range resp {
+		if strings.Contains(key, variableName) {
+			found = true
+
+			s := strings.Split(variableName, "##SK##")
+			name := s[0]
+			context := s[1]
+			if err := d.Set("name", name); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("context", context); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("environment_id", res.CompanyID); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("type", res.Type); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("mutable", res.Mutable); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("description", res.DisplayName); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("value", res.Value); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("min", res.Min); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
+			if err := d.Set("max", res.Max); err != nil {
+				diags = append(diags, diag.FromErr(err)...)
+				return diags
+			}
 		}
 	}
+
+	if found == false {
+		d.SetId("")
+	}
+
 	return diags
 }
 

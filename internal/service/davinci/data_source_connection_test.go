@@ -36,9 +36,9 @@ func testAccDataSourceConnection_DefinedConnection_ByID(t *testing.T, withBootst
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -81,9 +81,9 @@ func testAccDataSourceConnection_DefinedConnection_ByName(t *testing.T, withBoot
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -117,9 +117,9 @@ func TestAccDataSourceConnection_BootstrapConnection_ByID_Clean(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -147,9 +147,9 @@ func TestAccDataSourceConnection_BootstrapConnection_ByID_WithBootstrap(t *testi
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -203,9 +203,9 @@ func TestAccDataSourceConnection_BootstrapConnection_ByName_Clean(t *testing.T) 
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -233,9 +233,9 @@ func TestAccDataSourceConnection_BootstrapConnection_ByName_WithBootstrap(t *tes
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		//CheckDestroy:       acctest.CheckResourceDestroy([]string{"davinci_connection"}),
 		Steps: []resource.TestStep{
 			{
@@ -284,9 +284,9 @@ func TestAccDataSourceConnection_NotFound(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccDataSourceConnection_NotFoundByName(resourceName),
