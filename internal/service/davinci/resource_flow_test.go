@@ -550,7 +550,7 @@ func TestAccResourceFlow_ComputeDifferences_CompanyId(t *testing.T) {
 
 			return newFlow
 		}(),
-		ExpectNonEmptyPlan: false,
+		ExpectNonEmptyPlan: true,
 	})
 }
 
@@ -578,7 +578,7 @@ func TestAccResourceFlow_ComputeDifferences_Version(t *testing.T) {
 
 			return newFlow
 		}(),
-		ExpectNonEmptyPlan: false,
+		ExpectNonEmptyPlan: true,
 	})
 }
 
@@ -653,83 +653,85 @@ func TestAccResourceFlow_ComputeDifferences_NewNode(t *testing.T) {
 	testAccResourceFlow_ComputeDifferences(t, computeDifferencesTest{
 		BaselineFlow: flow,
 		ModifiedFlow: func() dv.Flow {
-			newFlow := flow
-			newFlow.GraphData.Elements.Nodes = func() []dv.Node {
-				newFlow.GraphData.Elements.Nodes = append(newFlow.GraphData.Elements.Nodes, dv.Node{
-					Data: func() *dv.NodeData {
-						v := dv.NodeData{
-							ID: func() *string {
-								v := "1u2m5vzr49"
-								return &v
-							}(),
-							NodeType: func() *string {
-								v := "CONNECTION"
-								return &v
-							}(),
-							ConnectionID: func() *string {
-								v := "867ed4363b2bc21c860085ad2baa817d"
-								return &v
-							}(),
-							ConnectorID: func() *string {
-								v := "httpConnector"
-								return &v
-							}(),
-							Name: func() *string {
-								v := "Http"
-								return &v
-							}(),
-							Label: func() *string {
-								v := "Http"
-								return &v
-							}(),
-							Status: func() *string {
-								v := "configured"
-								return &v
-							}(),
-							CapabilityName: func() *string {
-								v := "customHtmlMessage"
-								return &v
-							}(),
-							Type: func() *string {
-								v := "trigger"
-								return &v
-							}(),
-							Properties: func() *dv.Properties {
-								v := dv.Properties{
-									AdditionalProperties: map[string]interface{}{
-										"message": map[string]interface{}{
-											"value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"Hello, world?\"\n      }\n    ]\n  }\n]",
-										},
+			var newFlow dv.Flow
+			err := acctest.DeepCloneFlow(&flow, &newFlow)
+			if err != nil {
+				t.Fatalf("Failed to clone flow: %v", err)
+			}
+
+			newFlow.GraphData.Elements.Nodes = append(newFlow.GraphData.Elements.Nodes, dv.Node{
+				Data: func() *dv.NodeData {
+					v := dv.NodeData{
+						ID: func() *string {
+							v := "1u2m5vzr50"
+							return &v
+						}(),
+						NodeType: func() *string {
+							v := "CONNECTION"
+							return &v
+						}(),
+						ConnectionID: func() *string {
+							v := "867ed4363b2bc21c860085ad2baa817d"
+							return &v
+						}(),
+						ConnectorID: func() *string {
+							v := "httpConnector"
+							return &v
+						}(),
+						Name: func() *string {
+							v := "Http"
+							return &v
+						}(),
+						Label: func() *string {
+							v := "Http"
+							return &v
+						}(),
+						Status: func() *string {
+							v := "configured"
+							return &v
+						}(),
+						CapabilityName: func() *string {
+							v := "customHtmlMessage"
+							return &v
+						}(),
+						Type: func() *string {
+							v := "trigger"
+							return &v
+						}(),
+						Properties: func() *dv.Properties {
+							v := dv.Properties{
+								AdditionalProperties: map[string]interface{}{
+									"message": map[string]interface{}{
+										"value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"Hello, world?\"\n      }\n    ]\n  }\n]",
 									},
-								}
-								return &v
-							}(),
-						}
-						return &v
-					}(),
-					Position: func() *dv.Position {
-						v := dv.Position{
-							X: func() *float64 {
-								v := float64(277)
-								return &v
-							}(),
-							Y: func() *float64 {
-								v := float64(336)
-								return &v
-							}(),
-						}
-						return &v
-					}(),
-					Group:      "nodes",
-					Removed:    false,
-					Selected:   false,
-					Selectable: true,
-					Locked:     false,
-					Grabbable:  true,
-					Pannable:   false,
-				})
-				return newFlow.GraphData.Elements.Nodes
-			}()
+								},
+							}
+							return &v
+						}(),
+					}
+					return &v
+				}(),
+				Position: func() *dv.Position {
+					v := dv.Position{
+						X: func() *float64 {
+							v := float64(277)
+							return &v
+						}(),
+						Y: func() *float64 {
+							v := float64(336)
+							return &v
+						}(),
+					}
+					return &v
+				}(),
+				Group:      "nodes",
+				Removed:    false,
+				Selected:   false,
+				Selectable: true,
+				Locked:     false,
+				Grabbable:  true,
+				Pannable:   false,
+			})
 
 			return newFlow
 		}(),
@@ -908,6 +910,9 @@ func testAccResourceFlow_Full_WithMappingIDs_HCL(resourceName, name string, with
 	}
 
 	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", "", err
+	}
 
 	return fmt.Sprintf(`
 %[1]s
@@ -983,6 +988,9 @@ func testAccResourceFlow_Minimal_WithMappingIDs_HCL(resourceName, name string, w
 	}
 
 	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", "", err
+	}
 
 	return fmt.Sprintf(`
 %[1]s
@@ -1210,6 +1218,9 @@ func testAccResourceFlow_Full_WithoutMappingIDs_HCL(resourceName, name string, w
 	} else {
 		commonHcl, err = testAccResourceFlow_Common_WithoutMappingIDs_HCL_Datasources(resourceName, name)
 	}
+	if err != nil {
+		return "", "", err
+	}
 
 	return fmt.Sprintf(`
 %[1]s
@@ -1283,6 +1294,9 @@ func testAccResourceFlow_Minimal_WithoutMappingIDs_HCL(resourceName, name string
 		commonHcl, err = testAccResourceFlow_Common_WithoutMappingIDs_HCL_Resources(resourceName, name)
 	} else {
 		commonHcl, err = testAccResourceFlow_Common_WithoutMappingIDs_HCL_Datasources(resourceName, name)
+	}
+	if err != nil {
+		return "", "", err
 	}
 
 	return fmt.Sprintf(`
