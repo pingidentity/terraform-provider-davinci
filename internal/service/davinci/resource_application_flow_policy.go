@@ -132,13 +132,13 @@ func resourceApplicationFlowPolicyCreate(ctx context.Context, d *schema.Resource
 	}
 	var resAppPolicy *dv.Policy
 	for _, v := range res.Policies {
-		if v.Name == appPolicy.Name {
+		if v.Name != nil && appPolicy.Name != nil && *v.Name == *appPolicy.Name {
 			v := v // G601 (CWE-118)
 			resAppPolicy = &v
 			break
 		}
 	}
-	if resAppPolicy.PolicyID == nil || *resAppPolicy.PolicyID == "" {
+	if resAppPolicy == nil || resAppPolicy.PolicyID == nil || *resAppPolicy.PolicyID == "" {
 		err = fmt.Errorf("Unable to find created policy in response from Davinci API")
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
@@ -271,7 +271,7 @@ func resourceApplicationFlowPolicyDelete(ctx context.Context, d *schema.Resource
 	}
 
 	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message != nil || *res.Message != "" {
+	if !ok || (res != nil && res.Message != nil && *res.Message != "") {
 		err = fmt.Errorf("failed to delete application policy with id: %s", appId)
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
@@ -335,22 +335,41 @@ func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, err
 	if policy.PolicyID == nil || *policy.PolicyID == "" {
 		return nil, fmt.Errorf("Unable to find policy with id: %s", policyId)
 	}
-	a := map[string]interface{}{
-		"environment_id": app.CompanyID,
-		"application_id": app.AppID,
-		"name":           policy.Name,
-		"status":         policy.Status,
-		"created_date":   policy.CreatedDate.UnixMilli(),
+	a := map[string]interface{}{}
+
+	if app.CompanyID != nil {
+		a["environment_id"] = app.CompanyID
 	}
+
+	if app.AppID != nil {
+		a["application_id"] = app.AppID
+	}
+
+	if policy.Name != nil {
+		a["name"] = *policy.Name
+	}
+
+	if policy.Status != nil {
+		a["status"] = *policy.Status
+	}
+
+	if policy.CreatedDate != nil {
+		a["created_date"] = policy.CreatedDate.UnixMilli()
+	}
+
 	polFlows := []interface{}{}
 	for _, w := range policy.PolicyFlows {
 		thisPolFlow := map[string]interface{}{
 			"flow_id":         w.FlowID,
-			"weight":          w.Weight,
 			"version_id":      w.VersionID,
 			"success_nodes":   w.SuccessNodes,
 			"allowed_ip_list": w.IP,
 		}
+
+		if w.Weight != nil {
+			thisPolFlow["weight"] = *w.Weight
+		}
+
 		polFlows = append(polFlows, thisPolFlow)
 	}
 

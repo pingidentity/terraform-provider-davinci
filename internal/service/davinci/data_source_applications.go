@@ -429,7 +429,7 @@ func dataSourceApplicationsRead(ctx context.Context, d *schema.ResourceData, met
 		return diags
 	}
 
-	d.SetId(fmt.Sprintf("id-%s-applications", c.CompanyID))
+	d.SetId(fmt.Sprintf("id-%s-applications", environmentID))
 	return diags
 }
 
@@ -525,19 +525,37 @@ func flattenApp(app *dv.App) (map[string]interface{}, error) {
 		for _, w := range v.PolicyFlows {
 			thisPolFlow := map[string]interface{}{
 				"flow_id":    w.FlowID,
-				"weight":     w.Weight,
 				"version_id": w.VersionID,
 			}
+
+			if w.Weight != nil {
+				thisPolFlow["weight"] = *w.Weight
+			}
+
 			polFlows = append(polFlows, thisPolFlow)
 		}
 
-		pols = append(pols, map[string]interface{}{
-			"policy_flow":  polFlows,
-			"name":         v.Name,
-			"status":       v.Status,
-			"policy_id":    v.PolicyID,
-			"created_date": v.CreatedDate.UnixMilli(),
-		})
+		pol := map[string]interface{}{
+			"policy_flow": polFlows,
+		}
+
+		if v.Name != nil {
+			pol["name"] = *v.Name
+		}
+
+		if v.Status != nil {
+			pol["status"] = *v.Status
+		}
+
+		if v.PolicyID != nil {
+			pol["policy_id"] = *v.PolicyID
+		}
+
+		if v.CreatedDate != nil {
+			pol["created_date"] = v.CreatedDate.UnixMilli()
+		}
+
+		pols = append(pols, pol)
 	}
 	a["policy"] = pols
 

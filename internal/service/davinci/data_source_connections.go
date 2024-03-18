@@ -164,12 +164,12 @@ func dataSourceConnectionsRead(ctx context.Context, d *schema.ResourceData, meta
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	if err := d.Set("environment_id", c.CompanyID); err != nil {
+	if err := d.Set("environment_id", environmentID); err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
 
-	d.SetId(fmt.Sprintf("id-%s-connections", c.CompanyID))
+	d.SetId(fmt.Sprintf("id-%s-connections", environmentID))
 	return diags
 }
 

@@ -18,7 +18,7 @@ func TestAccResourceApplicationFlowPolicy_RemovalDrift(t *testing.T) {
 	resourceName := acctest.ResourceNameGen()
 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
 
-	hcl, err := testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, resourceName, true)
+	hcl, err := testAccResourceApplicationFlowPolicy_Full_HCL(resourceName, resourceName, false)
 	if err != nil {
 		t.Fatalf("Failed to generate HCL: %v", err)
 	}
@@ -37,10 +37,10 @@ func TestAccResourceApplicationFlowPolicy_RemovalDrift(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.ApplicationFlowPolicy_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.ApplicationFlowPolicy_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Configure
 			{
@@ -139,10 +139,10 @@ func TestAccResourceApplicationFlowPolicy_Full(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.ApplicationFlowPolicy_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.ApplicationFlowPolicy_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -175,6 +175,9 @@ func TestAccResourceApplicationFlowPolicy_Full(t *testing.T) {
 				}(),
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"created_date", // https://github.com/pingidentity/terraform-provider-davinci/issues/257
+				},
 			},
 		},
 	})
@@ -267,10 +270,10 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 			acctest.PreCheckClient(t)
 			acctest.PreCheckNewEnvironment(t)
 		},
-		ProviderFactories: acctest.ProviderFactories,
-		ExternalProviders: acctest.ExternalProviders,
-		ErrorCheck:        acctest.ErrorCheck(t),
-		CheckDestroy:      davinci.ApplicationFlowPolicy_CheckDestroy(),
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.ApplicationFlowPolicy_CheckDestroy(),
 		Steps: []resource.TestStep{
 			// Create from scratch
 			fullStep,
@@ -311,6 +314,9 @@ func TestAccResourceApplicationFlowPolicy_WithPolicyFlow_Full(t *testing.T) {
 				}(),
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"created_date", // https://github.com/pingidentity/terraform-provider-davinci/issues/257
+				},
 			},
 		},
 	})
@@ -555,7 +561,7 @@ resource "davinci_application_flow_policy" "%[2]s" {
 
 func flowResources(resourceName, name string, count int) (hcl string, err error) {
 
-	mainFlowHcl, err := acctest.ReadFlowJsonFile("flows/simple.json")
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/simple.json")
 	if err != nil {
 		return "", err
 	}
@@ -573,26 +579,17 @@ resource "davinci_connection" "%[1]s" {
 resource "davinci_flow" "%[1]s-%[2]d" {
   environment_id = pingone_environment.%[1]s.id
 
-  flow_json = %[3]s
-
-  deploy = true
+  flow_json = <<EOT
+%[3]s
+EOT
 
   connection_link {
-    replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
-
-    id   = davinci_connection.%[1]s.id
-    name = davinci_connection.%[1]s.name
-  }
-
-  lifecycle {
-    // For this resource's tests, we don't need to deal with import drift here
-    ignore_changes = [
-      flow_json,
-      connection_link,
-    ]
+	  id   = davinci_connection.%[1]s.id
+	  name = davinci_connection.%[1]s.name
+	  replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
   }
 }
-`, resourceName, i, mainFlowHcl)
+`, resourceName, i, mainFlowJson)
 	}
 
 	return hcl, nil

@@ -1,6 +1,11 @@
 package acctest
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+
+	dv "github.com/samir-gandhi/davinci-client-go/davinci"
+)
 
 type flowResource struct {
 	Name     string
@@ -166,4 +171,18 @@ resource "davinci_connection" "%[2]s" {
 }
 `, tcp.ResourcePrefix, tcp.GetResourceName(), tcp.ConnectorId, propertiesHcl)
 	return hcl
+}
+
+func DeepCloneFlow(src, dst *dv.Flow) error {
+	bytes, err := json.Marshal(src)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(bytes, dst)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
