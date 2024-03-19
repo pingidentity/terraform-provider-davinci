@@ -1,17 +1,85 @@
-```release-note:bug
-`resource/davinci_connection`: Fixed inconsistent plan when specifying a property data type.
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.34.0 => 0.36.0
+```
+
+```release-note:note
+Provider updated thoughout to support environments that have been created without demo/bootstrapped configuration automatically applied.  Creation of environments without demo/bootstrapped configuration is best practice going forward.
+```
+
+```release-note:note
+Index documentation updated to reflect latest best practices for admin role requirements and creation of PingOne environments that do not have demo/bootstrapped configuration automatically applied.
 ```
 
 ```release-note:bug
-`resource/davinci_connection`: Fixed inability to update the connection name and ID once created (resource requires replacement).
+Fixed bug where resources may be created in the incorrect PingOne environment when multiple DaVinci environments are being configured in the same `apply` routine.
+```
+
+```release-note:note
+Added plugin mux factory and plugin framework (v6 protocol) provider to facilitate migration from SDKv2 (v5 protocol).
+```
+
+```release-note:note
+Code optimisations to remove unnecessary SDK retry logic.
+```
+
+```release-note:note
+Added regex validation for resource/data-source parameters that require platform IDs.
 ```
 
 ```release-note:bug
 Fixed intermittent `Unable to retrieve access_token within 60s for environment` error.
 ```
 
+```release-note:note
+`data-source/davinci_applications`: Corrected documentation category.
+```
+
+```release-note:note
+`data-source/davinci_application`: Un-deprecate the `application_id` parameter, and deprecated the `id` parameter for the purpose of fetching an application by it's ID.  The `application_id` should be used going forward.
+```
+
+```release-note:note
+`data-source/davinci_application`: Deprecated the `user_portal` and `saml` block parameters as they are no longer used.  The parameters will be removed in the next major release.
+```
+
 ```release-note:bug
-`resource/davinci_connection`: Fixed `Error retrieving connectors / 7005` error in certain conditions.
+`data-source/davinci_applications`: Fixed bug where not all applications are returned for an environment due to eventual consistency considerations on environment creation.
+```
+
+```release-note:note
+`data-source/davinci_applications`: Deprecated the `user_portal` and `saml` block parameters as they are no longer used.  The parameters will be removed in the next major release.
+```
+
+```release-note:enhancement
+`data-source/davinci_applications`: Added a configurable timeout parameter and updated the default timeout to `20m` due to eventual consistency considerations on environment creation.
+```
+
+```release-note:bug
+`data-source/davinci_applications`: Fixed issue where not all connections are returned due to eventual consistency considerations on environment creation.
+```
+
+```release-note:enhancement
+`data-source/davinci_connection`: Added a new `connection_id` parameter and deprecated the `id` parameter for the purpose of fetching a connection by it's ID.  The `connection_id` should be used going forward.
+```
+
+```release-note:enhancement
+`data-source/davinci_connection`: Added a configurable timeout parameter and updated the default timeout to `20m` due to eventual consistency considerations on environment creation.
+```
+
+```release-note:bug
+`data-source/davinci_connection`: Fixed issue where a connection isn't returned due to eventual consistency considerations on environment creation.
+```
+
+```release-note:note
+`data-source/davinci_connections`: Deprecated the `connections.company_id` parameter as it is a duplicate of the `environment_id` parameter.
+```
+
+```release-note:bug
+`data-source/davinci_connections`: Fixed the `connections.customer_id` attribute not being stored into state.
+```
+
+```release-note:enhancement
+`data-source/davinci_connections`: Added a configurable timeout parameter and updated the default timeout to `20m` due to eventual consistency considerations on environment creation.
 ```
 
 ```release-note:bug
@@ -22,16 +90,16 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 `resource/davinci_application`: Fixed panic crash when defining an application with an `oauth` block, but without `oauth.values`.
 ```
 
+```release-note:note
+`resource/davinci_application`: Deprecated the `user_portal` and `saml` parameters as they are no longer used.  The parameters will be removed in the next major version release.
+```
+
 ```release-note:bug
-`resource/davinci_application_flow_policy`: (resource requires replacement).
+`resource/davinci_application_flow_policy`: Fixed inability to update the environment ID and application ID once created (resource now requires replacement).
 ```
 
 ```release-note:bug
 `resource/davinci_application_flow_policy`: Fixed error when specifying a flow policy without any `policy_flow` blocks.  The `policy_flow` block is now a required field.
-```
-
-```release-note:enhancement
-`resource/davinci_flow`: Added the ability to replace the name of connectors in a flow import.
 ```
 
 ```release-note:bug
@@ -47,21 +115,73 @@ Fixed intermittent `Unable to retrieve access_token within 60s for environment` 
 ```
 
 ```release-note:bug
-`data-source/davinci_connections`: Fixed the `connections.customer_id` attribute not being retrieved into state.
+`resource/davinci_connection`: Fixed inconsistent plan when specifying a property data type.
 ```
 
 ```release-note:bug
-`data-source/davinci_connections`: Fixed bug where not all connections are returned for a new environment where connections are still provisioning in the service.
+`resource/davinci_connection`: Fixed inability to update the environment ID, connection name and ID once created (resource now requires replacement).
 ```
 
 ```release-note:bug
-Fixed bug where resources may be created in the incorrect PingOne environment when multiple DaVinci environments are being configured in the same `apply` routine.
+`resource/davinci_connection`: Fixed `Error retrieving connectors / 7005` error in certain conditions.
 ```
 
-```release-note:bug
-`data-source/davinci_applications`: Fixed bug where not all applications are returned for an environment.
+```release-note:note
+`resource/davinci_connection`: When the `property.type` parameter is not set for a property object, the default is now set to `string`.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Added the `connection_link.replace_import_connection_id` parameter to be able to replace the name of connectors with the specified connection ID in a flow import.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Added the `subflow_link.replace_import_subflow_id` parameter to be able to replace the name of subflows with the specified subflow ID in a flow import.
 ```
 
 ```release-note:bug
 `resource/davinci_flow`: Fixed inability to update the environment ID after initial configuration (resource requires replacement).
+```
+
+```release-note:note
+`resource/davinci_flow`: Migrated to plugin framework.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Corrected flow drift calculation errors, causing plan inconsistency.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Corrected panic errors on flow drift calculation and connection/subflow re-mapping.
+```
+
+```release-note:note
+`resource/davinci_flow`: Updated warning messages when subflows and connectors are left unmapped.  Going forward, all subflows and connections in a flow should be mapped using the `connection_link` and `subflow_link` parameters.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: The `name` parameter is now an optional field, to be able to override the name of the flow on import.
+```
+
+```release-note:note
+`resource/davinci_flow`: The `deploy` parameter is now deprecated.  Deployment on import and update is now implicit.  This parameter will be removed in the next major release.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Added the `description` parameter to be able to override the description of the flow on import.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Added the `flow_configuration_json` and `flow_export_json` attributes to the resource.  `flow_configuration_json` is used to compute configuration changes and drift, while `flow_export_json` is used as a record of the resulting flow once imported to the target environment.
+```
+
+```release-note:breaking-change
+`resource/davinci_flow`: The `flow_json` parameter does not now represent the flow after import.  It now only represents the flow JSON payload from the source system.  When needing to use the resulting flow after import in the target environment, `flow_export_json` should be used.
+```
+
+```release-note:note
+`resource/davinci_flow`: The `flow_variables` computed attribute has changed data type.  Previously the attribute was a block type.  Going forward, the attribute is nested set type.  There are no changes expected to HCL to use the new data type.
+```
+
+```release-note:bug
+`resource/davinci_variable`: Fixed inability to update the environment ID once created (resource now requires replacement).
 ```
