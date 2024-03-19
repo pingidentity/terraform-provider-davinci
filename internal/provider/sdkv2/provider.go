@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone/model"
-	"github.com/pingidentity/terraform-provider-davinci/internal/client"
 	"github.com/pingidentity/terraform-provider-davinci/internal/service/davinci"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -128,7 +127,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			AccessToken:     accessToken,
 			UserAgent:       userAgent,
 		}
-		c, err := client.RetryableClient(&cInput)
+		c, err := dv.NewClient(&cInput)
 		if err != nil {
 			return nil, diag.FromErr(err)
 		}

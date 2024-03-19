@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone/model"
-	"github.com/pingidentity/terraform-provider-davinci/internal/client"
 	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	"github.com/pingidentity/terraform-provider-davinci/internal/service/davinci"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
@@ -212,7 +211,7 @@ func (p *davinciProvider) Configure(ctx context.Context, req provider.ConfigureR
 		AccessToken:     data.AccessToken.ValueString(),
 		UserAgent:       userAgent,
 	}
-	apiClient, err := client.RetryableClient(&cInput)
+	apiClient, err := dv.NewClient(&cInput)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Failed to create client",

@@ -327,16 +327,6 @@ func PingoneEnvironmentSsoHcl(resourceName string, withBootstrapConfig bool) (hc
 	return PingoneEnvironmentServicesSsoHcl(resourceName, nil, withBootstrapConfig)
 }
 
-func BaselineHcl(resourceName string) string {
-	pingoneHcl := PingoneEnvironmentSsoHcl(resourceName, true)
-	bsConnectionsHcl := BsConnectionsHcl(resourceName)
-	return fmt.Sprintf(`
-%[1]s
-
-%[2]s
-`, pingoneHcl, bsConnectionsHcl)
-}
-
 func TestClient() (*dv.APIClient, error) {
 	e := ""
 	username := os.Getenv("PINGONE_USERNAME")
