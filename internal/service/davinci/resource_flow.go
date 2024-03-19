@@ -1187,7 +1187,10 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 						diags.AddAttributeWarning(
 							path.Root("connection_link"),
 							"Unmapped node connection",
-							fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a node connection that does not have a `connection_link` mapping.  The configuration will be preserved on import to the DaVinci service and the service may create the connection implicitly, but there may be unpredictable results in Terraform difference calculation and the resulting implicitly created connection in the DaVinci service will be left unmanaged by Terraform.  Consider using the `davinci_connection` resource (to create a Terraform managed connection) with the `connection_link` parameter (to map the Terraform managed connection with the connection in the flow).\n\nConnection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID),
+							fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a node connection that does not have a `connection_link` mapping.  This behaviour is deprecated - going forward all connections in a flow must have a `connection_link` block parameter defined.\n\n"+
+								"Consider using the `davinci_connection` resource (to create a Terraform managed connection) with the `davinci_flow.connection_link` parameter (to map the Terraform managed connection with the connection in the flow).\n"+
+								"For more information and guidance on how to correctly configure flow connections, visit https://github.com/pingidentity/terraform-provider-davinci/issues/272\n\n"+
+								"Connection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID),
 						)
 					}
 
@@ -1224,7 +1227,10 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 							diags.AddAttributeWarning(
 								path.Root("subflow_link"),
 								"Unmapped flow connector subflow",
-								fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a subflow referenced in a flow connector that does not have a `subflow_link` mapping.  The flow will be imported to the DaVinci service, but there may be unpredictable results in difference calculation.  Consider using the `davinci_flow` resource (to create a Terraform managed subflow) with the `subflow_link` parameter (to map the Terraform managed subflow with the flow connector in the flow).\n\nConnection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v\nSubflow Name: %v\nSubflow ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID, *node.Data.Properties.SubFlowID.Value.Label, *node.Data.Properties.SubFlowID.Value.Value),
+								fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a subflow referenced in a flow connector that does not have a `subflow_link` mapping.  This behaviour is deprecated - going forward all subflows defined in a flow must have a `subflow_link` block parameter defined.\n\n"+
+									"Consider using the `davinci_flow` resource (to create the subflow) with the `davinci_flow.subflow_link` parameter (to map the Terraform managed subflow with the main flow).\n"+
+									"For more information and guidance on how to correctly configure subflow connections, visit https://github.com/pingidentity/terraform-provider-davinci/issues/273\n\n"+
+									"Connection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v\nSubflow Name: %v\nSubflow ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID, *node.Data.Properties.SubFlowID.Value.Label, *node.Data.Properties.SubFlowID.Value.Value),
 							)
 						}
 					}
@@ -1353,7 +1359,7 @@ func modifyPlanForMergedProperties(flowConfigObject *davinci.FlowUpdateConfigura
 		diags.AddAttributeWarning(
 			path.Root("flow_configuration_json"),
 			"Implicitly merged settings",
-			"The `flow_json` import does not contain flow settings, but the existing state does.  The settings from the state have been merged into the import.\n\nIf this is not the desired behaviour, please update the DaVinci flow in the source environment to include flow settings and re-export.",
+			"The `flow_json` import does not contain flow settings, but the existing state does.  To maintain consistency with the DaVinci service, the settings from the Terraform state have been merged into the import.\n\nIf this is not the desired behaviour, please update the DaVinci flow in the source environment to include the desired flow settings and re-export.",
 		)
 	}
 
