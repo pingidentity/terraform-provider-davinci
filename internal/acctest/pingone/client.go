@@ -24,7 +24,7 @@ func (c *Config) APIClient(ctx context.Context, version string) (*Client, error)
 		Region:               c.Region,
 		APIHostnameOverride:  c.APIHostnameOverride,
 		AuthHostnameOverride: c.AuthHostnameOverride,
-		UserAgentOverride:    &userAgent,
+		UserAgentSuffix:      &userAgent,
 		ProxyURL:             c.ProxyURL,
 	}
 
