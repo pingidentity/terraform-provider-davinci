@@ -3,8 +3,6 @@ package davinci_test
 import (
 	"fmt"
 	"regexp"
-
-	// "os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"

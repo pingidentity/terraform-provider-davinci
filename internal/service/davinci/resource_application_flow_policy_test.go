@@ -584,9 +584,9 @@ resource "davinci_flow" "%[1]s-%[2]d" {
 EOT
 
   connection_link {
-	  id   = davinci_connection.%[1]s.id
-	  name = davinci_connection.%[1]s.name
-	  replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
+    id                           = davinci_connection.%[1]s.id
+    name                         = davinci_connection.%[1]s.name
+    replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
   }
 }
 `, resourceName, i, mainFlowJson)

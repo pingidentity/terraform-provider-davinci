@@ -922,7 +922,7 @@ func testAccResourceFlow_Full_WithMappingIDs_HCL(resourceName, name string, with
 resource "davinci_flow" "%[3]s" {
   environment_id = pingone_environment.%[3]s.id
 
-  name = "my awesome flow"
+  name        = "my awesome flow"
   description = "my awesome flow description"
 
   flow_json = <<EOT
@@ -966,16 +966,16 @@ EOT
 
   // Subflow 2
   subflow_link {
-    id   = davinci_flow.%[3]s-subflow-2.id
-    name = davinci_flow.%[3]s-subflow-2.name
-	replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
+    id                        = davinci_flow.%[3]s-subflow-2.id
+    name                      = davinci_flow.%[3]s-subflow-2.name
+    replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
   }
 
   // Subflow 1
   subflow_link {
-    id   = davinci_flow.%[3]s-subflow-1.id
-    name = davinci_flow.%[3]s-subflow-1.name
-	replace_import_subflow_id = "00f66e8926ced6ef5b83619fde4a314a"
+    id                        = davinci_flow.%[3]s-subflow-1.id
+    name                      = davinci_flow.%[3]s-subflow-1.name
+    replace_import_subflow_id = "00f66e8926ced6ef5b83619fde4a314a"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
 }
@@ -1004,7 +1004,7 @@ resource "davinci_flow" "%[3]s" {
 %[4]s
 EOT
 
-// Error connector
+  // Error connector
   connection_link {
     id                           = davinci_connection.%[3]s-error.id
     name                         = davinci_connection.%[3]s-error.name
@@ -1071,8 +1071,8 @@ EOT
 
   // Http connector
   connection_link {
-    id                           = davinci_connection.%[1]s-http.id
-    name                         = davinci_connection.%[1]s-http.name
+    id   = davinci_connection.%[1]s-http.id
+    name = davinci_connection.%[1]s-http.name
   }
 }
 
@@ -1087,26 +1087,26 @@ EOT
 
   // Http connector
   connection_link {
-    id                           = davinci_connection.%[1]s-http.id
-    name                         = davinci_connection.%[1]s-http.name
+    id   = davinci_connection.%[1]s-http.id
+    name = davinci_connection.%[1]s-http.name
   }
 }
 
 locals {
-	  davinci_connection_variables_id   = davinci_connection.%[1]s-variables.id
-	  davinci_connection_variables_name = davinci_connection.%[1]s-variables.name
+  davinci_connection_variables_id   = davinci_connection.%[1]s-variables.id
+  davinci_connection_variables_name = davinci_connection.%[1]s-variables.name
 
-	  davinci_connection_http_id   = davinci_connection.%[1]s-http.id
-	  davinci_connection_http_name = davinci_connection.%[1]s-http.name
+  davinci_connection_http_id   = davinci_connection.%[1]s-http.id
+  davinci_connection_http_name = davinci_connection.%[1]s-http.name
 
-	  davinci_connection_functions_id   = davinci_connection.%[1]s-functions.id
-	  davinci_connection_functions_name = davinci_connection.%[1]s-functions.name
+  davinci_connection_functions_id   = davinci_connection.%[1]s-functions.id
+  davinci_connection_functions_name = davinci_connection.%[1]s-functions.name
 
-	  davinci_connection_flow_id   = davinci_connection.%[1]s-flow.id
-	  davinci_connection_flow_name = davinci_connection.%[1]s-flow.name
+  davinci_connection_flow_id   = davinci_connection.%[1]s-flow.id
+  davinci_connection_flow_name = davinci_connection.%[1]s-flow.name
 
-	  davinci_connection_error_id   = davinci_connection.%[1]s-error.id
-	  davinci_connection_error_name = davinci_connection.%[1]s-error.name
+  davinci_connection_error_id   = davinci_connection.%[1]s-error.id
+  davinci_connection_error_name = davinci_connection.%[1]s-error.name
 }
 `, resourceName, name, subFlow1Json, subFlow2Json), nil
 }
@@ -1125,33 +1125,33 @@ func testAccResourceFlow_Common_WithoutMappingIDs_HCL_Datasources(resourceName, 
 	return fmt.Sprintf(`
 // Variables connector
 data "davinci_connection" "%[1]s-variables" {
-	  environment_id = pingone_environment.%[1]s.id
-	name           = "Variables"
-  }
+  environment_id = pingone_environment.%[1]s.id
+  name           = "Variables"
+}
 
 // Http connector
 data "davinci_connection" "%[1]s-http" {
-	  environment_id = pingone_environment.%[1]s.id
-	name           = "Http"
-  }
+  environment_id = pingone_environment.%[1]s.id
+  name           = "Http"
+}
 
 // Functions connector
 data "davinci_connection" "%[1]s-functions" {
-	  environment_id = pingone_environment.%[1]s.id
-	name           = "Functions"
-  }
+  environment_id = pingone_environment.%[1]s.id
+  name           = "Functions"
+}
 
 // Flow conductor connector
 data "davinci_connection" "%[1]s-flow" {
-	  environment_id = pingone_environment.%[1]s.id
-	name           = "Flow Connector"
-  }
+  environment_id = pingone_environment.%[1]s.id
+  name           = "Flow Connector"
+}
 
 // Error connector
 data "davinci_connection" "%[1]s-error" {
-	  environment_id = pingone_environment.%[1]s.id
-	name           = "Error Message"
-  }
+  environment_id = pingone_environment.%[1]s.id
+  name           = "Error Message"
+}
 
 resource "davinci_flow" "%[1]s-subflow-1" {
   environment_id = pingone_environment.%[1]s.id
@@ -1164,8 +1164,8 @@ EOT
 
   // Http connector
   connection_link {
-    id                           = data.davinci_connection.%[1]s-http.id
-    name                         = data.davinci_connection.%[1]s-http.name
+    id   = data.davinci_connection.%[1]s-http.id
+    name = data.davinci_connection.%[1]s-http.name
   }
 }
 
@@ -1180,26 +1180,26 @@ EOT
 
   // Http connector
   connection_link {
-    id                           = data.davinci_connection.%[1]s-http.id
-    name                         = data.davinci_connection.%[1]s-http.name
+    id   = data.davinci_connection.%[1]s-http.id
+    name = data.davinci_connection.%[1]s-http.name
   }
 }
 
 locals {
-	  davinci_connection_variables_id   = data.davinci_connection.%[1]s-variables.id
-	  davinci_connection_variables_name = data.davinci_connection.%[1]s-variables.name
+  davinci_connection_variables_id   = data.davinci_connection.%[1]s-variables.id
+  davinci_connection_variables_name = data.davinci_connection.%[1]s-variables.name
 
-	  davinci_connection_http_id   = data.davinci_connection.%[1]s-http.id
-	  davinci_connection_http_name = data.davinci_connection.%[1]s-http.name
+  davinci_connection_http_id   = data.davinci_connection.%[1]s-http.id
+  davinci_connection_http_name = data.davinci_connection.%[1]s-http.name
 
-	  davinci_connection_functions_id   = data.davinci_connection.%[1]s-functions.id
-	  davinci_connection_functions_name = data.davinci_connection.%[1]s-functions.name
+  davinci_connection_functions_id   = data.davinci_connection.%[1]s-functions.id
+  davinci_connection_functions_name = data.davinci_connection.%[1]s-functions.name
 
-	  davinci_connection_flow_id   = data.davinci_connection.%[1]s-flow.id
-	  davinci_connection_flow_name = data.davinci_connection.%[1]s-flow.name
+  davinci_connection_flow_id   = data.davinci_connection.%[1]s-flow.id
+  davinci_connection_flow_name = data.davinci_connection.%[1]s-flow.name
 
-	  davinci_connection_error_id   = data.davinci_connection.%[1]s-error.id
-	  davinci_connection_error_name = data.davinci_connection.%[1]s-error.name
+  davinci_connection_error_id   = data.davinci_connection.%[1]s-error.id
+  davinci_connection_error_name = data.davinci_connection.%[1]s-error.name
 }
 `, resourceName, name, subFlow1Json, subFlow2Json), nil
 }
@@ -1230,7 +1230,7 @@ func testAccResourceFlow_Full_WithoutMappingIDs_HCL(resourceName, name string, w
 resource "davinci_flow" "%[3]s" {
   environment_id = pingone_environment.%[3]s.id
 
-  name = "my awesome flow"
+  name        = "my awesome flow"
   description = "my awesome flow description"
 
   flow_json = <<EOT
@@ -1239,32 +1239,32 @@ EOT
 
   // Variables connector
   connection_link {
-    id                           = local.davinci_connection_variables_id
-    name                         = local.davinci_connection_variables_name
+    id   = local.davinci_connection_variables_id
+    name = local.davinci_connection_variables_name
   }
 
   // Http connector
   connection_link {
-    id                           = local.davinci_connection_http_id
-    name                         = local.davinci_connection_http_name
+    id   = local.davinci_connection_http_id
+    name = local.davinci_connection_http_name
   }
 
   // Functions connector
   connection_link {
-    id                           = local.davinci_connection_functions_id
-    name                         = local.davinci_connection_functions_name
+    id   = local.davinci_connection_functions_id
+    name = local.davinci_connection_functions_name
   }
 
   // Flow connector
   connection_link {
-    id                           = local.davinci_connection_flow_id
-    name                         = local.davinci_connection_flow_name
+    id   = local.davinci_connection_flow_id
+    name = local.davinci_connection_flow_name
   }
 
   // Error connector
   connection_link {
-    id                           = local.davinci_connection_error_id
-    name                         = local.davinci_connection_error_name
+    id   = local.davinci_connection_error_id
+    name = local.davinci_connection_error_name
   }
 
   // Subflow 2
@@ -1311,10 +1311,10 @@ resource "davinci_flow" "%[3]s" {
 %[4]s
 EOT
 
-// Error connector
+  // Error connector
   connection_link {
-    id                           = local.davinci_connection_error_id
-    name                         = local.davinci_connection_error_name
+    id   = local.davinci_connection_error_id
+    name = local.davinci_connection_error_name
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
 }
@@ -1343,11 +1343,11 @@ resource "davinci_flow" "%[2]s" {
 %[3]s
 EOT
 
-// Error connector
+  // Error connector
   connection_link {
     id                           = davinci_connection.%[2]s-error.id
     name                         = davinci_connection.%[2]s-error.name
-	replace_import_connection_id = "6d8f6f706c45fd459a86b3f092602544"
+    replace_import_connection_id = "6d8f6f706c45fd459a86b3f092602544"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName, mainFlowJson), nil
 }
@@ -1376,11 +1376,11 @@ resource "davinci_flow" "%[2]s" {
 %[3]s
 EOT
 
-// Error connector
+  // Error connector
   connection_link {
     id                           = davinci_connection.%[2]s-error.id
     name                         = davinci_connection.%[2]s-error.name
-	replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName, flowJson), nil
 }

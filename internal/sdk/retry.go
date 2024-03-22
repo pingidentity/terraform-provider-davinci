@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"

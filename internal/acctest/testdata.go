@@ -49,35 +49,3 @@ func ReadFlowJsonFile(path string) (string, error) {
 
 	return string(mainFlowJsonBytes), nil
 }
-
-func makeSubflowsHcl(resourceName string, subflows []string) (subflowsHcl string) {
-	for _, subflowName := range subflows {
-		subflowsHcl += fmt.Sprintf(`
-	subflow_link {
-		id = davinci_flow.%[1]s-%[2]s.id
-		name = davinci_flow.%[1]s-%[2]s.name
-	}
-		
-`, resourceName, subflowName)
-	}
-	return subflowsHcl
-}
-
-func makeFlowConnectionsHcl(resourceName string, connections []string) (connectionsHcl string) {
-	for _, connName := range connections {
-		rName := fmt.Sprintf("davinci_connection.%s-%s", resourceName, connName)
-		// if _, ok := bsConnections[connName]; ok {
-		// 	rName = "data." + rName
-		// }
-
-		connectionsHcl += fmt.Sprintf(`
-	connection_link {
-		id = %[1]s.id
-		name = %[1]s.name
-	}
-	
-`,
-			rName)
-	}
-	return connectionsHcl
-}
