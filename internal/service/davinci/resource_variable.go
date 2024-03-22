@@ -213,7 +213,7 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta inte
 		}
 	}
 
-	if found == false {
+	if !found {
 		d.SetId("")
 	}
 
