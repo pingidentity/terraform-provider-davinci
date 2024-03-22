@@ -3,6 +3,10 @@ bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.34.0 => 0.36.0
 ```
 
 ```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.0.55 => 0.1.0
+```
+
+```release-note:note
 Provider updated thoughout to support environments that have been created without demo/bootstrapped configuration automatically applied.  Creation of environments without demo/bootstrapped configuration is best practice going forward.
 ```
 
