@@ -2213,37 +2213,6 @@ resource "davinci_connection" "httpConnector" {
 
 ### HUMAN
 
-Connector ID (`connector_id` in the resource): `humanCompromisedConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `appId` (string; *Type inferred from the provided string value*): App ID from your HUMAN Tenant. Console display name: "HUMAN App ID".
-* `authToken` (string; *Type inferred from the provided string value*): Auth Token from your HUMAN Tenant. Console display name: "HUMAN Auth Token".
-
-
-Example:
-```hcl
-resource "davinci_connection" "humanCompromisedConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "humanCompromisedConnector"
-  name           = "My awesome humanCompromisedConnector"
-
-  property {
-    name  = "appId"
-    value = # value here
-  }
-
-  property {
-    name  = "authToken"
-    value = # value here
-  }
-}
-```
-
-
-### HUMAN
-
 Connector ID (`connector_id` in the resource): `connectorHuman`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
@@ -2273,6 +2242,37 @@ resource "davinci_connection" "connectorHuman" {
 
   property {
     name  = "humanPolicyName"
+    value = # value here
+  }
+}
+```
+
+
+### HUMAN
+
+Connector ID (`connector_id` in the resource): `humanCompromisedConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `appId` (string; *Type inferred from the provided string value*): App ID from your HUMAN Tenant. Console display name: "HUMAN App ID".
+* `authToken` (string; *Type inferred from the provided string value*): Auth Token from your HUMAN Tenant. Console display name: "HUMAN Auth Token".
+
+
+Example:
+```hcl
+resource "davinci_connection" "humanCompromisedConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "humanCompromisedConnector"
+  name           = "My awesome humanCompromisedConnector"
+
+  property {
+    name  = "appId"
+    value = # value here
+  }
+
+  property {
+    name  = "authToken"
     value = # value here
   }
 }

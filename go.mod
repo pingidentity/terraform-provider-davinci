@@ -16,7 +16,7 @@ require (
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.36.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.1.0
-	github.com/samir-gandhi/dvgenerate v0.0.7
+	github.com/samir-gandhi/dvgenerate v0.0.9
 	github.com/terraform-linters/tflint v0.48.0
 )
 
