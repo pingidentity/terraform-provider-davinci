@@ -444,9 +444,10 @@ func makeProperties(d *schema.ResourceData) map[string]interface{} {
 				"value": val,
 				"type":  prop["type"].(string),
 			}
-		}
-		connProps[prop["name"].(string)] = map[string]interface{}{
-			"value": prop["value"].(string),
+		} else {
+			connProps[prop["name"].(string)] = map[string]interface{}{
+				"value": prop["value"].(string),
+			}
 		}
 	}
 	return connProps
