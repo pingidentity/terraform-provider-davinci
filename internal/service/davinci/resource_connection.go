@@ -430,8 +430,9 @@ func makeProperties(d *schema.ResourceData) map[string]interface{} {
 	props := d.Get("property").(*schema.Set).List()
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
-		if val, ok := prop["type"]; !ok {
-			switch prop["type"].(string) {
+		if propType, ok := prop["type"]; !ok {
+			var val interface{}
+			switch propType {
 			case "string":
 				val = prop["value"].(string)
 			case "number":
