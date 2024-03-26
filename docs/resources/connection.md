@@ -2279,31 +2279,6 @@ resource "davinci_connection" "humanCompromisedConnector" {
 ```
 
 
-### HYPR
-
-Connector ID (`connector_id` in the resource): `hyprConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `customAuth` (array):  Console display name: "Custom Parameters".
-
-
-Example:
-```hcl
-resource "davinci_connection" "hyprConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "hyprConnector"
-  name           = "My awesome hyprConnector"
-
-  property {
-    name  = "customAuth"
-    value = # value here
-  }
-}
-```
-
-
 ### HYPR Adapt
 
 Connector ID (`connector_id` in the resource): `connectorHyprAdapt`
@@ -2323,6 +2298,31 @@ resource "davinci_connection" "connectorHyprAdapt" {
 
   property {
     name  = "accessToken"
+    value = # value here
+  }
+}
+```
+
+
+### HYPR
+
+Connector ID (`connector_id` in the resource): `hyprConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (array):  Console display name: "Custom Parameters".
+
+
+Example:
+```hcl
+resource "davinci_connection" "hyprConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "hyprConnector"
+  name           = "My awesome hyprConnector"
+
+  property {
+    name  = "customAuth"
     value = # value here
   }
 }
@@ -2472,31 +2472,6 @@ resource "davinci_connection" "idranddConnector" {
 ```
 
 
-### ID.me
-
-Connector ID (`connector_id` in the resource): `idMeConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `oauth2` (array):  Console display name: "Oauth2 Parameters".
-
-
-Example:
-```hcl
-resource "davinci_connection" "idMeConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "idMeConnector"
-  name           = "My awesome idMeConnector"
-
-  property {
-    name  = "oauth2"
-    value = # value here
-  }
-}
-```
-
-
 ### ID.me - Identity Verification
 
 Connector ID (`connector_id` in the resource): `connectorIdMeIdentity`
@@ -2516,6 +2491,31 @@ resource "davinci_connection" "connectorIdMeIdentity" {
 
   property {
     name  = "openId"
+    value = # value here
+  }
+}
+```
+
+
+### ID.me
+
+Connector ID (`connector_id` in the resource): `idMeConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `oauth2` (array):  Console display name: "Oauth2 Parameters".
+
+
+Example:
+```hcl
+resource "davinci_connection" "idMeConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "idMeConnector"
+  name           = "My awesome idMeConnector"
+
+  property {
+    name  = "oauth2"
     value = # value here
   }
 }
@@ -2884,43 +2884,6 @@ resource "davinci_connection" "connectorJamf" {
 ```
 
 
-### Jira
-
-Connector ID (`connector_id` in the resource): `jiraConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): You may need to create a token from Jira with your credentials, if you haven't created one. Console display name: "Jira API token".
-* `apiUrl` (string): Base URL of the Jira instance. Console display name: "Base Url".
-* `email` (string): Email used for your Jira account. Console display name: "Email Address".
-
-
-Example:
-```hcl
-resource "davinci_connection" "jiraConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "jiraConnector"
-  name           = "My awesome jiraConnector"
-
-  property {
-    name  = "apiKey"
-    value = # value here
-  }
-
-  property {
-    name  = "apiUrl"
-    value = # value here
-  }
-
-  property {
-    name  = "email"
-    value = # value here
-  }
-}
-```
-
-
 ### Jira Service Desk
 
 Connector ID (`connector_id` in the resource): `connectorJiraServiceDesk`
@@ -2964,6 +2927,43 @@ resource "davinci_connection" "connectorJiraServiceDesk" {
 
   property {
     name  = "method"
+    value = # value here
+  }
+}
+```
+
+
+### Jira
+
+Connector ID (`connector_id` in the resource): `jiraConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): You may need to create a token from Jira with your credentials, if you haven't created one. Console display name: "Jira API token".
+* `apiUrl` (string): Base URL of the Jira instance. Console display name: "Base Url".
+* `email` (string): Email used for your Jira account. Console display name: "Email Address".
+
+
+Example:
+```hcl
+resource "davinci_connection" "jiraConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "jiraConnector"
+  name           = "My awesome jiraConnector"
+
+  property {
+    name  = "apiKey"
+    value = # value here
+  }
+
+  property {
+    name  = "apiUrl"
+    value = # value here
+  }
+
+  property {
+    name  = "email"
     value = # value here
   }
 }
@@ -4208,31 +4208,6 @@ resource "davinci_connection" "connector-oai-pingaccessadministrativeapi" {
 ```
 
 
-### PingFederate
-
-Connector ID (`connector_id` in the resource): `pingFederateConnectorV2`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `openId` (array):  Console display name: "OpenId Parameters".
-
-
-Example:
-```hcl
-resource "davinci_connection" "pingFederateConnectorV2" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "pingFederateConnectorV2"
-  name           = "My awesome pingFederateConnectorV2"
-
-  property {
-    name  = "openId"
-    value = # value here
-  }
-}
-```
-
-
 ### PingFederate Administration
 
 Connector ID (`connector_id` in the resource): `connector-oai-pfadminapi`
@@ -4276,6 +4251,31 @@ resource "davinci_connection" "connector-oai-pfadminapi" {
 ```
 
 
+### PingFederate
+
+Connector ID (`connector_id` in the resource): `pingFederateConnectorV2`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `openId` (array):  Console display name: "OpenId Parameters".
+
+
+Example:
+```hcl
+resource "davinci_connection" "pingFederateConnectorV2" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "pingFederateConnectorV2"
+  name           = "My awesome pingFederateConnectorV2"
+
+  property {
+    name  = "openId"
+    value = # value here
+  }
+}
+```
+
+
 ### PingID
 
 Connector ID (`connector_id` in the resource): `pingIdConnector`
@@ -4295,49 +4295,6 @@ resource "davinci_connection" "pingIdConnector" {
 
   property {
     name  = "customAuth"
-    value = # value here
-  }
-}
-```
-
-
-### PingOne
-
-Connector ID (`connector_id` in the resource): `pingOneSSOConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
-* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
-* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
-* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
-
-
-Example:
-```hcl
-resource "davinci_connection" "pingOneSSOConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "pingOneSSOConnector"
-  name           = "My awesome pingOneSSOConnector"
-
-  property {
-    name  = "clientId"
-    value = # value here
-  }
-
-  property {
-    name  = "clientSecret"
-    value = # value here
-  }
-
-  property {
-    name  = "envId"
-    value = # value here
-  }
-
-  property {
-    name  = "region"
     value = # value here
   }
 }
@@ -4711,6 +4668,98 @@ resource "davinci_connection" "pingOneVerifyConnector" {
 ```
 
 
+### PingOne
+
+Connector ID (`connector_id` in the resource): `pingOneSSOConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
+* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
+* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
+* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
+
+
+Example:
+```hcl
+resource "davinci_connection" "pingOneSSOConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "pingOneSSOConnector"
+  name           = "My awesome pingOneSSOConnector"
+
+  property {
+    name  = "clientId"
+    value = # value here
+  }
+
+  property {
+    name  = "clientSecret"
+    value = # value here
+  }
+
+  property {
+    name  = "envId"
+    value = # value here
+  }
+
+  property {
+    name  = "region"
+    value = # value here
+  }
+}
+```
+
+
+### Prove International
+
+Connector ID (`connector_id` in the resource): `proveConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseUrl` (string):  Console display name: "Prove Base URL".
+* `clientId` (string):  Console display name: "Prove Client ID".
+* `grantType` (string):  Console display name: "Prove Grant Type".
+* `password` (string):  Console display name: "Prove Password".
+* `username` (string):  Console display name: "Prove Username".
+
+
+Example:
+```hcl
+resource "davinci_connection" "proveConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "proveConnector"
+  name           = "My awesome proveConnector"
+
+  property {
+    name  = "baseUrl"
+    value = # value here
+  }
+
+  property {
+    name  = "clientId"
+    value = # value here
+  }
+
+  property {
+    name  = "grantType"
+    value = # value here
+  }
+
+  property {
+    name  = "password"
+    value = # value here
+  }
+
+  property {
+    name  = "username"
+    value = # value here
+  }
+}
+```
+
+
 ### Prove
 
 Connector ID (`connector_id` in the resource): `payfoneConnector`
@@ -4767,55 +4816,6 @@ resource "davinci_connection" "payfoneConnector" {
 
   property {
     name  = "skCallbackBaseUrl"
-    value = # value here
-  }
-
-  property {
-    name  = "username"
-    value = # value here
-  }
-}
-```
-
-
-### Prove International
-
-Connector ID (`connector_id` in the resource): `proveConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `baseUrl` (string):  Console display name: "Prove Base URL".
-* `clientId` (string):  Console display name: "Prove Client ID".
-* `grantType` (string):  Console display name: "Prove Grant Type".
-* `password` (string):  Console display name: "Prove Password".
-* `username` (string):  Console display name: "Prove Username".
-
-
-Example:
-```hcl
-resource "davinci_connection" "proveConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "proveConnector"
-  name           = "My awesome proveConnector"
-
-  property {
-    name  = "baseUrl"
-    value = # value here
-  }
-
-  property {
-    name  = "clientId"
-    value = # value here
-  }
-
-  property {
-    name  = "grantType"
-    value = # value here
-  }
-
-  property {
-    name  = "password"
     value = # value here
   }
 
@@ -4962,24 +4962,6 @@ resource "davinci_connection" "connectorIdiVERIFIED" {
 ```
 
 
-### SAML
-
-Connector ID (`connector_id` in the resource): `samlConnector`
-
-*No properties*
-
-
-Example:
-```hcl
-resource "davinci_connection" "samlConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "samlConnector"
-  name           = "My awesome samlConnector"
-}
-```
-
-
 ### SAML IdP
 
 Connector ID (`connector_id` in the resource): `samlIdpConnector`
@@ -5001,6 +4983,24 @@ resource "davinci_connection" "samlIdpConnector" {
     name  = "saml"
     value = # value here
   }
+}
+```
+
+
+### SAML
+
+Connector ID (`connector_id` in the resource): `samlConnector`
+
+*No properties*
+
+
+Example:
+```hcl
+resource "davinci_connection" "samlConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "samlConnector"
+  name           = "My awesome samlConnector"
 }
 ```
 
@@ -5128,55 +5128,6 @@ resource "davinci_connection" "connectorIdentityNow" {
 ```
 
 
-### Salesforce
-
-Connector ID (`connector_id` in the resource): `salesforceConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `adminUsername` (string; *Type inferred from the provided string value*): The username of your Salesforce administrator account. Console display name: "Username".
-* `consumerKey` (string; *Type inferred from the provided string value*): The consumer key shown on your Salesforce connected app. Console display name: "Consumer Key".
-* `domainName` (string; *Type inferred from the provided string value*): Your Salesforce domain name, such as "mycompany-dev-ed". Console display name: "Domain Name".
-* `environment` (string): If the environment you specify in the Domain Name field is part of a sandbox organization, select Sandbox. Otherwise, select Production. Console display name: "Environment".
-* `privateKey` (string; *Type inferred from the provided string value*): The private key that corresponds to the X.509 certificate you added to your Salesforce connected app. Console display name: "Private Key".
-
-
-Example:
-```hcl
-resource "davinci_connection" "salesforceConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id   = "salesforceConnector"
-  name           = "My awesome salesforceConnector"
-
-  property {
-    name  = "adminUsername"
-    value = # value here
-  }
-
-  property {
-    name  = "consumerKey"
-    value = # value here
-  }
-
-  property {
-    name  = "domainName"
-    value = # value here
-  }
-
-  property {
-    name  = "environment"
-    value = # value here
-  }
-
-  property {
-    name  = "privateKey"
-    value = # value here
-  }
-}
-```
-
-
 ### Salesforce Marketing Cloud (BETA)
 
 Connector ID (`connector_id` in the resource): `connectorSalesforceMarketingCloud`
@@ -5220,6 +5171,55 @@ resource "davinci_connection" "connectorSalesforceMarketingCloud" {
 
   property {
     name  = "scope"
+    value = # value here
+  }
+}
+```
+
+
+### Salesforce
+
+Connector ID (`connector_id` in the resource): `salesforceConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `adminUsername` (string; *Type inferred from the provided string value*): The username of your Salesforce administrator account. Console display name: "Username".
+* `consumerKey` (string; *Type inferred from the provided string value*): The consumer key shown on your Salesforce connected app. Console display name: "Consumer Key".
+* `domainName` (string; *Type inferred from the provided string value*): Your Salesforce domain name, such as "mycompany-dev-ed". Console display name: "Domain Name".
+* `environment` (string): If the environment you specify in the Domain Name field is part of a sandbox organization, select Sandbox. Otherwise, select Production. Console display name: "Environment".
+* `privateKey` (string; *Type inferred from the provided string value*): The private key that corresponds to the X.509 certificate you added to your Salesforce connected app. Console display name: "Private Key".
+
+
+Example:
+```hcl
+resource "davinci_connection" "salesforceConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "salesforceConnector"
+  name           = "My awesome salesforceConnector"
+
+  property {
+    name  = "adminUsername"
+    value = # value here
+  }
+
+  property {
+    name  = "consumerKey"
+    value = # value here
+  }
+
+  property {
+    name  = "domainName"
+    value = # value here
+  }
+
+  property {
+    name  = "environment"
+    value = # value here
+  }
+
+  property {
+    name  = "privateKey"
     value = # value here
   }
 }
