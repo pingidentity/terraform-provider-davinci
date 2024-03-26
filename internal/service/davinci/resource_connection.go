@@ -72,8 +72,8 @@ func ResourceConnection() *schema.Resource {
 						"type": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: `string` or `boolean`. Use `string` for array types.",
-							ValidateFunc: validation.StringInSlice([]string{"string", "boolean"}, false),
+							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: `string`, `number` or `boolean`. Use `string` for array types.",
+							ValidateFunc: validation.StringInSlice([]string{"string", "number", "boolean"}, false),
 
 							Default: "string",
 						},
@@ -365,8 +365,7 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 		}
 
 		thisProp := map[string]interface{}{
-			"name":  propName,
-			"value": "",
+			"name": propName,
 		}
 
 		if propType, ok := pMap["type"].(string); ok {
@@ -382,8 +381,18 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 					thisProp["value"] = strconv.FormatBool(pValue)
 					thisProp["type"] = "boolean"
 				}
+			case "number":
+				if pValue, ok := pMap["value"].(float64); ok {
+					thisProp["value"] = strconv.FormatFloat(pValue, 'f', -1, 64)
+					thisProp["type"] = "number"
+				} else if pValue, ok := pMap["value"].(int); ok {
+					thisProp["value"] = strconv.Itoa(pValue)
+					thisProp["type"] = "number"
+				} else {
+					return nil, fmt.Errorf("For Property '%v': unable to assert type. This is a bug, please raise an issue", thisProp["name"])
+				}
 			default:
-				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string or boolean is currently supported", thisProp["name"])
+				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, or number (int) is currently supported", thisProp["name"])
 			}
 		} else {
 			switch pMap["value"].(type) {
@@ -397,8 +406,18 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 					thisProp["value"] = strconv.FormatBool(pValue)
 					thisProp["type"] = "boolean"
 				}
+			case float64:
+				if pValue, ok := pMap["value"].(float64); ok {
+					thisProp["value"] = fmt.Sprintf("%f", pValue)
+					thisProp["type"] = "number"
+				}
+			case int:
+				if pValue, ok := pMap["value"].(int); ok {
+					thisProp["value"] = strconv.Itoa(pValue)
+					thisProp["type"] = "number"
+				}
 			default:
-				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string or boolean is currently supported", thisProp["name"])
+				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, or number (int) is currently supported", thisProp["name"])
 			}
 		}
 		connProps = append(connProps, thisProp)
@@ -411,6 +430,20 @@ func makeProperties(d *schema.ResourceData) map[string]interface{} {
 	props := d.Get("property").(*schema.Set).List()
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
+		if val, ok := prop["type"]; !ok {
+			switch prop["type"].(string) {
+			case "string":
+				val = prop["value"].(string)
+			case "number":
+				val, _ = strconv.ParseInt(prop["value"].(string), 10, 64)
+			case "boolean":
+				val, _ = strconv.ParseBool(prop["value"].(string))
+			}
+			connProps[prop["name"].(string)] = map[string]interface{}{
+				"value": val,
+				"type":  prop["type"].(string),
+			}
+		}
 		connProps[prop["name"].(string)] = map[string]interface{}{
 			"value": prop["value"].(string),
 		}
