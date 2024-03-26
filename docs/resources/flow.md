@@ -58,7 +58,7 @@ resource "davinci_flow" "my_awesome_main_flow" {
 ### Required
 
 - `environment_id` (String) The ID of the PingOne environment to import the DaVinci flow to.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
-- `flow_json` (String, Sensitive) The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.
+- `flow_json` (String, Sensitive) The DaVinci Flow to import, in raw JSON format. Should be a JSON file of a single flow (without subflows) that has been exported from a source DaVinci environment.  Must be a valid JSON string.
 
 ### Optional
 

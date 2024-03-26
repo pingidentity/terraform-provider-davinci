@@ -205,7 +205,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			},
 
 			"flow_json": schema.StringAttribute{
-				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format.  Should be a JSON file that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
+				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format. Should be a JSON file of a single flow (without subflows) that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
 				Required:    true,
 				Sensitive:   true,
 
