@@ -66,7 +66,7 @@ Required:
 
 Optional:
 
-- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: `string` or `boolean`. Use `string` for array types. Defaults to `string`.
+- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: `string`, `number` or `boolean`. Use `string` for array types. Defaults to `string`.
 
 ## Import
 
