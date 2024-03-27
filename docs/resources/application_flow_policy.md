@@ -12,12 +12,12 @@ description: |-
 ## Example Usage
 
 ```terraform
-// example of bootstrapped application
-resource "davinci_application" "registration_flow_app" {
-  name           = "PingOne SSO Connection"
+resource "davinci_application" "my_awesome_registration_flow_application" {
   environment_id = var.pingone_environment_id
+
+  name = "My Awesome Registration Application"
+
   oauth {
-    enabled = true
     values {
       allowed_grants                = ["authorizationCode"]
       allowed_scopes                = ["openid", "profile"]
@@ -26,21 +26,17 @@ resource "davinci_application" "registration_flow_app" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
 }
 
-resource "davinci_application_flow_policy" "registration_flow_policy" {
+resource "davinci_application_flow_policy" "my_awesome_registration_flow_application_policy" {
   environment_id = var.pingone_environment_id
-  application_id = davinci_application.registration_flow_app.id
-  name           = "PingOne - Registration"
-  status         = "enabled"
+  application_id = davinci_application.my_awesome_registration_flow_application.id
+
+  name   = "PingOne - Registration"
+  status = "enabled"
+
   policy_flow {
-    flow_id    = resource.davinci_flow.registration.id
+    flow_id    = davinci_flow.registration.id
     version_id = -1
     weight     = 100
   }
@@ -52,29 +48,33 @@ resource "davinci_application_flow_policy" "registration_flow_policy" {
 
 ### Required
 
-- `application_id` (String) Id of the application this policy is associated with
-- `environment_id` (String) PingOne environment id
-- `name` (String) Policy Name
+- `application_id` (String) The ID of the DaVinci application to manage the flow policy for. Must be a valid DaVinci resource ID. This field is immutable and will trigger a replace plan if changed.
+- `environment_id` (String) The ID of the PingOne environment to manage the flow policy in. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
+- `name` (String) A string that specifies the name of the policy.
+- `policy_flow` (Block Set, Min: 1) Set of weighted flows that this application will use. (see [below for nested schema](#nestedblock--policy_flow))
 
 ### Optional
 
-- `policy_flow` (Block Set) Set of weighted flows that this application will use (see [below for nested schema](#nestedblock--policy_flow))
-- `status` (String) If Policy should be enabled. Valid values are: enabled, disabled Defaults to `enabled`.
+- `status` (String) A boolan that specifies whether the policy should be enabled. Valid values are: `enabled`, `disabled`. Defaults to `enabled`.
 
 ### Read-Only
 
-- `created_date` (Number) Creation epoch of policy.
+- `created_date` (Number) Resource creation date as epoch.
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--policy_flow"></a>
 ### Nested Schema for `policy_flow`
 
-Optional:
+Required:
 
 - `flow_id` (String) Identifier of the flow that this policy will use.
-- `success_nodes` (List of String) List of node ids used by analytics for tracking user interaction.
-- `version_id` (Number) Version of the flow that this policy will use. Use -1 for latest
-- `weight` (Number) If multiple flows are specified, the weight determines the probability of the flow being used. This must add up to 100
+- `version_id` (Number) Version of the flow that this policy will use. Use `-1` for the latest version.
+
+Optional:
+
+- `allowed_ip_list` (Set of String) A list of IP CIDR entries that are allowed use of the application policy flow.
+- `success_nodes` (Set of String) A list of node ids used by analytics for tracking user interaction.
+- `weight` (Number) If multiple flows are specified, the weight determines the probability of the flow being used. The weights across all policy flows must add up to `100`.
 
 ## Import
 

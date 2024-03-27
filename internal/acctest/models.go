@@ -1,72 +1,11 @@
 package acctest
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
 
-type flowResource struct {
-	Name     string
-	FlowJson string
-	Subflows []string
-	// slice of connectorIds one word lowercased without word "connector". Ex: "httpConnector" -> "http"
-	Connections []string
-}
-
-type TestFlowsJson struct {
-	Simple                       string
-	SimpleSettingDrift           string
-	SimpleInputSchemaDrift       string
-	SimpleOutputSchemaDrift      string
-	Drifted                      string
-	Mainflow                     string
-	MainflowDrifted              string
-	Subflow                      string
-	AnotherMainflow              string
-	AnotherSubflow               string
-	WithVariableConnector        string
-	BrokenFlow                   string
-	PingOneSessionMainFlow       string
-	PingOneSessionMainFlowUpdate string
-	PingOneSessionSubFlow        string
-	FlowContextVarFlow           string
-}
-
-type TestFlowsHcl struct {
-	// A simple flow with minimal external dependencies
-	Simple                  FlowHcl
-	SimpleSettingDrift      FlowHcl
-	SimpleInputSchemaDrift  FlowHcl
-	SimpleOutputSchemaDrift FlowHcl
-	Drifted                 FlowHcl
-	//Depends on Subflow and AnotherSubflow
-	Mainflow                     FlowHcl
-	MainflowDrifted              FlowHcl
-	Subflow                      FlowHcl
-	AnotherMainflow              FlowHcl
-	AnotherSubflow               FlowHcl
-	WithVariableConnector        FlowHcl
-	BrokenFlow                   FlowHcl
-	PingOneSessionMainFlow       FlowHcl
-	PingOneSessionMainFlowUpdate FlowHcl
-	PingOneSessionSubFlow        FlowHcl
-	FlowContextVarFlow           FlowHcl
-}
-
-type FlowHcl struct {
-	Name string
-	Hcl  string
-}
-
-// Simple connection name/id pair to be converted in TestFlowsHcl.
-type flowConnection struct {
-	ConnectorId string
-	Name        string
-	Id          string
-}
-
-type TestConnections struct {
-	Http        string
-	CrowdStrike string
-	Flow        string
-}
+	dv "github.com/samir-gandhi/davinci-client-go/davinci"
+)
 
 type TestConnection struct {
 	ResourcePrefix string
@@ -138,7 +77,7 @@ func (tc TestConnection) GetResourceName() (resourceName string) {
 }
 
 func TestAccResourceConnectionHcl(resourceName string, p1Services []string, connections []TestConnection) (hcl string) {
-	baseHcl := PingoneEnvrionmentServicesSsoHcl(resourceName, p1Services)
+	baseHcl := PingoneEnvironmentServicesSsoHcl(resourceName, p1Services, true)
 	connectionsHcl := ""
 	for _, connection := range connections {
 		connectionsHcl += connection.MakeConnectionHcl()
@@ -159,12 +98,25 @@ func (tcp TestConnection) MakeConnectionHcl() (hcl string) {
 	}
 	hcl = fmt.Sprintf(`
 resource "davinci_connection" "%[2]s" {
-	environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
-	depends_on     = [data.davinci_connections.read_all]
-	connector_id   = "%[3]s"
-	name           = "%[2]s"
+  environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+  connector_id   = "%[3]s"
+  name           = "%[2]s"
 	%[4]s
 }
 `, tcp.ResourcePrefix, tcp.GetResourceName(), tcp.ConnectorId, propertiesHcl)
 	return hcl
+}
+
+func DeepCloneFlow(src, dst *dv.Flow) error {
+	bytes, err := json.Marshal(src)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(bytes, dst)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

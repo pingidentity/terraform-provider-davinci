@@ -1,4 +1,4 @@
-package provider
+package sdkv2
 
 import (
 	"context"
@@ -6,13 +6,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone/model"
 	"github.com/pingidentity/terraform-provider-davinci/internal/service/davinci"
-	client "github.com/samir-gandhi/davinci-client-go/davinci"
+	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 func init() {
@@ -47,14 +46,14 @@ func New(version string) func() *schema.Provider {
 				},
 				"region": {
 					Type:             schema.TypeString,
-					Required:         true,
+					Optional:         true,
 					DefaultFunc:      schema.EnvDefaultFunc("PINGONE_REGION", nil),
 					Description:      "The PingOne region to use.  Options are `AsiaPacific` `Canada` `Europe` and `NorthAmerica`.  Default value can be set with the `PINGONE_REGION` environment variable.",
 					ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(model.RegionsAvailableList(), false)),
 				},
 				"environment_id": {
 					Type:        schema.TypeString,
-					Required:    true,
+					Optional:    true,
 					DefaultFunc: schema.EnvDefaultFunc("PINGONE_ENVIRONMENT_ID", nil),
 					Description: "Environment ID PingOne User Login. Default value can be set with the `PINGONE_ENVIRONMENT_ID` environment variable.",
 				},
@@ -75,7 +74,6 @@ func New(version string) func() *schema.Provider {
 				"davinci_application":             davinci.ResourceApplication(),
 				"davinci_application_flow_policy": davinci.ResourceApplicationFlowPolicy(),
 				"davinci_connection":              davinci.ResourceConnection(),
-				"davinci_flow":                    davinci.ResourceFlow(),
 				"davinci_variable":                davinci.ResourceVariable(),
 			},
 			DataSourcesMap: map[string]*schema.Resource{
@@ -93,23 +91,23 @@ func New(version string) func() *schema.Provider {
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		var username, password, region, accessToken, environment_id, host_url string
-		if _, ok := d.GetOk("username"); ok {
-			username = d.Get("username").(string)
+		if v, ok := d.GetOk("username"); ok {
+			username = v.(string)
 		}
-		if _, ok := d.GetOk("password"); ok {
-			password = d.Get("password").(string)
+		if v, ok := d.GetOk("password"); ok {
+			password = v.(string)
 		}
-		if _, ok := d.GetOk("region"); ok {
-			region = d.Get("region").(string)
+		if v, ok := d.GetOk("region"); ok {
+			region = v.(string)
 		}
-		if _, ok := d.GetOk("access_token"); ok {
-			accessToken = d.Get("access_token").(string)
+		if v, ok := d.GetOk("access_token"); ok {
+			accessToken = v.(string)
 		}
-		if _, ok := d.GetOk("environment_id"); ok {
-			environment_id = d.Get("environment_id").(string)
+		if v, ok := d.GetOk("environment_id"); ok {
+			environment_id = v.(string)
 		}
-		if _, ok := d.GetOk("host_url"); ok {
-			host_url = d.Get("host_url").(string)
+		if v, ok := d.GetOk("host_url"); ok {
+			host_url = v.(string)
 		}
 
 		var diags diag.Diagnostics
@@ -120,7 +118,7 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			userAgent += fmt.Sprintf(" %s", v)
 		}
 
-		cInput := client.ClientInput{
+		cInput := dv.ClientInput{
 			Username:        username,
 			Password:        password,
 			PingOneRegion:   region,
@@ -129,47 +127,11 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 			AccessToken:     accessToken,
 			UserAgent:       userAgent,
 		}
-		c, err := retryableClient(&cInput)
+		c, err := dv.NewClient(&cInput)
 		if err != nil {
-			// DELETE ME
-			tflog.Info(ctx, "Error initializing client")
 			return nil, diag.FromErr(err)
 		}
-		if environment_id != "" {
-			c.CompanyID = environment_id
-		}
-		//In case non-sso is desired in the future
-		// c, err := client.NewClient(nil)
-		// if err != nil {
-		// 	return nil, diag.FromErr(err)
-		// }
+
 		return c, diags
 	}
-}
-
-func retryableClient(cInput *client.ClientInput) (*client.APIClient, error) {
-	var c *client.APIClient
-	var err error
-	ctx := context.Background()
-
-	for retries := 0; retries <= 2; retries++ {
-		c, err = client.NewClient(cInput)
-		if retries == 2 && err != nil {
-			return nil, err
-		}
-		switch {
-		case err == nil:
-			return c, nil
-			// These cases come from the davinci-client-go library and may be subject to change
-		case strings.Contains(err.Error(), "Error getting admin callback, got: status: 502, body:"):
-			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
-		case strings.Contains(err.Error(), "Error getting SSO callback, got err: status: 502, body:"):
-			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
-		case strings.Contains(err.Error(), "Auth Token not found, unsuccessful login, got: Found. Redirecting to https://console.pingone.com/davinci/index.html#/sso/callback/?error=AuthenticationFailed&error_description=unknownError2"):
-			tflog.Info(ctx, "Found retryable error while initializing client. Retrying...")
-		default:
-			return nil, err
-		}
-	}
-	return nil, fmt.Errorf("Error initializing client. Please report this as a bug.")
 }

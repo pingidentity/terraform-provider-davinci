@@ -1,0 +1,63 @@
+{
+    "companyId": "0a77c43b-3afd-4f08-b88c-61e811f3d0d9",
+    "connectorIds": [
+        "errorConnector"
+    ],
+    "createdDate": 1675789456863,
+    "currentVersion": 0,
+    "customerId": "ee728871d18a3b9b273c87192cee4a18",
+    "description": "",
+    "flowStatus": "enabled",
+    "name": "brokenFlow",
+    "updatedDate": 1675789456873,
+    "flowId": "ef5eab24ebe4f578cd73ec4acb79b78d",
+    "versionId": 0,
+    "graphData": {
+        "elements": {
+            "nodes": [
+                {
+                    "data": {
+                        "id": "zlgncqvws2",
+                        "nodeType": "CONNECTION",
+                        "connectionId": "6d8f6f706c45fd459a86b3f092602544",
+                        "connectorId": "errorConnector",
+                        "name": "Error Message",
+                        "label": "Error Message",
+                        "status": "unconfigured"
+                    },
+                    "position": {
+                        "x": 400,
+                        "y": 409.0909090042114
+                    },
+                    "group": "nodes",
+                    "removed": false,
+                    "selected": false,
+                    "selectable": true,
+                    "locked": false,
+                    "grabbable": true,
+                    "pannable": false,
+                    "classes": ""
+                }
+            ]
+        },
+        "data": {},
+        "zoomingEnabled": true,
+        "userZoomingEnabled": true,
+        "zoom": 1,
+        "minZoom": 1e-50,
+        "maxZoom": 1e+50,
+        "panningEnabled": true,
+        "userPanningEnabled": true,
+        "pan": {
+            "x": 0,
+            "y": 0
+        },
+        "boxSelectionEnabled": true,
+        "renderer": {
+            "name": "null"
+        }
+    },
+    "flowColor": "#FFC8C1",
+    "savedDate": 1675789456846,
+    "variables": []
+}

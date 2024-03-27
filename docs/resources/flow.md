@@ -2,67 +2,52 @@
 page_title: "davinci_flow Resource - terraform-provider-davinci"
 subcategory: "Flow"
 description: |-
-  
+  Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 ---
 
 # davinci_flow (Resource)
 
-
+Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 
 ## Example Usage
 
 ```terraform
-//Read all connections - This is a good first call to make
-data "davinci_connections" "all" {
+resource "davinci_connection" "my_awesome_flow_connector" {
+  environment_id = var.environment_id
+
+  name         = "Flow"
+  connector_id = "flowConnector"
 }
 
-resource "davinci_connection" "flow" {
-  name           = "Flow"
-  connector_id   = "flowConnector"
+resource "davinci_flow" "my_awesome_subflow" {
   environment_id = var.environment_id
-  // Forcing dependency on the inital connection provides better consistency when waiting for bootstrap to complete
-  depends_on = [data.davinci_connections.all]
+
+  name      = "My Awesome Subflow"
+  flow_json = file("./path/to/example-subflow.json")
+
+  connection_link {
+    id                           = davinci_connection.my_awesome_flow_connector.id
+    name                         = davinci_connection.my_awesome_flow_connector.name
+    replace_import_connection_id = "33329a264e268ab31fb19637debf1ea3"
+  }
 }
 
-resource "davinci_flow" "mainflow" {
+resource "davinci_flow" "my_awesome_main_flow" {
   environment_id = var.environment_id
-  flow_json      = "{\"customerId\":\"1234\",\"name\":\"mainflow\",\"description\":\"\",\"flowStatus\":\"enabled\",\"createdDate...\"\"connectorIds\":[\"httpConnector\",\"flowConnector\"],\"savedDate\":1662961640542,\"variables\":[]}"
-  deploy         = true
 
-  // Dependent subflows are defined in subflows blocks.
-  // These should always point to managed subflows
+  name      = "My Awesome Main Flow"
+  flow_json = file("./path/to/example-mainflow.json")
+
   subflow_link {
-    id   = resource.davinci_flow.subflow.id
-    name = resource.davinci_flow.subflow.name
-  }
-  // Dependent connections are defined in conections blocks. 
-  // It is best practice to define all connections referenced the flow_json. This prevents a mismatch between the flow_json and the connections
-
-  // This sample references a managed connection
-  connection_link {
-    id   = davinci_connection.flow.id
-    name = davinci_connection.flow.name
-  }
-  // This sample uses a bootstrapped connection
-  connection_link {
-    name = "Http"
-    // default connection id for the bootstrapped Http connector
-    id = "867ed4363b2bc21c860085ad2baa817d"
+    id                        = resource.davinci_flow.my_awesome_subflow.id
+    name                      = resource.davinci_flow.my_awesome_subflow.name
+    replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
   }
 
-}
-
-resource "davinci_flow" "subflow" {
-  environment_id = var.environment_id
-  flow_json      = file("subflow.json")
-  deploy         = true
   connection_link {
-    id   = "867ed4363b2bc21c860085ad2baa817d"
-    name = "Http"
-  }
-  connection_link {
-    id   = davinci_connection.flow.id
-    name = davinci_connection.flow.name
+    id                           = davinci_connection.my_awesome_flow_connector.id
+    name                         = davinci_connection.my_awesome_flow_connector.name
+    replace_import_connection_id = "33329a264e268ab31fb19637debf1ea3"
   }
 }
 ```
@@ -72,28 +57,35 @@ resource "davinci_flow" "subflow" {
 
 ### Required
 
-- `environment_id` (String) PingOne Environment to import flow into.
-- `flow_json` (String, Sensitive) DaVinci Flow in raw json format.
+- `environment_id` (String) The ID of the PingOne environment to import the DaVinci flow to.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
+- `flow_json` (String, Sensitive) The DaVinci Flow to import, in raw JSON format. Should be a JSON file of a single flow (without subflows) that has been exported from a source DaVinci environment.  Must be a valid JSON string.
 
 ### Optional
 
-- `connection_link` (Block Set) Connections this flow depends on. flow_json connectionId will be updated to id matching name . (see [below for nested schema](#nestedblock--connection_link))
-- `deploy` (Boolean) Deploy Flow after import. Flows must be deployed to be used. Defaults to `true`.
-- `subflow_link` (Block Set) Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1). (see [below for nested schema](#nestedblock--subflow_link))
+- `connection_link` (Block Set) Mappings to connections that this flow depends on.  Connections should be managed (with the `davinci_connection` resource) or retrieved (with the `davinci_connection` data source) to provide the mappings needed for this configuration block. (see [below for nested schema](#nestedblock--connection_link))
+- `deploy` (Boolean, Deprecated) **Deprecation notice:** This attribute is deprecated and will be removed in a future release.  Flows are automatically deployed on import. A boolean that specifies whether to deploy the flow after import.  Defaults to `true`.
+- `description` (String) A string that specifies a description of the flow.  If the field is left blank, a description value will be derived by the service.
+- `name` (String) A string that identifies the flow name after import.  If the field is left blank, a flow name will be derived by the service from the name in the import JSON (the `flow_json` parameter).
+- `subflow_link` (Block Set) Child flows of this resource, where the `flow_json` contains reference to subflows.  If the `flow_json` contains subflows, this one `subflow_link` block is required per contained subflow. (see [below for nested schema](#nestedblock--subflow_link))
 
 ### Read-Only
 
-- `flow_variables` (List of Object) Returned list of Flow Context variables. These are Variable resources that are created and managed by the Flow resource via flow_json (see [below for nested schema](#nestedatt--flow_variables))
+- `flow_configuration_json` (String, Sensitive) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
+- `flow_export_json` (String, Sensitive) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
+- `flow_variables` (Attributes Set) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
-- `name` (String) Computed Flow Name after import. Matches 'name' in flow_json
 
 <a id="nestedblock--connection_link"></a>
 ### Nested Schema for `connection_link`
 
 Required:
 
-- `id` (String) Connection ID that will be used when flow is imported.
-- `name` (String) Connection Name to match when updating flow_json connectionId.
+- `id` (String) A string that specifies the connector ID that will be applied when flow is imported.
+- `name` (String) The connector name.  If `replace_import_connection_id` is also specified, this value is used when the flow is imported.  If `replace_import_connection_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.
+
+Optional:
+
+- `replace_import_connection_id` (String) Connection ID of the connector in the import to replace with the connector described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
 
 
 <a id="nestedblock--subflow_link"></a>
@@ -101,8 +93,12 @@ Required:
 
 Required:
 
-- `id` (String) Subflow Flow ID that will be used when flow is imported.
-- `name` (String) Subflow Name to match when updating flow_json subflowId.
+- `id` (String) A string that specifies the subflow ID that will be applied when flow is imported.
+- `name` (String) The subflow name.  If `replace_import_subflow_id` is also specified, this value is used when the flow is imported.  If `replace_import_subflow_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.
+
+Optional:
+
+- `replace_import_subflow_id` (String) Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
 
 
 <a id="nestedatt--flow_variables"></a>
@@ -110,15 +106,15 @@ Required:
 
 Read-Only:
 
-- `context` (String)
-- `description` (String)
-- `flow_id` (String)
-- `id` (String)
-- `max` (Number)
-- `min` (Number)
-- `mutable` (Boolean)
-- `name` (String)
-- `type` (String)
+- `context` (String) The variable context.  Should always return `flow`.
+- `description` (String) A string that specifies the description of the variable.
+- `flow_id` (String) The flow ID that the variable belongs to, which should match the ID of this resource.
+- `id` (String) The DaVinci internal ID of the variable.
+- `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`.
+- `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`.
+- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.
+- `name` (String) The user friendly name of the variable in the UI.
+- `type` (String) The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.
 
 ## Import
 

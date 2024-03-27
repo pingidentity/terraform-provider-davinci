@@ -7,23 +7,26 @@ require (
 	github.com/golangci/golangci-lint v1.55.2
 	github.com/hashicorp/go-changelog v0.0.0-20221013053416-ba40b3a8c7ff
 	github.com/hashicorp/terraform-plugin-docs v0.16.0
+	github.com/hashicorp/terraform-plugin-framework v1.5.0
+	github.com/hashicorp/terraform-plugin-framework-validators v0.12.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
+	github.com/hashicorp/terraform-plugin-mux v0.14.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.31.0
 	github.com/katbyte/terrafmt v0.5.2
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.34.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.36.0
 	github.com/pavius/impi v0.0.3
-	github.com/samir-gandhi/davinci-client-go v0.0.55
-	github.com/samir-gandhi/dvgenerate v0.0.7
+	github.com/samir-gandhi/davinci-client-go v0.1.0
+	github.com/samir-gandhi/dvgenerate v0.0.10
 	github.com/terraform-linters/tflint v0.48.0
 )
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
 	4d63.com/gochecknoglobals v0.2.1 // indirect
-	cloud.google.com/go v0.110.8 // indirect
-	cloud.google.com/go/compute v1.23.0 // indirect
+	cloud.google.com/go v0.110.10 // indirect
+	cloud.google.com/go/compute v1.23.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
-	cloud.google.com/go/iam v1.1.2 // indirect
+	cloud.google.com/go/iam v1.1.5 // indirect
 	cloud.google.com/go/storage v1.30.1 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/4meepo/tagalign v1.3.3 // indirect
@@ -37,7 +40,7 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/OpenPeeDeeP/depguard/v2 v2.1.0 // indirect
-	github.com/ProtonMail/go-crypto v0.0.0-20230828082145-3c4c8a2d2371 // indirect
+	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/alecthomas/go-check-sumtype v0.1.3 // indirect
 	github.com/alexkohler/nakedret/v2 v2.0.2 // indirect
 	github.com/alexkohler/prealloc v1.0.0 // indirect
@@ -64,7 +67,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/charithe/durationcheck v0.0.10 // indirect
 	github.com/chavacava/garif v0.1.0 // indirect
-	github.com/cloudflare/circl v1.3.3 // indirect
+	github.com/cloudflare/circl v1.3.7 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/daixiang0/gci v0.11.2 // indirect
@@ -106,8 +109,8 @@ require (
 	github.com/golangci/unconvert v0.0.0-20180507085042-28b1c447d1f4 // indirect
 	github.com/google/go-github/v53 v53.2.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/google/s2a-go v0.1.4 // indirect
-	github.com/googleapis/enterprise-certificate-proxy v0.2.4 // indirect
+	github.com/google/s2a-go v0.1.7 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/gookit/color v1.5.4 // indirect
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601 // indirect
@@ -160,12 +163,12 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.14.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/owenrumney/go-sarif v1.1.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/agreementmanagement v0.3.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.6.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.2 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.12.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/verify v0.4.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/agreementmanagement v0.3.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.6.2 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.3 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.12.2 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/verify v0.4.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
@@ -238,13 +241,13 @@ require (
 	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/exp/typeparams v0.0.0-20230307190834-24139beb5833 // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/oauth2 v0.15.0 // indirect
+	golang.org/x/oauth2 v0.16.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/tools v0.16.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/api v0.128.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20231002182017-d307bd883b97 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20231002182017-d307bd883b97 // indirect
+	google.golang.org/api v0.149.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
@@ -264,10 +267,10 @@ require (
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fatih/color v1.15.0 // indirect
+	github.com/fatih/color v1.16.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/uuid v1.3.1 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-checkpoint v0.5.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -282,34 +285,34 @@ require (
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.19.0 // indirect
 	github.com/hashicorp/terraform-json v0.18.0 // indirect
-	github.com/hashicorp/terraform-plugin-go v0.20.0 // indirect
+	github.com/hashicorp/terraform-plugin-go v0.21.0
 	github.com/hashicorp/terraform-registry-address v0.2.3 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.15 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/cli v1.1.5 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
-	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
-	github.com/mitchellh/mapstructure v1.5.0
+	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/oklog/run v1.0.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2 v0.11.3
+	github.com/oklog/run v1.1.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2 v0.11.5
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.14.1 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/genproto v0.0.0-20231002182017-d307bd883b97 // indirect
-	google.golang.org/grpc v1.60.0 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
+	google.golang.org/grpc v1.61.0 // indirect
+	google.golang.org/protobuf v1.32.0 // indirect
 )

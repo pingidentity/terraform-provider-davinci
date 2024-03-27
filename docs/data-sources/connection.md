@@ -12,15 +12,15 @@ description: |-
 ## Example Usage
 
 ```terraform
-data "davinci_connection" "http_by_name" {
+data "davinci_connection" "example_by_name" {
   environment_id = var.pingone_environment_id
-  name           = "Http"
+
+  name = "Http"
 }
 
-data "davinci_connection" "http_by_id" {
+data "davinci_connection" "example_by_id" {
   environment_id = var.pingone_environment_id
-  // This will filter output to only include connections using the "httpConnector" type. 
-  // Helpful for validation that only one of a certain type exists.
+
   id = "867ed4363b2bc21c860085ad2baa817d"
 }
 ```
@@ -30,19 +30,29 @@ data "davinci_connection" "http_by_id" {
 
 ### Required
 
-- `environment_id` (String) PingOne environment id
+- `environment_id` (String) The ID of the PingOne environment to retrieve a connection from. Must be a valid PingOne resource ID.
 
 ### Optional
 
-- `id` (String) ID of the connection to retrieve. Either id or name must be specified.
-- `name` (String) Name of the connection to retrieve. Either id or name must be specified.
+- `connection_id` (String) A string that specifies the ID of the connection to retrieve. Either `connection_id` or `name` must be specified.
+- `id` (String) A string that specifies the ID of the connection to retrieve.  This field is deprecated for retrieving the connection and will be made read only in a future release, use `connection_id` instead.
+- `name` (String) A string that specifies the name of the connection to retrieve. Either `id` or `name` must be specified.
+- `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
 
 ### Read-Only
 
-- `connector_id` (String) DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')
-- `created_date` (Number) Resource creation date as epoch.
-- `customer_id` (String) Internal DaVinci id. Should not be set by user.
-- `property` (Set of Object) Connection configuration (see [below for nested schema](#nestedatt--property))
+- `connector_id` (String) The DaVinci internal connector type ID, which can be found in the [DaVinci Connection Definitions](../../resources/connection#davinci-connection-definitions) documentation.
+- `created_date` (Number) Resource creation date as epoch timestamp.
+- `customer_id` (String) An ID that represents the customer tenant.
+- `property` (Set of Object) Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) document to find the appropriate property name/value pairs for the connection. (see [below for nested schema](#nestedatt--property))
+
+<a id="nestedblock--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `read` (String)
+
 
 <a id="nestedatt--property"></a>
 ### Nested Schema for `property`

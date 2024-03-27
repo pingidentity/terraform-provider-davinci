@@ -103,7 +103,9 @@ func CreateTestEnvironment(ctx context.Context, apiClient *management.APIClient,
 	environment := *management.NewEnvironment(
 		*management.NewEnvironmentLicense(environmentLicense),
 		fmt.Sprintf("%sdynamic-%s", EnvironmentNamePrefix, index),
-		region,
+		management.EnvironmentRegion{
+			EnumRegionCode: &region,
+		},
 		management.ENUMENVIRONMENTTYPE_SANDBOX,
 	)
 

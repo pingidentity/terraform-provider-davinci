@@ -2,968 +2,1367 @@ package davinci
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"reflect"
-	"regexp"
-	"sort"
-	"strconv"
+	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/mitchellh/mapstructure"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework/customtypes/davinciexporttype"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
-	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
-	dv "github.com/samir-gandhi/davinci-client-go/davinci"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
+	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
-func ResourceFlow() *schema.Resource {
-	return &schema.Resource{
-		CreateContext: resourceFlowCreate,
-		ReadContext:   resourceFlowRead,
-		UpdateContext: resourceFlowUpdate,
-		DeleteContext: resourceFlowDelete,
-		Schema: map[string]*schema.Schema{
-			"flow_json": {
-				Type:             schema.TypeString,
-				Required:         true,
-				Description:      "DaVinci Flow in raw json format.",
-				DiffSuppressFunc: computeFlowDrift,
-				Sensitive:        true,
+// Types
+type FlowResource serviceClientType
+
+type FlowResourceModel struct {
+	Id                    types.String                  `tfsdk:"id"`
+	EnvironmentId         types.String                  `tfsdk:"environment_id"`
+	FlowJSON              davinciexporttype.ParsedValue `tfsdk:"flow_json"`
+	FlowConfigurationJSON davinciexporttype.ParsedValue `tfsdk:"flow_configuration_json"`
+	FlowExportJSON        davinciexporttype.ParsedValue `tfsdk:"flow_export_json"`
+	Deploy                types.Bool                    `tfsdk:"deploy"`
+	Name                  types.String                  `tfsdk:"name"`
+	Description           types.String                  `tfsdk:"description"`
+	ConnectionLinks       types.Set                     `tfsdk:"connection_link"`
+	SubFlowLinks          types.Set                     `tfsdk:"subflow_link"`
+	FlowVariables         types.Set                     `tfsdk:"flow_variables"`
+}
+
+type FlowConnectionLinkResourceModel struct {
+	Id                        types.String `tfsdk:"id"`
+	ReplaceImportConnectionId types.String `tfsdk:"replace_import_connection_id"`
+	Name                      types.String `tfsdk:"name"`
+}
+
+type FlowSubflowLinkResourceModel struct {
+	Id                     types.String `tfsdk:"id"`
+	ReplaceImportSubflowId types.String `tfsdk:"replace_import_subflow_id"`
+	Name                   types.String `tfsdk:"name"`
+}
+
+type FlowVariablesResourceModel struct {
+	Id          types.String `tfsdk:"id"`
+	Name        types.String `tfsdk:"name"`
+	Description types.String `tfsdk:"description"`
+	FlowId      types.String `tfsdk:"flow_id"`
+	Context     types.String `tfsdk:"context"`
+	Type        types.String `tfsdk:"type"`
+	Mutable     types.Bool   `tfsdk:"mutable"`
+	Min         types.Int64  `tfsdk:"min"`
+	Max         types.Int64  `tfsdk:"max"`
+}
+
+var (
+	flowVariablesTFObjectTypes = map[string]attr.Type{
+		"id":          types.StringType,
+		"name":        types.StringType,
+		"description": types.StringType,
+		"flow_id":     types.StringType,
+		"context":     types.StringType,
+		"type":        types.StringType,
+		"mutable":     types.BoolType,
+		"min":         types.Int64Type,
+		"max":         types.Int64Type,
+	}
+)
+
+var (
+	flowExportCmpOptsConfiguration = davinci.ExportCmpOpts{
+		IgnoreConfig:              false,
+		IgnoreDesignerCues:        false,
+		IgnoreEnvironmentMetadata: true,
+		IgnoreUnmappedProperties:  false,
+		IgnoreVersionMetadata:     true,
+		IgnoreFlowMetadata:        true,
+	}
+)
+
+// Framework interfaces
+var (
+	_ resource.Resource                   = &FlowResource{}
+	_ resource.ResourceWithConfigure      = &FlowResource{}
+	_ resource.ResourceWithValidateConfig = &FlowResource{}
+	_ resource.ResourceWithModifyPlan     = &FlowResource{}
+	_ resource.ResourceWithImportState    = &FlowResource{}
+)
+
+// New Object
+func NewFlowResource() resource.Resource {
+	return &FlowResource{}
+}
+
+// Metadata
+func (r *FlowResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_flow"
+}
+
+// Schema.
+func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+
+	const attrMinLength = 1
+	const minimumConnectionMappings = 1
+
+	nameDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that identifies the flow name after import.  If the field is left blank, a flow name will be derived by the service from the name in the import JSON (the `flow_json` parameter).",
+	)
+
+	descriptionDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies a description of the flow.  If the field is left blank, a description value will be derived by the service.",
+	)
+
+	deployDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"**Deprecation notice:** This attribute is deprecated and will be removed in a future release.  Flows are automatically deployed on import. A boolean that specifies whether to deploy the flow after import.",
+	).DefaultValue(true)
+
+	connectionLinkDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"Mappings to connections that this flow depends on.  Connections should be managed (with the `davinci_connection` resource) or retrieved (with the `davinci_connection` data source) to provide the mappings needed for this configuration block.",
+	)
+
+	connectionLinkNameDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The connector name.  If `replace_import_connection_id` is also specified, this value is used when the flow is imported.  If `replace_import_connection_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.",
+	)
+
+	connectionLinkReplaceImportConnectionIdDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"Connection ID of the connector in the import to replace with the connector described in `id` and `name` parameters.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
+	)
+
+	subflowLinkDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"Child flows of this resource, where the `flow_json` contains reference to subflows.  If the `flow_json` contains subflows, this one `subflow_link` block is required per contained subflow.",
+	)
+
+	subflowLinkNameDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The subflow name.  If `replace_import_subflow_id` is also specified, this value is used when the flow is imported.  If `replace_import_subflow_id` is not specified, the name must match that of the connector in the import file, so the connector ID in the `id` parameter can be updated.",
+	)
+
+	subflowLinkReplaceImportConnectionIdDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
+	)
+
+	flowVariablesDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`.",
+	)
+
+	flowVariablesContextDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The variable context.  Should always return `flow`.",
+	)
+
+	flowVariablesTypeDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.",
+	)
+
+	flowVariablesMutableDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.",
+	)
+
+	flowVariablesMinDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The minimum value of the variable, if the `type` parameter is set as `number`.",
+	)
+
+	flowVariablesMaxDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The maximum value of the variable, if the `type` parameter is set as `number`.",
+	)
+
+	resp.Schema = schema.Schema{
+		// This description is used by the documentation generator and the language server.
+		Description: "Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
+
+		Attributes: map[string]schema.Attribute{
+			"id": framework.Attr_ID(),
+
+			"environment_id": framework.Attr_LinkID(
+				framework.SchemaAttributeDescriptionFromMarkdown("The ID of the PingOne environment to import the DaVinci flow to."),
+			),
+
+			"name": schema.StringAttribute{
+				Description:         nameDescription.Description,
+				MarkdownDescription: nameDescription.MarkdownDescription,
+				Optional:            true,
+				Computed:            true,
+
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(attrMinLength),
+				},
 			},
-			"deploy": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Deploy Flow after import. Flows must be deployed to be used.",
+
+			"description": schema.StringAttribute{
+				Description:         descriptionDescription.Description,
+				MarkdownDescription: descriptionDescription.MarkdownDescription,
+				Optional:            true,
+				Computed:            true,
 			},
-			"name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Computed Flow Name after import. Matches 'name' in flow_json",
-			},
-			"environment_id": {
-				Type:        schema.TypeString,
+
+			"flow_json": schema.StringAttribute{
+				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format. Should be a JSON file of a single flow (without subflows) that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
 				Required:    true,
-				Description: "PingOne Environment to import flow into.",
-			},
-			"connection_link": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Computed:    true,
-				Description: "Connections this flow depends on. flow_json connectionId will be updated to id matching name .",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Connection ID that will be used when flow is imported.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Connection Name to match when updating flow_json connectionId.",
-						},
+				Sensitive:   true,
+
+				CustomType: davinciexporttype.ParsedType{
+					ExportCmpOpts: davinci.ExportCmpOpts{
+						IgnoreConfig:              false,
+						IgnoreDesignerCues:        false,
+						IgnoreEnvironmentMetadata: true,
+						IgnoreUnmappedProperties:  false,
+						IgnoreVersionMetadata:     true,
+						IgnoreFlowMetadata:        false,
 					},
 				},
 			},
-			"subflow_link": {
-				Type:        schema.TypeSet,
-				Optional:    true,
+
+			"flow_configuration_json": schema.StringAttribute{
+				Description: framework.SchemaAttributeDescriptionFromMarkdown("The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.").Description,
 				Computed:    true,
-				Description: "Child flows of this resource. Required to keep mapping if flow_json contains subflows. flow_json subflowId will be updated to id matching name. Note, subflow will automatically point to latest version (-1).",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Subflow Flow ID that will be used when flow is imported.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Subflow Name to match when updating flow_json subflowId.",
-						},
-						//TODO implement subflow version
-						// "subflow_version": {
-						// 	Type:        schema.TypeString,
-						// 	Optional: true,
-						// 	Computed: true,
-						// 	Description: "Subflow Version to use",
-						// },
+				Sensitive:   true,
+
+				CustomType: davinciexporttype.ParsedType{
+					ExportCmpOpts: flowExportCmpOptsConfiguration,
+				},
+			},
+
+			"flow_export_json": schema.StringAttribute{
+				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
+				Computed:    true,
+				Sensitive:   true,
+
+				CustomType: davinciexporttype.ParsedType{
+					ExportCmpOpts: davinci.ExportCmpOpts{
+						IgnoreConfig:              false,
+						IgnoreDesignerCues:        false,
+						IgnoreEnvironmentMetadata: false,
+						IgnoreUnmappedProperties:  true, // because we don't do calculation with this object
+						IgnoreVersionMetadata:     false,
+						IgnoreFlowMetadata:        false,
 					},
 				},
 			},
-			"flow_variables": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Returned list of Flow Context variables. These are Variable resources that are created and managed by the Flow resource via flow_json",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeString,
+
+			"deploy": schema.BoolAttribute{
+				Description:         deployDescription.Description,
+				MarkdownDescription: deployDescription.MarkdownDescription,
+				DeprecationMessage:  "This attribute is deprecated and will be removed in a future release.  Flows are automatically deployed on import.",
+				Optional:            true,
+				Computed:            true,
+
+				Default: booldefault.StaticBool(true),
+			},
+
+			"flow_variables": schema.SetNestedAttribute{
+				Description:         flowVariablesDescription.Description,
+				MarkdownDescription: flowVariablesDescription.MarkdownDescription,
+				Computed:            true,
+
+				NestedObject: schema.NestedAttributeObject{
+
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci internal ID of the variable.").Description,
 							Computed:    true,
-							Description: "DaVinci internal name of variable",
 						},
-						"name": {
-							Type:        schema.TypeString,
+
+						"name": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("The user friendly name of the variable in the UI.").Description,
 							Computed:    true,
-							Description: "Friendly Name of Variable in UI",
 						},
-						"description": {
-							Type:        schema.TypeString,
+
+						"description": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("A string that specifies the description of the variable.").Description,
 							Computed:    true,
-							Description: "Description of Variable in UI",
 						},
-						"flow_id": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Should match id of this davinci_flow",
-						},
-						"context": {
-							Type:        schema.TypeString,
+
+						"flow_id": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("The flow ID that the variable belongs to, which should match the ID of this resource.").Description,
 							Computed:    true,
-							Description: "Should always return 'flow'",
 						},
-						"type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Underlying type of variable",
+
+						"context": schema.StringAttribute{
+							Description:         flowVariablesContextDescription.Description,
+							MarkdownDescription: flowVariablesContextDescription.MarkdownDescription,
+							Computed:            true,
 						},
-						"mutable": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: "If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow.",
+
+						"type": schema.StringAttribute{
+							Description:         flowVariablesTypeDescription.Description,
+							MarkdownDescription: flowVariablesTypeDescription.MarkdownDescription,
+							Computed:            true,
 						},
-						"min": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "",
+
+						"mutable": schema.BoolAttribute{
+							Description:         flowVariablesMutableDescription.Description,
+							MarkdownDescription: flowVariablesMutableDescription.MarkdownDescription,
+							Computed:            true,
 						},
-						"max": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "",
+
+						"min": schema.Int64Attribute{
+							Description:         flowVariablesMinDescription.Description,
+							MarkdownDescription: flowVariablesMinDescription.MarkdownDescription,
+							Computed:            true,
+						},
+
+						"max": schema.Int64Attribute{
+							Description:         flowVariablesMaxDescription.Description,
+							MarkdownDescription: flowVariablesMaxDescription.MarkdownDescription,
+							Computed:            true,
 						},
 					},
 				},
 			},
 		},
-		Importer: &schema.ResourceImporter{
-			StateContext: resourceFlowImport,
+
+		Blocks: map[string]schema.Block{
+
+			"connection_link": schema.SetNestedBlock{
+				Description:         connectionLinkDescription.Description,
+				MarkdownDescription: connectionLinkDescription.MarkdownDescription,
+
+				NestedObject: schema.NestedBlockObject{
+
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("A string that specifies the connector ID that will be applied when flow is imported.").Description,
+							Required:    true,
+
+							Validators: []validator.String{
+								verify.P1DVResourceIDValidator(),
+							},
+						},
+
+						"name": schema.StringAttribute{
+							Description:         connectionLinkNameDescription.Description,
+							MarkdownDescription: connectionLinkNameDescription.MarkdownDescription,
+							Required:            true,
+						},
+
+						"replace_import_connection_id": schema.StringAttribute{
+							Description:         connectionLinkReplaceImportConnectionIdDescription.Description,
+							MarkdownDescription: connectionLinkReplaceImportConnectionIdDescription.MarkdownDescription,
+							Optional:            true,
+						},
+					},
+				},
+
+				Validators: []validator.Set{
+					setvalidator.SizeAtLeast(minimumConnectionMappings),
+				},
+			},
+
+			"subflow_link": schema.SetNestedBlock{
+				Description:         subflowLinkDescription.Description,
+				MarkdownDescription: subflowLinkDescription.MarkdownDescription,
+
+				NestedObject: schema.NestedBlockObject{
+
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("A string that specifies the subflow ID that will be applied when flow is imported.").Description,
+							Required:    true,
+
+							Validators: []validator.String{
+								verify.P1DVResourceIDValidator(),
+							},
+						},
+
+						"name": schema.StringAttribute{
+							Description:         subflowLinkNameDescription.Description,
+							MarkdownDescription: subflowLinkNameDescription.MarkdownDescription,
+							Required:            true,
+						},
+
+						"replace_import_subflow_id": schema.StringAttribute{
+							Description:         subflowLinkReplaceImportConnectionIdDescription.Description,
+							MarkdownDescription: subflowLinkReplaceImportConnectionIdDescription.MarkdownDescription,
+							Optional:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
 
-func resourceFlowCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
-	var diags diag.Diagnostics
+func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
+	// Destruction plan
+	if req.Plan.Raw.IsNull() {
+		return
 	}
 
-	validateFlowDeps(d, &diags)
+	var plan, config FlowResourceModel
 
-	var flowJson string
-	if fj, ok := d.GetOk("flow_json"); ok {
-		// check that all connections and subflows dependencies are met
-		flowJson = fj.(string)
-		//Update subflows if needed
-		subsJson, err := mapSubFlows(d, flowJson)
-		if err != nil {
-			return diag.FromErr(err)
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(resp.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Read Terraform config data into the model
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
+	var flowObject davinci.Flow
+	err := davinci.Unmarshal([]byte(plan.FlowJSON.ValueString()), &flowObject, davinci.ExportCmpOpts{})
+	if err != nil {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("flow_json"),
+			"Error parsing `flow_json`",
+			fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
+		)
+		return
+	}
+
+	if config.Name.IsNull() {
+		resp.Plan.SetAttribute(ctx, path.Root("name"), flowObject.Name)
+	}
+
+	flowConfigObject := flowObject.FlowConfiguration
+
+	var d diag.Diagnostics
+	unknownFlowConfigPlan := false
+
+	unknownFlowConfigPlan, d = modifyPlanForConnectionSubflowLinkMappings(ctx, &flowConfigObject, plan.ConnectionLinks, plan.SubFlowLinks)
+	resp.Diagnostics.Append(d...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if !unknownFlowConfigPlan && !req.State.Raw.IsNull() {
+
+		var state FlowResourceModel
+
+		// Read Terraform state data into the model
+		resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+		if resp.Diagnostics.HasError() {
+			return
 		}
-		//Update connections if needed
-		connsJson, err := mapFlowConnections(d, *subsJson)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		flowJson = *connsJson
-	} else {
-		return diag.FromErr(fmt.Errorf("Error: flow_json not found"))
-	}
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateFlowWithJson(&c.CompanyID, &flowJson)
-	}, nil)
-
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Error Importing Flow",
-			Detail:   fmt.Sprintf(`This may indicate the flow contains unconfigured nodes. Additionally the flow may have been imported as an unmanaged resource and may require manual intervention. API Error: %v`, err),
-		})
-		return diags
-	}
-	res, ok := sdkRes.(*dv.Flow)
-	if !ok || res.Name == "" {
-		err = fmt.Errorf("Unable to parse create response from Davinci API on flow")
-		return diag.FromErr(err)
-	}
-
-	err = deployIfNeeded(ctx, c, d, res.FlowID)
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Error deploying flow",
-			Detail:   fmt.Sprintf(`This may indicate flow '%s' contains unconfigured nodes.`, res.Name),
-		})
-		_, deleteErr := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.DeleteFlow(&c.CompanyID, res.FlowID)
-		}, nil)
-		if deleteErr != nil {
-			return diag.FromErr(deleteErr)
-		}
-		return diags
-	}
-
-	d.SetId(res.FlowID)
-
-	resourceFlowRead(ctx, d, meta)
-
-	return diags
-}
-
-func resourceFlowRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
-	var diags diag.Diagnostics
-
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	flowId := d.Id()
-
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadFlowVersion(&c.CompanyID, flowId, nil)
-	}, nil)
-	if err != nil {
-		httpErr, _ := dv.ParseDvHttpError(err)
-		if strings.Contains(httpErr.Body, "Error retrieving flow version") {
-			d.SetId("")
-			return diags
-		}
-		return diag.FromErr(err)
-	}
-	res, ok := sdkRes.(*dv.FlowInfo)
-	if !ok {
-		err = fmt.Errorf("Unable to cast FlowInfo type to response from Davinci API on flow id: %v", flowId)
-		return diag.FromErr(err)
-	}
-
-	if res.Flow.FlowID == "" {
-		d.SetId("")
-		return diags
-	}
-
-	d.SetId(res.Flow.FlowID)
-
-	if err := d.Set("name", res.Flow.Name); err != nil {
-		return diag.FromErr(err)
-	}
-	rString, err := json.Marshal(&res.Flow)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	if err := d.Set("flow_json", string(rString)); err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("environment_id", string(res.Flow.CompanyID)); err != nil {
-		return diag.FromErr(err)
-	}
-
-	// Set subflows, this is important for terraform import
-	subflows, err := flattenSubflows(res.Flow)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("subflow_link", subflows); err != nil {
-		return diag.FromErr(err)
-	}
-
-	// Set connections, this is important for terraform import
-	connections, err := flattenConnections(res.Flow)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("connection_link", connections); err != nil {
-		return diag.FromErr(err)
-	}
-
-	// Set flow_variables, this is important for terraform import)
-	flowVariables, err := flattenFlowVariables(res.Flow)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if err := d.Set("flow_variables", flowVariables); err != nil {
-		return diag.FromErr(err)
-	}
-
-	return diags
-}
-
-func flattenSubflows(flow dv.Flow) ([]interface{}, error) {
-	var subflows []interface{}
-	for _, v := range flow.GraphData.Elements.Nodes {
-		if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
-			sfProp, err := expandSubFlowProps(v.Data.Properties)
+		if !state.FlowConfigurationJSON.IsNull() {
+			// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
+			var flowConfigStateObject davinci.FlowConfiguration
+			err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &flowConfigStateObject, davinci.ExportCmpOpts{})
 			if err != nil {
-				return nil, err
+				resp.Diagnostics.AddAttributeError(
+					path.Root("flow_json"),
+					"Error parsing `flow_configuration_json` in state",
+					fmt.Sprintf("Error parsing `flow_configuration_json` in state into flow configuration object: %s", err),
+				)
+				return
 			}
-			subflowMap := map[string]interface{}{
-				"id":   sfProp.SubFlowID.Value.Value,
-				"name": sfProp.SubFlowID.Value.Label,
+
+			resp.Diagnostics.Append(modifyPlanForMergedProperties(&flowConfigObject.FlowUpdateConfiguration, flowConfigStateObject.FlowUpdateConfiguration)...)
+			if resp.Diagnostics.HasError() {
+				return
 			}
-			subflows = append(subflows, subflowMap)
 		}
 	}
-	return subflows, nil
-}
 
-func flattenConnections(flow dv.Flow) ([]interface{}, error) {
-	var connections []interface{}
-	for _, node := range flow.GraphData.Elements.Nodes {
-		if node.Data.ConnectionID != "" && node.Data.Name != "" {
-			connectionMap := map[string]interface{}{
-				"id":   node.Data.ConnectionID,
-				"name": node.Data.Name,
-			}
-			connections = append(connections, connectionMap)
-		}
-	}
-	return connections, nil
-}
+	var flowConfigurationJSON basetypes.StringValue
 
-func flattenFlowVariables(flow dv.Flow) ([]interface{}, error) {
-	flowJson, err := json.Marshal(flow)
-	if err != nil {
-		return nil, err
-	}
-	flowVars, err := getFlowVariables(string(flowJson))
-	if err != nil {
-		return nil, err
-	}
+	if unknownFlowConfigPlan {
 
-	var flowVariables []interface{}
-	for _, flowVar := range flowVars {
-		varStateSimpleName := strings.Split(flowVar.Name, "##SK##")
-		if varStateSimpleName[0] == "" || len(varStateSimpleName) == 1 {
-			return nil, fmt.Errorf("Unable to parse variable name: %s for state", flowVar.Name)
-		}
-		flowVariableMap := map[string]interface{}{
-			"id":          flowVar.Name,
-			"name":        varStateSimpleName[0],
-			"description": flowVar.Fields.DisplayName,
-			"flow_id":     flowVar.FlowID,
-			"context":     flowVar.Context,
-			"type":        flowVar.Type,
-			"mutable":     flowVar.Fields.Mutable,
-			"min":         flowVar.Fields.Min,
-			"max":         flowVar.Fields.Max,
-		}
-		flowVariables = append(flowVariables, flowVariableMap)
-	}
-	return flowVariables, nil
-}
+		flowConfigurationJSON = types.StringUnknown()
 
-func resourceFlowUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
+	} else {
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	flowId := d.Id()
-
-	// If changes are detected:
-	// 1. Map subflows
-	// 2. Map connections
-	// 3. Update flow via API
-	// 4. Update flow variables via variables api
-	// 5. Deploy flow if needed
-	if d.HasChanges("flow_json", "connection_link", "subflow_link") {
-		flowJson := d.Get("flow_json").(string)
-		subsJson, err := mapSubFlows(d, flowJson)
+		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
 		if err != nil {
-			return diag.FromErr(err)
-		}
-		connsJson, err := mapFlowConnections(d, *subsJson)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-		flowJson = *connsJson
-
-		flowVars, err := getFlowVariables(flowJson)
-		if err != nil {
-			return diag.FromErr(err)
+			resp.Diagnostics.AddError(
+				"Error converting the flow object to JSON",
+				fmt.Sprintf("Error converting the flow object (from the API response) to JSON in plan modification.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+			)
+			return
 		}
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateFlowWithJson(&c.CompanyID, &flowJson, flowId)
-		}, nil)
-		if err != nil {
-			return diag.FromErr(err)
-		}
-
-		// Update Flow Variables
-		// this will ONLY be flow variables because getFlowVariables removes all other variables contexts
-		// If variable exists in state, it should be updated. Else it should be created.
-		flowVariablesState, variableStateOk := d.GetOk("flow_variables")
-		for _, v := range flowVars {
-			variablePayload := dv.VariablePayload{
-				// Name:        v.Name,
-				Description: v.Fields.DisplayName,
-				FlowId:      flowId,
-				Context:     v.Context,
-				Type:        v.Fields.Type,
-				Mutable:     v.Fields.Mutable,
-				Min:         v.Fields.Min,
-				Max:         v.Fields.Max,
-			}
-			// Variable Payload is identified by the simple name of the variable because it is suffixed with an unknown unique id.
-			varSimpleName := strings.Split(v.Name, "##SK##")
-			existsInState := false
-			if varSimpleName[0] == "" || len(varSimpleName) == 1 {
-				return diag.FromErr(fmt.Errorf("Unable to parse variable name: %s from flow_json", v.Name))
-			}
-			if variableStateOk {
-				for _, stateVar := range flowVariablesState.([]interface{}) {
-					stateVarMap := stateVar.(map[string]interface{})
-					if stateVarMap["name"].(string) == varSimpleName[0] {
-						variablePayload.Name = stateVarMap["name"].(string)
-						existsInState = true
-						// Update SHOULD be safe because the variable should exist if the flow exists.
-						_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-							return c.UpdateVariable(&c.CompanyID, &variablePayload)
-						}, nil)
-						if err != nil {
-							return diag.FromErr(err)
-						}
-						break
-					}
-				}
-			}
-			if !existsInState {
-				variablePayload.Name = varSimpleName[0]
-
-				_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-					return c.CreateVariable(&c.CompanyID, &variablePayload)
-				}, nil)
-				if err != nil {
-					// In rare scenarios, the variable may exist in the environment but not in state, if so it should update instead.
-					httpErr, _ := dv.ParseDvHttpError(err)
-					if httpErr != nil && strings.Contains(httpErr.Body, "Record already exists") {
-						_, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-							return c.UpdateVariable(&c.CompanyID, &variablePayload)
-						}, nil)
-						if err != nil {
-							return diag.FromErr(err)
-						}
-					} else {
-						return diag.FromErr(err)
-					}
-				}
-			}
-		}
-
-		res, ok := sdkRes.(*dv.Flow)
-		if !ok || res.Name == "" {
-			err = fmt.Errorf("Unable to parse update response from Davinci API on flow id: %v", flowId)
-			return diag.FromErr(err)
-		}
+		flowConfigurationJSON = framework.StringToTF(string(jsonFlowConfigBytes[:]))
 	}
 
-	if err := deployIfNeeded(ctx, c, d, flowId); err != nil {
-		return diag.FromErr(err)
-	}
+	resp.Plan.SetAttribute(ctx, path.Root("flow_configuration_json"), flowConfigurationJSON)
 
-	return resourceFlowRead(ctx, d, meta)
 }
 
-func resourceFlowDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
-	var diags diag.Diagnostics
+func (p *FlowResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var config FlowResourceModel
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Config.Get(ctx, &config)...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	flowId := d.Id()
+	resp.Diagnostics.Append(validateConnectionSubflowLinkMappings(ctx, config.FlowJSON, config.ConnectionLinks, config.SubFlowLinks, true)...)
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteFlow(&c.CompanyID, flowId)
-	}, nil)
-
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message == "" {
-		err = fmt.Errorf("Unable to parse delete response from Davinci API on flow id: %v", flowId)
-		return diag.FromErr(err)
-	}
-
-	d.SetId("")
-
-	return diags
 }
 
-func resourceFlowImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func (r *FlowResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	// Prevent panic if the provider has not been configured.
+	if req.ProviderData == nil {
+		return
+	}
 
-	idComponents := []utils.ImportComponent{
+	resourceConfig, ok := req.ProviderData.(framework.ResourceType)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected the provider client, got: %T. Please report this issue to the provider maintainers.", req.ProviderData),
+		)
+
+		return
+	}
+
+	r.Client = resourceConfig.Client
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialised",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.",
+		)
+		return
+	}
+}
+
+func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan, state FlowResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
+	}
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(plan.validate(ctx)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Build the model for the API
+	daVinciImport, d := plan.expand(ctx)
+	resp.Diagnostics.Append(d...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	environmentID := plan.EnvironmentId.ValueString()
+
+	createResponse, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (any, *http.Response, error) {
+			return r.Client.CreateFlowWithResponse(environmentID, *daVinciImport)
+		},
+	)
+	if err != nil {
+
+		additionalText := ""
+
+		if dvError, ok := err.(davinci.ErrorResponse); ok {
+
+			additionalText = "This error may indicate the flow is not fully configured."
+
+			if dvError.Code == davinci.DV_ERROR_CODE_ERROR_CREATING_CONNECTOR {
+				additionalText = "This error may indicate that a node in the flow is not fully configured."
+			}
+		}
+
+		resp.Diagnostics.AddError(
+			"Error importing flow",
+			fmt.Sprintf("Error creating flow: %s. %s", err, additionalText),
+		)
+	}
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	createFlow, ok := createResponse.(*davinci.Flow)
+	if !ok || createFlow.Name == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected response",
+			"Unable to parse create response from Davinci API on flow",
+		)
+	}
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Do an export for state
+	// Run the API call
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return r.Client.ReadFlowVersionWithResponse(environmentID, createFlow.FlowID, nil)
+		},
+	)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error reading flow",
+			fmt.Sprintf("Error reading flow: %s", err),
+		)
+		return
+	}
+
+	response, ok := sdkRes.(*davinci.FlowInfo)
+	if !ok || response.Flow.Name == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected response",
+			"Unable to parse create export response from Davinci API on flow",
+		)
+		return
+	}
+
+	// Create the state to save
+	state = plan
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(state.toState(&response.Flow)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
+}
+
+func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *FlowResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
+	}
+
+	// Read Terraform prior state data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	environmentID := data.EnvironmentId.ValueString()
+	flowID := data.Id.ValueString()
+
+	// Run the API call
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
+		},
+	)
+
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error reading flow",
+			fmt.Sprintf("Error reading flow: %s", err),
+		)
+	}
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	response, ok := sdkRes.(*davinci.FlowInfo)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected response",
+			fmt.Sprintf("Unable to parse read response from Davinci API on flow id: %v", flowID),
+		)
+	}
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Remove from state if resource is not found
+	if response == nil || response.Flow.FlowID == "" {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(data.toState(&response.Flow)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FlowResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
+	}
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Read Terraform state data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	environmentID := plan.EnvironmentId.ValueString()
+	flowID := plan.Id.ValueString()
+
+	if !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) {
+
+		daVinciUpdate, d := plan.expandUpdate(state)
+		resp.Diagnostics.Append(d...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		_, err := sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.UpdateFlowWithResponse(environmentID, flowID, *daVinciUpdate)
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error importing flow",
+				fmt.Sprintf("Error updating flow: %s", err),
+			)
+		}
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		_, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.DeployFlowWithResponse(environmentID, flowID)
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error deploying flow",
+				fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow: %s", err),
+			)
+		}
+		if resp.Diagnostics.HasError() {
+			return
+		}
+	}
+
+	// Do an export for state
+	// Run the API call
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
+		},
+	)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error reading flow",
+			fmt.Sprintf("Error reading flow: %s", err),
+		)
+		return
+	}
+
+	response, ok := sdkRes.(*davinci.FlowInfo)
+	if !ok || response.Flow.Name == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected response",
+			"Unable to parse update export response from Davinci API on flow",
+		)
+		return
+	}
+
+	// Create the state to save
+	state = plan
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(state.toState(&response.Flow)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
+}
+
+func (r *FlowResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data FlowResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
+	}
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	environmentID := data.EnvironmentId.ValueString()
+	flowID := data.Id.ValueString()
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return r.Client.DeleteFlowWithResponse(environmentID, flowID)
+		},
+	)
+
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error deleting flow",
+			fmt.Sprintf("Error deleting flow: %s", err),
+		)
+	}
+	res, ok := sdkRes.(*davinci.Message)
+	if !ok || res.Message == nil || *res.Message == "" {
+		resp.Diagnostics.AddWarning(
+			"Unexpected response",
+			fmt.Sprintf("Unable to parse delete response from Davinci API on flow id: %v", flowID),
+		)
+	}
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+}
+
+func (r *FlowResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+
+	idComponents := []framework.ImportComponent{
 		{
 			Label:  "environment_id",
-			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
 			Label:     "davinci_flow_id",
-			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			Regexp:    verify.P1DVResourceIDRegexp,
 			PrimaryID: true,
 		},
 	}
 
-	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(req.ID, idComponents...)
 	if err != nil {
-		return nil, err
+		resp.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			err.Error(),
+		)
+		return
 	}
 
-	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
-		return nil, err
+	for _, idComponent := range idComponents {
+		pathKey := idComponent.Label
+
+		if idComponent.PrimaryID {
+			pathKey = "id"
+		}
+
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root(pathKey), attributes[idComponent.Label])...)
 	}
-
-	d.SetId(attributes["davinci_flow_id"])
-
-	resourceFlowRead(ctx, d, meta)
-
-	return []*schema.ResourceData{d}, nil
 }
 
-func computeFlowDrift(k, old, new string, d *schema.ResourceData) bool {
-	var err error
-	// exit quickly if new resource
-	if old == "" && new != "" {
-		return false
-	}
+func (p *FlowResourceModel) validate(ctx context.Context) (diags diag.Diagnostics) {
 
-	// Apply subflow dependencies if needed.
-	if _, ok := d.GetOk("subflow_link"); ok {
-		if new != "" {
-			newFlowJson, err := mapSubFlows(d, new)
-			if err != nil {
-				//lintignore:R009
-				panic(err)
-			}
-			new = *newFlowJson
-		}
-		if old != "" {
-			oldFlowJson, err := mapSubFlows(d, old)
-			if err != nil {
-				//lintignore:R009
-				panic(err)
-			}
-			old = *oldFlowJson
-		}
-	}
+	diags.Append(validateConnectionSubflowLinkMappings(ctx, p.FlowJSON, p.ConnectionLinks, p.SubFlowLinks, false)...)
 
-	// Apply connection dependencies if needed.
-	if _, ok := d.GetOk("connection_link"); ok {
-		if new != "" {
-			newFlowJson, err := mapFlowConnections(d, new)
-			if err != nil {
-				//lintignore:R009
-				panic(err)
-			}
-			new = *newFlowJson
-		}
-		if old != "" {
-			oldFlowJson, err := mapFlowConnections(d, old)
-			if err != nil {
-				//lintignore:R009
-				panic(err)
-			}
-			old = *oldFlowJson
-		}
-	}
-
-	//Prepare current and desired inputs for drift detection
-	current := dv.Flow{}
-	desired := dv.Flow{}
-	if old != "" {
-		currentFi := dv.FlowImport{}
-		currentF := dv.Flow{}
-		err = json.Unmarshal([]byte(old), &currentFi)
-		if err != nil {
-			//lintignore:R009
-			panic(err)
-		}
-		// convert to type Flow if needed
-		if currentFi.FlowInfo.Name != "" {
-			current = currentFi.FlowInfo
-		}
-		err = json.Unmarshal([]byte(old), &currentF)
-		if err != nil {
-			//lintignore:R009
-			panic(err)
-		}
-		if currentF.GraphData.Elements.Nodes != nil {
-			current = currentF
-		}
-	}
-	if new != "" {
-		desiredFi := dv.FlowImport{}
-		desiredF := dv.Flow{}
-		err = json.Unmarshal([]byte(new), &desiredFi)
-		if err != nil {
-			//lintignore:R009
-			panic(err)
-		}
-		// convert to type Flow if needed
-		if desiredFi.FlowInfo.Name != "" {
-			desired = desiredFi.FlowInfo
-		}
-		err = json.Unmarshal([]byte(new), &desiredF)
-		if err != nil {
-			//lintignore:R009
-			panic(err)
-		}
-		if desiredF.GraphData.Elements.Nodes != nil {
-			desired = desiredF
-		}
-	}
-
-	// Check for Settings, inputSchema, outputSchema, name, FlowStatus, trigger drift
-
-	//ignore logLevel
-	var cSettings, dSettings map[string]interface{}
-
-	if _, ok := current.Settings.(map[string]interface{}); ok {
-		cSettings = current.Settings.(map[string]interface{})
-		delete(cSettings, "logLevel")
-	}
-	if _, ok := desired.Settings.(map[string]interface{}); ok {
-		dSettings = desired.Settings.(map[string]interface{})
-		delete(dSettings, "logLevel")
-	}
-	if !reflect.DeepEqual(cSettings, dSettings) {
-		return false
-	}
-
-	//account for deletion of inputSchema
-	if current.InputSchema != nil && desired.InputSchema == nil {
-		desired.InputSchema = make([]interface{}, 0)
-	}
-	if !reflect.DeepEqual(current.InputSchema, desired.InputSchema) {
-		return false
-	}
-
-	//OutputSchema Diff
-	if !reflect.DeepEqual(current.OutputSchemaCompiled, desired.OutputSchemaCompiled) {
-		return false
-	}
-
-	if !reflect.DeepEqual(current.Trigger, desired.Trigger) {
-		return false
-	}
-
-	if current.Name != desired.Name {
-		return false
-	}
-	if current.FlowStatus != desired.FlowStatus {
-		return false
-	}
-
-	// Variables Diff
-	dVar := []dv.FlowVariable{}
-	for _, v := range desired.Variables {
-		if v.Context == "flow" {
-			dVar = append(dVar, v)
-		}
-	}
-	desired.Variables = dVar
-	cVar := []dv.FlowVariable{}
-	for _, v := range current.Variables {
-		if v.Context == "flow" {
-			cVar = append(cVar, v)
-		}
-	}
-	current.Variables = cVar
-	sort.SliceStable(current.Variables, func(i, j int) bool {
-		return current.Variables[i].Name < current.Variables[j].Name
-	})
-	sort.SliceStable(desired.Variables, func(i, j int) bool {
-		return desired.Variables[i].Name < desired.Variables[j].Name
-	})
-	for i, currentV := range current.Variables {
-		//Check relevant fields only
-		desiredV := desired.Variables[i]
-		if currentV.Fields.DisplayName != desiredV.Fields.DisplayName ||
-			currentV.Type != desiredV.Type ||
-			currentV.Visibility != desiredV.Visibility ||
-			currentV.Fields.Mutable != desiredV.Fields.Mutable ||
-			currentV.Fields.Max != desiredV.Fields.Max ||
-			currentV.Fields.Min != desiredV.Fields.Min {
-			return false
-		}
-	}
-
-	// Overall GraphData Diff
-	if !reflect.DeepEqual(current.GraphData, desired.GraphData) {
-		cGraph := current.GraphData
-		cGraph.Elements.Nodes = nil
-		dGraph := desired.GraphData
-		dGraph.Elements.Nodes = nil
-		// GraphData Diff without Nodes
-		if !reflect.DeepEqual(cGraph, dGraph) {
-			return false
-		}
-		currentNodes, err := json.Marshal(current.GraphData.Elements.Nodes)
-		if err != nil {
-			//lintignore:R009
-			panic(err)
-		}
-		desiredNodes, err := json.Marshal(desired.GraphData.Elements.Nodes)
-		if err != nil {
-			//lintignore:R009
-			panic(err)
-		}
-
-		// Nodes Diff - This is mainly to account for json null vs go nil
-		if string(currentNodes) != string(desiredNodes) {
-			return false
-		}
-	}
-
-	return true
+	return diags
 }
 
-func deployIfNeeded(ctx context.Context, c *dv.APIClient, d *schema.ResourceData, flowId string) error {
-	isDeploy := d.Get("deploy").(bool)
-	if isDeploy {
-		_, err := c.DeployFlow(&c.CompanyID, flowId)
+func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	data := davinci.FlowImport{
+		Name:        p.Name.ValueStringPointer(),
+		Description: p.Description.ValueStringPointer(),
+	}
+
+	err := davinci.Unmarshal([]byte(p.FlowJSON.ValueString()), &data.FlowInfo, davinci.ExportCmpOpts{})
+	if err != nil {
+		diags.AddError(
+			"Error parsing `flow_json`",
+			fmt.Sprintf("Error parsing `flow_json`: %s", err),
+		)
+		return nil, diags
+	}
+
+	data.FlowNameMapping = map[string]string{
+		data.FlowInfo.FlowID: p.Name.ValueString(),
+	}
+
+	var flowConfigObject davinci.FlowConfiguration
+	if !p.FlowConfigurationJSON.IsUnknown() && !p.FlowConfigurationJSON.IsNull() {
+
+		err = davinci.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &flowConfigObject, davinci.ExportCmpOpts{})
 		if err != nil {
-			return fmt.Errorf("Possible misconfigured flow: %v", err)
+			diags.AddError(
+				"Error parsing `flow_configuration_json`",
+				fmt.Sprintf("Error parsing `flow_configuration_json` into flow configuration object: %s", err),
+			)
+			return nil, diags
+		}
+
+		data.FlowInfo.FlowConfiguration = flowConfigObject
+
+	} else {
+
+		// Connection and subflow links
+		err = davinci.Unmarshal([]byte(p.FlowJSON.ValueString()), &flowConfigObject, davinci.ExportCmpOpts{})
+		if err != nil {
+			diags.AddError(
+				"Error parsing `flow_json`",
+				fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
+			)
+			return nil, diags
+		}
+
+		unknownFlowConfigPlan, d := modifyPlanForConnectionSubflowLinkMappings(ctx, &flowConfigObject, p.ConnectionLinks, p.SubFlowLinks)
+		diags.Append(d...)
+		if diags.HasError() {
+			return nil, diags
+		}
+
+		if unknownFlowConfigPlan {
+
+			diags.AddError(
+				"Unknown Flow Import",
+				"The `flow_configuration_json` parameter is unknown.  Cannot complete the plan calculation.",
+			)
+			return nil, diags
+
+		}
+
+		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
+		if err != nil {
+			diags.AddError(
+				"Error converting the flow object to JSON",
+				fmt.Sprintf("Error converting the flow object (from the API response) to JSON in API model parsing.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+			)
+			return nil, diags
+		}
+
+		err = davinci.Unmarshal(jsonFlowConfigBytes, &data.FlowInfo.FlowConfiguration, flowExportCmpOptsConfiguration)
+		if err != nil {
+			diags.AddError(
+				"Error parsing `flow_configuration_json`",
+				fmt.Sprintf("Error parsing `flow_configuration_json`: %s", err),
+			)
+			return nil, diags
 		}
 	}
-	return nil
+
+	return &data, diags
 }
 
-func mapSubFlows(d *schema.ResourceData, flowJson string) (*string, error) {
-	if sf, ok := d.GetOk("subflow_link"); ok {
-		fjMap, err := dv.ParseFlowImportJson(&flowJson)
-		if err != nil {
-			return nil, err
-		}
-		sfList := sf.(*schema.Set).List()
-		for i, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
-			sfProp := &dv.SubFlowProperties{}
-			// Only two types of subflow capabilities use the subflowId and subflowVersionId properties
-			if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
-				sfProp, err = expandSubFlowProps(v.Data.Properties)
-				if err != nil {
-					return nil, err
-				}
-				for _, sfMap := range sfList {
-					sfValues := sfMap.(map[string]interface{})
-					if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
-						sfProp.SubFlowID.Value.Value = sfValues["id"].(string)
-						//TODO implement subflow version
-						// sfProp.SubFlowVersionID.Value = sfValues["subflow_version"].(string)
-					}
-				}
-				properties := v.Data.Properties // G601 (CWE-118)
-				err = mapstructure.Decode(sfProp, &properties)
-				if err != nil {
-					return nil, err
-				}
-				fjMap.FlowInfo.GraphData.Elements.Nodes[i] = v
-			}
-		}
-		fjByte, err := json.Marshal(fjMap)
-		if err != nil {
-			return nil, err
-		}
-		flowJson = string(fjByte)
+func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.FlowUpdate, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var data, stateData davinci.FlowUpdate
+
+	err := davinci.Unmarshal([]byte(p.FlowConfigurationJSON.ValueString()), &data, davinci.ExportCmpOpts{})
+	if err != nil {
+		diags.AddError(
+			"Error parsing `flow_json`",
+			fmt.Sprintf("Error parsing `flow_json`: %s", err),
+		)
+		return nil, diags
 	}
-	return &flowJson, nil
+
+	if !p.Name.IsNull() {
+		name := p.Name.ValueString()
+		data.Name = &name
+	}
+
+	if !p.Description.IsNull() {
+		description := p.Description.ValueString()
+		data.Description = &description
+	}
+
+	err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData, davinci.ExportCmpOpts{})
+	if err != nil {
+		diags.AddError(
+			"Error parsing `flow_configuration_json`",
+			fmt.Sprintf("Error parsing `flow_configuration_json`: %s", err),
+		)
+		return nil, diags
+	}
+
+	diags.Append(modifyPlanForMergedProperties(&data.FlowUpdateConfiguration, stateData.FlowUpdateConfiguration)...)
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	return &data, diags
 }
 
-func expandSubFlowProps(subflowProps map[string]interface{}) (*dv.SubFlowProperties, error) {
+func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
+	var diags diag.Diagnostics
 
-	sfp, ok := subflowProps["subFlowId"].(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("Flow Validation Error: subFlowId key not found in subflow properties")
-	}
-	sfpVal, ok := sfp["value"].(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("Flow Validation Error: subFlowId value not found in subflow properties")
-	}
-	sfId := dv.SubFlowID{
-		Value: dv.SubFlowValue{
-			Value: sfpVal["value"].(string),
-			Label: sfpVal["label"].(string),
-		},
-	}
-	subflowVersionId, ok := subflowProps["subFlowVersionId"].(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("Flow Validation Error: subFlowVersionId not found in subflow properties")
-	}
-	var sfvidString string
-	if subflowVersionId["value"] == nil {
-		return nil, fmt.Errorf("Flow Validation Error: subFlowVersionId.value not found in subflow properties")
-	}
-	switch subflowVersionId["value"].(type) {
-	case int:
-		sfvidString = strconv.Itoa(subflowVersionId["value"].(int))
-	case float64:
-		sfvidString = strconv.FormatFloat(subflowVersionId["value"].(float64), 'f', -1, 64)
-	case string:
-		sfvidString = subflowVersionId["value"].(string)
-	default:
-		return nil, fmt.Errorf("Flow Validation Error: subflow versionId is not a string or int")
+	if apiObject == nil {
+		diags.AddError(
+			"Data object missing",
+			"Cannot convert the data object to state as the data object is nil.  Please report this to the provider maintainers.",
+		)
+
+		return diags
 	}
 
-	sfv := dv.SubFlowVersionID{
-		Value: sfvidString,
+	p.Id = framework.StringToTF(apiObject.FlowID)
+	p.EnvironmentId = framework.StringToTF(apiObject.CompanyID)
+
+	jsonConfigurationBytes, err := davinci.Marshal(apiObject.FlowConfiguration, flowExportCmpOptsConfiguration)
+	if err != nil {
+		diags.AddError(
+			"Error converting the flow object configuration to JSON",
+			fmt.Sprintf("Error converting the flow object configuration (from the API response) to JSON.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+		)
+		return diags
 	}
-	if sfId.Value.Value == "" || sfv.Value == "" {
-		return nil, fmt.Errorf("Flow Validation Error: subflow value or versionId is empty")
+
+	p.FlowConfigurationJSON = framework.DaVinciExportTypeToTF(string(jsonConfigurationBytes[:]))
+
+	jsonBytes, err := davinci.Marshal(apiObject, davinci.ExportCmpOpts{})
+	if err != nil {
+		diags.AddError(
+			"Error converting the flow object to JSON",
+			fmt.Sprintf("Error converting the flow object (from the API response) to JSON in recording state.  This is a bug in the provider, please report this to the provider maintainers. Error: %s", err),
+		)
+		return diags
 	}
-	subflow := dv.SubFlowProperties{
-		SubFlowID:        sfId,
-		SubFlowVersionID: sfv,
+
+	p.FlowExportJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]))
+
+	if p.FlowJSON.IsNull() {
+		p.FlowJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]))
 	}
-	return &subflow, nil
+
+	if apiObject.DeployedDate != nil {
+		p.Deploy = types.BoolValue(true)
+	} else {
+		p.Deploy = types.BoolValue(false)
+	}
+
+	p.Name = framework.StringToTF(apiObject.Name)
+
+	if apiObject.Description != nil {
+		p.Description = framework.StringToTF(*apiObject.Description)
+	}
+
+	var d diag.Diagnostics
+	p.FlowVariables, d = flowVariablesToTF(apiObject.Variables)
+	diags.Append(d...)
+
+	return diags
 }
 
-func mapFlowConnections(d *schema.ResourceData, flowJson string) (*string, error) {
-	if conns, ok := d.GetOk("connection_link"); ok {
-		fjMap, err := dv.ParseFlowImportJson(&flowJson)
-		if err != nil {
-			return nil, err
-		}
-		connList := conns.(*schema.Set).List()
-		for i, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
-			for _, connMap := range connList {
-				connValues := connMap.(map[string]interface{})
-				if connValues["name"].(string) == v.Data.Name {
-					v.Data.ConnectionID = connValues["id"].(string)
-				}
-			}
-			fjMap.FlowInfo.GraphData.Elements.Nodes[i] = v
-		}
-		fjByte, err := json.Marshal(fjMap)
-		if err != nil {
-			return nil, err
-		}
-		flowJson = string(fjByte)
+func flowVariablesToTF(apiObject []davinci.FlowVariable) (types.Set, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	tfObjType := types.ObjectType{AttrTypes: flowVariablesTFObjectTypes}
+
+	if apiObject == nil {
+		return types.SetNull(tfObjType), diags
 	}
-	return &flowJson, nil
+
+	variablesSet := make([]attr.Value, 0)
+
+	for _, variable := range apiObject {
+
+		varStateSimpleName := strings.Split(variable.Name, "##SK##")
+		if varStateSimpleName[0] == "" || len(varStateSimpleName) == 1 {
+
+			diags.AddError(
+				"Error parsing variable name",
+				fmt.Sprintf("Unable to parse variable name: %s for state", variable.Name),
+			)
+
+			return types.SetNull(tfObjType), diags
+		}
+
+		attributesMap := map[string]attr.Value{
+			"id":          framework.StringToTF(variable.Name),
+			"name":        framework.StringToTF(varStateSimpleName[0]),
+			"description": framework.StringOkToTF(variable.Label, true),
+			"flow_id":     framework.StringOkToTF(variable.FlowID, true),
+			"context":     framework.StringOkToTF(variable.Context, true),
+			"type":        framework.StringToTF(variable.Type),
+			"mutable":     framework.BoolOkToTF(variable.Fields.Mutable, true),
+			"min":         framework.Int32OkToTF(variable.Fields.Min, true),
+			"max":         framework.Int32OkToTF(variable.Fields.Max, true),
+		}
+
+		flattenedObj, d := types.ObjectValue(flowVariablesTFObjectTypes, attributesMap)
+		diags.Append(d...)
+
+		variablesSet = append(variablesSet, flattenedObj)
+
+	}
+
+	returnVar, d := types.SetValue(tfObjType, variablesSet)
+	diags.Append(d...)
+
+	return returnVar, diags
 }
 
-// validate that each connection and subflow in flow_json has a corresponding dependency
-func validateFlowDeps(d *schema.ResourceData, diags *diag.Diagnostics) {
-	if flowJson, ok := d.Get("flow_json").(string); ok {
-		fjMap, err := dv.ParseFlowImportJson(&flowJson)
+// Validate if there are connections in the flow that should have a connection mapping, and flow connector instances that should have a subflow mapping
+func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinciexporttype.ParsedValue, connectionLinks basetypes.SetValue, subFlowLinks basetypes.SetValue, allowUnknownValues bool) (diags diag.Diagnostics) {
+
+	if !flowJSON.IsUnknown() && !connectionLinks.IsUnknown() && !subFlowLinks.IsUnknown() {
+
+		var flowConfigObject davinci.FlowConfiguration
+		err := davinci.Unmarshal([]byte(flowJSON.ValueString()), &flowConfigObject, davinci.ExportCmpOpts{})
 		if err != nil {
-			*diags = append(*diags, diag.Diagnostic{
-				Severity: diag.Error,
-				Summary:  "Error parsing flow_json",
-				Detail:   err.Error(),
-			})
+			diags.AddError(
+				"Error parsing `flow_json`",
+				fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
+			)
 			return
 		}
-		//prepare de-duped map of connections
-		flowConns := map[string]struct {
-			ConnectionID   string
-			ConnectionName string
-		}{}
-		for _, v := range fjMap.FlowInfo.GraphData.Elements.Nodes {
-			if v.Data.Name == "" || v.Data.ConnectionID == "" {
-				continue
-			}
-			flowConns[v.Data.ConnectionID] = struct {
-				ConnectionID   string
-				ConnectionName string
-			}{
-				ConnectionID:   v.Data.ConnectionID,
-				ConnectionName: v.Data.Name,
-			}
-			// validate subflows
-			if v.Data.ConnectorID == "flowConnector" && (v.Data.CapabilityName == "startSubFlow" || v.Data.CapabilityName == "startUiSubFlow") {
-				foundSubflow := false
-				sfProp, err := expandSubFlowProps(v.Data.Properties)
-				if err != nil {
-					*diags = append(*diags, diag.Diagnostic{
-						Severity: diag.Error,
-						Summary:  "Error Validating flow_json",
-						Detail:   err.Error(),
-					})
-					return
-				}
-				if subflows, ok := d.GetOk("subflow_link"); ok {
-					sfList := subflows.(*schema.Set).List()
-					for _, sfMap := range sfList {
-						sfValues := sfMap.(map[string]interface{})
-						if sfValues["name"].(string) == sfProp.SubFlowID.Value.Label {
-							foundSubflow = true
+
+		var connectionLinksPlan []FlowConnectionLinkResourceModel
+		diags.Append(connectionLinks.ElementsAs(ctx, &connectionLinksPlan, false)...)
+
+		var subflowLinksPlan []FlowSubflowLinkResourceModel
+		diags.Append(subFlowLinks.ElementsAs(ctx, &subflowLinksPlan, false)...)
+
+		if flowConfigObject.GraphData.Elements != nil && flowConfigObject.GraphData.Elements.Nodes != nil && len(flowConfigObject.GraphData.Elements.Nodes) > 0 {
+
+			for _, node := range flowConfigObject.GraphData.Elements.Nodes {
+
+				if node.Data != nil && (node.Data.NodeType != nil && *node.Data.NodeType == "CONNECTION") || (node.Data.ConnectorID != nil && *node.Data.ConnectorID != "") {
+
+					connectionLinkFound := false
+
+					// Validate the connection Link mapping
+					for _, connectionLinkPlan := range connectionLinksPlan {
+
+						if !allowUnknownValues && (connectionLinkPlan.ReplaceImportConnectionId.IsUnknown() || connectionLinkPlan.Name.IsUnknown() || connectionLinkPlan.Id.IsUnknown()) {
+							diags.AddAttributeError(
+								path.Root("connection_link"),
+								"Unknown Connection Links",
+								"One of `connection_link.replace_connection_id`, `connection_link.name`, `connection_link.id` is unknown.  Cannot validate the connection link mappings.",
+							)
+
+							return diags
+						}
+
+						if node.Data.ConnectionID != nil && !connectionLinkPlan.ReplaceImportConnectionId.IsNull() && connectionLinkPlan.ReplaceImportConnectionId.ValueString() == *node.Data.ConnectionID {
+							connectionLinkFound = true
+						}
+
+						if node.Data.Name != nil && connectionLinkPlan.Name.ValueString() == *node.Data.Name {
+							connectionLinkFound = true
+						}
+
+						if connectionLinkPlan.ReplaceImportConnectionId.IsUnknown() || connectionLinkPlan.Name.IsUnknown() {
+							connectionLinkFound = true // defer this validation to the plan step
+						}
+
+					}
+
+					if !connectionLinkFound {
+						diags.AddAttributeWarning(
+							path.Root("connection_link"),
+							"Unmapped node connection",
+							fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a node connection that does not have a `connection_link` mapping.  This behaviour is deprecated - going forward all connections in a flow must have a `connection_link` block parameter defined.\n\n"+
+								"Consider using the `davinci_connection` resource (to create a Terraform managed connection) with the `davinci_flow.connection_link` parameter (to map the Terraform managed connection with the connection in the flow).\n"+
+								"For more information and guidance on how to correctly configure flow connections, visit https://github.com/pingidentity/terraform-provider-davinci/issues/272\n\n"+
+								"Connection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID),
+						)
+					}
+
+					// Validate the subflow link mapping if necessary
+					if node.Data.ConnectorID != nil && *node.Data.ConnectorID == "flowConnector" {
+						subflowLinkFound := false
+
+						for _, subflowLinkPlan := range subflowLinksPlan {
+
+							if !allowUnknownValues && (subflowLinkPlan.ReplaceImportSubflowId.IsUnknown() || subflowLinkPlan.Name.IsUnknown() || subflowLinkPlan.Id.IsUnknown()) {
+								diags.AddAttributeError(
+									path.Root("subflow_link"),
+									"Unknown SubFlow Links",
+									"One of `subflow_link.replace_subflow_id`, `subflow_link.name`, `subflow_link.id` is unknown.  Cannot validate the flow connector subflow link mappings.",
+								)
+
+								return diags
+							}
+
+							if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Value != nil && !subflowLinkPlan.ReplaceImportSubflowId.IsNull() && subflowLinkPlan.ReplaceImportSubflowId.ValueString() == *node.Data.Properties.SubFlowID.Value.Value {
+								subflowLinkFound = true
+							}
+
+							if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Label != nil && subflowLinkPlan.Name.ValueString() == *node.Data.Properties.SubFlowID.Value.Label {
+								subflowLinkFound = true
+							}
+
+							if subflowLinkPlan.ReplaceImportSubflowId.IsUnknown() && subflowLinkPlan.Name.IsUnknown() {
+								subflowLinkFound = true // defer this validation to the plan step
+							}
+						}
+
+						if !subflowLinkFound {
+							diags.AddAttributeWarning(
+								path.Root("subflow_link"),
+								"Unmapped flow connector subflow",
+								fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a subflow referenced in a flow connector that does not have a `subflow_link` mapping.  This behaviour is deprecated - going forward all subflows defined in a flow must have a `subflow_link` block parameter defined.\n\n"+
+									"Consider using the `davinci_flow` resource (to create the subflow) with the `davinci_flow.subflow_link` parameter (to map the Terraform managed subflow with the main flow).\n"+
+									"For more information and guidance on how to correctly configure subflow connections, visit https://github.com/pingidentity/terraform-provider-davinci/issues/273\n\n"+
+									"Connection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v\nSubflow Name: %v\nSubflow ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID, *node.Data.Properties.SubFlowID.Value.Label, *node.Data.Properties.SubFlowID.Value.Value),
+							)
 						}
 					}
 				}
-				if !foundSubflow {
-					*diags = append(*diags, diag.Diagnostic{
-						Severity: diag.Warning,
-						Summary:  "Unmapped Subflow Dependency",
-						Detail:   fmt.Sprintf("Flow '%s' contains subflow named '%s' which is not defined in dependent subflows. \nThis may lead to incorrect subflow mapping", fjMap.Name, sfProp.SubFlowID.Value.Label),
-					})
-				}
 			}
 		}
-		// validate connections
-		for _, v := range flowConns {
-			foundConnection := false
-			if conns, ok := d.GetOk("connection_link"); ok {
-				connList := conns.(*schema.Set).List()
-				for _, connMap := range connList {
-					connValues := connMap.(map[string]interface{})
-					if connValues["name"].(string) == v.ConnectionName {
-						foundConnection = true
+	}
+
+	if !allowUnknownValues && flowJSON.IsUnknown() {
+		diags.AddAttributeError(
+			path.Root("flow_json"),
+			"Unknown Flow Import",
+			"The `flow_json` parameter is unknown.  Cannot validate the connection link mappings.",
+		)
+	}
+
+	if !allowUnknownValues && connectionLinks.IsUnknown() {
+		diags.AddAttributeError(
+			path.Root("connection_link"),
+			"Unknown Connection Links",
+			"The `connection_link` parameter is unknown.  Cannot validate the connection link mappings.",
+		)
+	}
+
+	if !allowUnknownValues && subFlowLinks.IsUnknown() {
+		diags.AddAttributeError(
+			path.Root("subflow_link"),
+			"Unknown Subflow Links",
+			"The `subflow_link` parameter is unknown.  Cannot validate the flow connector subflow link mappings.",
+		)
+	}
+
+	return diags
+}
+
+// Modify the plan for connector and subflow re-mapping
+func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigObject *davinci.FlowConfiguration, connectionLinks basetypes.SetValue, subflowLinks basetypes.SetValue) (unknownFlowConfigPlan bool, diags diag.Diagnostics) {
+
+	// Update connectors if we know the config of connection links
+	unknownFlowConfigPlan = connectionLinks.IsUnknown() || subflowLinks.IsUnknown()
+
+	if !unknownFlowConfigPlan && flowConfigObject.GraphData.Elements != nil && flowConfigObject.GraphData.Elements.Nodes != nil && len(flowConfigObject.GraphData.Elements.Nodes) > 0 {
+
+		var connectionLinksPlan []FlowConnectionLinkResourceModel
+		diags.Append(connectionLinks.ElementsAs(ctx, &connectionLinksPlan, false)...)
+
+		var subflowLinksPlan []FlowSubflowLinkResourceModel
+		diags.Append(subflowLinks.ElementsAs(ctx, &subflowLinksPlan, false)...)
+
+		newNodes := make([]davinci.Node, 0)
+		for _, node := range flowConfigObject.GraphData.Elements.Nodes {
+
+			if !unknownFlowConfigPlan && ((node.Data.NodeType != nil && *node.Data.NodeType == "CONNECTION") || (node.Data.ConnectorID != nil && *node.Data.ConnectorID != "")) {
+
+				// Find the connection_link reference
+				for _, connectionLinkPlan := range connectionLinksPlan {
+
+					if connectionLinkPlan.ReplaceImportConnectionId.IsUnknown() || connectionLinkPlan.Name.IsUnknown() || connectionLinkPlan.Id.IsUnknown() {
+						unknownFlowConfigPlan = true
+						break
+					}
+
+					if node.Data.ConnectionID != nil && !connectionLinkPlan.ReplaceImportConnectionId.IsNull() && connectionLinkPlan.ReplaceImportConnectionId.ValueString() == *node.Data.ConnectionID {
+						// If the replace import connection ID is known and not null, we can replace the connection ID in the flowConfigObject
+
+						// replace the ID and name in the flowConfigObject
+						connectionID := connectionLinkPlan.Id.ValueString()
+						connectionName := connectionLinkPlan.Name.ValueString()
+						node.Data.ConnectionID = &connectionID
+						node.Data.Name = &connectionName
+
+					} else if node.Data != nil && node.Data.Name != nil && connectionLinkPlan.Name.ValueString() == *node.Data.Name {
+						// If we're here, the replace import connection ID is known to be null, so we do name matching
+
+						// replace the ID in the flowConfigObject
+						connectionID := connectionLinkPlan.Id.ValueString()
+						node.Data.ConnectionID = &connectionID
+					}
+				}
+
+				if !unknownFlowConfigPlan && node.Data.ConnectorID != nil && *node.Data.ConnectorID == "flowConnector" {
+
+					// Find the subflow_link reference
+					for _, subflowLinkPlan := range subflowLinksPlan {
+
+						if subflowLinkPlan.ReplaceImportSubflowId.IsUnknown() || subflowLinkPlan.Name.IsUnknown() || subflowLinkPlan.Id.IsUnknown() {
+							unknownFlowConfigPlan = true
+							break
+						}
+
+						// If the replace import connection ID is known and not null, we can replace the connection ID in the flowConfigObject
+						if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Value != nil && !subflowLinkPlan.ReplaceImportSubflowId.IsNull() && subflowLinkPlan.ReplaceImportSubflowId.ValueString() == *node.Data.Properties.SubFlowID.Value.Value {
+
+							// replace the ID and label
+							subflowPlanValue := subflowLinkPlan.Id.ValueString()
+							subflowPlanLabel := subflowLinkPlan.Name.ValueString()
+							node.Data.Properties.SubFlowID.Value.Value = &subflowPlanValue
+							node.Data.Properties.SubFlowID.Value.Label = &subflowPlanLabel
+
+						} else if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Label != nil && subflowLinkPlan.Name.ValueString() == *node.Data.Properties.SubFlowID.Value.Label {
+							// If we're here, the replace import connection ID is known to be null, so we do name matching
+
+							// replace the ID in the flowConfigObject
+							subflowPlanValue := subflowLinkPlan.Id.ValueString()
+							node.Data.Properties.SubFlowID.Value.Value = &subflowPlanValue
+						}
 					}
 				}
 			}
-			if !foundConnection {
-				*diags = append(*diags, diag.Diagnostic{
-					Severity: diag.Warning,
-					Summary:  "Unmapped Connection Dependency",
-					Detail:   fmt.Sprintf("Flow '%s' contains connection '%s' which is not defined in dependent connections. \nThis may lead to autogeneration of unmanaged connections or incorrect connection mapping", fjMap.Name, v.ConnectionName),
-				})
-			}
+
+			newNodes = append(newNodes, node)
 		}
+
+		flowConfigObject.GraphData.Elements.Nodes = newNodes
 	}
+
+	return unknownFlowConfigPlan, diags
 }
 
-func getFlowVariables(flowJson string) ([]dv.FlowVariable, error) {
-	flowOutput, err := dv.MakeFlowPayload(&flowJson, "Flow")
-	if err == nil {
-		var flow dv.Flow
-		if err = json.Unmarshal([]byte(*flowOutput), &flow); err != nil {
-			return nil, err
-		}
-		return flow.Variables, nil
+func modifyPlanForMergedProperties(flowConfigObject *davinci.FlowUpdateConfiguration, stateFlowConfigObject davinci.FlowUpdateConfiguration) (diags diag.Diagnostics) {
+
+	// Must merge settings back into flow import if it's missing
+	if stateFlowConfigObject.Settings != nil && flowConfigObject.Settings == nil {
+		flowConfigObject.Settings = stateFlowConfigObject.Settings
+
+		diags.AddAttributeWarning(
+			path.Root("flow_configuration_json"),
+			"Implicitly merged settings",
+			"The `flow_json` import does not contain flow settings, but the existing state does.  To maintain consistency with the DaVinci service, the settings from the Terraform state have been merged into the import.\n\nIf this is not the desired behaviour, please update the DaVinci flow in the source environment to include the desired flow settings and re-export.",
+		)
 	}
-	flowOutput, err = dv.MakeFlowPayload(&flowJson, "FlowImport")
-	if err == nil {
-		var flow dv.FlowImport
-		if err = json.Unmarshal([]byte(*flowOutput), &flow); err != nil {
-			return nil, err
-		}
-		return flow.FlowInfo.Variables, nil
-	}
-	return nil, fmt.Errorf("Error: Unable to abstract flow variables from flow_json")
+
+	return diags
+
 }

@@ -12,19 +12,14 @@ description: |-
 ## Example Usage
 
 ```terraform
-data "davinci_connections" "all" {
+data "davinci_connections" "all_connections" {
   environment_id = var.pingone_environment_id
 }
 
-data "davinci_connections" "http" {
+data "davinci_connections" "all_connections_filtered_by_connector_id" {
   environment_id = var.pingone_environment_id
-  // This will filter output to only include connections using the "httpConnector" type. 
-  // Helpful for validation that only one of a certain type exists.
+
   connector_ids = ["httpConnector"]
-}
-
-output "davinci_connection" {
-  value = data.davinci_connection.all.connections
 }
 ```
 
@@ -33,16 +28,25 @@ output "davinci_connection" {
 
 ### Required
 
-- `environment_id` (String) PingOne environment id
+- `environment_id` (String) The ID of the PingOne environment to retrieve connections for. Must be a valid PingOne resource ID.
 
 ### Optional
 
-- `connector_ids` (List of String) Filters list of returned connections
+- `connector_ids` (List of String) A list of connector IDs to filter from the returned connections.
+- `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
 
 ### Read-Only
 
-- `connections` (Set of Object) Returned set of connections matching environment and/or the filter criteria. (see [below for nested schema](#nestedatt--connections))
+- `connections` (Set of Object) The returned set of connections matching the environment and the optional filter criteria. (see [below for nested schema](#nestedatt--connections))
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `read` (String)
+
 
 <a id="nestedatt--connections"></a>
 ### Nested Schema for `connections`

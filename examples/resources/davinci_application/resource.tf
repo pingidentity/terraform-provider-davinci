@@ -1,9 +1,9 @@
-// example of bootstrapped application
-resource "davinci_application" "use_default_flow" {
-  name           = "PingOne SSO Connection"
+resource "davinci_application" "my_awesome_application" {
   environment_id = var.pingone_environment_id
+
+  name = "My Awesome Application"
+
   oauth {
-    enabled = true
     values {
       allowed_grants                = ["authorizationCode"]
       allowed_scopes                = ["openid", "profile"]
@@ -12,34 +12,32 @@ resource "davinci_application" "use_default_flow" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  // `policy` is deprecated
-  policy {
-    name   = "PingOne - Authentication"
-    status = "enabled"
-    policy_flow {
-      flow_id    = var.davinci_flow_id
-      version_id = -1
-      weight     = 100
-    }
-  }
-  // `policy` is deprecated
-  policy {
-    name   = "PingOne - Registration"
-    status = "enabled"
-    policy_flow {
-      flow_id    = resource.davinci_flow.registration.id
-      version_id = -1
-      weight     = 100
-    }
-  }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
+}
+
+resource "davinci_application_flow_policy" "authentication_flow_policy" {
+  environment_id = var.pingone_environment_id
+  application_id = davinci_application.my_awesome_application.id
+
+  name   = "PingOne - Authentication"
+  status = "enabled"
+
+  policy_flow {
+    flow_id    = davinci_flow.authentication.id
+    version_id = -1
+    weight     = 100
   }
 }
 
-output "default_app_test_key" {
-  value = resource.davinci_application.use_default_flow.api_keys.test
+resource "davinci_application_flow_policy" "registration_flow_policy" {
+  environment_id = var.pingone_environment_id
+  application_id = davinci_application.my_awesome_application.id
+
+  name   = "PingOne - Authentication"
+  status = "enabled"
+
+  policy_flow {
+    flow_id    = davinci_flow.authentication.id
+    version_id = -1
+    weight     = 100
+  }
 }

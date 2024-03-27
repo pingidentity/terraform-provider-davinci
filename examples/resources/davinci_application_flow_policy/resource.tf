@@ -1,9 +1,9 @@
-// example of bootstrapped application
-resource "davinci_application" "registration_flow_app" {
-  name           = "PingOne SSO Connection"
+resource "davinci_application" "my_awesome_registration_flow_application" {
   environment_id = var.pingone_environment_id
+
+  name = "My Awesome Registration Application"
+
   oauth {
-    enabled = true
     values {
       allowed_grants                = ["authorizationCode"]
       allowed_scopes                = ["openid", "profile"]
@@ -12,21 +12,17 @@ resource "davinci_application" "registration_flow_app" {
       redirect_uris                 = ["https://auth.pingone.com/0000-0000-000/rp/callback/openid_connect"]
     }
   }
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
 }
 
-resource "davinci_application_flow_policy" "registration_flow_policy" {
+resource "davinci_application_flow_policy" "my_awesome_registration_flow_application_policy" {
   environment_id = var.pingone_environment_id
-  application_id = davinci_application.registration_flow_app.id
-  name           = "PingOne - Registration"
-  status         = "enabled"
+  application_id = davinci_application.my_awesome_registration_flow_application.id
+
+  name   = "PingOne - Registration"
+  status = "enabled"
+
   policy_flow {
-    flow_id    = resource.davinci_flow.registration.id
+    flow_id    = davinci_flow.registration.id
     version_id = -1
     weight     = 100
   }

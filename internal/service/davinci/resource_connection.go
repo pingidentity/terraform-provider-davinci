@@ -3,15 +3,15 @@ package davinci
 import (
 	"context"
 	"fmt"
-	"regexp"
+	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
-	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
+	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -25,52 +25,57 @@ func ResourceConnection() *schema.Resource {
 			"connector_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "DaVinci internal connector type. Only found via API read response (e.g Http Connector is 'httpConnector')",
+				Description: "The DaVinci connector type identifier. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate connector ID value. This field is immutable and will trigger a replace plan if changed.",
+				ForceNew:    true,
 			},
 			"environment_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "PingOne environment id",
+				Description: "The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+
+				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
+				ForceNew:         true,
 			},
 			"customer_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Internal DaVinci id. Should not be set by user.",
+				Description: "An ID that represents the customer tenant.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments.",
+				Description: "Name of the connection displayed in UI. Also used for mapping id on flows between environments. This field is immutable and will trigger a replace plan if changed.",
+				ForceNew:    true,
 			},
 			"created_date": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Resource creation date as epoch.",
+				Description: "Resource creation date as epoch timestamp.",
 			},
 			"property": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Connection properties. These are specific to the connector type. Get connection properties from connection API read response.",
-				// Not yet implemented
-				// ConflictsWith: []string{"custom_auth"},
+				Description: "Connection properties. These are specific to the connector type configured in `connector_id`. See the [DaVinci Connection Definitions](#davinci-connection-definitions) below to find the appropriate property name/value pairs for the connection.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Name of the property.",
+							Description: "The name of the property.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Sensitive:   true,
-							Description: "Value of the property as string. If the property is an array, use a comma separated string.",
+							Description: "The value of the property as string. If the property is an array, use a comma separated string.",
 						},
 						"type": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: string or boolean. Use 'string' for array",
+							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: `string` or `boolean`. Use `string` for array types.",
 							ValidateFunc: validation.StringInSlice([]string{"string", "boolean"}, false),
+
+							Default: "string",
 						},
 					},
 				},
@@ -86,39 +91,49 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
+	connection := dv.Connection{}
+
+	if v, ok := d.Get("connector_id").(string); ok {
+		connection.ConnectorID = &v
 	}
 
-	connection := dv.Connection{
-		ConnectorID: d.Get("connector_id").(string),
-		Name:        d.Get("name").(string),
+	if v, ok := d.Get("name").(string); ok {
+		connection.Name = &v
 	}
 
-	connection.Properties = *makeProperties(d)
+	connection.Properties = makeProperties(d)
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.CreateInitializedConnection(&c.CompanyID, &connection)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.CreateInitializedConnectionWithResponse(environmentID, &connection)
+		},
+	)
 
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resp, ok := sdkRes.(*dv.Connection)
-	if !ok || resp.Name == "" {
+	if !ok || resp.Name == nil || *resp.Name == "" {
 		err = fmt.Errorf("failed to cast created response to Connection")
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
-	d.SetId(resp.ConnectionID)
+	d.SetId(*resp.ConnectionID)
 
 	// Set properties based on incoming config after successful create
 	// not using reponse itself because it may contain obfuscated values
 	configProps := makePropsListMap(d)
 	if err := d.Set("property", configProps); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	resourceConnectionRead(ctx, d, meta)
@@ -141,52 +156,63 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	connId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.ReadConnection(&c.CompanyID, connId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	sdkRes, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.ReadConnectionWithResponse(environmentID, connId)
+		},
+	)
 	if err != nil {
-		// currently a 400 (rather than 404) is returned if the connection is not found.
-		// The comparison is made to match the entire error message to avoid false positives
-		if strings.Contains(err.Error(), "status: 400, body: {\"cause\":null,\"logLevel\":\"error\",\"serviceName\":null,\"message\":\"Error retrieving connectors\",\"errorMessage\":\"Error retrieving connectors\",\"success\":false,\"httpResponseCode\":400,\"code\":7005}") {
-			d.SetId("")
-			return diags
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			if dvError.HttpResponseCode == http.StatusNotFound || dvError.Code == dv.DV_ERROR_CODE_CONNECTION_NOT_FOUND {
+				d.SetId("")
+				return diags
+			}
 		}
-		return diag.FromErr(err)
+
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	res, ok := sdkRes.(*dv.Connection)
 	if !ok {
 		err = fmt.Errorf("Unable to cast Connection type to response from Davinci API on connection id: %v", connId)
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
-	d.SetId(res.ConnectionID)
+	d.SetId(*res.ConnectionID)
 
 	if err := d.Set("name", res.Name); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("connector_id", res.ConnectorID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
-	if err := d.Set("created_date", res.CreatedDate); err != nil {
-		return diag.FromErr(err)
+	if err := d.Set("created_date", res.CreatedDate.UnixMilli()); err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("environment_id", res.CompanyID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	if err := d.Set("customer_id", res.CustomerID); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
-	props, err := flattenConnectionProperties(&res.Properties)
+	props, err := flattenConnectionProperties(res.Properties)
 	if err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	// // override props with state props if obfuscated
 	stateProps := makePropsListMap(d)
@@ -201,45 +227,62 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 	}
 
 	if err := d.Set("property", props); err != nil {
-		return diag.FromErr(err)
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 	return diags
 }
 
 func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	c := meta.(*dv.APIClient)
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
 	connId := d.Id()
-	if d.HasChanges("property", "name") {
+	// API only allows property changes
+	if d.HasChanges("property") {
 		connection := dv.Connection{
-			ConnectorID:  d.Get("connector_id").(string),
-			Name:         d.Get("name").(string),
-			ConnectionID: connId,
+			ConnectionID: &connId,
 		}
 
-		connection.Properties = *makeProperties(d)
+		if v, ok := d.Get("connector_id").(string); ok {
+			connection.ConnectorID = &v
+		}
 
-		sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-			return c.UpdateConnection(&c.CompanyID, &connection)
-		}, nil)
+		if v, ok := d.Get("name").(string); ok {
+			connection.Name = &v
+		}
+
+		connection.Properties = makeProperties(d)
+
+		environmentID := d.Get("environment_id").(string)
+
+		sdkRes, err := sdk.DoRetryable(
+			ctx,
+			c,
+			environmentID,
+			func() (interface{}, *http.Response, error) {
+				return c.UpdateConnectionWithResponse(environmentID, &connection)
+			},
+		)
 		if err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 
 		res, ok := sdkRes.(*dv.Connection)
-		if !ok || res.Name == "" {
+		if !ok || res.Name == nil || *res.Name == "" {
 			err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
+
 		// Set properties based on incoming config after successful create
 		// not using reponse itself because it may contain obfuscated values
 		configProps := makePropsListMap(d)
 		if err := d.Set("property", configProps); err != nil {
-			return diag.FromErr(err)
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
 		}
 	}
 
@@ -250,46 +293,47 @@ func resourceConnectionDelete(ctx context.Context, d *schema.ResourceData, meta 
 	c := meta.(*dv.APIClient)
 	var diags diag.Diagnostics
 
-	err := sdk.CheckAndRefreshAuth(ctx, c, d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
 	connId := d.Id()
 
-	sdkRes, err := sdk.DoRetryable(ctx, func() (interface{}, error) {
-		return c.DeleteConnection(&c.CompanyID, connId)
-	}, nil)
+	environmentID := d.Get("environment_id").(string)
+
+	_, err := sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.DeleteConnectionWithResponse(environmentID, connId)
+		},
+	)
 	if err != nil {
-		return diag.FromErr(err)
+		if dvError, ok := err.(dv.ErrorResponse); ok {
+			// Can indicate environment already deleted/missing
+			if dvError.HttpResponseCode == http.StatusNotFound && dvError.Code == dv.DV_ERROR_CODE_CONNECTION_NOT_FOUND {
+				return diags
+			}
+		}
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
-
-	res, ok := sdkRes.(*dv.Message)
-	if !ok || res.Message == "" {
-		err = fmt.Errorf("Unable to parse update response from Davinci API on connection id: %v", connId)
-		return diag.FromErr(err)
-	}
-
-	d.SetId("")
 
 	return diags
 }
 
 func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
 
-	idComponents := []utils.ImportComponent{
+	idComponents := []framework.ImportComponent{
 		{
 			Label:  "environment_id",
-			Regexp: regexp.MustCompile(`[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}`),
+			Regexp: verify.P1ResourceIDRegexp,
 		},
 		{
 			Label:     "davinci_connection_id",
-			Regexp:    regexp.MustCompile(`[a-f0-9]{32}`),
+			Regexp:    verify.P1DVResourceIDRegexp,
 			PrimaryID: true,
 		},
 	}
 
-	attributes, err := utils.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(d.Id(), idComponents...)
 	if err != nil {
 		return nil, err
 	}
@@ -305,12 +349,12 @@ func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta 
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[string]interface{}, error) {
+func flattenConnectionProperties(connectionProperties map[string]interface{}) ([]map[string]interface{}, error) {
 	if connectionProperties == nil {
-		return nil, fmt.Errorf("no properties")
+		return nil, nil
 	}
 	connProps := []map[string]interface{}{}
-	for propName, propVal := range *connectionProperties {
+	for propName, propVal := range connectionProperties {
 		pMap := propVal.(map[string]interface{})
 		if pMap == nil {
 			return nil, fmt.Errorf("Unable to assert property values for %v\n", propName)
@@ -331,10 +375,12 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 			case "string", "":
 				if _, ok := pMap["value"].(string); ok {
 					thisProp["value"] = pMap["value"].(string)
+					thisProp["type"] = "string"
 				}
 			case "boolean":
 				if pValue, ok := pMap["value"].(bool); ok {
 					thisProp["value"] = strconv.FormatBool(pValue)
+					thisProp["type"] = "boolean"
 				}
 			default:
 				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string or boolean is currently supported", thisProp["name"])
@@ -344,10 +390,12 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 			case string:
 				if _, ok := pMap["value"].(string); ok {
 					thisProp["value"] = pMap["value"].(string)
+					thisProp["type"] = "string"
 				}
 			case bool:
 				if pValue, ok := pMap["value"].(bool); ok {
 					thisProp["value"] = strconv.FormatBool(pValue)
+					thisProp["type"] = "boolean"
 				}
 			default:
 				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string or boolean is currently supported", thisProp["name"])
@@ -358,8 +406,8 @@ func flattenConnectionProperties(connectionProperties *dv.Properties) ([]map[str
 	return connProps, nil
 }
 
-func makeProperties(d *schema.ResourceData) *dv.Properties {
-	connProps := dv.Properties{}
+func makeProperties(d *schema.ResourceData) map[string]interface{} {
+	connProps := map[string]interface{}{}
 	props := d.Get("property").(*schema.Set).List()
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
@@ -367,5 +415,5 @@ func makeProperties(d *schema.ResourceData) *dv.Properties {
 			"value": prop["value"].(string),
 		}
 	}
-	return &connProps
+	return connProps
 }

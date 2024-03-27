@@ -13,8 +13,8 @@ description: |-
 
 ```terraform
 data "davinci_application" "by_app_id" {
-  application_id = var.application_id
   environment_id = var.environment_id
+  application_id = var.application_id
 }
 
 output "davinci_app_one_key" {
@@ -27,26 +27,26 @@ output "davinci_app_one_key" {
 
 ### Required
 
-- `environment_id` (String) PingOne environment id
+- `environment_id` (String) The ID of the PingOne environment to create the DaVinci application. Must be a valid PingOne resource ID.
 
 ### Optional
 
-- `application_id` (String) DEPRECATED: Use field 'id'. id of the application to retrieve.
-- `id` (String) id of the application to retrieve.
+- `application_id` (String) The ID of the application to retrieve.
+- `id` (String) The ID of the application.  Use of this parameter to fetch the application data is deprecated, use the `application_id` parameter instead.
 
 ### Read-Only
 
-- `api_key_enabled` (Boolean) Enabled by default in UI
-- `api_keys` (Map of String) Appplication Api Key
-- `created_date` (Number) Resource creation date
-- `customer_id` (String) Internal used field
-- `metadata` (Map of String) Appplication Metadata
-- `name` (String) Application name
-- `oauth` (Set of Object) OIDC configuration (see [below for nested schema](#nestedatt--oauth))
+- `api_key_enabled` (Boolean) A boolean that specifies whether the API key is enabled for the application.
+- `api_keys` (Map of String) A map of strings that represents the application's API Key.
+- `created_date` (Number) Resource creation date as epoch.
+- `customer_id` (String) An ID that represents the customer tenant.
+- `metadata` (Map of String) Application Metadata.
+- `name` (String) The application name.
+- `oauth` (Set of Object) A single list item specifying OIDC/OAuth 2.0 configuration. (see [below for nested schema](#nestedatt--oauth))
 - `policy` (Set of Object) Flow Policy Configuration (see [below for nested schema](#nestedatt--policy))
-- `saml` (Set of Object) SAML configuration (see [below for nested schema](#nestedatt--saml))
-- `user_pools` (Map of String) Internal read only field.
-- `user_portal` (Set of Object) This is deprecated in the UI and will be removed in a future release. (see [below for nested schema](#nestedatt--user_portal))
+- `saml` (Set of Object, Deprecated) **Deprecation notice**: SAML configuration is now deprecated in the service and will be removed in the next major release.  A single list item that specifies SAML configuration. (see [below for nested schema](#nestedatt--saml))
+- `user_pools` (Map of String) Application User Pools.
+- `user_portal` (Set of Object, Deprecated) **Deprecation notice** This is now deprecated in the service and will be removed from the provider in the next major release.  A single object that describes user portal settings. (see [below for nested schema](#nestedatt--user_portal))
 
 <a id="nestedatt--oauth"></a>
 ### Nested Schema for `oauth`

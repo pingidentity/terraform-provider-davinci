@@ -1,6 +1,6 @@
 ---
 page_title: "davinci_applications Data Source - terraform-provider-davinci"
-subcategory: "Connection"
+subcategory: "Application"
 description: |-
   
 ---
@@ -12,12 +12,8 @@ description: |-
 ## Example Usage
 
 ```terraform
-data "davinci_applications" "all" {
+data "davinci_applications" "all_applications" {
   environment_id = var.environment_id
-}
-
-output "davinci_applications" {
-  value = data.davinci_applications.all.applications
 }
 ```
 
@@ -26,12 +22,24 @@ output "davinci_applications" {
 
 ### Required
 
-- `environment_id` (String) PingOne environment id
+- `environment_id` (String) The ID of the PingOne environment to retrieve applications from. Must be a valid PingOne resource ID.
+
+### Optional
+
+- `timeouts` (Block, Optional) (see [below for nested schema](#nestedblock--timeouts))
 
 ### Read-Only
 
-- `applications` (Set of Object) List of applications in the environment. (see [below for nested schema](#nestedatt--applications))
+- `applications` (Set of Object) A set of applications retrieved from the environment. (see [below for nested schema](#nestedatt--applications))
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--timeouts"></a>
+### Nested Schema for `timeouts`
+
+Optional:
+
+- `read` (String)
+
 
 <a id="nestedatt--applications"></a>
 ### Nested Schema for `applications`

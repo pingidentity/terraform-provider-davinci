@@ -12,13 +12,14 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "davinci_variable" "my_global_var" {
+resource "davinci_variable" "my_awesome_region_variable" {
   environment_id = var.environment_id
-  name           = "region"
-  context        = "company"
-  description    = "identifies region for functions in flow"
-  value          = "northamerica"
-  type           = "string"
+
+  name        = "region"
+  context     = "company"
+  description = "identifies region for functions in flow"
+  value       = "northamerica"
+  type        = "string"
 }
 ```
 
@@ -27,18 +28,18 @@ resource "davinci_variable" "my_global_var" {
 
 ### Required
 
-- `context` (String) Must be one of: company, flowInstance, user
-- `environment_id` (String) PingOne environment id
-- `name` (String) Name of the variable
-- `type` (String) Must be one of: string, number, boolean, object
+- `context` (String) The variable context.  Must be one of: `company`, `flowInstance`, `user`.   This field is immutable and will trigger a replace plan if changed.
+- `environment_id` (String) The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
+- `name` (String) The name of the variable.  This field is immutable and will trigger a replace plan if changed.
+- `type` (String) The variable's data type.  Must be one of `string`, `number`, `boolean`, `object`.
 
 ### Optional
 
-- `description` (String) Description of variable
-- `max` (Number) Defaults to `2000`.
-- `min` (Number) Defaults to `0`.
-- `mutable` (Boolean) If true, the variable can be modified by the flow. If false, the variable is read-only and cannot be modified by the flow. Defaults to `true`.
-- `value` (String, Sensitive) Variable value as string, type will be inferred
+- `description` (String) A string that specifies the description of the variable.
+- `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`. Defaults to `2000`.
+- `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`. Defaults to `0`.
+- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow. Defaults to `true`.
+- `value` (String, Sensitive) Variable value as string, type will be inferred from the value specified in the `type` parameter.
 
 ### Read-Only
 
