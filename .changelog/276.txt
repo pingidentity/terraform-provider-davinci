@@ -1,11 +1,11 @@
-```release-note:enhancement
+```release-note:bug
 `data-source/davinci_connection`: Fixed `unable to identify value type, only string or boolean is currently supported` error when reading a connection that has an integer property value.
 ```
 
-```release-note:enhancement
+```release-note:bug
 `resource/davinci_connection`: Fixed `unable to identify value type, only string or boolean is currently supported` error when importing a connection that has an integer property value.
 ```
 
-```release-note:enhancement
+```release-note:bug
 `data-source/davinci_connections`: Fixed `unable to identify value type, only string or boolean is currently supported` error when reading connections that have an integer property value.
 ```
