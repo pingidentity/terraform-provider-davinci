@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/terraform-plugin-mux v0.14.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.31.0
 	github.com/katbyte/terrafmt v0.5.2
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.36.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.38.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.1.0
 	github.com/samir-gandhi/dvgenerate v0.0.10
@@ -167,7 +167,7 @@ require (
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.6.2 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.3 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.12.2 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.14.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/verify v0.4.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
@@ -241,7 +241,7 @@ require (
 	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/exp/typeparams v0.0.0-20230307190834-24139beb5833 // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/oauth2 v0.16.0 // indirect
+	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/tools v0.16.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
@@ -300,19 +300,19 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.1.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2 v0.11.5
+	github.com/patrickcping/pingone-go-sdk-v2 v0.11.8
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.14.1 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
-	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/grpc v1.61.0 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 )
