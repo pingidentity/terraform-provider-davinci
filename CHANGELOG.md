@@ -28,12 +28,18 @@ NOTES:
 * `resource/davinci_flow`: The `deploy` parameter is now deprecated.  Deployment on import and update is now implicit.  This parameter will be removed in the next major release. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * `resource/davinci_flow`: The `flow_variables` computed attribute has changed data type.  Previously the attribute was a block type.  Going forward, the attribute is nested set type.  There are no changes expected to HCL to use the new data type. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * `resource/davinci_flow`: Updated warning messages when subflows and connectors are left unmapped.  Going forward, all subflows and connections in a flow should be mapped using the `connection_link` and `subflow_link` parameters. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* bump `github.com/cloudflare/circl` 1.3.3 => 1.3.7 ([#278](https://github.com/pingidentity/terraform-provider-davinci/issues/278))
 * bump `github.com/go-git/go-git/v5` v5.9.0 => v5.11.0 ([#242](https://github.com/pingidentity/terraform-provider-davinci/issues/242))
+* bump `github.com/hashicorp/terraform-plugin-docs` 0.16.0 => 0.18.0 ([#278](https://github.com/pingidentity/terraform-provider-davinci/issues/278))
 * bump `github.com/hashicorp/terraform-plugin-sdk/v2` v2.30.0 => v2.31.0 ([#246](https://github.com/pingidentity/terraform-provider-davinci/issues/246))
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.34.0 => 0.36.0 ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.36.0 => 0.38.0 ([#278](https://github.com/pingidentity/terraform-provider-davinci/issues/278))
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` v0.32.0 => v0.34.0 ([#246](https://github.com/pingidentity/terraform-provider-davinci/issues/246))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.11.5 => 0.11.8 ([#278](https://github.com/pingidentity/terraform-provider-davinci/issues/278))
 * bump `github.com/samir-gandhi/davinci-client-go` 0.0.55 => 0.1.0 ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* bump `github.com/terraform-linters/tflint` 0.48.0 => 0.50.3 ([#278](https://github.com/pingidentity/terraform-provider-davinci/issues/278))
 * bump `golang.org/x/crypto` v0.16.0 => v0.17.0 ([#241](https://github.com/pingidentity/terraform-provider-davinci/issues/241))
+* bump `google.golang.org/protobuf` 1.31.0 => 1.33.0 ([#278](https://github.com/pingidentity/terraform-provider-davinci/issues/278))
 
 ENHANCEMENTS:
 
