@@ -1,17 +1,75 @@
 ## 0.3.0 (Unreleased)
 
+BREAKING CHANGES:
+
+* `resource/davinci_flow`: The `flow_json` parameter does not now represent the flow after import.  It now only represents the flow JSON payload from the source system.  When needing to use the resulting flow after import in the target environment, `flow_export_json` should be used. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+
 NOTES:
 
+* Added plugin mux factory and plugin framework (v6 protocol) provider to facilitate migration from SDKv2 (v5 protocol). ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* Added regex validation for resource/data-source parameters that require platform IDs. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* Code optimisations to remove unnecessary SDK retry logic. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* Index documentation updated to reflect latest best practices for admin role requirements and creation of PingOne environments that do not have demo/bootstrapped configuration automatically applied. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* Provider updated thoughout to support environments that have been created without demo/bootstrapped configuration automatically applied.  Creation of environments without demo/bootstrapped configuration is best practice going forward. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * Upgrade GO to `v1.21`. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `data-source/davinci_application`: Deprecated the `user_portal` and `saml` block parameters as they are no longer used.  The parameters will be removed in the next major release. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_application`: Un-deprecate the `application_id` parameter, and deprecated the `id` parameter for the purpose of fetching an application by it's ID.  The `application_id` should be used going forward. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * `data-source/davinci_applications`: Address code scanning advisories. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `data-source/davinci_applications`: Corrected documentation category. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_applications`: Deprecated the `user_portal` and `saml` block parameters as they are no longer used.  The parameters will be removed in the next major release. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_connections`: Deprecated the `connections.company_id` parameter as it is a duplicate of the `environment_id` parameter. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * `resource/davinci_application_flow_policy`: Address code scanning advisories. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
 * `resource/davinci_application_flow_policy`: Fix import documentation example. ([#248](https://github.com/pingidentity/terraform-provider-davinci/issues/248))
+* `resource/davinci_application`: Deprecated the `user_portal` and `saml` parameters as they are no longer used.  The parameters will be removed in the next major version release. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * `resource/davinci_connection`: Updated connector reference documentation. ([#245](https://github.com/pingidentity/terraform-provider-davinci/issues/245))
+* `resource/davinci_connection`: When the `property.type` parameter is not set for a property object, the default is now set to `string`. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * `resource/davinci_flow`: Address code scanning advisories. ([#247](https://github.com/pingidentity/terraform-provider-davinci/issues/247))
+* `resource/davinci_flow`: Migrated to plugin framework. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: The `deploy` parameter is now deprecated.  Deployment on import and update is now implicit.  This parameter will be removed in the next major release. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: The `flow_variables` computed attribute has changed data type.  Previously the attribute was a block type.  Going forward, the attribute is nested set type.  There are no changes expected to HCL to use the new data type. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Updated warning messages when subflows and connectors are left unmapped.  Going forward, all subflows and connections in a flow should be mapped using the `connection_link` and `subflow_link` parameters. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * bump `github.com/go-git/go-git/v5` v5.9.0 => v5.11.0 ([#242](https://github.com/pingidentity/terraform-provider-davinci/issues/242))
 * bump `github.com/hashicorp/terraform-plugin-sdk/v2` v2.30.0 => v2.31.0 ([#246](https://github.com/pingidentity/terraform-provider-davinci/issues/246))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.34.0 => 0.36.0 ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` v0.32.0 => v0.34.0 ([#246](https://github.com/pingidentity/terraform-provider-davinci/issues/246))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.0.55 => 0.1.0 ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 * bump `golang.org/x/crypto` v0.16.0 => v0.17.0 ([#241](https://github.com/pingidentity/terraform-provider-davinci/issues/241))
+
+ENHANCEMENTS:
+
+* Added ability to append custom text information to the default User Agent. ([#249](https://github.com/pingidentity/terraform-provider-davinci/issues/249))
+* `data-source/davinci_applications`: Added a configurable timeout parameter and updated the default timeout to `20m` due to eventual consistency considerations on environment creation. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_connection`: Added a configurable timeout parameter and updated the default timeout to `20m` due to eventual consistency considerations on environment creation. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_connection`: Added a new `connection_id` parameter and deprecated the `id` parameter for the purpose of fetching a connection by it's ID.  The `connection_id` should be used going forward. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_connections`: Added a configurable timeout parameter and updated the default timeout to `20m` due to eventual consistency considerations on environment creation. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application_flow_policy`: Added `policy_flow.allowed_ip_list` to be able to configure an allowed IP list for policy flows. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Added the `connection_link.replace_import_connection_id` parameter to be able to replace the name of connectors with the specified connection ID in a flow import. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Added the `description` parameter to be able to override the description of the flow on import. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Added the `flow_configuration_json` and `flow_export_json` attributes to the resource.  `flow_configuration_json` is used to compute configuration changes and drift, while `flow_export_json` is used as a record of the resulting flow once imported to the target environment. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Added the `subflow_link.replace_import_subflow_id` parameter to be able to replace the name of subflows with the specified subflow ID in a flow import. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: The `name` parameter is now an optional field, to be able to override the name of the flow on import. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+
+BUG FIXES:
+
+* Fixed bug where resources may be created in the incorrect PingOne environment when multiple DaVinci environments are being configured in the same `apply` routine. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* Fixed intermittent `Unable to retrieve access_token within 60s for environment` error. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_applications`: Fixed bug where not all applications are returned for an environment due to eventual consistency considerations on environment creation. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_applications`: Fixed issue where not all connections are returned due to eventual consistency considerations on environment creation. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_connection`: Fixed issue where a connection isn't returned due to eventual consistency considerations on environment creation. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `data-source/davinci_connections`: Fixed the `connections.customer_id` attribute not being stored into state. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application_flow_policy`: Fixed error when specifying a flow policy without `policy_flow.name` or `policy_flow.version` parameters.  The `policy_flow.name` and `policy_flow.version` are now required fields. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application_flow_policy`: Fixed error when specifying a flow policy without any `policy_flow` blocks.  The `policy_flow` block is now a required field. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application_flow_policy`: Fixed inability to set `policy_flow.success_nodes`. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application_flow_policy`: Fixed inability to update the environment ID and application ID once created (resource now requires replacement). ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application`: Fixed inability to set `api_key_enabled`, `oauth.enabled` and `oauth.values.enabled` to `false`. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_application`: Fixed panic crash when defining an application with an `oauth` block, but without `oauth.values`. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_connection`: Fixed `Error retrieving connectors / 7005` error in certain conditions. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_connection`: Fixed inability to update the environment ID, connection name and ID once created (resource now requires replacement). ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_connection`: Fixed inconsistent plan when specifying a property data type. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Corrected flow drift calculation errors, causing plan inconsistency. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Corrected panic errors on flow drift calculation and connection/subflow re-mapping. ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_flow`: Fixed inability to update the environment ID after initial configuration (resource requires replacement). ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
+* `resource/davinci_variable`: Fixed inability to update the environment ID once created (resource now requires replacement). ([#250](https://github.com/pingidentity/terraform-provider-davinci/issues/250))
 
 ## 0.2.1
 
