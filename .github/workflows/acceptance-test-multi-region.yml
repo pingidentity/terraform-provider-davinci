@@ -88,13 +88,13 @@ jobs:
       PINGONE_LICENSE_ID: ${{ secrets.AP_PINGONE_LICENSE_ID }}
       PINGONE_TESTING_PROVIDER_VERSION: "test"
 
-    timeout-minutes: 45
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.6.*'
+          - '1.7.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -117,7 +117,7 @@ jobs:
         go mod download
 
     - name: TF acceptance tests
-      timeout-minutes: 45
+      timeout-minutes: 180
       run: |
         make testacc
 
@@ -208,13 +208,13 @@ jobs:
       PINGONE_LICENSE_ID: ${{ secrets.CA_PINGONE_LICENSE_ID }}
       PINGONE_TESTING_PROVIDER_VERSION: "test"
 
-    timeout-minutes: 45
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.6.*'
+          - '1.7.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -237,7 +237,7 @@ jobs:
         go mod download
 
     - name: TF acceptance tests
-      timeout-minutes: 45
+      timeout-minutes: 180
       run: |
         make testacc
 
@@ -328,13 +328,13 @@ jobs:
       PINGONE_LICENSE_ID: ${{ secrets.EU_PINGONE_LICENSE_ID }}
       PINGONE_TESTING_PROVIDER_VERSION: "test"
 
-    timeout-minutes: 45
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.6.*'
+          - '1.7.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -357,7 +357,7 @@ jobs:
         go mod download
 
     - name: TF acceptance tests
-      timeout-minutes: 45
+      timeout-minutes: 180
       run: |
         make testacc
 
@@ -434,7 +434,7 @@ jobs:
 
   # run acceptance tests in a matrix with Terraform core versions
   test-na:
-    name: Acceptance Test NA (Multi-version)
+    name: Acceptance Test NA
     needs: [prepare-na, build]
     runs-on: ubuntu-latest
 
@@ -448,13 +448,13 @@ jobs:
       PINGONE_LICENSE_ID: ${{ secrets.NA_PINGONE_LICENSE_ID }}
       PINGONE_TESTING_PROVIDER_VERSION: "test"
 
-    timeout-minutes: 45
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.6.*'
+          - '1.7.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -478,7 +478,7 @@ jobs:
         go mod tidy
 
     - name: TF acceptance tests
-      timeout-minutes: 45
+      timeout-minutes: 180
       run: |
         make testacc
 
