@@ -2,8 +2,10 @@ package davinci
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -67,13 +69,13 @@ func ResourceConnection() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Sensitive:   true,
-							Description: "The value of the property as string. If the property is an array, use a comma separated string.",
+							Description: "The value of the property as string.  Use in conjunction with `type` to cast the value to the correct type.  For example, a number value should be entered as a string and `type` set to `number`.  JSON in string form should be used for complex types.",
 						},
 						"type": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: `string`, `number` or `boolean`. Use `string` for array types.",
-							ValidateFunc: validation.StringInSlice([]string{"string", "number", "boolean"}, false),
+							Description:  "Type of the property. This is used to cast the value to the correct type. Must be: `string`, `number`, `boolean` or `json`.",
+							ValidateFunc: validation.StringInSlice([]string{"string", "number", "boolean", "json"}, false),
 
 							Default: "string",
 						},
@@ -101,7 +103,12 @@ func resourceConnectionCreate(ctx context.Context, d *schema.ResourceData, meta 
 		connection.Name = &v
 	}
 
-	connection.Properties = makeProperties(d)
+	var err error
+	connection.Properties, err = makeProperties(d)
+	if err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
+	}
 
 	environmentID := d.Get("environment_id").(string)
 
@@ -253,7 +260,12 @@ func resourceConnectionUpdate(ctx context.Context, d *schema.ResourceData, meta 
 			connection.Name = &v
 		}
 
-		connection.Properties = makeProperties(d)
+		var err error
+		connection.Properties, err = makeProperties(d)
+		if err != nil {
+			diags = append(diags, diag.FromErr(err)...)
+			return diags
+		}
 
 		environmentID := d.Get("environment_id").(string)
 
@@ -391,8 +403,29 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 				} else {
 					return nil, fmt.Errorf("For Property '%v': unable to assert type. This is a bug, please raise an issue", thisProp["name"])
 				}
+			case "array":
+				if pValue, ok := pMap["value"].(map[string]interface{}); ok {
+
+					bytes, err := json.Marshal(pValue)
+					if err != nil {
+						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported", thisProp["name"])
+					}
+
+					thisProp["value"] = string(bytes[:])
+					thisProp["type"] = "json"
+				}
+				if pValue, ok := pMap["value"].([]interface{}); ok {
+
+					bytes, err := json.Marshal(pValue)
+					if err != nil {
+						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported", thisProp["name"])
+					}
+
+					thisProp["value"] = string(bytes[:])
+					thisProp["type"] = "json"
+				}
 			default:
-				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, or number (int) is currently supported", thisProp["name"])
+				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, number (int) or json is currently supported", thisProp["name"])
 			}
 		} else {
 			switch pMap["value"].(type) {
@@ -416,8 +449,30 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 					thisProp["value"] = strconv.Itoa(pValue)
 					thisProp["type"] = "number"
 				}
+			case []interface{}:
+				if pValue, ok := pMap["value"].([]interface{}); ok {
+
+					bytes, err := json.Marshal(pValue)
+					if err != nil {
+						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported: %s", thisProp["name"], err)
+					}
+
+					thisProp["value"] = string(bytes[:])
+					thisProp["type"] = "json"
+				}
+			case map[string]interface{}:
+				if pValue, ok := pMap["value"].(map[string]interface{}); ok {
+
+					bytes, err := json.Marshal(pValue)
+					if err != nil {
+						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported: %s", thisProp["name"], err)
+					}
+
+					thisProp["value"] = string(bytes[:])
+					thisProp["type"] = "json"
+				}
 			default:
-				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, or number (int) is currently supported", thisProp["name"])
+				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, number (int) or json is currently supported", thisProp["name"])
 			}
 		}
 		connProps = append(connProps, thisProp)
@@ -425,24 +480,52 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 	return connProps, nil
 }
 
-func makeProperties(d *schema.ResourceData) map[string]interface{} {
+func makeProperties(d *schema.ResourceData) (map[string]interface{}, error) {
 	connProps := map[string]interface{}{}
 	props := d.Get("property").(*schema.Set).List()
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
-		if propType, ok := prop["type"]; !ok {
+		if propType, ok := prop["type"]; ok {
 			var val interface{}
 			switch propType {
 			case "string":
 				val = prop["value"].(string)
+
+				connProps[prop["name"].(string)] = map[string]interface{}{
+					"value": val,
+					"type":  propType,
+				}
 			case "number":
 				val, _ = strconv.ParseInt(prop["value"].(string), 10, 64)
+
+				connProps[prop["name"].(string)] = map[string]interface{}{
+					"value": val,
+					"type":  propType,
+				}
 			case "boolean":
 				val, _ = strconv.ParseBool(prop["value"].(string))
-			}
-			connProps[prop["name"].(string)] = map[string]interface{}{
-				"value": val,
-				"type":  prop["type"].(string),
+
+				connProps[prop["name"].(string)] = map[string]interface{}{
+					"value": val,
+					"type":  propType,
+				}
+			case "json":
+				var jsonMap interface{}
+				strValue, _ := prop["value"].(string)
+				err := json.Unmarshal([]byte(strValue), &jsonMap)
+				if err != nil {
+					return nil, fmt.Errorf("For Property '%v': unable to unmarshal json value, only string, boolean, number (int) or json is currently supported: %s", prop["name"], err)
+				}
+
+				val = jsonMap
+				connProps[prop["name"].(string)] = map[string]interface{}{
+					"value":                val,
+					"type":                 "array",
+					"preferredControlType": "tableViewAttributes",
+					"sections": []string{
+						"connectorAttributes",
+					},
+				}
 			}
 		} else {
 			connProps[prop["name"].(string)] = map[string]interface{}{
@@ -450,5 +533,6 @@ func makeProperties(d *schema.ResourceData) map[string]interface{} {
 			}
 		}
 	}
-	return connProps
+
+	return connProps, nil
 }
