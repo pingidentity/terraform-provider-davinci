@@ -303,6 +303,105 @@ func TestAccResourceConnection_Properties(t *testing.T) {
 	})
 }
 
+func TestAccResourceConnection_ComplexProperties(t *testing.T) {
+	resourceBase := "davinci_connection"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	name := resourceName
+
+	withBootstrapConfig := false
+
+	mixedType := resource.TestStep{
+		Config: testAccResourceConnection_PropertyDataTypesMixed_HCL(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttr(resourceFullName, "property.#", "6"),
+			resource.TestCheckTypeSetElemNestedAttrs(resourceFullName, "property.*", map[string]string{
+				"name":  "hostname",
+				"value": "localhost",
+				"type":  "string",
+			}),
+			resource.TestCheckTypeSetElemNestedAttrs(resourceFullName, "property.*", map[string]string{
+				"name":  "port",
+				"value": "2525",
+				"type":  "number",
+			}),
+			resource.TestCheckTypeSetElemNestedAttrs(resourceFullName, "property.*", map[string]string{
+				"name":  "secureFlag",
+				"value": "true",
+				"type":  "boolean",
+			}),
+		),
+	}
+
+	jsonType := resource.TestStep{
+		Config: testAccResourceConnection_PropertyDataTypesJson_HCL(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttr(resourceFullName, "property.#", "1"),
+			resource.TestCheckTypeSetElemNestedAttrs(resourceFullName, "property.*", map[string]string{
+				"name":  "customAttributes",
+				"value": "[{\"attributeType\":\"sk\",\"description\":\"Username\",\"maxLength\":\"300\",\"minLength\":\"1\",\"name\":\"username\",\"required\":true,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"First Name\",\"maxLength\":\"100\",\"minLength\":\"1\",\"name\":\"firstName\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Last Name\",\"maxLength\":\"100\",\"minLength\":\"1\",\"name\":\"lastName\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Display Name\",\"maxLength\":\"250\",\"minLength\":\"1\",\"name\":\"name\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Email\",\"maxLength\":\"250\",\"minLength\":\"1\",\"name\":\"email\",\"required\":false,\"type\":\"string\",\"value\":null}]",
+				"type":  "json",
+			}),
+		),
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Connection_CheckDestroy(),
+		Steps: []resource.TestStep{
+			// mixed types (string, number, boolean)
+			mixedType,
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config:  testAccResourceConnection_PropertyDataTypesMixed_HCL(resourceName, name, withBootstrapConfig),
+				Destroy: true,
+			},
+			// JSON type
+			jsonType,
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config:  testAccResourceConnection_PropertyDataTypesJson_HCL(resourceName, name, withBootstrapConfig),
+				Destroy: true,
+			},
+		},
+	})
+}
+
 func TestAccResourceConnection_BadParameters(t *testing.T) {
 
 	resourceBase := "davinci_connection"
@@ -415,6 +514,122 @@ resource "davinci_connection" "%[2]s" {
   environment_id = pingone_environment.%[2]s.id
   connector_id   = "annotationConnector"
   name           = "%[3]s"
+}
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
+}
+
+func testAccResourceConnection_PropertyDataTypesMixed_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	return fmt.Sprintf(`
+%[1]s
+
+resource "davinci_connection" "%[2]s" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "smtpConnector"
+  name           = "%[3]s"
+
+  property {
+    name  = "name"
+    value = "test"
+    type  = "string"
+  }
+
+  property {
+    name  = "hostname"
+    value = "localhost"
+    type  = "string"
+  }
+
+  property {
+    name  = "port"
+    value = "2525"
+    type  = "number"
+  }
+
+  property {
+    name  = "secureFlag"
+    value = "true"
+    type  = "boolean"
+  }
+
+  property {
+    name  = "username"
+    value = "test"
+    type  = "string"
+  }
+
+  property {
+    name  = "password"
+    value = "test"
+    type  = "string"
+  }
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
+}
+
+func testAccResourceConnection_PropertyDataTypesJson_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	return fmt.Sprintf(`
+%[1]s
+
+resource "davinci_connection" "%[2]s" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "skUserPool"
+  name           = "%[3]s"
+
+  property {
+    name = "customAttributes"
+    value = jsonencode([
+      {
+        "name" : "username",
+        "description" : "Username",
+        "type" : "string",
+        "value" : null,
+        "minLength" : "1",
+        "maxLength" : "300",
+        "required" : true,
+        "attributeType" : "sk"
+      },
+      {
+        "name" : "firstName",
+        "description" : "First Name",
+        "type" : "string",
+        "value" : null,
+        "minLength" : "1",
+        "maxLength" : "100",
+        "required" : false,
+        "attributeType" : "sk"
+      },
+      {
+        "name" : "lastName",
+        "description" : "Last Name",
+        "type" : "string",
+        "value" : null,
+        "minLength" : "1",
+        "maxLength" : "100",
+        "required" : false,
+        "attributeType" : "sk"
+      },
+      {
+        "name" : "name",
+        "description" : "Display Name",
+        "type" : "string",
+        "value" : null,
+        "minLength" : "1",
+        "maxLength" : "250",
+        "required" : false,
+        "attributeType" : "sk"
+      },
+      {
+        "name" : "email",
+        "description" : "Email",
+        "type" : "string",
+        "value" : null,
+        "minLength" : "1",
+        "maxLength" : "250",
+        "required" : false,
+        "attributeType" : "sk"
+      }
+    ])
+    type = "json"
+  }
 }
 `, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
 }

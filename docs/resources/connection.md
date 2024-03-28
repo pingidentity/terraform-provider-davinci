@@ -62,11 +62,11 @@ resource "davinci_connection" "my_awesome_crowdstrike_connection" {
 Required:
 
 - `name` (String) The name of the property.
-- `value` (String, Sensitive) The value of the property as string. If the property is an array, use a comma separated string.
+- `value` (String, Sensitive) The value of the property as string.  Use in conjunction with `type` to cast the value to the correct type.  For example, a number value should be entered as a string and `type` set to `number`.  JSON in string form should be used for complex types.
 
 Optional:
 
-- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: `string`, `number` or `boolean`. Use `string` for array types. Defaults to `string`.
+- `type` (String) Type of the property. This is used to cast the value to the correct type. Must be: `string`, `number`, `boolean` or `json`. Defaults to `string`.
 
 ## Import
 
