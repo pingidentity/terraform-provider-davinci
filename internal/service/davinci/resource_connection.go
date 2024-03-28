@@ -328,7 +328,7 @@ func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta 
 		},
 		{
 			Label:     "davinci_connection_id",
-			Regexp:    verify.P1DVResourceIDRegexp,
+			Regexp:    regexp.MustCompile(fmt.Sprintf(`(%s|defaultUserPool)`, verify.P1DVResourceIDRegexp)),
 			PrimaryID: true,
 		},
 	}
