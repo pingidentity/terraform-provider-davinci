@@ -334,13 +334,25 @@ func TestAccResourceConnection_ComplexProperties(t *testing.T) {
 		),
 	}
 
-	jsonType := resource.TestStep{
-		Config: testAccResourceConnection_PropertyDataTypesJson_HCL(resourceName, name, withBootstrapConfig),
+	jsonArrayType := resource.TestStep{
+		Config: testAccResourceConnection_PropertyDataTypesJsonArray_HCL(resourceName, name, withBootstrapConfig),
 		Check: resource.ComposeTestCheckFunc(
 			resource.TestCheckResourceAttr(resourceFullName, "property.#", "1"),
 			resource.TestCheckTypeSetElemNestedAttrs(resourceFullName, "property.*", map[string]string{
 				"name":  "customAttributes",
-				"value": "[{\"attributeType\":\"sk\",\"description\":\"Username\",\"maxLength\":\"300\",\"minLength\":\"1\",\"name\":\"username\",\"required\":true,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"First Name\",\"maxLength\":\"100\",\"minLength\":\"1\",\"name\":\"firstName\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Last Name\",\"maxLength\":\"100\",\"minLength\":\"1\",\"name\":\"lastName\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Display Name\",\"maxLength\":\"250\",\"minLength\":\"1\",\"name\":\"name\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Email\",\"maxLength\":\"250\",\"minLength\":\"1\",\"name\":\"email\",\"required\":false,\"type\":\"string\",\"value\":null}]",
+				"value": "{\"preferredControlType\":\"tableViewAttributes\",\"sections\":[\"connectorAttributes\"],\"type\":\"array\",\"value\":[{\"attributeType\":\"sk\",\"description\":\"Username\",\"maxLength\":\"300\",\"minLength\":\"1\",\"name\":\"username\",\"required\":true,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"First Name\",\"maxLength\":\"100\",\"minLength\":\"1\",\"name\":\"firstName\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Last Name\",\"maxLength\":\"100\",\"minLength\":\"1\",\"name\":\"lastName\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Display Name\",\"maxLength\":\"250\",\"minLength\":\"1\",\"name\":\"name\",\"required\":false,\"type\":\"string\",\"value\":null},{\"attributeType\":\"sk\",\"description\":\"Email\",\"maxLength\":\"250\",\"minLength\":\"1\",\"name\":\"email\",\"required\":false,\"type\":\"string\",\"value\":null}]}",
+				"type":  "json",
+			}),
+		),
+	}
+
+	jsonObjectType := resource.TestStep{
+		Config: testAccResourceConnection_PropertyDataTypesJsonObject_HCL(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttr(resourceFullName, "property.#", "1"),
+			resource.TestCheckTypeSetElemNestedAttrs(resourceFullName, "property.*", map[string]string{
+				"name":  "openId",
+				"value": "{\"properties\":{\"clientId\":{\"displayName\":\"Client ID\",\"placeholder\":\"\",\"preferredControlType\":\"textField\",\"required\":true,\"type\":\"string\",\"value\":\"test\"},\"clientSecret\":{\"displayName\":\"Client Secret\",\"preferredControlType\":\"textField\",\"required\":true,\"secure\":true,\"type\":\"string\",\"value\":\"test\"},\"issuerUrl\":{\"displayName\":\"Base URL\",\"preferredControlType\":\"textField\",\"required\":true,\"type\":\"string\",\"value\":\"https://ping-eng.com\"},\"returnToUrl\":{\"displayName\":\"Application Return To URL\",\"info\":\"When using the embedded flow player widget and an IDP/Social Login connector, provide a callback URL to return back to the application.\",\"preferredControlType\":\"textField\",\"value\":\"https://ping-eng.com/callback\"},\"scope\":{\"displayName\":\"Scope\",\"preferredControlType\":\"textField\",\"required\":true,\"requiredValue\":\"openid\",\"type\":\"string\",\"value\":\"openid\"},\"skRedirectUri\":{\"copyToClip\":true,\"disabled\":true,\"displayName\":\"Redirect URL\",\"info\":\"Enter this in your identity provider configuration to allow it to redirect the browser back to DaVinci. If you use a custom PingOne domain, modify the URL accordingly.\",\"initializeValue\":\"SINGULARKEY_REDIRECT_URI\",\"preferredControlType\":\"textField\",\"type\":\"string\"}}}",
 				"type":  "json",
 			}),
 		),
@@ -377,8 +389,8 @@ func TestAccResourceConnection_ComplexProperties(t *testing.T) {
 				Config:  testAccResourceConnection_PropertyDataTypesMixed_HCL(resourceName, name, withBootstrapConfig),
 				Destroy: true,
 			},
-			// JSON type
-			jsonType,
+			// JSON array type
+			jsonArrayType,
 			{
 				ResourceName: resourceFullName,
 				ImportStateIdFunc: func() resource.ImportStateIdFunc {
@@ -395,7 +407,31 @@ func TestAccResourceConnection_ComplexProperties(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config:  testAccResourceConnection_PropertyDataTypesJson_HCL(resourceName, name, withBootstrapConfig),
+				Config:  testAccResourceConnection_PropertyDataTypesJsonArray_HCL(resourceName, name, withBootstrapConfig),
+				Destroy: true,
+			},
+			// JSON object type
+			jsonObjectType,
+			{
+				ResourceName: resourceFullName,
+				ImportStateIdFunc: func() resource.ImportStateIdFunc {
+					return func(s *terraform.State) (string, error) {
+						rs, ok := s.RootModule().Resources[resourceFullName]
+						if !ok {
+							return "", fmt.Errorf("Resource Not found: %s", resourceFullName)
+						}
+
+						return fmt.Sprintf("%s/%s", rs.Primary.Attributes["environment_id"], rs.Primary.ID), nil
+					}
+				}(),
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"property.0.value",
+				},
+			},
+			{
+				Config:  testAccResourceConnection_PropertyDataTypesJsonObject_HCL(resourceName, name, withBootstrapConfig),
 				Destroy: true,
 			},
 		},
@@ -565,7 +601,7 @@ resource "davinci_connection" "%[2]s" {
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
 }
 
-func testAccResourceConnection_PropertyDataTypesJson_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+func testAccResourceConnection_PropertyDataTypesJsonArray_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
 	return fmt.Sprintf(`
 %[1]s
 
@@ -576,7 +612,13 @@ resource "davinci_connection" "%[2]s" {
 
   property {
     name = "customAttributes"
-    value = jsonencode([
+    value = jsonencode({
+		"type": "array",
+		"preferredControlType": "tableViewAttributes",
+		"sections": [
+			"connectorAttributes"
+		],
+		"value": [
       {
         "name" : "username",
         "description" : "Username",
@@ -627,7 +669,75 @@ resource "davinci_connection" "%[2]s" {
         "required" : false,
         "attributeType" : "sk"
       }
-    ])
+    ]
+})
+    type = "json"
+  }
+}
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name)
+}
+
+func testAccResourceConnection_PropertyDataTypesJsonObject_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	return fmt.Sprintf(`
+%[1]s
+
+resource "davinci_connection" "%[2]s" {
+  environment_id = pingone_environment.%[2]s.id
+  connector_id   = "pingFederateConnectorV2"
+  name           = "%[3]s"
+
+  property {
+    name = "openId"
+    value = jsonencode({
+		"properties": {
+		  "skRedirectUri": {
+			"type": "string",
+			"displayName": "Redirect URL",
+			"info": "Enter this in your identity provider configuration to allow it to redirect the browser back to DaVinci. If you use a custom PingOne domain, modify the URL accordingly.",
+			"preferredControlType": "textField",
+			"disabled": true,
+			"initializeValue": "SINGULARKEY_REDIRECT_URI",
+			"copyToClip": true
+		  },
+		  "clientId": {
+			"type": "string",
+			"displayName": "Client ID",
+			"placeholder": "",
+			"preferredControlType": "textField",
+			"required": true,
+			"value": "test"
+		  },
+		  "clientSecret": {
+			"type": "string",
+			"displayName": "Client Secret",
+			"preferredControlType": "textField",
+			"secure": true,
+			"required": true,
+			"value": "test"
+		  },
+		  "scope": {
+			"type": "string",
+			"displayName": "Scope",
+			"preferredControlType": "textField",
+			"requiredValue": "openid",
+			"value": "openid",
+			"required": true
+		  },
+		  "issuerUrl": {
+			"type": "string",
+			"displayName": "Base URL",
+			"preferredControlType": "textField",
+			"value": "https://ping-eng.com",
+			"required": true
+		  },
+		  "returnToUrl": {
+			"displayName": "Application Return To URL",
+			"preferredControlType": "textField",
+			"info": "When using the embedded flow player widget and an IDP/Social Login connector, provide a callback URL to return back to the application.",
+			"value": "https://ping-eng.com/callback"
+		  }
+		}
+	  })
     type = "json"
   }
 }

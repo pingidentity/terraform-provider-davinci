@@ -216,21 +216,50 @@ func resourceConnectionRead(ctx context.Context, d *schema.ResourceData, meta in
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	props, err := flattenConnectionProperties(res.Properties)
+
+	// override props with state props if obfuscated
+	stateProps, err := makeProperties(d)
 	if err != nil {
 		diags = append(diags, diag.FromErr(err)...)
 		return diags
 	}
-	// // override props with state props if obfuscated
-	stateProps := makePropsListMap(d)
-	for _, prop := range props {
-		if prop["value"] == "******" {
-			for _, stateProp := range stateProps {
-				if prop["name"] == stateProp["name"] {
-					prop["value"] = stateProp["value"]
-				}
+
+	for pName, pValue := range res.Properties {
+
+		var sValue dv.ConnectionProperty
+		if v, ok := stateProps[pName]; ok {
+			sValue = v
+		} else {
+			continue
+		}
+
+		if pValue.Value == "******" {
+			if v, ok := stateProps[pName]; ok {
+				pValue.Value = v.Value
 			}
 		}
+
+		// nested properties
+		if pValue.Properties != nil && sValue.Properties != nil {
+
+			for pNameN, pValueN := range pValue.Properties {
+				if pValueN.Value == "******" {
+					if v, ok := sValue.Properties[pNameN]; ok {
+						pValueN.Value = v.Value
+					}
+				}
+
+				pValue.Properties[pNameN] = pValueN
+			}
+		}
+
+		res.Properties[pName] = pValue
+	}
+
+	props, err := flattenConnectionProperties(res.Properties)
+	if err != nil {
+		diags = append(diags, diag.FromErr(err)...)
+		return diags
 	}
 
 	if err := d.Set("property", props); err != nil {
@@ -361,118 +390,88 @@ func resourceConnectionImport(ctx context.Context, d *schema.ResourceData, meta 
 	return []*schema.ResourceData{d}, nil
 }
 
-func flattenConnectionProperties(connectionProperties map[string]interface{}) ([]map[string]interface{}, error) {
+func flattenConnectionProperties(connectionProperties map[string]dv.ConnectionProperty) ([]map[string]interface{}, error) {
 	if connectionProperties == nil {
 		return nil, nil
 	}
 	connProps := []map[string]interface{}{}
+
 	for propName, propVal := range connectionProperties {
-		pMap := propVal.(map[string]interface{})
-		if pMap == nil {
-			return nil, fmt.Errorf("Unable to assert property values for %v\n", propName)
-		}
-
-		if _, ok := pMap["value"]; !ok {
-			continue
-		}
-
 		thisProp := map[string]interface{}{
 			"name": propName,
 		}
 
-		if propType, ok := pMap["type"].(string); ok {
-			thisProp["type"] = propType
-			switch propType {
-			case "string", "":
-				if _, ok := pMap["value"].(string); ok {
-					thisProp["value"] = pMap["value"].(string)
-					thisProp["type"] = "string"
-				}
-			case "boolean":
-				if pValue, ok := pMap["value"].(bool); ok {
-					thisProp["value"] = strconv.FormatBool(pValue)
-					thisProp["type"] = "boolean"
-				}
-			case "number":
-				if pValue, ok := pMap["value"].(float64); ok {
-					thisProp["value"] = strconv.FormatFloat(pValue, 'f', -1, 64)
-					thisProp["type"] = "number"
-				} else if pValue, ok := pMap["value"].(int); ok {
-					thisProp["value"] = strconv.Itoa(pValue)
-					thisProp["type"] = "number"
-				} else {
-					return nil, fmt.Errorf("For Property '%v': unable to assert type. This is a bug, please raise an issue", thisProp["name"])
-				}
-			case "array":
-				if pValue, ok := pMap["value"].(map[string]interface{}); ok {
-
-					bytes, err := json.Marshal(pValue)
-					if err != nil {
-						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported", thisProp["name"])
-					}
-
-					thisProp["value"] = string(bytes[:])
-					thisProp["type"] = "json"
-				}
-				if pValue, ok := pMap["value"].([]interface{}); ok {
-
-					bytes, err := json.Marshal(pValue)
-					if err != nil {
-						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported", thisProp["name"])
-					}
-
-					thisProp["value"] = string(bytes[:])
-					thisProp["type"] = "json"
-				}
-			default:
-				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, number (int) or json is currently supported", thisProp["name"])
+		if propVal.Value == nil {
+			bytes, err := json.Marshal(propVal)
+			if err != nil {
+				return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported", thisProp["name"])
 			}
+
+			thisProp["value"] = string(bytes[:])
+			thisProp["type"] = "json"
 		} else {
-			switch pMap["value"].(type) {
-			case string:
-				if _, ok := pMap["value"].(string); ok {
-					thisProp["value"] = pMap["value"].(string)
-					thisProp["type"] = "string"
-				}
-			case bool:
-				if pValue, ok := pMap["value"].(bool); ok {
-					thisProp["value"] = strconv.FormatBool(pValue)
-					thisProp["type"] = "boolean"
-				}
-			case float64:
-				if pValue, ok := pMap["value"].(float64); ok {
-					thisProp["value"] = fmt.Sprintf("%f", pValue)
-					thisProp["type"] = "number"
-				}
-			case int:
-				if pValue, ok := pMap["value"].(int); ok {
-					thisProp["value"] = strconv.Itoa(pValue)
-					thisProp["type"] = "number"
-				}
-			case []interface{}:
-				if pValue, ok := pMap["value"].([]interface{}); ok {
 
-					bytes, err := json.Marshal(pValue)
+			if propVal.Type != nil {
+
+				switch *propVal.Type {
+				case "string", "":
+					if v, ok := propVal.Value.(string); ok {
+						thisProp["value"] = v
+						thisProp["type"] = "string"
+					}
+				case "boolean":
+					if v, ok := propVal.Value.(bool); ok {
+						thisProp["value"] = strconv.FormatBool(v)
+						thisProp["type"] = "boolean"
+					}
+				case "number":
+					if v, ok := propVal.Value.(float64); ok {
+						thisProp["value"] = strconv.FormatFloat(v, 'f', -1, 64)
+						thisProp["type"] = "number"
+					} else if v, ok := propVal.Value.(int); ok {
+						thisProp["value"] = strconv.Itoa(v)
+						thisProp["type"] = "number"
+					} else {
+						return nil, fmt.Errorf("For Property '%v': unable to assert type. This is a bug, please raise an issue", thisProp["name"])
+					}
+				case "array", "object":
+
+					bytes, err := json.Marshal(propVal)
 					if err != nil {
-						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported: %s", thisProp["name"], err)
+						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported", thisProp["name"])
 					}
 
 					thisProp["value"] = string(bytes[:])
 					thisProp["type"] = "json"
-				}
-			case map[string]interface{}:
-				if pValue, ok := pMap["value"].(map[string]interface{}); ok {
 
-					bytes, err := json.Marshal(pValue)
-					if err != nil {
-						return nil, fmt.Errorf("For Property '%v': unable to marshal json value, only string, boolean, number (int) or json is currently supported: %s", thisProp["name"], err)
+				default:
+					return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, number (int) or json is currently supported", thisProp["name"])
+				}
+			} else {
+				switch propVal.Value.(type) {
+				case string:
+					if v, ok := propVal.Value.(string); ok {
+						thisProp["value"] = v
+						thisProp["type"] = "string"
 					}
-
-					thisProp["value"] = string(bytes[:])
-					thisProp["type"] = "json"
+				case bool:
+					if v, ok := propVal.Value.(bool); ok {
+						thisProp["value"] = strconv.FormatBool(v)
+						thisProp["type"] = "boolean"
+					}
+				case float64:
+					if v, ok := propVal.Value.(float64); ok {
+						thisProp["value"] = fmt.Sprintf("%f", v)
+						thisProp["type"] = "number"
+					}
+				case int:
+					if v, ok := propVal.Value.(int); ok {
+						thisProp["value"] = strconv.Itoa(v)
+						thisProp["type"] = "number"
+					}
+				default:
+					return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, number (int) or json is currently supported", thisProp["name"])
 				}
-			default:
-				return nil, fmt.Errorf("For Property '%v': unable to identify value type, only string, boolean, number (int) or json is currently supported", thisProp["name"])
 			}
 		}
 		connProps = append(connProps, thisProp)
@@ -480,56 +479,54 @@ func flattenConnectionProperties(connectionProperties map[string]interface{}) ([
 	return connProps, nil
 }
 
-func makeProperties(d *schema.ResourceData) (map[string]interface{}, error) {
-	connProps := map[string]interface{}{}
+func makeProperties(d *schema.ResourceData) (map[string]dv.ConnectionProperty, error) {
+	connProps := map[string]dv.ConnectionProperty{}
+
 	props := d.Get("property").(*schema.Set).List()
+
 	for _, raw := range props {
 		prop := raw.(map[string]interface{})
 		if propType, ok := prop["type"]; ok {
-			var val interface{}
-			switch propType {
-			case "string":
-				val = prop["value"].(string)
 
-				connProps[prop["name"].(string)] = map[string]interface{}{
-					"value": val,
-					"type":  propType,
-				}
-			case "number":
-				val, _ = strconv.ParseInt(prop["value"].(string), 10, 64)
+			if typ, ok := propType.(string); ok {
 
-				connProps[prop["name"].(string)] = map[string]interface{}{
-					"value": val,
-					"type":  propType,
-				}
-			case "boolean":
-				val, _ = strconv.ParseBool(prop["value"].(string))
+				var val interface{}
+				switch typ {
+				case "string":
+					val = prop["value"].(string)
 
-				connProps[prop["name"].(string)] = map[string]interface{}{
-					"value": val,
-					"type":  propType,
-				}
-			case "json":
-				var jsonMap interface{}
-				strValue, _ := prop["value"].(string)
-				err := json.Unmarshal([]byte(strValue), &jsonMap)
-				if err != nil {
-					return nil, fmt.Errorf("For Property '%v': unable to unmarshal json value, only string, boolean, number (int) or json is currently supported: %s", prop["name"], err)
-				}
+					connProps[prop["name"].(string)] = dv.ConnectionProperty{
+						Value: val,
+						Type:  &typ,
+					}
+				case "number":
+					val, _ = strconv.ParseInt(prop["value"].(string), 10, 64)
 
-				val = jsonMap
-				connProps[prop["name"].(string)] = map[string]interface{}{
-					"value":                val,
-					"type":                 "array",
-					"preferredControlType": "tableViewAttributes",
-					"sections": []string{
-						"connectorAttributes",
-					},
+					connProps[prop["name"].(string)] = dv.ConnectionProperty{
+						Value: val,
+						Type:  &typ,
+					}
+				case "boolean":
+					val, _ = strconv.ParseBool(prop["value"].(string))
+
+					connProps[prop["name"].(string)] = dv.ConnectionProperty{
+						Value: val,
+						Type:  &typ,
+					}
+				case "json":
+					var connPropertyObj dv.ConnectionProperty
+					strValue, _ := prop["value"].(string)
+					err := json.Unmarshal([]byte(strValue), &connPropertyObj)
+					if err != nil {
+						return nil, fmt.Errorf("For Property '%v': unable to unmarshal json value, only string, boolean, number (int) or json is currently supported: %s", prop["name"], err)
+					}
+
+					connProps[prop["name"].(string)] = connPropertyObj
 				}
 			}
 		} else {
-			connProps[prop["name"].(string)] = map[string]interface{}{
-				"value": prop["value"].(string),
+			connProps[prop["name"].(string)] = dv.ConnectionProperty{
+				Value: prop["value"].(string),
 			}
 		}
 	}
