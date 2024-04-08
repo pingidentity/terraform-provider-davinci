@@ -19,6 +19,9 @@ import (
 
 func ResourceConnection() *schema.Resource {
 	return &schema.Resource{
+
+		Description: "A resource to create and manage connections in DaVinci.\n\nA full connector reference, with Terraform examples, can be found in the [DaVinci Connector Reference guide](../../guides/connector-reference).",
+
 		CreateContext: resourceConnectionCreate,
 		ReadContext:   resourceConnectionRead,
 		UpdateContext: resourceConnectionUpdate,

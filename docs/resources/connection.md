@@ -2,12 +2,15 @@
 page_title: "davinci_connection Resource - terraform-provider-davinci"
 subcategory: "Connection"
 description: |-
-  
+  A resource to create and manage connections in DaVinci.
+  A full connector reference, with Terraform examples, can be found in the DaVinci Connector Reference guide ../../guides/connector-reference.
 ---
 
 # davinci_connection (Resource)
 
+A resource to create and manage connections in DaVinci.
 
+A full connector reference, with Terraform examples, can be found in the [DaVinci Connector Reference guide](../../guides/connector-reference).
 
 ## Example Usage
 
