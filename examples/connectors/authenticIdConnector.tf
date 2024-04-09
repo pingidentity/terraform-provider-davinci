@@ -13,7 +13,7 @@ resource "davinci_connection" "authenticIdConnector" {
   property {
     name  = "androidSDKLicenseKey"
     type  = "string"
-    value = var.authenticidconnector_property_android_s_d_k_license_key
+    value = var.authenticidconnector_property_android_sdk_license_key
   }
 
   property {
@@ -43,7 +43,7 @@ resource "davinci_connection" "authenticIdConnector" {
   property {
     name  = "iOSSDKLicenseKey"
     type  = "string"
-    value = var.authenticidconnector_property_i_o_s_s_d_k_license_key
+    value = var.authenticidconnector_property_ios_sdk_license_key
   }
 
   property {
