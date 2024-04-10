@@ -1,4 +1,4 @@
-## 0.3.0 (Unreleased)
+## 0.3.0 (10 April 2024)
 
 BREAKING CHANGES:
 
