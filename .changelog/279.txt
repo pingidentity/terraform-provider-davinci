@@ -1,0 +1,15 @@
+```release-note:bug
+`resource/davinci_connection`: Fixed inability to import the `defaultUserPool` User Pool connector to Terraform state.
+```
+
+```release-note:enhancement
+`resource/davinci_connection`: Added ability to configure complex properties as JSON format.
+```
+
+```release-note:note
+`resource/davinci_connection`: Moved connector reference to separate guide.
+```
+
+```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.1.0 => 0.2.0
+```

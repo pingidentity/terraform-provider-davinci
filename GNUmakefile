@@ -27,14 +27,19 @@ install: build
 	@echo "==> Installing..."
 	go install -ldflags="-X main.version=$(VERSION)"
 
-generate: build fmtcheck
+generate: build generateconnectorref fmtcheck
 	@echo "==> Generating code..."
-	go generate ./...
+	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+
+generateconnectorref: build
+	@echo "==> Generating connector docs & examples..."
+	rm examples/connectors/*.tf
+	go run github.com/samir-gandhi/dvgenerate/cmd/generate
 	
 test: build
 	@echo "==> Running tests..."
 	go test $(TEST) $(TESTARGS) -timeout=5m
-	
+
 testacc: build
 	@echo "==> Running acceptance tests..."
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel 15
