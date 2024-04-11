@@ -1127,6 +1127,67 @@ func flowVariablesToTF(apiObject []davinci.FlowVariable) (types.Set, diag.Diagno
 	return returnVar, diags
 }
 
+type flowConnectionNodeModel struct {
+	connectionID        string
+	connectorID         string
+	id                  string
+	name                string
+	nodeType            string
+	subFlowIDValueLabel string
+	subFlowIDValueValue string
+	hasSubflowRef       bool
+}
+
+func parseFlowNodeProperties(node davinci.Node) flowConnectionNodeModel {
+
+	returnVar := flowConnectionNodeModel{
+		hasSubflowRef: false,
+	}
+
+	if nd := node.Data; nd != nil {
+
+		if v := nd.ConnectionID; v != nil {
+			returnVar.connectionID = *v
+		}
+
+		if v := nd.ConnectorID; v != nil {
+			returnVar.connectorID = *v
+		}
+
+		if v := nd.ID; v != nil {
+			returnVar.id = *v
+		}
+
+		if v := nd.Name; v != nil {
+			returnVar.name = *v
+		}
+
+		if v := nd.NodeType; v != nil {
+			returnVar.nodeType = *v
+		}
+
+		if ndp := nd.Properties; ndp != nil {
+			if ndps := ndp.SubFlowID; ndps != nil {
+				if ndpsv := ndps.Value; ndpsv != nil {
+
+					returnVar.hasSubflowRef = true
+
+					if v := ndpsv.Label; v != nil {
+						returnVar.subFlowIDValueLabel = *v
+					}
+
+					if v := ndpsv.Value; v != nil {
+						returnVar.subFlowIDValueValue = *v
+					}
+
+				}
+			}
+		}
+	}
+
+	return returnVar
+}
+
 // Validate if there are connections in the flow that should have a connection mapping, and flow connector instances that should have a subflow mapping
 func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinciexporttype.ParsedValue, connectionLinks basetypes.SetValue, subFlowLinks basetypes.SetValue, allowUnknownValues bool) (diags diag.Diagnostics) {
 
@@ -1152,7 +1213,9 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 
 			for _, node := range flowConfigObject.GraphData.Elements.Nodes {
 
-				if node.Data != nil && (node.Data.NodeType != nil && *node.Data.NodeType == "CONNECTION") || (node.Data.ConnectorID != nil && *node.Data.ConnectorID != "") {
+				nodeObject := parseFlowNodeProperties(node)
+
+				if nodeObject.nodeType == "CONNECTION" || nodeObject.connectorID != "" {
 
 					connectionLinkFound := false
 
@@ -1169,11 +1232,11 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 							return diags
 						}
 
-						if node.Data.ConnectionID != nil && !connectionLinkPlan.ReplaceImportConnectionId.IsNull() && connectionLinkPlan.ReplaceImportConnectionId.ValueString() == *node.Data.ConnectionID {
+						if !connectionLinkPlan.ReplaceImportConnectionId.IsNull() && connectionLinkPlan.ReplaceImportConnectionId.ValueString() == nodeObject.connectionID {
 							connectionLinkFound = true
 						}
 
-						if node.Data.Name != nil && connectionLinkPlan.Name.ValueString() == *node.Data.Name {
+						if connectionLinkPlan.Name.ValueString() == nodeObject.name {
 							connectionLinkFound = true
 						}
 
@@ -1190,12 +1253,12 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 							fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a node connection that does not have a `connection_link` mapping.  This behaviour is deprecated - going forward all connections in a flow must have a `connection_link` block parameter defined.\n\n"+
 								"Consider using the `davinci_connection` resource (to create a Terraform managed connection) with the `davinci_flow.connection_link` parameter (to map the Terraform managed connection with the connection in the flow).\n"+
 								"For more information and guidance on how to correctly configure flow connections, visit https://github.com/pingidentity/terraform-provider-davinci/issues/272\n\n"+
-								"Connection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID),
+								"Connection ID: %s\nConnector ID: %s\nConnection Name: %s\nNode Type: %s\nNode ID: %s", nodeObject.connectionID, nodeObject.connectorID, nodeObject.name, nodeObject.nodeType, nodeObject.id),
 						)
 					}
 
 					// Validate the subflow link mapping if necessary
-					if node.Data.ConnectorID != nil && *node.Data.ConnectorID == "flowConnector" {
+					if nodeObject.connectorID == "flowConnector" && nodeObject.hasSubflowRef {
 						subflowLinkFound := false
 
 						for _, subflowLinkPlan := range subflowLinksPlan {
@@ -1210,11 +1273,11 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 								return diags
 							}
 
-							if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Value != nil && !subflowLinkPlan.ReplaceImportSubflowId.IsNull() && subflowLinkPlan.ReplaceImportSubflowId.ValueString() == *node.Data.Properties.SubFlowID.Value.Value {
+							if !subflowLinkPlan.ReplaceImportSubflowId.IsNull() && subflowLinkPlan.ReplaceImportSubflowId.ValueString() == nodeObject.subFlowIDValueValue {
 								subflowLinkFound = true
 							}
 
-							if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Label != nil && subflowLinkPlan.Name.ValueString() == *node.Data.Properties.SubFlowID.Value.Label {
+							if subflowLinkPlan.Name.ValueString() == nodeObject.subFlowIDValueLabel {
 								subflowLinkFound = true
 							}
 
@@ -1230,7 +1293,7 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 								fmt.Sprintf("The flow JSON to import (provided in the `flow_json` parameter) contains a subflow referenced in a flow connector that does not have a `subflow_link` mapping.  This behaviour is deprecated - going forward all subflows defined in a flow must have a `subflow_link` block parameter defined.\n\n"+
 									"Consider using the `davinci_flow` resource (to create the subflow) with the `davinci_flow.subflow_link` parameter (to map the Terraform managed subflow with the main flow).\n"+
 									"For more information and guidance on how to correctly configure subflow connections, visit https://github.com/pingidentity/terraform-provider-davinci/issues/273\n\n"+
-									"Connection ID: %v\nConnector ID: %v\nConnection Name: %v\nNode Type: %v\nNode ID: %v\nSubflow Name: %v\nSubflow ID: %v", *node.Data.ConnectionID, *node.Data.ConnectorID, *node.Data.Name, *node.Data.NodeType, *node.Data.ID, *node.Data.Properties.SubFlowID.Value.Label, *node.Data.Properties.SubFlowID.Value.Value),
+									"Connection ID: %s\nConnector ID: %s\nConnection Name: %s\nNode Type: %s\nNode ID: %s\nSubflow Name: %s\nSubflow ID: %s", nodeObject.connectionID, nodeObject.connectorID, nodeObject.name, nodeObject.nodeType, nodeObject.id, nodeObject.subFlowIDValueLabel, nodeObject.subFlowIDValueValue),
 							)
 						}
 					}
@@ -1283,7 +1346,9 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 		newNodes := make([]davinci.Node, 0)
 		for _, node := range flowConfigObject.GraphData.Elements.Nodes {
 
-			if !unknownFlowConfigPlan && ((node.Data.NodeType != nil && *node.Data.NodeType == "CONNECTION") || (node.Data.ConnectorID != nil && *node.Data.ConnectorID != "")) {
+			nodeObject := parseFlowNodeProperties(node)
+
+			if !unknownFlowConfigPlan && (nodeObject.nodeType == "CONNECTION" || nodeObject.connectorID != "") {
 
 				// Find the connection_link reference
 				for _, connectionLinkPlan := range connectionLinksPlan {
@@ -1302,7 +1367,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 						node.Data.ConnectionID = &connectionID
 						node.Data.Name = &connectionName
 
-					} else if node.Data != nil && node.Data.Name != nil && connectionLinkPlan.Name.ValueString() == *node.Data.Name {
+					} else if connectionLinkPlan.Name.ValueString() == nodeObject.name {
 						// If we're here, the replace import connection ID is known to be null, so we do name matching
 
 						// replace the ID in the flowConfigObject
@@ -1311,7 +1376,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 					}
 				}
 
-				if !unknownFlowConfigPlan && node.Data.ConnectorID != nil && *node.Data.ConnectorID == "flowConnector" {
+				if !unknownFlowConfigPlan && nodeObject.connectorID == "flowConnector" && nodeObject.hasSubflowRef {
 
 					// Find the subflow_link reference
 					for _, subflowLinkPlan := range subflowLinksPlan {
@@ -1322,7 +1387,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 						}
 
 						// If the replace import connection ID is known and not null, we can replace the connection ID in the flowConfigObject
-						if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Value != nil && !subflowLinkPlan.ReplaceImportSubflowId.IsNull() && subflowLinkPlan.ReplaceImportSubflowId.ValueString() == *node.Data.Properties.SubFlowID.Value.Value {
+						if !subflowLinkPlan.ReplaceImportSubflowId.IsNull() && subflowLinkPlan.ReplaceImportSubflowId.ValueString() == nodeObject.subFlowIDValueValue {
 
 							// replace the ID and label
 							subflowPlanValue := subflowLinkPlan.Id.ValueString()
@@ -1330,7 +1395,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 							node.Data.Properties.SubFlowID.Value.Value = &subflowPlanValue
 							node.Data.Properties.SubFlowID.Value.Label = &subflowPlanLabel
 
-						} else if node.Data.Properties != nil && node.Data.Properties.SubFlowID != nil && node.Data.Properties.SubFlowID.Value != nil && node.Data.Properties.SubFlowID.Value.Label != nil && subflowLinkPlan.Name.ValueString() == *node.Data.Properties.SubFlowID.Value.Label {
+						} else if subflowLinkPlan.Name.ValueString() == nodeObject.subFlowIDValueLabel {
 							// If we're here, the replace import connection ID is known to be null, so we do name matching
 
 							// replace the ID in the flowConfigObject
