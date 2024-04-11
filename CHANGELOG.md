@@ -7,9 +7,11 @@ NOTES:
 * bump `github.com/hashicorp/terraform-plugin-mux` 0.14.0 => 0.15.0 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
 * bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.31.0 => 2.33.0 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
 * bump `github.com/katbyte/terrafmt` 0.5.2 => 0.5.3 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.2.0 => 0.3.0 ([#288](https://github.com/pingidentity/terraform-provider-davinci/issues/288))
 
 BUG FIXES:
 
+* `resource/davinci_flow`: Fixed inconsistent state errors when importing a flow with a non-default log setting. ([#288](https://github.com/pingidentity/terraform-provider-davinci/issues/288))
 * `resource/davinci_flow`: Fixed panic error when the flow JSON contains a flow conductor node which isn't using a subflow capability. ([#285](https://github.com/pingidentity/terraform-provider-davinci/issues/285))
 
 ## 0.3.0 (10 April 2024)
