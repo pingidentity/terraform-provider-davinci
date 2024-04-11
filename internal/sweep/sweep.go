@@ -9,7 +9,6 @@ import (
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/patrickcping/pingone-go-sdk-v2/management"
 	"github.com/patrickcping/pingone-go-sdk-v2/pingone/model"
@@ -62,7 +61,8 @@ func FetchTaggedEnvironmentsByPrefix(ctx context.Context, apiClient *management.
 				var err error
 
 				// Permissions may not have propagated by this point
-				if m, err := regexp.MatchString("^The request could not be completed. You do not have access to this resource.", p1error.GetMessage()); err == nil && m {
+				m, err := regexp.MatchString("^The request could not be completed. You do not have access to this resource.", p1error.GetMessage())
+				if err == nil && m {
 					tflog.Warn(ctx, "Insufficient PingOne privileges detected")
 					return true
 				}
@@ -125,23 +125,7 @@ func CreateTestEnvironment(ctx context.Context, apiClient *management.APIClient,
 			return apiClient.EnvironmentsApi.CreateEnvironmentActiveLicense(ctx).Environment(environment).Execute()
 		},
 		"CreateEnvironmentActiveLicense",
-		func(error model.P1Error) diag.Diagnostics {
-
-			// Invalid region
-			if details, ok := error.GetDetailsOk(); ok && details != nil && len(details) > 0 {
-				if target, ok := details[0].GetTargetOk(); ok && *target == "region" {
-					allowedRegions := make([]string, 0)
-					for _, allowedRegion := range details[0].GetInnerError().AllowedValues {
-						allowedRegions = append(allowedRegions, model.FindRegionByAPICode(management.EnumRegionCode(allowedRegion)).Region)
-					}
-					diags := diag.FromErr(fmt.Errorf("Incompatible environment region for the organization tenant.  Expecting regions %v, region provided: %s", allowedRegions, region))
-
-					return diags
-				}
-			}
-
-			return nil
-		},
+		nil,
 		DefaultRetryable,
 	)
 	if diags.HasError() {
