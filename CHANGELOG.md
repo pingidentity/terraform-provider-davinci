@@ -1,5 +1,9 @@
 ## 0.3.1 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_flow`: Fixed panic error when the flow JSON contains a flow conductor node which isn't using a subflow capability. ([#285](https://github.com/pingidentity/terraform-provider-davinci/issues/285))
+
 ## 0.3.0 (10 April 2024)
 
 BREAKING CHANGES:
