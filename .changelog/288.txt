@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fixed inconsistent state errors when importing a flow with a non-default log setting.
+```
