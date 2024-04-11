@@ -1135,11 +1135,14 @@ type flowConnectionNodeModel struct {
 	nodeType            string
 	subFlowIDValueLabel string
 	subFlowIDValueValue string
+	hasSubflowRef       bool
 }
 
 func parseFlowNodeProperties(node davinci.Node) flowConnectionNodeModel {
 
-	returnVar := flowConnectionNodeModel{}
+	returnVar := flowConnectionNodeModel{
+		hasSubflowRef: false,
+	}
 
 	if nd := node.Data; nd != nil {
 
@@ -1166,6 +1169,8 @@ func parseFlowNodeProperties(node davinci.Node) flowConnectionNodeModel {
 		if ndp := nd.Properties; ndp != nil {
 			if ndps := ndp.SubFlowID; ndps != nil {
 				if ndpsv := ndps.Value; ndpsv != nil {
+
+					returnVar.hasSubflowRef = true
 
 					if v := ndpsv.Label; v != nil {
 						returnVar.subFlowIDValueLabel = *v
@@ -1253,7 +1258,7 @@ func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinci
 					}
 
 					// Validate the subflow link mapping if necessary
-					if nodeObject.connectorID == "flowConnector" {
+					if nodeObject.connectorID == "flowConnector" && nodeObject.hasSubflowRef {
 						subflowLinkFound := false
 
 						for _, subflowLinkPlan := range subflowLinksPlan {
@@ -1371,7 +1376,7 @@ func modifyPlanForConnectionSubflowLinkMappings(ctx context.Context, flowConfigO
 					}
 				}
 
-				if !unknownFlowConfigPlan && nodeObject.connectorID == "flowConnector" {
+				if !unknownFlowConfigPlan && nodeObject.connectorID == "flowConnector" && nodeObject.hasSubflowRef {
 
 					// Find the subflow_link reference
 					for _, subflowLinkPlan := range subflowLinksPlan {
