@@ -1,5 +1,13 @@
 ## 0.3.1 (Unreleased)
 
+NOTES:
+
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.5.0 => 1.7.0 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
+* bump `github.com/hashicorp/terraform-plugin-go` 0.21.0 => 0.22.1 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
+* bump `github.com/hashicorp/terraform-plugin-mux` 0.14.0 => 0.15.0 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.31.0 => 2.33.0 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
+* bump `github.com/katbyte/terrafmt` 0.5.2 => 0.5.3 ([#286](https://github.com/pingidentity/terraform-provider-davinci/issues/286))
+
 BUG FIXES:
 
 * `resource/davinci_flow`: Fixed panic error when the flow JSON contains a flow conductor node which isn't using a subflow capability. ([#285](https://github.com/pingidentity/terraform-provider-davinci/issues/285))
