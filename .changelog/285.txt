@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fixed panic error when the flow JSON contains a flow conductor node which isn't using a subflow capability.
+```
