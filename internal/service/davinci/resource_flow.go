@@ -603,6 +603,19 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 
+	// do an update for the settings
+	flowUpdate := davinci.FlowUpdate{
+		FlowUpdateConfiguration: daVinciImport.FlowInfo.FlowUpdateConfiguration,
+		CurrentVersion:          createFlow.CurrentVersion,
+		Name:                    &createFlow.Name,
+		Description:             createFlow.Description,
+	}
+
+	resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, createFlow.FlowID, &flowUpdate)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	// Do an export for state
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
@@ -725,48 +738,13 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	flowID := plan.Id.ValueString()
 
 	if !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) {
-
 		daVinciUpdate, d := plan.expandUpdate(state)
 		resp.Diagnostics.Append(d...)
 		if resp.Diagnostics.HasError() {
 			return
 		}
 
-		_, err := sdk.DoRetryable(
-			ctx,
-			r.Client,
-			environmentID,
-			func() (any, *http.Response, error) {
-				return r.Client.UpdateFlowWithResponse(environmentID, flowID, *daVinciUpdate)
-			},
-		)
-		if err != nil {
-			resp.Diagnostics.AddError(
-				"Error importing flow",
-				fmt.Sprintf("Error updating flow: %s", err),
-			)
-		}
-		if resp.Diagnostics.HasError() {
-			return
-		}
-
-		_, err = sdk.DoRetryable(
-			ctx,
-			r.Client,
-			environmentID,
-			func() (any, *http.Response, error) {
-				return r.Client.DeployFlowWithResponse(environmentID, flowID)
-			},
-		)
-		if err != nil {
-			resp.Diagnostics.AddError(
-				"Error deploying flow",
-				fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow: %s", err),
-			)
-		}
-		if resp.Diagnostics.HasError() {
-			return
-		}
+		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate)...)
 	}
 
 	// Do an export for state
@@ -802,6 +780,45 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(state.toState(&response.Flow)...)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
+}
+
+func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID string, daVinciUpdate *davinci.FlowUpdate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	_, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (any, *http.Response, error) {
+			return r.Client.UpdateFlowWithResponse(environmentID, flowID, *daVinciUpdate)
+		},
+	)
+	if err != nil {
+		diags.AddError(
+			"Error importing flow",
+			fmt.Sprintf("Error updating flow: %s", err),
+		)
+	}
+	if diags.HasError() {
+		return diags
+	}
+
+	_, err = sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (any, *http.Response, error) {
+			return r.Client.DeployFlowWithResponse(environmentID, flowID)
+		},
+	)
+	if err != nil {
+		diags.AddError(
+			"Error deploying flow",
+			fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow, or an unmapped node connection: %s", err),
+		)
+	}
+
+	return diags
 }
 
 func (r *FlowResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {

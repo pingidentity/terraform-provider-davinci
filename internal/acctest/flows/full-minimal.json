@@ -17,7 +17,9 @@
       "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
       "intermediateLoadingScreenCSS": "",
       "intermediateLoadingScreenHTML": "",
-      "flowHttpTimeoutInSeconds": 300
+      "flowHttpTimeoutInSeconds": 300,
+      "logLevel": 1,
+      "useCustomCSS": true
     },
     "timeouts": "null",
     "updatedDate": 1707837221226,
