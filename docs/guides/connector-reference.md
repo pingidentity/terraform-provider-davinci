@@ -1,3 +1,10 @@
+---
+layout: ""
+page_title: "DaVinci Connection Definitions"
+description: |-
+  The guide provides a full DaVinci connector reference when using the `davinci_connection` Terraform resource.
+---
+
 # DaVinci Connection Definitions
 
 Below is a list of all available DaVinci Connections available for use in `davinci_connection` resource. 
@@ -8434,27 +8441,6 @@ resource "davinci_connection" "connectorRandomUserMe" {
 Connector ID (`connector_id` in the resource): `connectorTruid`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `customAuth` (json):  Console display name: "Custom Parameters".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorTruid" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorTruid"
-  name         = "My awesome connectorTruid"
-
-  property {
-    name  = "customAuth"
-    type  = "json"
-    value = jsonencode({})
-  }
-}
-```
-
-k in the resource as the `name` parameter):
 
 * `customAuth` (json):  Console display name: "Custom Parameters".
 
