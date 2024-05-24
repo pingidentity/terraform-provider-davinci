@@ -412,59 +412,63 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 		return
 	}
 
+	unknownFlowConfigPlan := true
+	var flowConfigObject davinci.FlowConfiguration
+
 	// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
-	var flowObject davinci.Flow
-	err := davinci.Unmarshal([]byte(plan.FlowJSON.ValueString()), &flowObject, davinci.ExportCmpOpts{})
-	if err != nil {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("flow_json"),
-			"Error parsing `flow_json`",
-			fmt.Sprintf("Error parsing `flow_json` into flow configuration object: %s", err),
-		)
-		return
-	}
+	if !plan.FlowJSON.IsUnknown() {
+		var flowObject davinci.Flow
+		err := davinci.Unmarshal([]byte(plan.FlowJSON.ValueString()), &flowObject, davinci.ExportCmpOpts{})
+		if err != nil {
+			resp.Diagnostics.AddAttributeError(
+				path.Root("flow_json"),
+				"Error parsing `flow_json`",
+				fmt.Sprintf("Error parsing `flow_json` into flow configuration object when applying plan modifications: %s", err),
+			)
+			return
+		}
 
-	if config.Name.IsNull() {
-		resp.Plan.SetAttribute(ctx, path.Root("name"), flowObject.Name)
-	}
+		if config.Name.IsNull() {
+			resp.Plan.SetAttribute(ctx, path.Root("name"), flowObject.Name)
+		}
 
-	flowConfigObject := flowObject.FlowConfiguration
+		flowConfigObject = flowObject.FlowConfiguration
 
-	var d diag.Diagnostics
-	unknownFlowConfigPlan := false
+		var d diag.Diagnostics
 
-	unknownFlowConfigPlan, d = modifyPlanForConnectionSubflowLinkMappings(ctx, &flowConfigObject, plan.ConnectionLinks, plan.SubFlowLinks)
-	resp.Diagnostics.Append(d...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	if !unknownFlowConfigPlan && !req.State.Raw.IsNull() {
-
-		var state FlowResourceModel
-
-		// Read Terraform state data into the model
-		resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+		unknownFlowConfigPlan, d = modifyPlanForConnectionSubflowLinkMappings(ctx, &flowConfigObject, plan.ConnectionLinks, plan.SubFlowLinks)
+		resp.Diagnostics.Append(d...)
 		if resp.Diagnostics.HasError() {
 			return
 		}
 
-		if !state.FlowConfigurationJSON.IsNull() {
-			// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
-			var flowConfigStateObject davinci.FlowConfiguration
-			err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &flowConfigStateObject, davinci.ExportCmpOpts{})
-			if err != nil {
-				resp.Diagnostics.AddAttributeError(
-					path.Root("flow_json"),
-					"Error parsing `flow_configuration_json` in state",
-					fmt.Sprintf("Error parsing `flow_configuration_json` in state into flow configuration object: %s", err),
-				)
+		if !unknownFlowConfigPlan && !req.State.Raw.IsNull() {
+
+			var state FlowResourceModel
+
+			// Read Terraform state data into the model
+			resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+			if resp.Diagnostics.HasError() {
 				return
 			}
 
-			resp.Diagnostics.Append(modifyPlanForMergedProperties(&flowConfigObject.FlowUpdateConfiguration, flowConfigStateObject.FlowUpdateConfiguration)...)
-			if resp.Diagnostics.HasError() {
-				return
+			if !state.FlowConfigurationJSON.IsNull() {
+				// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
+				var flowConfigStateObject davinci.FlowConfiguration
+				err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &flowConfigStateObject, davinci.ExportCmpOpts{})
+				if err != nil {
+					resp.Diagnostics.AddAttributeError(
+						path.Root("flow_json"),
+						"Error parsing `flow_configuration_json` in state",
+						fmt.Sprintf("Error parsing `flow_configuration_json` in state into flow configuration object: %s", err),
+					)
+					return
+				}
+
+				resp.Diagnostics.Append(modifyPlanForMergedProperties(&flowConfigObject.FlowUpdateConfiguration, flowConfigStateObject.FlowUpdateConfiguration)...)
+				if resp.Diagnostics.HasError() {
+					return
+				}
 			}
 		}
 	}

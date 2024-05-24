@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fixed "Error parsing `flow_json`" error when the `flow_json` string is unknown during plan.
+```

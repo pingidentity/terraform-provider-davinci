@@ -792,6 +792,39 @@ func testAccResourceFlow_ComputeDifferences(t *testing.T, cd computeDifferencesT
 	})
 }
 
+func TestAccResourceFlow_UnknownFlowString(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	name := resourceName
+
+	stepHcl, err := testAccResourceFlow_UnknownFlow_HCL(resourceName, name)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Flow_CheckDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: stepHcl,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+				),
+			},
+		},
+	})
+}
+
 func TestAccResourceFlow_BrokenFlow(t *testing.T) {
 
 	resourceName := acctest.ResourceNameGen()
@@ -1383,6 +1416,125 @@ EOT
     replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), resourceName, flowJson), nil
+}
+
+func testAccResourceFlow_UnknownFlow_HCL(resourceName, name string) (hcl string, err error) {
+
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/full-minimal.json")
+	if err != nil {
+		return "", err
+	}
+
+	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf(`
+%[1]s
+
+%[2]s
+
+resource "davinci_flow" "%[3]s" {
+  environment_id = pingone_environment.%[3]s.id
+
+  flow_json = <<EOT
+{
+  "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb",
+  "authTokenExpireIds": [],
+  "connectorIds": [
+    "errorConnector"
+  ],
+  "createdDate": 1707837216607,
+  "currentVersion": 4,
+  "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+  "deployedDate": 1707837221226,
+  "description": "Imported on Wed Jan 31 2024 13:29:13 GMT+0000 (Coordinated Universal Time)",
+  "flowStatus": "enabled",
+  "isOutputSchemaSaved": false,
+  "name": "simple",
+  "publishedVersion": 4,
+  "settings": {
+    "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
+    "intermediateLoadingScreenCSS": "",
+    "intermediateLoadingScreenHTML": "",
+    "flowHttpTimeoutInSeconds": 300,
+    "logLevel": 1,
+    "useCustomCSS": true
+  },
+  "timeouts": "null",
+  "updatedDate": 1707837221226,
+  "flowId": "8f93840f61b58b043a0a38439a1c6640",
+  "versionId": 4,
+  "graphData": {
+    "elements": {
+      "nodes": [
+        {
+          "data": {
+            "id": "2pzouq7el7",
+            "nodeType": "CONNECTION",
+            "connectionId": "53ab83a4a4ab919d9f2cb02d9e111ac8",
+            "connectorId": "errorConnector",
+            "name": "Error Message",
+            "label": "Error Message",
+            "status": "configured",
+            "capabilityName": "customErrorMessage",
+            "type": "action",
+            "properties": {
+              "errorMessage": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"This is an error - ${davinci_connection.%[3]s-error.id}\"\n      }\n    ]\n  }\n]"
+              },
+              "errorDescription": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"This is an error, really\"\n      }\n    ]\n  }\n]"
+              }
+            }
+          },
+          "position": {
+            "x": 400,
+            "y": 400
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        }
+      ]
+    },
+    "data": {},
+    "zoomingEnabled": true,
+    "userZoomingEnabled": true,
+    "zoom": 1,
+    "minZoom": 1e-50,
+    "maxZoom": 1e+50,
+    "panningEnabled": true,
+    "userPanningEnabled": true,
+    "pan": {
+      "x": 0,
+      "y": 0
+    },
+    "boxSelectionEnabled": true,
+    "renderer": {
+      "name": "null"
+    }
+  },
+  "flowColor": "#FFC8C1",
+  "savedDate": 1707837216592,
+  "variables": [],
+  "connections": []
+}
+EOT
+
+  // Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), commonHcl, resourceName, mainFlowJson), nil
 }
 
 // // tests for changes other than graph data.
