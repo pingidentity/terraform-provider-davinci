@@ -1,0 +1,3 @@
+```release-note:note
+`resource/davinci_flow`: `flow_variables` now includes a plan derived from the flow import JSON.
+```
