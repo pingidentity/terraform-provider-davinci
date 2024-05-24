@@ -452,6 +452,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 				return
 			}
 
+			// Flow configuration
 			if !state.FlowConfigurationJSON.IsNull() {
 				// Compute the Flow Configuration (the drift of the import file is calculated based on this attribute)
 				var flowConfigStateObject davinci.FlowConfiguration
@@ -470,6 +471,21 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 					return
 				}
 			}
+
+			// Flow variables
+			flowVariablesPlan := make([]davinci.FlowVariable, 0)
+			for _, flowVariable := range flowObject.FlowMetadata.Variables {
+				flowVariableIDOld := *flowVariable.FlowID
+				flowVariable.FlowID = state.Id.ValueStringPointer()
+				flowVariable.Name = strings.Replace(flowVariable.Name, flowVariableIDOld, state.Id.ValueString(), -1)
+
+				flowVariablesPlan = append(flowVariablesPlan, flowVariable)
+			}
+
+			var d diag.Diagnostics
+			flowVariables, d := flowVariablesToTF(flowVariablesPlan)
+			resp.Diagnostics.Append(d...)
+			resp.Plan.SetAttribute(ctx, path.Root("flow_variables"), flowVariables)
 		}
 	}
 
@@ -479,8 +495,11 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 		flowConfigurationJSON = types.StringUnknown()
 
+		resp.Plan.SetAttribute(ctx, path.Root("flow_variables"), types.SetUnknown(types.ObjectType{AttrTypes: flowVariablesTFObjectTypes}))
+
 	} else {
 
+		// Flow configuration
 		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
 		if err != nil {
 			resp.Diagnostics.AddError(
