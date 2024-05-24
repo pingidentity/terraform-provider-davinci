@@ -1,5 +1,14 @@
 ## 0.3.2 (Unreleased)
 
+NOTES:
+
+* bump `github.com/golangci/golangci-lint` 1.55.2 => 1.58.2 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
+* bump `github.com/hashicorp/go-getter` 1.7.2 => 1.7.4 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
+* bump `github.com/hashicorp/terraform-plugin-docs` 0.18.0 => 0.19.2 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
+* bump `github.com/hashicorp/terraform-plugin-go` 0.22.1 => 0.23.0 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
+* bump `github.com/samir-gandhi/dvgenerate` 0.0.10 => 0.0.11 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
+* bump `golang.org/x/net` 0.22.0 => 0.25.0 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
+
 BUG FIXES:
 
 * `resource/davinci_flow`: Fixed "Error parsing `flow_json`" error when the `flow_json` string is unknown during plan. ([#306](https://github.com/pingidentity/terraform-provider-davinci/issues/306))
