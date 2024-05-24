@@ -2,6 +2,7 @@
 
 NOTES:
 
+* `resource/davinci_flow`: `flow_variables` now includes a plan derived from the flow import JSON. ([#308](https://github.com/pingidentity/terraform-provider-davinci/issues/308))
 * bump `github.com/golangci/golangci-lint` 1.55.2 => 1.58.2 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
 * bump `github.com/hashicorp/go-getter` 1.7.2 => 1.7.4 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
 * bump `github.com/hashicorp/terraform-plugin-docs` 0.18.0 => 0.19.2 ([#307](https://github.com/pingidentity/terraform-provider-davinci/issues/307))
