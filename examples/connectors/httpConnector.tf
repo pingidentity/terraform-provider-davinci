@@ -21,4 +21,10 @@ resource "davinci_connection" "httpConnector" {
     type  = "string"
     value = var.httpconnector_property_recaptcha_site_key
   }
+
+  property {
+    name  = "whiteList"
+    type  = "string"
+    value = var.httpconnector_property_white_list
+  }
 }
