@@ -1,5 +1,9 @@
 ## 0.3.2 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_flow`: Fixed "Error parsing `flow_json`" error when the `flow_json` string is unknown during plan. ([#306](https://github.com/pingidentity/terraform-provider-davinci/issues/306))
+
 ## 0.3.1 (12 April 2024)
 
 NOTES:
