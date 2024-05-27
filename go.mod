@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/terraform-plugin-mux v0.15.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.33.0
 	github.com/katbyte/terrafmt v0.5.3
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.38.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.39.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.3.0
 	github.com/samir-gandhi/dvgenerate v0.0.11
