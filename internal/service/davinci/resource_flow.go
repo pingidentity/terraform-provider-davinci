@@ -475,9 +475,11 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			// Flow variables
 			flowVariablesPlan := make([]davinci.FlowVariable, 0)
 			for _, flowVariable := range flowObject.FlowMetadata.Variables {
-				flowVariableIDOld := *flowVariable.FlowID
-				flowVariable.FlowID = state.Id.ValueStringPointer()
-				flowVariable.Name = strings.Replace(flowVariable.Name, flowVariableIDOld, state.Id.ValueString(), -1)
+				if v := flowVariable.FlowID; v != nil {
+					flowVariableIDOld := *flowVariable.FlowID
+					flowVariable.FlowID = state.Id.ValueStringPointer()
+					flowVariable.Name = strings.Replace(flowVariable.Name, flowVariableIDOld, state.Id.ValueString(), -1)
+				}
 
 				flowVariablesPlan = append(flowVariablesPlan, flowVariable)
 			}
