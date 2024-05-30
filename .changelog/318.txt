@@ -13,3 +13,7 @@ bump `github.com/hashicorp/terraform-plugin-mux` 0.15.0 => 0.16.0
 ```release-note:note
 bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.38.0 => 0.39.0
 ```
+
+```release-note:note
+`resource/davinci_flow`: Replace deprecated flow attribute validator.
+```

@@ -80,13 +80,31 @@ var (
 )
 
 var (
-	flowExportCmpOptsConfiguration = davinci.ExportCmpOpts{
+	flowJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
+		IgnoreConfig:              false,
+		IgnoreDesignerCues:        false,
+		IgnoreEnvironmentMetadata: true,
+		IgnoreUnmappedProperties:  false,
+		IgnoreVersionMetadata:     true,
+		IgnoreFlowMetadata:        false,
+	}
+
+	flowConfigurationJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
 		IgnoreConfig:              false,
 		IgnoreDesignerCues:        false,
 		IgnoreEnvironmentMetadata: true,
 		IgnoreUnmappedProperties:  false,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
+	}
+
+	flowExportJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
+		IgnoreConfig:              false,
+		IgnoreDesignerCues:        false,
+		IgnoreEnvironmentMetadata: false,
+		IgnoreUnmappedProperties:  true, // because we don't do calculation with this object
+		IgnoreVersionMetadata:     false,
+		IgnoreFlowMetadata:        false,
 	}
 )
 
@@ -210,14 +228,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
-					ExportCmpOpts: davinci.ExportCmpOpts{
-						IgnoreConfig:              false,
-						IgnoreDesignerCues:        false,
-						IgnoreEnvironmentMetadata: true,
-						IgnoreUnmappedProperties:  false,
-						IgnoreVersionMetadata:     true,
-						IgnoreFlowMetadata:        false,
-					},
+					ExportCmpOpts: flowJsonCmpOptsConfiguration,
 				},
 			},
 
@@ -227,7 +238,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
-					ExportCmpOpts: flowExportCmpOptsConfiguration,
+					ExportCmpOpts: flowConfigurationJsonCmpOptsConfiguration,
 				},
 			},
 
@@ -237,14 +248,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
-					ExportCmpOpts: davinci.ExportCmpOpts{
-						IgnoreConfig:              false,
-						IgnoreDesignerCues:        false,
-						IgnoreEnvironmentMetadata: false,
-						IgnoreUnmappedProperties:  true, // because we don't do calculation with this object
-						IgnoreVersionMetadata:     false,
-						IgnoreFlowMetadata:        false,
-					},
+					ExportCmpOpts: flowExportJsonCmpOptsConfiguration,
 				},
 			},
 
@@ -502,7 +506,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 	} else {
 
 		// Flow configuration
-		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
+		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowConfigurationJsonCmpOptsConfiguration)
 		if err != nil {
 			resp.Diagnostics.AddError(
 				"Error converting the flow object to JSON",
@@ -997,7 +1001,7 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, di
 
 		}
 
-		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowExportCmpOptsConfiguration)
+		jsonFlowConfigBytes, err := davinci.Marshal(flowConfigObject, flowConfigurationJsonCmpOptsConfiguration)
 		if err != nil {
 			diags.AddError(
 				"Error converting the flow object to JSON",
@@ -1006,7 +1010,7 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, di
 			return nil, diags
 		}
 
-		err = davinci.Unmarshal(jsonFlowConfigBytes, &data.FlowInfo.FlowConfiguration, flowExportCmpOptsConfiguration)
+		err = davinci.Unmarshal(jsonFlowConfigBytes, &data.FlowInfo.FlowConfiguration, flowConfigurationJsonCmpOptsConfiguration)
 		if err != nil {
 			diags.AddError(
 				"Error parsing `flow_configuration_json`",
@@ -1075,7 +1079,7 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 	p.Id = framework.StringToTF(apiObject.FlowID)
 	p.EnvironmentId = framework.StringToTF(apiObject.CompanyID)
 
-	jsonConfigurationBytes, err := davinci.Marshal(apiObject.FlowConfiguration, flowExportCmpOptsConfiguration)
+	jsonConfigurationBytes, err := davinci.Marshal(apiObject.FlowConfiguration, flowConfigurationJsonCmpOptsConfiguration)
 	if err != nil {
 		diags.AddError(
 			"Error converting the flow object configuration to JSON",
@@ -1084,7 +1088,7 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 		return diags
 	}
 
-	p.FlowConfigurationJSON = framework.DaVinciExportTypeToTF(string(jsonConfigurationBytes[:]))
+	p.FlowConfigurationJSON = framework.DaVinciExportTypeToTF(string(jsonConfigurationBytes[:]), flowConfigurationJsonCmpOptsConfiguration)
 
 	jsonBytes, err := davinci.Marshal(apiObject, davinci.ExportCmpOpts{})
 	if err != nil {
@@ -1095,10 +1099,10 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 		return diags
 	}
 
-	p.FlowExportJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]))
+	p.FlowExportJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]), flowExportJsonCmpOptsConfiguration)
 
 	if p.FlowJSON.IsNull() {
-		p.FlowJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]))
+		p.FlowJSON = framework.DaVinciExportTypeToTF(string(jsonBytes[:]), flowJsonCmpOptsConfiguration)
 	}
 
 	if apiObject.DeployedDate != nil {
