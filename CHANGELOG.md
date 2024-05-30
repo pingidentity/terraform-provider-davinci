@@ -1,5 +1,13 @@
 ## 0.3.3 (Unreleased)
 
+NOTES:
+
+* `resource/davinci_flow`: Replace deprecated flow attribute validator. ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/golangci/golangci-lint` 1.58.2 => 1.59.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.7.0 => 1.8.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/hashicorp/terraform-plugin-mux` 0.15.0 => 0.16.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.38.0 => 0.39.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+
 BUG FIXES:
 
 * `resource/davinci_flow`: Fix panic crash when flow instance and/or company variables are included in a flow export. ([#316](https://github.com/pingidentity/terraform-provider-davinci/issues/316))
