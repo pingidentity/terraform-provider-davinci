@@ -1,5 +1,9 @@
 ## 0.3.3 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix panic crash when flow instance and/or company variables are included in a flow export. ([#316](https://github.com/pingidentity/terraform-provider-davinci/issues/316))
+
 ## 0.3.2 (28 May 2024)
 
 NOTES:
