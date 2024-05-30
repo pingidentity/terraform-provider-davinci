@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fix panic crash when flow instance and/or company variables are included in a flow export.
+```
