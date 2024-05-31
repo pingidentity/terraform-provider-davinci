@@ -220,6 +220,10 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				MarkdownDescription: descriptionDescription.MarkdownDescription,
 				Optional:            true,
 				Computed:            true,
+
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(attrMinLength),
+				},
 			},
 
 			"flow_json": schema.StringAttribute{
