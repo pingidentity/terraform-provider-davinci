@@ -138,7 +138,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 	)
 
 	descriptionDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"A string that specifies a description of the flow.  If the field is left blank, a description value will be derived by the service.",
+		"A string that specifies a description of the flow.  If the field is left undefined, the description from the flow export will be used.  If this field is left undefined and the flow export does not contain a description, the service will define a description on import.",
 	)
 
 	deployDescription := framework.SchemaAttributeDescriptionFromMarkdown(

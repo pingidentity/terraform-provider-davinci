@@ -64,7 +64,7 @@ resource "davinci_flow" "my_awesome_main_flow" {
 
 - `connection_link` (Block Set) Mappings to connections that this flow depends on.  Connections should be managed (with the `davinci_connection` resource) or retrieved (with the `davinci_connection` data source) to provide the mappings needed for this configuration block. (see [below for nested schema](#nestedblock--connection_link))
 - `deploy` (Boolean, Deprecated) **Deprecation notice:** This attribute is deprecated and will be removed in a future release.  Flows are automatically deployed on import. A boolean that specifies whether to deploy the flow after import.  Defaults to `true`.
-- `description` (String) A string that specifies a description of the flow.  If the field is left blank, a description value will be derived by the service.
+- `description` (String) A string that specifies a description of the flow.  If the field is left undefined, the description from the flow export will be used.  If this field is left undefined and the flow export does not contain a description, the service will define a description on import.
 - `name` (String) A string that identifies the flow name after import.  If the field is left blank, a flow name will be derived by the service from the name in the import JSON (the `flow_json` parameter).
 - `subflow_link` (Block Set) Child flows of this resource, where the `flow_json` contains reference to subflows.  If the `flow_json` contains subflows, this one `subflow_link` block is required per contained subflow. (see [below for nested schema](#nestedblock--subflow_link))
 
