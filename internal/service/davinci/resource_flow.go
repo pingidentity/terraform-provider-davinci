@@ -955,6 +955,14 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, di
 		return nil, diags
 	}
 
+	if data.Name == nil {
+		data.Name = &data.FlowInfo.Name
+	}
+
+	if data.Description == nil && data.FlowInfo.Description != nil {
+		data.Description = data.FlowInfo.Description
+	}
+
 	data.FlowNameMapping = map[string]string{
 		data.FlowInfo.FlowID: p.Name.ValueString(),
 	}
@@ -1038,13 +1046,11 @@ func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.Flow
 	}
 
 	if !p.Name.IsNull() {
-		name := p.Name.ValueString()
-		data.Name = &name
+		data.Name = p.Name.ValueStringPointer()
 	}
 
 	if !p.Description.IsNull() {
-		description := p.Description.ValueString()
-		data.Description = &description
+		data.Description = p.Description.ValueStringPointer()
 	}
 
 	err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData, davinci.ExportCmpOpts{})
@@ -1113,8 +1119,8 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 
 	p.Name = framework.StringToTF(apiObject.Name)
 
-	if apiObject.Description != nil {
-		p.Description = framework.StringToTF(*apiObject.Description)
+	if v := apiObject.Description; v != nil {
+		p.Description = framework.StringToTF(*v)
 	}
 
 	var d diag.Diagnostics

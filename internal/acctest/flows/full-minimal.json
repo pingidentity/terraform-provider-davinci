@@ -8,7 +8,7 @@
     "currentVersion": 4,
     "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
     "deployedDate": 1707837221226,
-    "description": "Imported on Wed Jan 31 2024 13:29:13 GMT+0000 (Coordinated Universal Time)",
+    "description": "This is a fallback description",
     "flowStatus": "enabled",
     "isOutputSchemaSaved": false,
     "name": "simple",
