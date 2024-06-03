@@ -3,7 +3,7 @@ module github.com/pingidentity/terraform-provider-davinci
 go 1.21.1
 
 require (
-	github.com/bflad/tfproviderlint v0.29.0
+	github.com/bflad/tfproviderlint v0.30.0
 	github.com/golangci/golangci-lint v1.59.0
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/go-changelog v0.0.0-20221013053416-ba40b3a8c7ff
