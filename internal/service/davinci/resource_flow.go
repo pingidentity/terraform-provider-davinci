@@ -440,6 +440,10 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			resp.Plan.SetAttribute(ctx, path.Root("name"), flowObject.Name)
 		}
 
+		if v := flowObject.Description; config.Description.IsNull() && v != nil && *v != "" {
+			resp.Plan.SetAttribute(ctx, path.Root("description"), *v)
+		}
+
 		flowConfigObject = flowObject.FlowConfiguration
 
 		var d diag.Diagnostics
@@ -644,7 +648,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		Description:             createFlow.Description,
 	}
 
-	resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, createFlow.FlowID, &flowUpdate)...)
+	resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, createFlow.FlowID, &flowUpdate, true)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -777,7 +781,20 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			return
 		}
 
-		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate)...)
+		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, true)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+	} else if !plan.Description.Equal(state.Description) || !plan.Name.Equal(state.Name) {
+		daVinciUpdate := &davinci.FlowUpdate{
+			Name:        plan.Name.ValueStringPointer(),
+			Description: plan.Description.ValueStringPointer(),
+		}
+
+		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Do an export for state
@@ -815,7 +832,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
-func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID string, daVinciUpdate *davinci.FlowUpdate) diag.Diagnostics {
+func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID string, daVinciUpdate *davinci.FlowUpdate, deploy bool) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	_, err := sdk.DoRetryable(
@@ -836,19 +853,21 @@ func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID str
 		return diags
 	}
 
-	_, err = sdk.DoRetryable(
-		ctx,
-		r.Client,
-		environmentID,
-		func() (any, *http.Response, error) {
-			return r.Client.DeployFlowWithResponse(environmentID, flowID)
-		},
-	)
-	if err != nil {
-		diags.AddError(
-			"Error deploying flow",
-			fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow, or an unmapped node connection: %s", err),
+	if deploy {
+		_, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.DeployFlowWithResponse(environmentID, flowID)
+			},
 		)
+		if err != nil {
+			diags.AddError(
+				"Error deploying flow",
+				fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow, or an unmapped node connection: %s", err),
+			)
+		}
 	}
 
 	return diags
