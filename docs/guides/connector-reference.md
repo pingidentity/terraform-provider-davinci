@@ -1,3 +1,10 @@
+---
+layout: ""
+page_title: "Connector Parameter Reference"
+description: |-
+  The guide describes the connection parameters for all connectors in the DaVinci platform, with examples of how to define within Terraform using the `davinci_connection` resource.
+---
+
 # DaVinci Connection Definitions
 
 Below is a list of all available DaVinci Connections available for use in `davinci_connection` resource. 
