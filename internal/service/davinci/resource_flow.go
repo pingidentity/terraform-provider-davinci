@@ -138,7 +138,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 	)
 
 	descriptionDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"A string that specifies a description of the flow.  If the field is left blank, a description value will be derived by the service.",
+		"A string that specifies a description of the flow.  If the field is left undefined, the description from the flow export will be used.  If this field is left undefined and the flow export does not contain a description, the service will define a description on import.",
 	)
 
 	deployDescription := framework.SchemaAttributeDescriptionFromMarkdown(
@@ -220,6 +220,10 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				MarkdownDescription: descriptionDescription.MarkdownDescription,
 				Optional:            true,
 				Computed:            true,
+
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(attrMinLength),
+				},
 			},
 
 			"flow_json": schema.StringAttribute{
@@ -436,6 +440,10 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			resp.Plan.SetAttribute(ctx, path.Root("name"), flowObject.Name)
 		}
 
+		if v := flowObject.Description; config.Description.IsNull() && v != nil && *v != "" {
+			resp.Plan.SetAttribute(ctx, path.Root("description"), *v)
+		}
+
 		flowConfigObject = flowObject.FlowConfiguration
 
 		var d diag.Diagnostics
@@ -640,7 +648,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		Description:             createFlow.Description,
 	}
 
-	resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, createFlow.FlowID, &flowUpdate)...)
+	resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, createFlow.FlowID, &flowUpdate, true)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -773,7 +781,20 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			return
 		}
 
-		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate)...)
+		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, true)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+	} else if !plan.Description.Equal(state.Description) || !plan.Name.Equal(state.Name) {
+		daVinciUpdate := &davinci.FlowUpdate{
+			Name:        plan.Name.ValueStringPointer(),
+			Description: plan.Description.ValueStringPointer(),
+		}
+
+		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, false)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Do an export for state
@@ -811,7 +832,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
-func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID string, daVinciUpdate *davinci.FlowUpdate) diag.Diagnostics {
+func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID string, daVinciUpdate *davinci.FlowUpdate, deploy bool) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	_, err := sdk.DoRetryable(
@@ -832,19 +853,21 @@ func (r *FlowResource) updateFlow(ctx context.Context, environmentID, flowID str
 		return diags
 	}
 
-	_, err = sdk.DoRetryable(
-		ctx,
-		r.Client,
-		environmentID,
-		func() (any, *http.Response, error) {
-			return r.Client.DeployFlowWithResponse(environmentID, flowID)
-		},
-	)
-	if err != nil {
-		diags.AddError(
-			"Error deploying flow",
-			fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow, or an unmapped node connection: %s", err),
+	if deploy {
+		_, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.DeployFlowWithResponse(environmentID, flowID)
+			},
 		)
+		if err != nil {
+			diags.AddError(
+				"Error deploying flow",
+				fmt.Sprintf("Error deploying flow, this might indicate a misconfiguration of the flow, or an unmapped node connection: %s", err),
+			)
+		}
 	}
 
 	return diags
@@ -955,6 +978,14 @@ func (p *FlowResourceModel) expand(ctx context.Context) (*davinci.FlowImport, di
 		return nil, diags
 	}
 
+	if data.Name == nil {
+		data.Name = &data.FlowInfo.Name
+	}
+
+	if data.Description == nil && data.FlowInfo.Description != nil {
+		data.Description = data.FlowInfo.Description
+	}
+
 	data.FlowNameMapping = map[string]string{
 		data.FlowInfo.FlowID: p.Name.ValueString(),
 	}
@@ -1038,13 +1069,11 @@ func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.Flow
 	}
 
 	if !p.Name.IsNull() {
-		name := p.Name.ValueString()
-		data.Name = &name
+		data.Name = p.Name.ValueStringPointer()
 	}
 
 	if !p.Description.IsNull() {
-		description := p.Description.ValueString()
-		data.Description = &description
+		data.Description = p.Description.ValueStringPointer()
 	}
 
 	err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData, davinci.ExportCmpOpts{})
@@ -1113,8 +1142,8 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 
 	p.Name = framework.StringToTF(apiObject.Name)
 
-	if apiObject.Description != nil {
-		p.Description = framework.StringToTF(*apiObject.Description)
+	if v := apiObject.Description; v != nil {
+		p.Description = framework.StringToTF(*v)
 	}
 
 	var d diag.Diagnostics
