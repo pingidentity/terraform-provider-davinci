@@ -3,10 +3,16 @@
 NOTES:
 
 * `resource/davinci_flow`: Replace deprecated flow attribute validator. ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/bflad/tfproviderlint` from 0.29.0 => 0.30.0 ([#326](https://github.com/pingidentity/terraform-provider-davinci/issues/326))
 * bump `github.com/golangci/golangci-lint` 1.58.2 => 1.59.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/hashicorp/terraform-plugin-docs` from 0.19.2 => 0.19.3 ([#326](https://github.com/pingidentity/terraform-provider-davinci/issues/326))
 * bump `github.com/hashicorp/terraform-plugin-framework` 1.7.0 => 1.8.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
 * bump `github.com/hashicorp/terraform-plugin-mux` 0.15.0 => 0.16.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` from 2.33.0 => 2.34.0 ([#326](https://github.com/pingidentity/terraform-provider-davinci/issues/326))
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.38.0 => 0.39.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.8 => 0.11.9 ([#326](https://github.com/pingidentity/terraform-provider-davinci/issues/326))
+* bump `github.com/terraform-linters/tflint` from 0.50.3 => 0.51.1 ([#326](https://github.com/pingidentity/terraform-provider-davinci/issues/326))
+* bump go version from 1.21.1 => 1.22.3 ([#326](https://github.com/pingidentity/terraform-provider-davinci/issues/326))
 
 ENHANCEMENTS:
 
