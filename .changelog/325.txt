@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fix issue whereby flow variables cannot be updated, leading to error.
+```
