@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -360,4 +361,58 @@ func getVariableAttributes(d *schema.ResourceData) dv.VariablePayload {
 		}
 	}
 	return variablePayload
+}
+
+// Framework
+type VariableResourceModel struct {
+	Id          types.String `tfsdk:"id"`
+	Name        types.String `tfsdk:"name"`
+	Description types.String `tfsdk:"description"`
+	FlowId      types.String `tfsdk:"flow_id"`
+	Context     types.String `tfsdk:"context"`
+	Type        types.String `tfsdk:"type"`
+	Value       types.String `tfsdk:"value"`
+	Mutable     types.Bool   `tfsdk:"mutable"`
+	Min         types.Int64  `tfsdk:"min"`
+	Max         types.Int64  `tfsdk:"max"`
+}
+
+func (p *VariableResourceModel) expand() *dv.VariablePayload {
+
+	data := dv.VariablePayload{
+		Context: p.Context.ValueString(),
+		Type:    p.Type.ValueString(),
+	}
+
+	if !p.Name.IsNull() {
+		data.Name = p.Name.ValueStringPointer()
+	}
+
+	if !p.Description.IsNull() {
+		data.Description = p.Description.ValueStringPointer()
+	}
+
+	if !p.FlowId.IsNull() {
+		data.FlowId = p.FlowId.ValueStringPointer()
+	}
+
+	if !p.Value.IsNull() {
+		data.Value = p.Value.ValueStringPointer()
+	}
+
+	if !p.Mutable.IsNull() {
+		data.Mutable = p.Mutable.ValueBoolPointer()
+	}
+
+	if !p.Min.IsNull() {
+		min := int(p.Min.ValueInt64())
+		data.Min = &min
+	}
+
+	if !p.Max.IsNull() {
+		max := int(p.Max.ValueInt64())
+		data.Max = &max
+	}
+
+	return &data
 }

@@ -72,7 +72,7 @@ resource "davinci_flow" "my_awesome_main_flow" {
 
 - `flow_configuration_json` (String, Sensitive) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
 - `flow_export_json` (String, Sensitive) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
-- `flow_variables` (Attributes Set) Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`. (see [below for nested schema](#nestedatt--flow_variables))
+- `flow_variables` (Attributes Set) List of Flow variables that will be updated in the DaVinci instance. These are variable resources that are created and managed by the Flow resource, where variables are embedded in the `flow_json` DaVinci export file. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--connection_link"></a>
@@ -115,6 +115,7 @@ Read-Only:
 - `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.
 - `name` (String) The user friendly name of the variable in the UI.
 - `type` (String) The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.
+- `value` (String) A string that represents the variable's default value.
 
 ## Import
 

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -53,18 +54,6 @@ type FlowSubflowLinkResourceModel struct {
 	Name                   types.String `tfsdk:"name"`
 }
 
-type FlowVariablesResourceModel struct {
-	Id          types.String `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	Description types.String `tfsdk:"description"`
-	FlowId      types.String `tfsdk:"flow_id"`
-	Context     types.String `tfsdk:"context"`
-	Type        types.String `tfsdk:"type"`
-	Mutable     types.Bool   `tfsdk:"mutable"`
-	Min         types.Int64  `tfsdk:"min"`
-	Max         types.Int64  `tfsdk:"max"`
-}
-
 var (
 	flowVariablesTFObjectTypes = map[string]attr.Type{
 		"id":          types.StringType,
@@ -73,6 +62,7 @@ var (
 		"flow_id":     types.StringType,
 		"context":     types.StringType,
 		"type":        types.StringType,
+		"value":       types.StringType,
 		"mutable":     types.BoolType,
 		"min":         types.Int64Type,
 		"max":         types.Int64Type,
@@ -170,7 +160,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 	)
 
 	flowVariablesDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"Returned list of Flow Context variables. These are variable resources that are created and managed by the Flow resource via `flow_json`.",
+		"List of Flow variables that will be updated in the DaVinci instance. These are variable resources that are created and managed by the Flow resource, where variables are embedded in the `flow_json` DaVinci export file.",
 	)
 
 	flowVariablesContextDescription := framework.SchemaAttributeDescriptionFromMarkdown(
@@ -179,6 +169,10 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 
 	flowVariablesTypeDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.",
+	)
+
+	flowVariablesValueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that represents the variable's default value.",
 	)
 
 	flowVariablesMutableDescription := framework.SchemaAttributeDescriptionFromMarkdown(
@@ -303,6 +297,12 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 						"type": schema.StringAttribute{
 							Description:         flowVariablesTypeDescription.Description,
 							MarkdownDescription: flowVariablesTypeDescription.MarkdownDescription,
+							Computed:            true,
+						},
+
+						"value": schema.StringAttribute{
+							Description:         flowVariablesValueDescription.Description,
+							MarkdownDescription: flowVariablesValueDescription.MarkdownDescription,
 							Computed:            true,
 						},
 
@@ -797,6 +797,93 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		}
 	}
 
+	// Variables
+	if !plan.FlowVariables.Equal(state.FlowVariables) {
+		var flowVarPlan, flowVarState []VariableResourceModel
+		resp.Diagnostics.Append(plan.FlowVariables.ElementsAs(ctx, &flowVarPlan, false)...)
+		resp.Diagnostics.Append(state.FlowVariables.ElementsAs(ctx, &flowVarState, false)...)
+		// If there are errors, keep going as it's a read to state left
+
+		if !resp.Diagnostics.HasError() {
+			for _, flowVar := range flowVarPlan {
+				var flowVarStateFound bool
+				for _, flowVarState := range flowVarState {
+					if flowVar.Id.Equal(flowVarState.Id) {
+						flowVarStateFound = true
+
+						// test for modifications
+						if !cmp.Equal(flowVar, flowVarState) {
+							flowVariable := flowVar.expand()
+
+							_, err := sdk.DoRetryable(
+								ctx,
+								r.Client,
+								environmentID,
+								func() (interface{}, *http.Response, error) {
+									return r.Client.UpdateVariableWithResponse(environmentID, flowVariable)
+								},
+							)
+							if err != nil {
+								resp.Diagnostics.AddError(
+									"Error adding flow variable",
+									fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
+								)
+							}
+						}
+					}
+				}
+
+				if !flowVarStateFound {
+					// add the new variable
+					flowVariable := flowVar.expand()
+
+					_, err := sdk.DoRetryable(
+						ctx,
+						r.Client,
+						environmentID,
+						func() (interface{}, *http.Response, error) {
+							return r.Client.CreateVariableWithResponse(environmentID, flowVariable)
+						},
+					)
+					if err != nil {
+						resp.Diagnostics.AddError(
+							"Error adding flow variable",
+							fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
+						)
+					}
+				}
+			}
+
+			for _, flowVar := range flowVarState {
+				var flowVarPlanFound bool
+				for _, flowVarPlan := range flowVarPlan {
+					if flowVar.Id.Equal(flowVarPlan.Id) {
+						flowVarPlanFound = true
+						break
+					}
+				}
+
+				if !flowVarPlanFound {
+					// remove the variable
+					_, err := sdk.DoRetryable(
+						ctx,
+						r.Client,
+						environmentID,
+						func() (interface{}, *http.Response, error) {
+							return r.Client.DeleteVariableWithResponse(environmentID, flowVar.Id.ValueString())
+						},
+					)
+					if err != nil {
+						resp.Diagnostics.AddError(
+							"Error removing flow variable",
+							fmt.Sprintf("Error removing flow variable as part of flow update: %s", err),
+						)
+					}
+				}
+			}
+		}
+	}
+
 	// Do an export for state
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
@@ -1183,7 +1270,8 @@ func flowVariablesToTF(apiObject []davinci.FlowVariable) (types.Set, diag.Diagno
 			"description": framework.StringOkToTF(variable.Label, true),
 			"flow_id":     framework.StringOkToTF(variable.FlowID, true),
 			"context":     framework.StringOkToTF(variable.Context, true),
-			"type":        framework.StringToTF(variable.Type),
+			"type":        framework.StringOkToTF(variable.Fields.Type, true),
+			"value":       framework.StringOkToTF(variable.Fields.Value, true),
 			"mutable":     framework.BoolOkToTF(variable.Fields.Mutable, true),
 			"min":         framework.Int32OkToTF(variable.Fields.Min, true),
 			"max":         framework.Int32OkToTF(variable.Fields.Max, true),

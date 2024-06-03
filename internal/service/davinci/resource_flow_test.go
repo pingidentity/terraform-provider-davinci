@@ -120,8 +120,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 				"min":     regexp.MustCompile(`^0$`),
 				"mutable": regexp.MustCompile(`^true$`),
 				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
-				"type":    regexp.MustCompile(`^property$`),
-				//"type":    regexp.MustCompile(`^string$`),
+				"type":    regexp.MustCompile(`^string$`),
 			}),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
 				"context": regexp.MustCompile(`^flow$`),
@@ -131,9 +130,8 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 				"min":     regexp.MustCompile(`^4$`),
 				"mutable": regexp.MustCompile(`^true$`),
 				"name":    regexp.MustCompile(`^test123$`),
-				"type":    regexp.MustCompile(`^property$`),
-				//"type":    regexp.MustCompile(`^number$`),
-				//"value":   regexp.MustCompile(`^10$`),
+				"type":    regexp.MustCompile(`^number$`),
+				"value":   regexp.MustCompile(`^10$`),
 			}),
 		),
 	}
@@ -194,21 +192,21 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 		Steps: []resource.TestStep{
 			// Create full from scratch
 			fullStep,
-			{
-				Config:  fullStepHcl,
-				Destroy: true,
-			},
-			// Create minimal from scratch
 			minimalStep,
 			{
 				Config:  minimalStepHcl,
 				Destroy: true,
 			},
-			// Test updates
+			// Create minimal from scratch
+			minimalStep,
 			fullStep,
+			{
+				Config:  fullStepHcl,
+				Destroy: true,
+			},
+			// Test updates
 			minimalStep,
 			updateStep,
-			fullStep,
 			// Test importing the resource
 			{
 				ResourceName: resourceFullName,
@@ -372,6 +370,7 @@ func testAccResourceFlow_ConnectionSubflowLinks_WithMappingIDs(t *testing.T, wit
 					"connection_link",
 					"subflow_link",
 					"flow_json",
+					"flow_export_json",
 				},
 			},
 		},
@@ -503,6 +502,7 @@ func testAccResourceFlow_ConnectionSubflowLinks_WithoutMappingIDs(t *testing.T, 
 					"connection_link",
 					"subflow_link",
 					"flow_json",
+					"flow_export_json",
 				},
 			},
 		},

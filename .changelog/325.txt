@@ -1,0 +1,11 @@
+```release-note:bug
+`resource/davinci_flow`: Fix issue whereby flow variables cannot be updated, leading to error.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fixed `flow_variables.type` so that it refers to the data type of the variable (as is the original intention), rather than the type of the variable object.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Added `flow_variables.value` to allow the variable's default value to be updated.
+```
