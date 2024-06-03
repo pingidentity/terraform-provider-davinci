@@ -10,7 +10,9 @@ NOTES:
 
 BUG FIXES:
 
+* `resource/davinci_flow`: Fix issue whereby descriptions are not updated. ([#319](https://github.com/pingidentity/terraform-provider-davinci/issues/319))
 * `resource/davinci_flow`: Fix panic crash when flow instance and/or company variables are included in a flow export. ([#316](https://github.com/pingidentity/terraform-provider-davinci/issues/316))
+* `resource/davinci_flow`: Where a description is not provided in the Terraform schema, the description from the flow export will be applied as a fallback. ([#319](https://github.com/pingidentity/terraform-provider-davinci/issues/319))
 
 ## 0.3.2 (28 May 2024)
 
