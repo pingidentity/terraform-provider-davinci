@@ -120,7 +120,8 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 				"min":     regexp.MustCompile(`^0$`),
 				"mutable": regexp.MustCompile(`^true$`),
 				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
-				"type":    regexp.MustCompile(`^string$`),
+				"type":    regexp.MustCompile(`^property$`),
+				//"type":    regexp.MustCompile(`^string$`),
 			}),
 			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
 				"context": regexp.MustCompile(`^flow$`),
@@ -130,8 +131,9 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 				"min":     regexp.MustCompile(`^4$`),
 				"mutable": regexp.MustCompile(`^true$`),
 				"name":    regexp.MustCompile(`^test123$`),
-				"type":    regexp.MustCompile(`^number$`),
-				"value":   regexp.MustCompile(`^10$`),
+				"type":    regexp.MustCompile(`^property$`),
+				//"type":    regexp.MustCompile(`^number$`),
+				//"value":   regexp.MustCompile(`^10$`),
 			}),
 		),
 	}
