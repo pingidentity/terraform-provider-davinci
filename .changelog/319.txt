@@ -1,0 +1,7 @@
+```release-note:bug
+`resource/davinci_flow`: Fix issue whereby descriptions are not updated.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Where a description is not provided in the Terraform schema, the description from the flow export will be applied as a fallback.
+```
