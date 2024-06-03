@@ -8,10 +8,16 @@ NOTES:
 * bump `github.com/hashicorp/terraform-plugin-mux` 0.15.0 => 0.16.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.38.0 => 0.39.0 ([#318](https://github.com/pingidentity/terraform-provider-davinci/issues/318))
 
+ENHANCEMENTS:
+
+* `resource/davinci_flow`: Added `flow_variables.value` to allow the variable's default value to be updated. ([#325](https://github.com/pingidentity/terraform-provider-davinci/issues/325))
+
 BUG FIXES:
 
 * `resource/davinci_flow`: Fix issue whereby descriptions are not updated. ([#319](https://github.com/pingidentity/terraform-provider-davinci/issues/319))
+* `resource/davinci_flow`: Fix issue whereby flow variables cannot be updated, leading to error. ([#325](https://github.com/pingidentity/terraform-provider-davinci/issues/325))
 * `resource/davinci_flow`: Fix panic crash when flow instance and/or company variables are included in a flow export. ([#316](https://github.com/pingidentity/terraform-provider-davinci/issues/316))
+* `resource/davinci_flow`: Fixed `flow_variables.type` so that it refers to the data type of the variable (as is the original intention), rather than the type of the variable object. ([#325](https://github.com/pingidentity/terraform-provider-davinci/issues/325))
 * `resource/davinci_flow`: Where a description is not provided in the Terraform schema, the description from the flow export will be applied as a fallback. ([#319](https://github.com/pingidentity/terraform-provider-davinci/issues/319))
 
 ## 0.3.2 (28 May 2024)
