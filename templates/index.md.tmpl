@@ -26,7 +26,7 @@ If the PingOne Environment and Permissions are managed in:
   - **separate module** - use [static credentials](#authenticate-using-static-credentials) or [environment variable credentials](#authenticate-using-credentials-as-environment-variables).
   - **same module as davinci configuration** - use the [full deployment example](#full-deployment-example-with-a-pingone-environment).
 
-For a more thorough example on how to set up PingOne for DaVinci API authentication see [getting started}(https://terraform.pingidentity.com/getting-started/davinci/)
+For a more thorough example on how to set up PingOne for DaVinci API authentication see [getting started](https://terraform.pingidentity.com/getting-started/davinci/)
 
 ### Authenticate using static credentials
 
