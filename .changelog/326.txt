@@ -1,0 +1,23 @@
+```release-note:note
+bump go version from 1.21.1 => 1.22.3
+```
+
+```release-note:note
+bump `github.com/terraform-linters/tflint` from 0.50.3 => 0.51.1
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-sdk/v2` from 2.33.0 => 2.34.0
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-docs` from 0.19.2 => 0.19.3
+```
+
+```release-note:note
+bump `github.com/bflad/tfproviderlint` from 0.29.0 => 0.30.0
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.8 => 0.11.9
+```
