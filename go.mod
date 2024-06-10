@@ -16,8 +16,8 @@ require (
 	github.com/hashicorp/terraform-plugin-mux v0.16.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	github.com/katbyte/terrafmt v0.5.3
-	github.com/patrickcping/pingone-go-sdk-v2 v0.11.9
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.39.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.12.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.40.0
 	github.com/pavius/impi v0.0.3
 	github.com/samir-gandhi/davinci-client-go v0.3.0
 	github.com/samir-gandhi/dvgenerate v0.0.11
@@ -172,12 +172,11 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.16.2 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/owenrumney/go-sarif v1.1.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/agreementmanagement v0.3.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.4.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.7.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.18.3 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.14.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/verify v0.4.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.5.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.8.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.19.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.15.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/verify v0.5.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
@@ -260,7 +259,7 @@ require (
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/oauth2 v0.20.0 // indirect
+	golang.org/x/oauth2 v0.21.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.21.0 // indirect
