@@ -1,5 +1,15 @@
 ## 0.3.4 (Unreleased)
 
+NOTES:
+
+* Bump `github.com/golangci/golangci-lint` from 1.59.0 => 1.59.1 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/hashicorp/go-getter` from 1.7.4 => 1.7.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/hashicorp/terraform-plugin-docs` from 0.19.3 => 0.19.4 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/hashicorp/terraform-plugin-framework` from 1.8.0 => 1.11.0 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/patrickcping/pingone-go-sdk-v2/management` from 0.39.0 => 0.43.0 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.9 => 0.12.3 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* bump go version from 1.22.3 => 1.22.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+
 ## 0.3.3 (4 June 2024)
 
 NOTES:
