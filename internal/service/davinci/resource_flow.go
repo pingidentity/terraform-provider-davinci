@@ -653,6 +653,15 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 
+	flowIncludeVariableValues := false
+	planFlowVariables := daVinciImport.FlowInfo.Variables
+	for _, v := range planFlowVariables {
+		if v.Fields.Value != nil {
+			// if any variables ever have values set, include all in state
+			flowIncludeVariableValues = true
+		}
+	}
+
 	// Do an export for state
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
@@ -660,7 +669,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionWithResponse(environmentID, createFlow.FlowID, nil)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, flowIncludeVariableValues)
 		},
 	)
 	if err != nil {
@@ -707,13 +716,23 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	environmentID := data.EnvironmentId.ValueString()
 	flowID := data.Id.ValueString()
 
+	flowIncludeVariableValues := false
+	planFlowVariables := data.FlowVariables.Elements()
+	for _, v := range planFlowVariables {
+		// TODO: this should be updated to use terraform modules
+		planFlowVariablesString := v.String()
+		if strings.Contains(planFlowVariablesString, `"value":<null>`) {
+			flowIncludeVariableValues = true
+		}
+	}
+
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
 		ctx,
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, flowIncludeVariableValues)
 		},
 	)
 
@@ -796,6 +815,8 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			return
 		}
 	}
+
+	flowIncludeVariableValues := false
 
 	// Variables
 	if !plan.FlowVariables.Equal(state.FlowVariables) {
@@ -881,6 +902,12 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 					}
 				}
 			}
+			for _, v := range flowVarPlan {
+				if !v.Value.IsNull() {
+					flowIncludeVariableValues = true
+					break
+				}
+			}
 		}
 	}
 
@@ -891,7 +918,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, flowIncludeVariableValues)
 		},
 	)
 	if err != nil {

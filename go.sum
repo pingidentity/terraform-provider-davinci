@@ -930,8 +930,6 @@ github.com/ryancurrah/gomodguard v1.3.2 h1:CuG27ulzEB1Gu5Dk5gP8PFxSOZ3ptSdP5iI/3
 github.com/ryancurrah/gomodguard v1.3.2/go.mod h1:LqdemiFomEjcxOqirbQCb3JFvSxH2JUYMerTFd3sF2o=
 github.com/ryanrolds/sqlclosecheck v0.5.1 h1:dibWW826u0P8jNLsLN+En7+RqWWTYrjCB9fJfSfdyCU=
 github.com/ryanrolds/sqlclosecheck v0.5.1/go.mod h1:2g3dUjoS6AL4huFdv6wn55WpLIDjY7ZgUR4J8HOO/XQ=
-github.com/samir-gandhi/davinci-client-go v0.3.0 h1:pwP5E0h7FcknX2hSs3TC3jAuD7/0zlzm6qypaps9Wos=
-github.com/samir-gandhi/davinci-client-go v0.3.0/go.mod h1:DmOPy/WsIc4e7RYOIeSGM6Qrlb1JsYuN45UaGnlDt9U=
 github.com/samir-gandhi/dvgenerate v0.0.11 h1:VMvkeCdI7DyzrPuE3clPFPvR1gO9s6Z24O8Gyh0d5h8=
 github.com/samir-gandhi/dvgenerate v0.0.11/go.mod h1:PvrK6c+8SdRSWKmyXsagKeVqSGoo9P8oBbWaIzFD1mQ=
 github.com/sanposhiho/wastedassign/v2 v2.0.7 h1:J+6nrY4VW+gC9xFzUc+XjPD3g3wF3je/NsJFwFK7Uxc=

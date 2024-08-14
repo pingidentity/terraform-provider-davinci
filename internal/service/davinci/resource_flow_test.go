@@ -136,6 +136,49 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 		),
 	}
 
+	redactedVarStepHcl, redactedVarStepJson, err := testAccResourceFlow_RedactedCompanyVariableFlow_HCL(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	redactedVarStep := resource.TestStep{
+		Config: redactedVarStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "name", "my awesome flow"),
+			resource.TestCheckResourceAttr(resourceFullName, "description", "my awesome flow description"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", redactedVarStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "5"),
+			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
+			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "2"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"max":     regexp.MustCompile(`^2000$`),
+				"min":     regexp.MustCompile(`^0$`),
+				"mutable": regexp.MustCompile(`^true$`),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"max":     regexp.MustCompile(`^20$`),
+				"min":     regexp.MustCompile(`^4$`),
+				"mutable": regexp.MustCompile(`^true$`),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+				"value":   regexp.MustCompile(`^10$`),
+			}),
+		),
+	}
+
 	minimalStepHcl, minimalStepJson, err := testAccResourceFlow_Minimal_WithMappingIDs_HCL(resourceName, name, withBootstrapConfig)
 	if err != nil {
 		t.Fatalf("Failed to get HCL: %v", err)
@@ -207,6 +250,12 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			// Test updates
 			minimalStep,
 			updateStep,
+			{
+				Config:  minimalStepHcl,
+				Destroy: true,
+			},
+			// Test redacted company variable flow
+			redactedVarStep,
 			// Test importing the resource
 			{
 				ResourceName: resourceFullName,
