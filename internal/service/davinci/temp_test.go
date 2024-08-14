@@ -58,9 +58,6 @@ func testAccResourceFlow_RedactedCompanyVar(t *testing.T, withBootstrapConfig bo
 	if err != nil {
 		t.Fatalf("Failed to get HCL: %v", err)
 	}
-	// fmt.Printf("redactedVarStepHcl: %s\n", redactedVarStepHcl)
-	// fmt.Printf("redactedVarStepJson: %s\n", redactedVarStepJson)
-	// fmt.Printf("resourceFullName: %s\n", resourceFullName)
 
 	redactedVarStep := resource.TestStep{
 		Config: redactedVarStepHcl,
@@ -100,6 +97,9 @@ func testAccResourceFlow_RedactedCompanyVar(t *testing.T, withBootstrapConfig bo
 		),
 	}
 
+	redactedVarStepPlanOnly := redactedVarStep
+	redactedVarStepPlanOnly.PlanOnly = true
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.PreCheckClient(t)
@@ -116,7 +116,8 @@ func testAccResourceFlow_RedactedCompanyVar(t *testing.T, withBootstrapConfig bo
 		Steps: []resource.TestStep{
 			// Test redacted company variable flow
 			redactedVarStep,
-			redactedVarStep,
+			// run the same config with plan-only:true to simulate a separate, subsequent plan.
+			redactedVarStepPlanOnly,
 			// Test importing the resource
 			{
 				ResourceName: resourceFullName,

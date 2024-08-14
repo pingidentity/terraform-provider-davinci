@@ -721,7 +721,7 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	for _, v := range planFlowVariables {
 		// TODO: this should be updated to use terraform modules
 		planFlowVariablesString := v.String()
-		if strings.Contains(planFlowVariablesString, `"value":<null>`) {
+		if !strings.Contains(planFlowVariablesString, `"value":<null>`) {
 			flowIncludeVariableValues = true
 		}
 	}
