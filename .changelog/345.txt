@@ -1,0 +1,27 @@
+```release-note:note
+bump go version from 1.22.3 => 1.22.5
+```
+
+```release-note:note
+Bump `github.com/hashicorp/terraform-plugin-framework` from 1.8.0 => 1.11.0 
+``` 
+
+```release-note:note
+Bump `github.com/patrickcping/pingone-go-sdk-v2/management` from 0.39.0 => 0.43.0 
+```
+
+```release-note:note
+Bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.9 => 0.12.3 
+```
+
+```release-note:note
+Bump `github.com/hashicorp/go-getter` from 1.7.4 => 1.7.5 
+```
+
+```release-note:note
+Bump `github.com/hashicorp/terraform-plugin-docs` from 0.19.3 => 0.19.4 
+```
+
+```release-note:note
+Bump `github.com/golangci/golangci-lint` from 1.59.0 => 1.59.1 
+```
