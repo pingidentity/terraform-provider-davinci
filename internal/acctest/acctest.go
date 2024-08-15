@@ -305,7 +305,7 @@ resource "pingone_environment" "%[1]s" {
     },
     {
         type = "DaVinci"
-        tags = ["DAVINCI_MINIMAL"]
+        tags = %[6]s
     }
   ])
 }
