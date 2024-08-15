@@ -1,4 +1,4 @@
-## 0.3.4 (Unreleased)
+## 0.4.0 (Unreleased)
 
 NOTES:
 

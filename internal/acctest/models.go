@@ -98,7 +98,7 @@ func (tcp TestConnection) MakeConnectionHcl() (hcl string) {
 	}
 	hcl = fmt.Sprintf(`
 resource "davinci_connection" "%[2]s" {
-  environment_id = resource.pingone_role_assignment_user.%[1]s.scope_environment_id
+  environment_id = resource.pingone_user_role_assignment.%[1]s.scope_environment_id
   connector_id   = "%[3]s"
   name           = "%[2]s"
 	%[4]s
