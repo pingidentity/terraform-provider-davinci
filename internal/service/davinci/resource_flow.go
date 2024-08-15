@@ -29,17 +29,18 @@ import (
 type FlowResource serviceClientType
 
 type FlowResourceModel struct {
-	Id                    types.String                  `tfsdk:"id"`
-	EnvironmentId         types.String                  `tfsdk:"environment_id"`
-	FlowJSON              davinciexporttype.ParsedValue `tfsdk:"flow_json"`
-	FlowConfigurationJSON davinciexporttype.ParsedValue `tfsdk:"flow_configuration_json"`
-	FlowExportJSON        davinciexporttype.ParsedValue `tfsdk:"flow_export_json"`
-	Deploy                types.Bool                    `tfsdk:"deploy"`
-	Name                  types.String                  `tfsdk:"name"`
-	Description           types.String                  `tfsdk:"description"`
-	ConnectionLinks       types.Set                     `tfsdk:"connection_link"`
-	SubFlowLinks          types.Set                     `tfsdk:"subflow_link"`
-	FlowVariables         types.Set                     `tfsdk:"flow_variables"`
+	Id                        types.String                  `tfsdk:"id"`
+	EnvironmentId             types.String                  `tfsdk:"environment_id"`
+	FlowJSON                  davinciexporttype.ParsedValue `tfsdk:"flow_json"`
+	FlowConfigurationJSON     davinciexporttype.ParsedValue `tfsdk:"flow_configuration_json"`
+	FlowExportJSON            davinciexporttype.ParsedValue `tfsdk:"flow_export_json"`
+	Deploy                    types.Bool                    `tfsdk:"deploy"`
+	Name                      types.String                  `tfsdk:"name"`
+	Description               types.String                  `tfsdk:"description"`
+	ConnectionLinks           types.Set                     `tfsdk:"connection_link"`
+	SubFlowLinks              types.Set                     `tfsdk:"subflow_link"`
+	FlowVariables             types.Set                     `tfsdk:"flow_variables"`
+	IncludeFlowVariableValues types.Bool                    `tfsdk:"include_flow_variable_values"`
 }
 
 type FlowConnectionLinkResourceModel struct {
@@ -187,6 +188,12 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 		"The maximum value of the variable, if the `type` parameter is set as `number`.",
 	)
 
+	includeFlowVariableValuesDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A boolean that indicates whether the exported flow contains flow variables and this resource should manage variable values.  If `true`, then the variable values will be included in Terraform state and also included when updating flow variable configuration.  If `false`, the variable values will not be included in Terraform state, and any updates to flow variables will clear the current variable value.",
+	).DefaultValue(true).AppendMarkdownStringTrim(`.
+
+!> If `+"`include_flow_variable_values` is set to `false`"+`, if updates are made to flow variables, these will clear any previously defined values for the updated flow variable.  The flow must be designed to be resilient to flow variable values becoming undefined.  Consider using company variables for values that should be made persistent.`, false)
+
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		Description: "Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
@@ -223,7 +230,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format. Should be a JSON file of a single flow (without subflows) that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
 				Required:    true,
-				Sensitive:   true,
+				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowJsonCmpOptsConfiguration,
@@ -233,7 +240,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_configuration_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.").Description,
 				Computed:    true,
-				Sensitive:   true,
+				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowConfigurationJsonCmpOptsConfiguration,
@@ -243,7 +250,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_export_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
 				Computed:    true,
-				Sensitive:   true,
+				//Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowExportJsonCmpOptsConfiguration,
@@ -254,6 +261,15 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Description:         deployDescription.Description,
 				MarkdownDescription: deployDescription.MarkdownDescription,
 				DeprecationMessage:  "This attribute is deprecated and will be removed in a future release.  Flows are automatically deployed on import.",
+				Optional:            true,
+				Computed:            true,
+
+				Default: booldefault.StaticBool(true),
+			},
+
+			"include_flow_variable_values": schema.BoolAttribute{
+				Description:         includeFlowVariableValuesDescription.Description,
+				MarkdownDescription: includeFlowVariableValuesDescription.MarkdownDescription,
 				Optional:            true,
 				Computed:            true,
 
@@ -528,6 +544,26 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 	resp.Plan.SetAttribute(ctx, path.Root("flow_configuration_json"), flowConfigurationJSON)
 
+	if !req.State.Raw.IsNull() {
+		var state FlowResourceModel
+
+		// Read Terraform plan data into the model
+		resp.Diagnostics.Append(resp.Plan.Get(ctx, &plan)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		// Read Terraform state data into the model
+		resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		if !plan.FlowJSON.Equal(state.FlowJSON) || !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) || !plan.FlowVariables.Equal(state.FlowVariables) {
+			resp.Plan.SetAttribute(ctx, path.Root("flow_export_json"), types.StringUnknown())
+		}
+	}
+
 }
 
 func (p *FlowResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
@@ -653,15 +689,6 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		return
 	}
 
-	flowIncludeVariableValues := false
-	planFlowVariables := daVinciImport.FlowInfo.Variables
-	for _, v := range planFlowVariables {
-		if v.Fields.Value != nil {
-			// if any variables ever have values set, include all in state
-			flowIncludeVariableValues = true
-		}
-	}
-
 	// Do an export for state
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
@@ -669,7 +696,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, flowIncludeVariableValues)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, plan.IncludeFlowVariableValues.ValueBool())
 		},
 	)
 	if err != nil {
@@ -716,23 +743,13 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	environmentID := data.EnvironmentId.ValueString()
 	flowID := data.Id.ValueString()
 
-	flowIncludeVariableValues := false
-	planFlowVariables := data.FlowVariables.Elements()
-	for _, v := range planFlowVariables {
-		// TODO: this should be updated to use terraform modules
-		planFlowVariablesString := v.String()
-		if strings.Contains(planFlowVariablesString, `"value":<null>`) {
-			flowIncludeVariableValues = true
-		}
-	}
-
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
 		ctx,
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, flowIncludeVariableValues)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, data.IncludeFlowVariableValues.ValueBool())
 		},
 	)
 
@@ -815,8 +832,6 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			return
 		}
 	}
-
-	flowIncludeVariableValues := false
 
 	// Variables
 	if !plan.FlowVariables.Equal(state.FlowVariables) {
@@ -902,12 +917,6 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 					}
 				}
 			}
-			for _, v := range flowVarPlan {
-				if !v.Value.IsNull() {
-					flowIncludeVariableValues = true
-					break
-				}
-			}
 		}
 	}
 
@@ -918,7 +927,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, flowIncludeVariableValues)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, plan.IncludeFlowVariableValues.ValueBool())
 		},
 	)
 	if err != nil {
@@ -1263,6 +1272,10 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 	var d diag.Diagnostics
 	p.FlowVariables, d = flowVariablesToTF(apiObject.Variables)
 	diags.Append(d...)
+
+	if p.IncludeFlowVariableValues.IsNull() {
+		p.IncludeFlowVariableValues = types.BoolValue(true)
+	}
 
 	return diags
 }

@@ -81,8 +81,13 @@ func Flow_GetIDs(resourceName string, environmentID, flowID *string) resource.Te
 			return fmt.Errorf("Resource Not found: %s", resourceName)
 		}
 
-		*flowID = rs.Primary.ID
-		*environmentID = rs.Primary.Attributes["environment_id"]
+		if flowID != nil {
+			*flowID = rs.Primary.ID
+		}
+
+		if environmentID != nil {
+			*environmentID = rs.Primary.Attributes["environment_id"]
+		}
 
 		return nil
 	}

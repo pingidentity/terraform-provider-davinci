@@ -53,9 +53,15 @@ func (r SchemaDescription) AppendStringValue(pretext string, value string) Schem
 }
 
 func (r SchemaDescription) AppendMarkdownString(text string) SchemaDescription {
-	text = strings.TrimSpace(text)
+	return r.AppendMarkdownStringTrim(text, true)
+}
 
-	r = r.Clean(true)
+func (r SchemaDescription) AppendMarkdownStringTrim(text string, trimSpace bool) SchemaDescription {
+	if trimSpace {
+		text = strings.TrimSpace(text)
+	}
+
+	r = r.Clean(trimSpace)
 
 	if r.Description != "" {
 		r.Description = fmt.Sprintf("%s.  ", r.Description)

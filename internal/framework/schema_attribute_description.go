@@ -131,6 +131,10 @@ func (r SchemaAttributeDescription) AppendStringValue(pretext string, value stri
 }
 
 func (r SchemaAttributeDescription) AppendMarkdownString(text string) SchemaAttributeDescription {
+	return r.AppendMarkdownStringTrim(text, true)
+}
+
+func (r SchemaAttributeDescription) AppendMarkdownStringTrim(text string, trimSpace bool) SchemaAttributeDescription {
 	text = strings.TrimSpace(text)
 
 	r = r.Clean(true)
