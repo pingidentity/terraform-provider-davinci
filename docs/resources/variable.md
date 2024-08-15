@@ -2,12 +2,12 @@
 page_title: "davinci_variable Resource - terraform-provider-davinci"
 subcategory: "Variable"
 description: |-
-  
+  Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 ---
 
 # davinci_variable (Resource)
 
-
+Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 
 ## Example Usage
 
@@ -28,18 +28,19 @@ resource "davinci_variable" "my_awesome_region_variable" {
 
 ### Required
 
-- `context` (String) The variable context.  Must be one of: `company`, `flowInstance`, `user`.   This field is immutable and will trigger a replace plan if changed.
-- `environment_id` (String) The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
-- `name` (String) The name of the variable.  This field is immutable and will trigger a replace plan if changed.
-- `type` (String) The variable's data type.  Must be one of `string`, `number`, `boolean`, `object`.
+- `context` (String) A string that specifies the context of the variable.  Options are `company`, `flow`, `flowInstance`, `user`.  This field is immutable and will trigger a replace plan if changed.
+- `environment_id` (String) The ID of the PingOne environment to manage the DaVinci variable in.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
+- `name` (String) A string that specifies the name of the variable.  This field is immutable and will trigger a replace plan if changed.
+- `type` (String) A string that specifies the variable's data type.  Options are `boolean`, `number`, `object`, `secret`, `string`.
 
 ### Optional
 
 - `description` (String) A string that specifies the description of the variable.
-- `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`. Defaults to `2000`.
-- `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`. Defaults to `0`.
-- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow. Defaults to `true`.
-- `value` (String, Sensitive) Variable value as string, type will be inferred from the value specified in the `type` parameter.
+- `flow_id` (String) A string that specifies the ID of the flow to which the variable is assigned.  This field is required when the `context` field is set to `flow`.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
+- `max` (Number) An integer that specifies the maximum value of the variable, if the `type` parameter is set as `number`.  Defaults to `2000`.
+- `min` (Number) An integer that specifies the minimum value of the variable, if the `type` parameter is set as `number`.  Defaults to `0`.
+- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.  Defaults to `true`.
+- `value` (String, Sensitive) A string that specifies the value of the variable, the type will be inferred from the value specified in the `type` parameter.
 
 ### Read-Only
 

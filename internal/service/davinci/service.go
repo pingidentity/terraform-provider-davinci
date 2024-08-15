@@ -13,6 +13,7 @@ type serviceClientType struct {
 func Resources() []func() resource.Resource {
 	return []func() resource.Resource{
 		NewFlowResource,
+		NewVariableResource,
 	}
 }
 
