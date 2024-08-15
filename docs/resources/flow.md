@@ -72,6 +72,7 @@ resource "davinci_flow" "my_awesome_main_flow" {
 
 - `flow_configuration_json` (String) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
 - `flow_export_json` (String) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
+- `flow_variables` (Attributes Set) List of Flow variables that will be updated in the DaVinci instance. These are variable resources that are created and managed by the Flow resource, where variables are embedded in the `flow_json` DaVinci export file. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--connection_link"></a>
@@ -98,6 +99,18 @@ Required:
 Optional:
 
 - `replace_import_subflow_id` (String) Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
+
+
+<a id="nestedatt--flow_variables"></a>
+### Nested Schema for `flow_variables`
+
+Read-Only:
+
+- `context` (String) The variable context.  Should always return `flow`.
+- `flow_id` (String) The flow ID that the variable belongs to, which should match the ID of this resource.
+- `id` (String) The DaVinci internal ID of the variable.
+- `name` (String) The user friendly name of the variable in the UI.
+- `type` (String) The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.
 
 ## Import
 

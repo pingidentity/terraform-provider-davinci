@@ -111,6 +111,21 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "5"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
 			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "2"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
 		),
 	}
 
@@ -130,6 +145,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
 			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "0"),
 		),
 	}
 
@@ -149,6 +165,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
 			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "0"),
 		),
 	}
 
@@ -866,6 +883,21 @@ func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", fullStepJson)),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
 		),
 	}
 
@@ -881,6 +913,28 @@ func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", addVariableStepJson)),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "3"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123NEW##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123NEW$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
 		),
 	}
 
@@ -896,6 +950,14 @@ func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", removeVariableStepJson)),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "1"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
 		),
 	}
 
@@ -911,6 +973,21 @@ func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", modifyVariableStepJson)),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
 		),
 	}
 

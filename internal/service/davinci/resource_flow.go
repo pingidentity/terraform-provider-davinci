@@ -5,9 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -37,6 +40,15 @@ type FlowResourceModel struct {
 	Description           types.String                  `tfsdk:"description"`
 	ConnectionLinks       types.Set                     `tfsdk:"connection_link"`
 	SubFlowLinks          types.Set                     `tfsdk:"subflow_link"`
+	FlowVariables         types.Set                     `tfsdk:"flow_variables"`
+}
+
+type FlowVariableResourceModel struct {
+	Id            types.String `tfsdk:"id"`
+	FlowId        types.String `tfsdk:"flow_id"`
+	Name          types.String `tfsdk:"name"`
+	Context       types.String `tfsdk:"context"`
+	Type          types.String `tfsdk:"type"`
 }
 
 type FlowConnectionLinkResourceModel struct {
@@ -50,6 +62,16 @@ type FlowSubflowLinkResourceModel struct {
 	ReplaceImportSubflowId types.String `tfsdk:"replace_import_subflow_id"`
 	Name                   types.String `tfsdk:"name"`
 }
+
+var (
+	flowVariablesTFObjectTypes = map[string]attr.Type{
+		"id":      types.StringType,
+		"name":    types.StringType,
+		"flow_id": types.StringType,
+		"context": types.StringType,
+		"type":    types.StringType,
+	}
+)
 
 var (
 	flowJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -144,6 +166,18 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 		"Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the \"Connectors\" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.",
 	)
 
+	flowVariablesDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"List of Flow variables that will be updated in the DaVinci instance. These are variable resources that are created and managed by the Flow resource, where variables are embedded in the `flow_json` DaVinci export file.",
+	)
+
+	flowVariablesContextDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The variable context.  Should always return `flow`.",
+	)
+
+	flowVariablesTypeDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.",
+	)
+
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		Description: "Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
@@ -215,6 +249,44 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:            true,
 
 				Default: booldefault.StaticBool(true),
+			},
+
+			"flow_variables": schema.SetNestedAttribute{
+				Description:         flowVariablesDescription.Description,
+				MarkdownDescription: flowVariablesDescription.MarkdownDescription,
+				Computed:            true,
+
+				NestedObject: schema.NestedAttributeObject{
+
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci internal ID of the variable.").Description,
+							Computed:    true,
+						},
+
+						"name": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("The user friendly name of the variable in the UI.").Description,
+							Computed:    true,
+						},
+
+						"flow_id": schema.StringAttribute{
+							Description: framework.SchemaAttributeDescriptionFromMarkdown("The flow ID that the variable belongs to, which should match the ID of this resource.").Description,
+							Computed:    true,
+						},
+
+						"context": schema.StringAttribute{
+							Description:         flowVariablesContextDescription.Description,
+							MarkdownDescription: flowVariablesContextDescription.MarkdownDescription,
+							Computed:            true,
+						},
+
+						"type": schema.StringAttribute{
+							Description:         flowVariablesTypeDescription.Description,
+							MarkdownDescription: flowVariablesTypeDescription.MarkdownDescription,
+							Computed:            true,
+						},
+					},
+				},
 			},
 		},
 
@@ -373,6 +445,23 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 					return
 				}
 			}
+
+			// Flow variables
+			flowVariablesPlan := make([]davinci.FlowVariable, 0)
+			for _, flowVariable := range flowObject.FlowMetadata.Variables {
+				if v := flowVariable.FlowID; v != nil {
+					flowVariableIDOld := *flowVariable.FlowID
+					flowVariable.FlowID = state.Id.ValueStringPointer()
+					flowVariable.Name = strings.Replace(flowVariable.Name, flowVariableIDOld, state.Id.ValueString(), -1)
+				}
+
+				flowVariablesPlan = append(flowVariablesPlan, flowVariable)
+			}
+
+			var d diag.Diagnostics
+			flowVariables, d := flowVariablesToTF(flowVariablesPlan)
+			resp.Diagnostics.Append(d...)
+			resp.Plan.SetAttribute(ctx, path.Root("flow_variables"), flowVariables)
 		}
 	}
 
@@ -381,6 +470,8 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 	if unknownFlowConfigPlan {
 
 		flowConfigurationJSON = types.StringUnknown()
+
+		resp.Plan.SetAttribute(ctx, path.Root("flow_variables"), types.SetUnknown(types.ObjectType{AttrTypes: flowVariablesTFObjectTypes}))
 
 	} else {
 
@@ -688,6 +779,93 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		}
 	}
 
+	// Variables
+	if !plan.FlowVariables.Equal(state.FlowVariables) {
+		var flowVarPlan, flowVarState []FlowVariableResourceModel
+		resp.Diagnostics.Append(plan.FlowVariables.ElementsAs(ctx, &flowVarPlan, false)...)
+		resp.Diagnostics.Append(state.FlowVariables.ElementsAs(ctx, &flowVarState, false)...)
+		// If there are errors, keep going as it's a read to state left
+
+		if !resp.Diagnostics.HasError() {
+			for _, flowVar := range flowVarPlan {
+				var flowVarStateFound bool
+				for _, flowVarState := range flowVarState {
+					if flowVar.Id.Equal(flowVarState.Id) {
+						flowVarStateFound = true
+
+						// test for modifications
+						if !cmp.Equal(flowVar, flowVarState) {
+							flowVariable := flowVar.expand()
+
+							_, err := sdk.DoRetryable(
+								ctx,
+								r.Client,
+								environmentID,
+								func() (interface{}, *http.Response, error) {
+									return r.Client.UpdateVariableWithResponse(environmentID, flowVariable)
+								},
+							)
+							if err != nil {
+								resp.Diagnostics.AddError(
+									"Error adding flow variable",
+									fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
+								)
+							}
+						}
+					}
+				}
+
+				if !flowVarStateFound {
+					// add the new variable
+					flowVariable := flowVar.expand()
+
+					_, err := sdk.DoRetryable(
+						ctx,
+						r.Client,
+						environmentID,
+						func() (interface{}, *http.Response, error) {
+							return r.Client.CreateVariableWithResponse(environmentID, flowVariable)
+						},
+					)
+					if err != nil {
+						resp.Diagnostics.AddError(
+							"Error adding flow variable",
+							fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
+						)
+					}
+				}
+			}
+
+			for _, flowVar := range flowVarState {
+				var flowVarPlanFound bool
+				for _, flowVarPlan := range flowVarPlan {
+					if flowVar.Id.Equal(flowVarPlan.Id) {
+						flowVarPlanFound = true
+						break
+					}
+				}
+
+				if !flowVarPlanFound {
+					// remove the variable
+					_, err := sdk.DoRetryable(
+						ctx,
+						r.Client,
+						environmentID,
+						func() (interface{}, *http.Response, error) {
+							return r.Client.DeleteVariableWithResponse(environmentID, flowVar.Id.ValueString())
+						},
+					)
+					if err != nil {
+						resp.Diagnostics.AddError(
+							"Error removing flow variable",
+							fmt.Sprintf("Error removing flow variable as part of flow update: %s", err),
+						)
+					}
+				}
+			}
+		}
+	}
+
 	// Do an export for state
 	// Run the API call
 	sdkRes, err := sdk.DoRetryable(
@@ -984,6 +1162,27 @@ func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.Flow
 	return &data, diags
 }
 
+func (p *FlowVariableResourceModel) expand() *davinci.VariablePayload {
+	
+	mutableValue := true
+
+	data := davinci.VariablePayload{
+		Context: p.Context.ValueString(),
+		Type:    p.Type.ValueString(),
+		Mutable: &mutableValue,
+	}
+
+	if !p.Name.IsNull() && !p.Name.IsUnknown() {
+		data.Name = p.Name.ValueStringPointer()
+	}
+
+	if !p.FlowId.IsNull() && !p.FlowId.IsUnknown() {
+		data.FlowId = p.FlowId.ValueStringPointer()
+	}
+
+	return &data
+}
+
 func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -1037,7 +1236,56 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 		p.Description = framework.StringToTF(*v)
 	}
 
+	var d diag.Diagnostics
+	p.FlowVariables, d = flowVariablesToTF(apiObject.Variables)
+	diags.Append(d...)
+
 	return diags
+}
+
+func flowVariablesToTF(apiObject []davinci.FlowVariable) (types.Set, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	tfObjType := types.ObjectType{AttrTypes: flowVariablesTFObjectTypes}
+
+	if apiObject == nil {
+		return types.SetNull(tfObjType), diags
+	}
+
+	variablesSet := make([]attr.Value, 0)
+
+	for _, variable := range apiObject {
+
+		varStateSimpleName := strings.Split(variable.Name, "##SK##")
+		if varStateSimpleName[0] == "" || len(varStateSimpleName) == 1 {
+
+			diags.AddError(
+				"Error parsing variable name",
+				fmt.Sprintf("Unable to parse variable name: %s for state", variable.Name),
+			)
+
+			return types.SetNull(tfObjType), diags
+		}
+
+		attributesMap := map[string]attr.Value{
+			"id":      framework.StringToTF(variable.Name),
+			"name":    framework.StringToTF(varStateSimpleName[0]),
+			"flow_id": framework.StringOkToTF(variable.FlowID, true),
+			"context": framework.StringOkToTF(variable.Context, true),
+			"type":    framework.StringOkToTF(variable.Fields.Type, true),
+		}
+
+		flattenedObj, d := types.ObjectValue(flowVariablesTFObjectTypes, attributesMap)
+		diags.Append(d...)
+
+		variablesSet = append(variablesSet, flattenedObj)
+
+	}
+
+	returnVar, d := types.SetValue(tfObjType, variablesSet)
+	diags.Append(d...)
+
+	return returnVar, diags
 }
 
 type flowConnectionNodeModel struct {
