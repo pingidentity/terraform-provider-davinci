@@ -2,6 +2,8 @@ module github.com/pingidentity/terraform-provider-davinci
 
 go 1.22.5
 
+replace github.com/samir-gandhi/davinci-client-go => /Users/patrickcowland/Documents/Terraform/davinci-client-go
+
 require (
 	github.com/bflad/tfproviderlint v0.30.0
 	github.com/golangci/golangci-lint v1.59.1
