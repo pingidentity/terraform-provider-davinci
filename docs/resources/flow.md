@@ -65,9 +65,6 @@ resource "davinci_flow" "my_awesome_main_flow" {
 - `connection_link` (Block Set) Mappings to connections that this flow depends on.  Connections should be managed (with the `davinci_connection` resource) or retrieved (with the `davinci_connection` data source) to provide the mappings needed for this configuration block. (see [below for nested schema](#nestedblock--connection_link))
 - `deploy` (Boolean, Deprecated) **Deprecation notice:** This attribute is deprecated and will be removed in a future release.  Flows are automatically deployed on import. A boolean that specifies whether to deploy the flow after import.  Defaults to `true`.
 - `description` (String) A string that specifies a description of the flow.  If the field is left undefined, the description from the flow export will be used.  If this field is left undefined and the flow export does not contain a description, the service will define a description on import.
-- `include_flow_variable_values` (Boolean) A boolean that indicates whether the exported flow contains flow variables and this resource should manage variable values.  If `true`, then the variable values will be included in Terraform state and also included when updating flow variable configuration.  If `false`, the variable values will not be included in Terraform state, and any updates to flow variables will clear the current variable value.  Defaults to `true`.  .
-
-!> If `include_flow_variable_values` is set to `false`, if updates are made to flow variables, these will clear any previously defined values for the updated flow variable.  The flow must be designed to be resilient to flow variable values becoming undefined.  Consider using company variables for values that should be made persistent.
 - `name` (String) A string that identifies the flow name after import.  If the field is left blank, a flow name will be derived by the service from the name in the import JSON (the `flow_json` parameter).
 - `subflow_link` (Block Set) Child flows of this resource, where the `flow_json` contains reference to subflows.  If the `flow_json` contains subflows, this one `subflow_link` block is required per contained subflow. (see [below for nested schema](#nestedblock--subflow_link))
 
@@ -75,7 +72,6 @@ resource "davinci_flow" "my_awesome_main_flow" {
 
 - `flow_configuration_json` (String) The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.
 - `flow_export_json` (String) The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.
-- `flow_variables` (Attributes Set) List of Flow variables that will be updated in the DaVinci instance. These are variable resources that are created and managed by the Flow resource, where variables are embedded in the `flow_json` DaVinci export file. (see [below for nested schema](#nestedatt--flow_variables))
 - `id` (String) The ID of this resource.
 
 <a id="nestedblock--connection_link"></a>
@@ -102,23 +98,6 @@ Required:
 Optional:
 
 - `replace_import_subflow_id` (String) Subflow ID of the subflow in the import to replace with the subflow described in `id` and `name` parameters.  This can be found in the source system in the "Connectors" menu, but is also at the following path in the JSON file: `[enabledGraphData|graphData].elements.nodes.data.connectionId`.
-
-
-<a id="nestedatt--flow_variables"></a>
-### Nested Schema for `flow_variables`
-
-Read-Only:
-
-- `context` (String) The variable context.  Should always return `flow`.
-- `description` (String) A string that specifies the description of the variable.
-- `flow_id` (String) The flow ID that the variable belongs to, which should match the ID of this resource.
-- `id` (String) The DaVinci internal ID of the variable.
-- `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`.
-- `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`.
-- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.
-- `name` (String) The user friendly name of the variable in the UI.
-- `type` (String) The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.
-- `value` (String) A string that represents the variable's default value.
 
 ## Import
 
