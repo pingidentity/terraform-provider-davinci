@@ -505,7 +505,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			return
 		}
 
-		if !plan.FlowJSON.Equal(state.FlowJSON) || !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) {
+		if !plan.FlowJSON.Equal(state.FlowJSON) || !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) || !plan.FlowVariables.Equal(state.FlowVariables) {
 			resp.Plan.SetAttribute(ctx, path.Root("flow_export_json"), types.StringUnknown())
 		}
 	}
