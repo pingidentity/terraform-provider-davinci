@@ -9,6 +9,8 @@ description: |-
 
 Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 
+!> When flow variables are embedded in the `flow_json`, only the `context`, `type` and `name` of the flow variables are managed by this resource.  To manage the mutability, value, description, minimum and maximum values of a flow variable, the `davinci_variable` resource must be used.
+
 ## Example Usage
 
 ```terraform
