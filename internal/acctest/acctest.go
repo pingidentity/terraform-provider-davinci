@@ -50,7 +50,7 @@ func init() {
 	ExternalProviders = map[string]resource.ExternalProvider{
 		"pingone": {
 			Source:            "pingidentity/pingone",
-			VersionConstraint: ">= 0.25, < 1.0",
+			VersionConstraint: ">= 1.0, < 2.0",
 		},
 	}
 }
@@ -294,21 +294,20 @@ resource "pingone_environment" "%[1]s" {
   name       = "tf-testacc-dv-dynamic-%[1]s"
   license_id = "%[2]s"
 
-  service {
-    type = "SSO"
-  }
-  service {
-    type = "DaVinci"
-	tags = %[6]s
-  }
-
-  dynamic "service" {
-    for_each = toset(var.services_%[1]s)
-
-    content {
-      type = service.key
+  services = concat([
+    for serviceType in var.services_%[1]s : {
+      type = serviceType
     }
-  }
+  ],
+  [
+    {
+        type = "SSO"
+    },
+    {
+        type = "DaVinci"
+        tags = ["DAVINCI_MINIMAL"]
+    }
+  ])
 }
 `, resourceName, licenseID, username, adminEnvID, servicesString, daVinciTags)
 }
