@@ -168,7 +168,7 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"context", // This shouldn't be ignored, can be solved on migration to the plugin framework
-					"value", // This shouldn't be ignored, can be solved on migration to the plugin framework
+					"value",   // This shouldn't be ignored, can be solved on migration to the plugin framework
 				},
 			},
 		},
@@ -272,7 +272,7 @@ func testAccResourceVariable_Full_FlowInstanceContext(t *testing.T, withBootstra
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"context", // This shouldn't be ignored, can be solved on migration to the plugin framework
-					"value", // This shouldn't be ignored, can be solved on migration to the plugin framework
+					"value",   // This shouldn't be ignored, can be solved on migration to the plugin framework
 				},
 			},
 		},
@@ -723,7 +723,7 @@ resource "davinci_variable" "%[1]s-company" {
   context     = "company"
   description = "testVariable description"
   type        = "string"
-  value 	  = "%[2]s"
+  value       = "%[2]s"
 }
 
 resource "davinci_variable" "%[1]s-flowInstance" {
@@ -733,7 +733,7 @@ resource "davinci_variable" "%[1]s-flowInstance" {
   context     = "flowInstance"
   description = "flowInstanceVariable1 description"
   type        = "string"
-  value 	  = "%[2]s"
+  value       = "%[2]s"
 }`, resourceName, variableValue)
 
 	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company]`, resourceName)
@@ -747,7 +747,7 @@ resource "davinci_variable" "%[1]s-flow" {
   context     = "flow"
   description = "fdgdfgfdg description"
   type        = "string"
-  value 	  = "%[2]s"
+  value       = "%[2]s"
 }`, resourceName, variableValue)
 
 	hcl, _ = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)

@@ -75,7 +75,6 @@ func (r *VariableResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 
 	const attrMinLength = 1
-	const minimumConnectionMappings = 1
 
 	flowIdDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"A string that specifies the ID of the flow to which the variable is assigned.  This field is required when the `context` field is set to `flow`.",
@@ -669,7 +668,7 @@ func (p *VariableResourceModel) expand() *davinci.VariablePayload {
 func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	if apiObject == nil || len(apiObject) == 0 {
+	if len(apiObject) == 0 {
 		diags.AddError(
 			"Data object missing",
 			"Cannot convert the data object to state as the data object is nil.  Please report this to the provider maintainers.",
