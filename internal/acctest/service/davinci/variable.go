@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"testing"
 
+	sdkv2acctest "github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
@@ -110,5 +111,38 @@ func Variable_RemovalDrift_PreConfig(t *testing.T, environmentID, variableID str
 	)
 	if err != nil {
 		t.Fatalf("Failed to delete variable: %v", err)
+	}
+}
+
+func Variable_RandomVariableValue_PreConfig(t *testing.T, environmentID string, flowID *string, variable *dv.VariablePayload) {
+	c, err := acctest.TestClient()
+	if err != nil {
+		t.Fatalf("Failed to get API client: %v", err)
+	}
+
+	if environmentID == "" || variable == nil {
+		t.Fatalf("One of environment ID or variable cannot be determined. Environment ID: %s, Variable: %v", environmentID, variable)
+	}
+
+	var ctx = context.Background()
+
+	strlen := 10
+	randomValue := sdkv2acctest.RandStringFromCharSet(strlen, sdkv2acctest.CharSetAlpha)
+	variable.Value = &randomValue
+
+	if variable.Context == "flow" {
+		variable.FlowId = flowID
+	}
+
+	_, err = sdk.DoRetryable(
+		ctx,
+		c,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return c.UpdateVariableWithResponse(environmentID, variable)
+		},
+	)
+	if err != nil {
+		t.Fatalf("Failed to update variable: %v", err)
 	}
 }

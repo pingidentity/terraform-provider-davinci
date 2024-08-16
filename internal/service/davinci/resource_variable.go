@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/boolvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -39,22 +40,25 @@ type VariableResourceModel struct {
 	Type          types.String `tfsdk:"type"`
 	Mutable       types.Bool   `tfsdk:"mutable"`
 	Value         types.String `tfsdk:"value"`
+	EmptyValue    types.Bool   `tfsdk:"empty_value"`
+	ValueService  types.String `tfsdk:"value_service"`
 	Min           types.Int64  `tfsdk:"min"`
 	Max           types.Int64  `tfsdk:"max"`
 }
 
 // Framework interfaces
 var (
-	_ resource.Resource                   = &VariableResource{}
-	_ resource.ResourceWithConfigure      = &VariableResource{}
-	_ resource.ResourceWithImportState    = &VariableResource{}
+	_ resource.Resource                = &VariableResource{}
+	_ resource.ResourceWithConfigure   = &VariableResource{}
+	_ resource.ResourceWithModifyPlan  = &VariableResource{}
+	_ resource.ResourceWithImportState = &VariableResource{}
 )
 
 const (
-	contextCompany     = "company"
+	contextCompany      = "company"
 	contextFlowInstance = "flowInstance"
-	contextUser        = "user"
-	contextFlow        = "flow"
+	contextUser         = "user"
+	contextFlow         = "flow"
 )
 
 // New Object
@@ -100,8 +104,16 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 	).DefaultValue(true)
 
 	valueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"A string that specifies the value of the variable, the type will be inferred from the value specified in the `type` parameter.",
+		"A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.",
+	).ConflictsWith([]string{"value", "empty_value"})
+
+	valueServiceDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the value of the variable in the service, the type will be inferred from the value specified in the `type` parameter.",
 	)
+
+	EmptyValueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A boolean that specifies whether the variable's `value` must be kept as an empty string.",
+	).ConflictsWith([]string{"value", "empty_value"})
 
 	minDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"An integer that specifies the minimum value of the variable, if the `type` parameter is set as `number`.",
@@ -130,7 +142,7 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 					stringplanmodifier.RequiresReplace(),
 				},
 				Validators: []validator.String{
-					verify.P1ResourceIDValidator(),
+					verify.P1DVResourceIDValidator(),
 					stringvalidatorinternal.IsRequiredIfMatchesPathValue(
 						types.StringValue(contextFlow),
 						path.MatchRelative().AtParent().AtName("context"),
@@ -198,7 +210,7 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description:         mutableDescription.Description,
 				MarkdownDescription: mutableDescription.MarkdownDescription,
 				Optional:            true,
-				Computed: true,
+				Computed:            true,
 
 				Default: booldefault.StaticBool(true),
 			},
@@ -207,14 +219,42 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description:         valueDescription.Description,
 				MarkdownDescription: valueDescription.MarkdownDescription,
 				Optional:            true,
-				Sensitive: true,
+				Sensitive:           true,
+
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(attrMinLength),
+					stringvalidator.ConflictsWith(
+						path.MatchRelative().AtParent().AtName("value"),
+						path.MatchRelative().AtParent().AtName("empty_value"),
+					),
+				},
+			},
+
+			"empty_value": schema.BoolAttribute{
+				Description:         EmptyValueDescription.Description,
+				MarkdownDescription: EmptyValueDescription.MarkdownDescription,
+				Optional:            true,
+
+				Validators: []validator.Bool{
+					boolvalidator.ConflictsWith(
+						path.MatchRelative().AtParent().AtName("value"),
+						path.MatchRelative().AtParent().AtName("empty_value"),
+					),
+				},
+			},
+
+			"value_service": schema.StringAttribute{
+				Description:         valueServiceDescription.Description,
+				MarkdownDescription: valueServiceDescription.MarkdownDescription,
+				Computed:            true,
+				Sensitive:           true,
 			},
 
 			"min": schema.Int64Attribute{
 				Description:         minDescription.Description,
 				MarkdownDescription: minDescription.MarkdownDescription,
 				Optional:            true,
-				Computed: true,
+				Computed:            true,
 
 				Default: int64default.StaticInt64(0),
 			},
@@ -223,11 +263,40 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description:         maxDescription.Description,
 				MarkdownDescription: maxDescription.MarkdownDescription,
 				Optional:            true,
-				Computed: true,
+				Computed:            true,
 
 				Default: int64default.StaticInt64(2000),
 			},
 		},
+	}
+}
+
+func (p *VariableResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+
+	// Destruction plan
+	if req.Plan.Raw.IsNull() {
+		return
+	}
+
+	var varValuePlan *string
+	resp.Diagnostics.Append(resp.Plan.GetAttribute(ctx, path.Root("value"), &varValuePlan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	var varEmptyValuePlan *bool
+	resp.Diagnostics.Append(resp.Plan.GetAttribute(ctx, path.Root("empty_value"), &varEmptyValuePlan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	if varEmptyValuePlan != nil && *varEmptyValuePlan {
+		resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringNull())
+	} else {
+
+		if varValuePlan != nil {
+			resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringValue(*varValuePlan))
+		}
 	}
 }
 
@@ -275,23 +344,46 @@ func (r *VariableResource) Create(ctx context.Context, req resource.CreateReques
 
 	// Build the model for the API
 	variablePayload := plan.expand()
-	
+
 	environmentID := plan.EnvironmentId.ValueString()
 
-	response, err := sdk.DoRetryable(
-		ctx,
-		r.Client,
-		environmentID,
-		func() (any, *http.Response, error) {
-			return r.Client.CreateVariableWithResponse(environmentID, variablePayload)
-		},
-	)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error creating variable",
-			fmt.Sprintf("Error creating variable: %s. %s", *variablePayload.Name, err),
+	var response interface{}
+	var err error
+
+	if plan.Context.ValueString() != contextFlow {
+		// we create variables for anything other than "flow" context
+		response, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.CreateVariableWithResponse(environmentID, variablePayload)
+			},
 		)
-		return
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error creating variable",
+				fmt.Sprintf("Error creating variable: %s. %s", *variablePayload.Name, err),
+			)
+			return
+		}
+	} else {
+		// we override "flow" variables
+		response, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.UpdateVariableWithResponse(environmentID, variablePayload)
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error overriding flow variable",
+				fmt.Sprintf("Error overriding flow variable: %s. %s", *variablePayload.Name, err),
+			)
+			return
+		}
 	}
 
 	res, ok := response.(map[string]davinci.Variable)
@@ -400,7 +492,7 @@ func (r *VariableResource) Update(ctx context.Context, req resource.UpdateReques
 
 	// Build the model for the API
 	variablePayload := plan.expand()
-	
+
 	environmentID := plan.EnvironmentId.ValueString()
 
 	response, err := sdk.DoRetryable(
@@ -530,7 +622,7 @@ func (r *VariableResource) ImportState(ctx context.Context, req resource.ImportS
 }
 
 func (p *VariableResourceModel) expand() *davinci.VariablePayload {
-	
+
 	data := davinci.VariablePayload{
 		Context: p.Context.ValueString(),
 		Type:    p.Type.ValueString(),
@@ -546,6 +638,11 @@ func (p *VariableResourceModel) expand() *davinci.VariablePayload {
 
 	if !p.Value.IsNull() && !p.Value.IsUnknown() {
 		data.Value = p.Value.ValueStringPointer()
+	}
+
+	if !p.EmptyValue.IsNull() && !p.EmptyValue.IsUnknown() {
+		v := ""
+		data.Value = &v
 	}
 
 	if !p.Min.IsNull() && !p.Min.IsUnknown() {
@@ -618,17 +715,23 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 	} else {
 		p.Type = types.StringNull()
 	}
-	
+
 	if v := variableObject.Mutable; v != nil {
 		p.Mutable = framework.BoolToTF(*v)
 	} else {
 		p.Mutable = types.BoolValue(false) // comes back null if false
 	}
 
-	if v := variableObject.Value; v != nil {
-		p.Value = framework.StringToTF(*v)
+	// if v := variableObject.Value; v != nil {
+	// 	p.Value = framework.StringToTF(*v)
+	// } else {
+	// 	p.Value = types.StringNull()
+	// }
+
+	if v := variableObject.Value; v != nil && *v != "" {
+		p.ValueService = framework.StringToTF(*v)
 	} else {
-		p.Value = types.StringNull()
+		p.ValueService = types.StringNull()
 	}
 
 	if v := variableObject.Min; v != nil {
@@ -642,6 +745,6 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 	} else {
 		p.Max = types.Int64Null()
 	}
-	
+
 	return diags
 }

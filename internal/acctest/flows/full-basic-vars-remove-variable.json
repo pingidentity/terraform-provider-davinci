@@ -1,5 +1,5 @@
 {
-  "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb",
+  "companyId": "f21d1763-7d39-45a7-9aae-82bab2582ed8",
   "authTokenExpireIds": [],
   "connectorIds": [
     "httpConnector",
@@ -8,19 +8,19 @@
     "flowConnector",
     "variablesConnector"
   ],
-  "createdDate": 1706708769850,
-  "currentVersion": 8,
+  "createdDate": 1723801589706,
+  "currentVersion": 4,
   "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
-  "deployedDate": 1706709739837,
-  "description": "",
+  "deployedDate": 1723801592896,
+  "description": "Imported on Fri Aug 16 2024 09:44:27 GMT+0000 (Coordinated Universal Time)",
   "flowStatus": "enabled",
   "isOutputSchemaSaved": false,
   "name": "full-basic",
-  "publishedVersion": 8,
+  "publishedVersion": 4,
   "timeouts": "null",
-  "updatedDate": 1706709739837,
-  "flowId": "c7062a8857740ee2185694bb855f8f21",
-  "versionId": 8,
+  "updatedDate": 1723801592940,
+  "flowId": "8d7ec5e438e76128c6388c045348c47e",
+  "versionId": 4,
   "graphData": {
     "elements": {
       "nodes": [
@@ -30,20 +30,20 @@
             "nodeType": "CONNECTION",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "name": "acjaeeskxf-http",
             "label": "Http",
             "status": "configured",
             "capabilityName": "customHtmlMessage",
             "type": "trigger",
             "properties": {
               "message": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"Hello, world?\"\n      }\n    ]\n  }\n]"
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"Hello, world?\"\n      },\n      {\n        \"text\": \"\"\n      }\n]"
               }
             }
           },
           "position": {
-            "x": 277,
-            "y": 336
+            "x": 284,
+            "y": 392
           },
           "group": "nodes",
           "removed": false,
@@ -61,8 +61,8 @@
             "label": "Evaluator"
           },
           "position": {
-            "x": 426.5,
-            "y": 337.25
+            "x": 433.5,
+            "y": 393.25
           },
           "group": "nodes",
           "removed": false,
@@ -79,7 +79,7 @@
             "nodeType": "CONNECTION",
             "connectionId": "de650ca45593b82c49064ead10b9fe17",
             "connectorId": "functionsConnector",
-            "name": "Functions",
+            "name": "acjaeeskxf-functions",
             "label": "Functions",
             "status": "configured",
             "capabilityName": "AEqualsB",
@@ -94,8 +94,8 @@
             }
           },
           "position": {
-            "x": 576,
-            "y": 338.5
+            "x": 583,
+            "y": 394.5
           },
           "group": "nodes",
           "removed": false,
@@ -121,8 +121,8 @@
             }
           },
           "position": {
-            "x": 717,
-            "y": 326
+            "x": 724,
+            "y": 382
           },
           "group": "nodes",
           "removed": false,
@@ -139,7 +139,7 @@
             "nodeType": "CONNECTION",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "name": "acjaeeskxf-http",
             "label": "Http",
             "status": "configured",
             "capabilityName": "createSuccessResponse",
@@ -147,8 +147,8 @@
             "properties": {}
           },
           "position": {
-            "x": 1197,
-            "y": 266
+            "x": 1204,
+            "y": 322
           },
           "group": "nodes",
           "removed": false,
@@ -165,7 +165,7 @@
             "nodeType": "CONNECTION",
             "connectionId": "53ab83a4a4ab919d9f2cb02d9e111ac8",
             "connectorId": "errorConnector",
-            "name": "Error Message",
+            "name": "acjaeeskxf-error",
             "label": "Error Message",
             "status": "configured",
             "capabilityName": "customErrorMessage",
@@ -177,8 +177,8 @@
             }
           },
           "position": {
-            "x": 1197,
-            "y": 416
+            "x": 1204,
+            "y": 472
           },
           "group": "nodes",
           "removed": false,
@@ -195,7 +195,7 @@
             "nodeType": "CONNECTION",
             "connectionId": "2581eb287bb1d9bd29ae9886d675f89f",
             "connectorId": "flowConnector",
-            "name": "Flow Connector",
+            "name": "acjaeeskxf-flow",
             "label": "Flow Conductor",
             "status": "configured",
             "capabilityName": "startUiSubFlow",
@@ -213,8 +213,8 @@
             }
           },
           "position": {
-            "x": 867,
-            "y": 446
+            "x": 874,
+            "y": 502
           },
           "group": "nodes",
           "removed": false,
@@ -231,7 +231,7 @@
             "nodeType": "CONNECTION",
             "connectionId": "2581eb287bb1d9bd29ae9886d675f89f",
             "connectorId": "flowConnector",
-            "name": "Flow Connector",
+            "name": "acjaeeskxf-flow",
             "label": "Flow Conductor",
             "status": "configured",
             "capabilityName": "startUiSubFlow",
@@ -249,8 +249,8 @@
             }
           },
           "position": {
-            "x": 867,
-            "y": 236
+            "x": 874,
+            "y": 292
           },
           "group": "nodes",
           "removed": false,
@@ -267,8 +267,8 @@
             "nodeType": "EVAL"
           },
           "position": {
-            "x": 1017,
-            "y": 236
+            "x": 1024,
+            "y": 292
           },
           "group": "nodes",
           "removed": false,
@@ -285,8 +285,8 @@
             "nodeType": "EVAL"
           },
           "position": {
-            "x": 1032,
-            "y": 431
+            "x": 1039,
+            "y": 487
           },
           "group": "nodes",
           "removed": false,
@@ -303,7 +303,7 @@
             "nodeType": "CONNECTION",
             "connectionId": "06922a684039827499bdbdd97f49827b",
             "connectorId": "variablesConnector",
-            "name": "Variables",
+            "name": "acjaeeskxf-variables",
             "label": "Variables",
             "status": "configured",
             "capabilityName": "saveFlowValue",
@@ -312,26 +312,18 @@
               "saveFlowVariables": {
                 "value": [
                   {
-                    "name": "fdgdfgfdg",
-                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"test124\"\n      }\n    ]\n  }\n]",
-                    "key": 0.8936786494474329,
-                    "label": "fdgdfgfdg (string - flow)",
-                    "type": "string"
-                  },
-                  {
                     "name": "test123",
-                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"test456\"\n      }\n    ]\n  }\n]",
                     "key": 0.379286774724122,
-                    "label": "test123 (string - flow)",
-                    "type": "string"
+                    "label": "test123 (number - flow)",
+                    "type": "number"
                   }
                 ]
               }
             }
           },
           "position": {
-            "x": 270,
-            "y": 180
+            "x": 277,
+            "y": 236
           },
           "group": "nodes",
           "removed": false,
@@ -348,8 +340,118 @@
             "nodeType": "EVAL"
           },
           "position": {
+            "x": 280.5,
+            "y": 314
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "0cj7n971ix",
+            "nodeType": "CONNECTION",
+            "connectionId": "06922a684039827499bdbdd97f49827b",
+            "connectorId": "variablesConnector",
+            "name": "acjaeeskxf-variables",
+            "label": "acjaeeskxf-variables",
+            "status": "configured",
+            "capabilityName": "saveValue",
+            "type": "trigger",
+            "properties": {
+              "saveVariables": {
+                "value": [
+                  {
+                    "name": "flowInstanceVariable1",
+                    "key": 0.09068454768967449,
+                    "label": "flowInstanceVariable1 (string - flowInstance)",
+                    "type": "string"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 270,
+            "y": 120
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "esg7oyahen",
+            "nodeType": "EVAL"
+          },
+          "position": {
             "x": 273.5,
-            "y": 258
+            "y": 178
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "j3j8fmgc9q",
+            "nodeType": "CONNECTION",
+            "connectionId": "06922a684039827499bdbdd97f49827b",
+            "connectorId": "variablesConnector",
+            "name": "acjaeeskxf-variables",
+            "label": "acjaeeskxf-variables",
+            "status": "configured",
+            "capabilityName": "saveValueUserInfo",
+            "type": "trigger",
+            "properties": {
+              "saveVariables": {
+                "value": [
+                  {
+                    "name": "testuser",
+                    "key": 0.9814043007447408,
+                    "label": "testuser (string - flowInstance)",
+                    "type": "string"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 90,
+            "y": 60
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "1uu35lv024",
+            "nodeType": "EVAL"
+          },
+          "position": {
+            "x": 180,
+            "y": 90
           },
           "group": "nodes",
           "removed": false,
@@ -570,6 +672,82 @@
           "grabbable": true,
           "pannable": true,
           "classes": ""
+        },
+        {
+          "data": {
+            "id": "mz51tp7j0f",
+            "source": "0cj7n971ix",
+            "target": "esg7oyahen"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "as3c6w9yus",
+            "source": "esg7oyahen",
+            "target": "3zvjdgdljx"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "hdak1wwkml",
+            "source": "j3j8fmgc9q",
+            "target": "1uu35lv024"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "dv5jn5u6e7",
+            "source": "1uu35lv024",
+            "target": "0cj7n971ix"
+          },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "group": "edges",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": true,
+          "classes": ""
         }
       ]
     },
@@ -591,43 +769,40 @@
     }
   },
   "flowColor": "#E3F0FF",
-  "savedDate": 1706708769645,
+  "savedDate": 1723801589637,
   "variables": [
     {
-      "context": "flow",
-      "createdDate": 1706708735989,
-      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+      "context": "flowInstance",
+      "createdDate": 1723798747638,
       "fields": {
-        "type": "string",
         "displayName": "",
-        "value": "thisisastring",
-        "mutable": true,
+        "max": 2000,
         "min": 0,
-        "max": 2000
+        "mutable": true,
+        "type": "string"
       },
-      "flowId": "c7062a8857740ee2185694bb855f8f21",
+      "id": "e2d4da17-2147-4a48-a86f-8d5af35d2eef",
       "type": "property",
       "visibility": "private",
-      "name": "fdgdfgfdg##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
-      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
+      "name": "flowInstanceVariable1##SK##flowInstance",
+      "companyId": "f21d1763-7d39-45a7-9aae-82bab2582ed8"
     },
     {
       "context": "flow",
-      "createdDate": 1706708761083,
-      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+      "createdDate": 1723801468004,
       "fields": {
-        "type": "string",
+        "type": "number",
         "displayName": "test123",
-        "value": "test",
         "mutable": true,
         "min": 4,
         "max": 20
       },
-      "flowId": "c7062a8857740ee2185694bb855f8f21",
+      "flowId": "8d7ec5e438e76128c6388c045348c47e",
+      "id": "da41a0bd-24f3-431b-82e0-ea331c19e2c5",
       "type": "property",
       "visibility": "private",
-      "name": "test123##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
-      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
+      "name": "test123##SK##flow##SK##8d7ec5e438e76128c6388c045348c47e",
+      "companyId": "f21d1763-7d39-45a7-9aae-82bab2582ed8"
     }
   ],
   "connections": []

@@ -44,11 +44,11 @@ type FlowResourceModel struct {
 }
 
 type FlowVariableResourceModel struct {
-	Id            types.String `tfsdk:"id"`
-	FlowId        types.String `tfsdk:"flow_id"`
-	Name          types.String `tfsdk:"name"`
-	Context       types.String `tfsdk:"context"`
-	Type          types.String `tfsdk:"type"`
+	Id      types.String `tfsdk:"id"`
+	FlowId  types.String `tfsdk:"flow_id"`
+	Name    types.String `tfsdk:"name"`
+	Context types.String `tfsdk:"context"`
+	Type    types.String `tfsdk:"type"`
 }
 
 type FlowConnectionLinkResourceModel struct {
@@ -214,7 +214,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow to import, in raw JSON format. Should be a JSON file of a single flow (without subflows) that has been exported from a source DaVinci environment.  Must be a valid JSON string.").Description,
 				Required:    true,
-				//Sensitive:   true,
+				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowJsonCmpOptsConfiguration,
@@ -224,7 +224,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_configuration_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The parsed configuration of the DaVinci Flow import JSON.  Drift is calculated based on this attribute.").Description,
 				Computed:    true,
-				//Sensitive:   true,
+				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowConfigurationJsonCmpOptsConfiguration,
@@ -234,7 +234,7 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"flow_export_json": schema.StringAttribute{
 				Description: framework.SchemaAttributeDescriptionFromMarkdown("The DaVinci Flow export in raw JSON format following successful import, including target environment metadata.").Description,
 				Computed:    true,
-				//Sensitive:   true,
+				Sensitive:   true,
 
 				CustomType: davinciexporttype.ParsedType{
 					ExportCmpOpts: flowExportJsonCmpOptsConfiguration,
@@ -807,8 +807,8 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 							)
 							if err != nil {
 								resp.Diagnostics.AddError(
-									"Error adding flow variable",
-									fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
+									fmt.Sprintf("Error adding %s variable", flowVariable.Context),
+									fmt.Sprintf("Error adding %s variable %s as part of flow update: %s", flowVariable.Context, *flowVariable.Name, err),
 								)
 							}
 						}
@@ -828,10 +828,13 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 						},
 					)
 					if err != nil {
-						resp.Diagnostics.AddError(
-							"Error adding flow variable",
-							fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
-						)
+						// if error starts with "Record already exists" then ignore it
+						if !strings.HasPrefix(err.Error(), "Record already exists") {
+							resp.Diagnostics.AddError(
+								fmt.Sprintf("Error adding %s variable", flowVariable.Context),
+								fmt.Sprintf("Error adding %s variable %s as part of flow update: %s", flowVariable.Context, *flowVariable.Name, err),
+							)
+						}
 					}
 				}
 			}
@@ -845,7 +848,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 					}
 				}
 
-				if !flowVarPlanFound {
+				if !flowVarPlanFound && flowVar.Context.Equal(types.StringValue(contextFlow)) {
 					// remove the variable
 					_, err := sdk.DoRetryable(
 						ctx,
@@ -856,10 +859,12 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 						},
 					)
 					if err != nil {
-						resp.Diagnostics.AddError(
-							"Error removing flow variable",
-							fmt.Sprintf("Error removing flow variable as part of flow update: %s", err),
-						)
+						if !strings.HasPrefix(err.Error(), "Error deleting record") {
+							resp.Diagnostics.AddError(
+								fmt.Sprintf("Error removing %s variable", flowVar.Context.ValueString()),
+								fmt.Sprintf("Error removing %s variable %s as part of flow update: %s", flowVar.Context.ValueString(), flowVar.Name.ValueString(), err),
+							)
+						}
 					}
 				}
 			}
@@ -1163,7 +1168,7 @@ func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.Flow
 }
 
 func (p *FlowVariableResourceModel) expand() *davinci.VariablePayload {
-	
+
 	mutableValue := true
 
 	data := davinci.VariablePayload{
