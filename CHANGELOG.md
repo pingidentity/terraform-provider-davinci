@@ -1,5 +1,9 @@
 ## 0.4.0 (Unreleased)
 
+BREAKING CHANGES:
+
+* `resource/davinci_flow`: Some variable configuration fields have been removed from the `davinci_flow` resource.  Variable `description`, `max`, `min`, `value` and `mutable` fields can no longer be managed in the flow export.  Use `davinci_variable` to manage these configuration items instead. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
+
 NOTES:
 
 * Bump `github.com/golangci/golangci-lint` from 1.59.0 => 1.59.1 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
@@ -10,10 +14,20 @@ NOTES:
 * Bump `github.com/patrickcping/pingone-go-sdk-v2/management` from 0.39.0 => 0.43.0 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.9 => 0.12.3 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/samir-gandhi/davinci-client-go` from 0.3.0 => 0.4.0 ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
+* `resource/davinci_variable`: Migrated to plugin framework. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
 * bump go version from 1.22.3 => 1.22.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+
+ENHANCEMENTS:
+
+* `resource/davinci_flow`: Change flow/variable logic to support the ability to export flows without variable values, but still allow management of variables values if necessary. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
+* `resource/davinci_variable`: Add support for secret company variables. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
+* `resource/davinci_variable`: Change flow/variable logic to support the ability to export flows without variable values, but still allow management of variables values if necessary. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
 
 BUG FIXES:
 
+* `resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" error when updating variables in a flow. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
+* `resource/davinci_flow`: Fix erroneous deletion of a company / flow instance variable if a flow contains reference to it within it's export. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
+* `resource/davinci_flow`: Fix inability to let flows themselves manage variable values during flow execution (allow option to not manage variable values in Terraform state). ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
 * `resource/davinci_flow`: Resolve warnings that state that DaVinci JSON files contain unknown properties (August 2024). ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
 
 ## 0.3.3 (4 June 2024)
