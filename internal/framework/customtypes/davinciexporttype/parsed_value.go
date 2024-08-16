@@ -95,7 +95,7 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		return
 	}
 
-	if ok := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{}); ok {
+	if ok, _, _, _ := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{}); ok {
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
@@ -107,7 +107,7 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 	}
 
 	// Validate just the config of the export
-	if ok := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
+	if ok, _, _, _ := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
 		IgnoreConfig:              v.IgnoreConfig,
 		IgnoreDesignerCues:        v.IgnoreDesignerCues,
 		IgnoreEnvironmentMetadata: v.IgnoreEnvironmentMetadata,
@@ -126,7 +126,7 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 	}
 
 	// Warn in case there are AdditionalProperties in the import file (since these aren't cleanly handled in the SDK, while they are preserved on import, there may be unpredictable results in diff calculation)
-	if ok := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
+	if ok, _, _, _ := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
 		IgnoreConfig:              true,
 		IgnoreDesignerCues:        true,
 		IgnoreEnvironmentMetadata: true,
