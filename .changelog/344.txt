@@ -1,0 +1,31 @@
+```release-note:note
+`resource/davinci_variable`: Migrated to plugin framework.
+```
+
+```release-note:breaking-change
+`resource/davinci_flow`: Some variable configuration fields have been removed from the `davinci_flow` resource.  Variable `description`, `max`, `min`, `value` and `mutable` fields can no longer be managed in the flow export.  Use `davinci_variable` to manage these configuration items instead.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" error when updating variables in a flow.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fix inability to let flows themselves manage variable values during flow execution (allow option to not manage variable values in Terraform state).
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fix erroneous deletion of a company / flow instance variable if a flow contains reference to it within it's export.
+```
+
+```release-note:enhancement
+`resource/davinci_flow`: Change flow/variable logic to support the ability to export flows without variable values, but still allow management of variables values if necessary.
+```
+
+```release-note:enhancement
+`resource/davinci_variable`: Change flow/variable logic to support the ability to export flows without variable values, but still allow management of variables values if necessary.
+```
+
+```release-note:enhancement
+`resource/davinci_variable`: Add support for secret company variables.
+```
