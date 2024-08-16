@@ -3,12 +3,18 @@
 NOTES:
 
 * Bump `github.com/golangci/golangci-lint` from 1.59.0 => 1.59.1 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/golangci/golangci-lint` from 1.59.1 => 1.60.1 ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
 * Bump `github.com/hashicorp/go-getter` from 1.7.4 => 1.7.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/hashicorp/terraform-plugin-docs` from 0.19.3 => 0.19.4 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/hashicorp/terraform-plugin-framework` from 1.8.0 => 1.11.0 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/patrickcping/pingone-go-sdk-v2/management` from 0.39.0 => 0.43.0 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.9 => 0.12.3 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump `github.com/samir-gandhi/davinci-client-go` from 0.3.0 => 0.4.0 ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
 * bump go version from 1.22.3 => 1.22.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+
+BUG FIXES:
+
+* `resource/davinci_flow`: Resolve warnings that state that DaVinci JSON files contain unknown properties (August 2024). ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
 
 ## 0.3.3 (4 June 2024)
 
