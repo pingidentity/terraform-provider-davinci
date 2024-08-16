@@ -2,24 +2,137 @@
 page_title: "davinci_variable Resource - terraform-provider-davinci"
 subcategory: "Variable"
 description: |-
-  
+  Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 ---
 
 # davinci_variable (Resource)
 
+Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 
+~> When using "company" or "flow instance" variables, it is recommended to define these variables before the flows that depend on them. This is shown in the example using the `depends_on` meta argument.
+
+~> When using "flow" variables, it is recommended to define these variables after the flows that depends on them have been imported, as shown in the example.
 
 ## Example Usage
+
+The following example shows the recommended usage of this resource when combined with the `davinci_flow` resource.
 
 ```terraform
 resource "davinci_variable" "my_awesome_region_variable" {
   environment_id = var.environment_id
 
+  context = "company"
+
   name        = "region"
-  context     = "company"
   description = "identifies region for functions in flow"
   value       = "northamerica"
   type        = "string"
+}
+
+resource "davinci_flow" "my_awesome_main_flow" {
+  depends_on = [
+    davinci_variable.my_awesome_region_variable,
+  ]
+
+  environment_id = var.environment_id
+
+  name      = "My Awesome Main Flow"
+  flow_json = file("./path/to/example-mainflow.json")
+
+  # ... subflow_link and connection_link arguments
+}
+
+resource "davinci_variable" "my_awesome_usercontext_variable" {
+  environment_id = var.environment_id
+
+  context = "flow"
+  flow_id = davinci_flow.my_awesome_main_flow.id
+
+  name        = "usercontext"
+  description = "identifies usercontext for functions in flow"
+  type        = "string"
+}
+```
+
+## Example Usage - Dynamic Variable Values
+
+The following example shows the recommended usage of a variable where the variable value is dynamically set by flow execution, and should not be managed in Terraform state.
+
+```terraform
+resource "davinci_flow" "my_awesome_main_flow" {
+  environment_id = var.environment_id
+
+  name      = "My Awesome Main Flow"
+  flow_json = file("./path/to/example-mainflow.json")
+
+  # ... subflow_link and connection_link arguments
+}
+
+resource "davinci_variable" "my_awesome_usercontext_variable" {
+  environment_id = var.environment_id
+
+  context = "flow"
+  flow_id = davinci_flow.my_awesome_main_flow.id
+
+  name        = "usercontext"
+  description = "identifies usercontext for functions in flow"
+  type        = "string"
+}
+```
+
+## Example Usage - Static, Non-empty Variable Values
+
+The following example shows the recommended usage of a variable where the variable value is static, has a defined value and should be managed in Terraform state.
+
+```terraform
+resource "davinci_flow" "my_awesome_main_flow" {
+  environment_id = var.environment_id
+
+  name      = "My Awesome Main Flow"
+  flow_json = file("./path/to/example-mainflow.json")
+
+  # ... subflow_link and connection_link arguments
+}
+
+resource "davinci_variable" "my_awesome_usercontext_variable" {
+  environment_id = var.environment_id
+
+  context = "flow"
+  flow_id = davinci_flow.my_awesome_main_flow.id
+
+  name        = "usercontext"
+  description = "identifies usercontext for functions in flow"
+  type        = "string"
+
+  value = "fixed-value"
+}
+```
+
+## Example Usage - Static, Empty Variable Values
+
+The following example shows the recommended usage of a variable where the variable value is static, has an empty value and should be managed in Terraform state.
+
+```terraform
+resource "davinci_flow" "my_awesome_main_flow" {
+  environment_id = var.environment_id
+
+  name      = "My Awesome Main Flow"
+  flow_json = file("./path/to/example-mainflow.json")
+
+  # ... subflow_link and connection_link arguments
+}
+
+resource "davinci_variable" "my_awesome_usercontext_variable" {
+  environment_id = var.environment_id
+
+  context = "flow"
+  flow_id = davinci_flow.my_awesome_main_flow.id
+
+  name        = "usercontext"
+  description = "identifies usercontext for functions in flow"
+  type        = "string"
+
+  empty_value = true
 }
 ```
 
@@ -28,22 +141,25 @@ resource "davinci_variable" "my_awesome_region_variable" {
 
 ### Required
 
-- `context` (String) The variable context.  Must be one of: `company`, `flowInstance`, `user`.   This field is immutable and will trigger a replace plan if changed.
-- `environment_id` (String) The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.
-- `name` (String) The name of the variable.  This field is immutable and will trigger a replace plan if changed.
-- `type` (String) The variable's data type.  Must be one of `string`, `number`, `boolean`, `object`.
+- `context` (String) A string that specifies the context of the variable.  Options are `company`, `flow`, `flowInstance`, `user`.  This field is immutable and will trigger a replace plan if changed.
+- `environment_id` (String) The ID of the PingOne environment to manage the DaVinci variable in.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
+- `name` (String) A string that specifies the name of the variable.  This field is immutable and will trigger a replace plan if changed.
+- `type` (String) A string that specifies the variable's data type.  Options are `boolean`, `number`, `object`, `secret`, `string`.
 
 ### Optional
 
 - `description` (String) A string that specifies the description of the variable.
-- `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`. Defaults to `2000`.
-- `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`. Defaults to `0`.
-- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow. Defaults to `true`.
-- `value` (String, Sensitive) Variable value as string, type will be inferred from the value specified in the `type` parameter.
+- `empty_value` (Boolean) A boolean that specifies whether the variable's `value` must be kept as an empty string.  Conflicts with `value`, `empty_value`.
+- `flow_id` (String) A string that specifies the ID of the flow to which the variable is assigned.  This field is required when the `context` field is set to `flow`.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
+- `max` (Number) An integer that specifies the maximum value of the variable, if the `type` parameter is set as `number`.  Defaults to `2000`.
+- `min` (Number) An integer that specifies the minimum value of the variable, if the `type` parameter is set as `number`.  Defaults to `0`.
+- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.  Defaults to `true`.
+- `value` (String, Sensitive) A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.  Conflicts with `value`, `empty_value`.
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `value_service` (String, Sensitive) A string that specifies the value of the variable in the service, the type will be inferred from the value specified in the `type` parameter.
 
 ## Import
 

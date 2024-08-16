@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr/xattr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
@@ -86,6 +87,7 @@ func (v ParsedValue) StringSemanticEquals(ctx context.Context, newValuable baset
 		IgnoreUnmappedProperties:  v.IgnoreUnmappedProperties,
 		IgnoreVersionMetadata:     v.IgnoreVersionMetadata,
 		IgnoreFlowMetadata:        v.IgnoreFlowMetadata,
+		IgnoreFlowVariables:       v.IgnoreFlowVariables,
 	}), diags
 }
 
@@ -95,7 +97,17 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		return
 	}
 
-	if ok, _, _, _ := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{}); ok {
+	ok, _, _, err := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{})
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"DaVinci Export JSON String Validation Error",
+			"An unexpected error was encountered while validating the DaVinci Export JSON string.  This is always an error in the provider. "+
+				"Please report the following to the provider developer:\n\n"+err.Error(),
+		)
+		return	
+	}
+		
+	if ok {
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
@@ -107,14 +119,22 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 	}
 
 	// Validate just the config of the export
-	if ok, _, _, _ := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
+	ok, errorCode, _, err := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
 		IgnoreConfig:              v.IgnoreConfig,
 		IgnoreDesignerCues:        v.IgnoreDesignerCues,
 		IgnoreEnvironmentMetadata: v.IgnoreEnvironmentMetadata,
 		IgnoreUnmappedProperties:  true,
 		IgnoreVersionMetadata:     v.IgnoreVersionMetadata,
 		IgnoreFlowMetadata:        v.IgnoreFlowMetadata,
-	}); !ok {
+		IgnoreFlowVariables:       v.IgnoreFlowVariables,
+	})
+	
+	if !ok {
+		tflog.Debug(ctx, "Invalid DaVinci Flow Export String Value", map[string]interface{}{
+			"error code": string(errorCode),
+			//"diff":       &diff, - we don't want to expose this in the logs as it may contain sensitive information
+			"error":      err,
+		})
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
@@ -126,14 +146,23 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 	}
 
 	// Warn in case there are AdditionalProperties in the import file (since these aren't cleanly handled in the SDK, while they are preserved on import, there may be unpredictable results in diff calculation)
-	if ok, _, _, _ := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
+	ok, errorCode, _, err = davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
 		IgnoreConfig:              true,
 		IgnoreDesignerCues:        true,
 		IgnoreEnvironmentMetadata: true,
 		IgnoreUnmappedProperties:  false,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
-	}); !v.IgnoreUnmappedProperties && !ok {
+		IgnoreFlowVariables:       true,
+	})
+	
+	if !v.IgnoreUnmappedProperties && !ok {
+		tflog.Debug(ctx, "Invalid DaVinci Flow Export String Value", map[string]interface{}{
+			"error code": string(errorCode),
+			//"diff":       &diff, - we don't want to expose this in the logs as it may contain sensitive information
+			"error":      err,
+		})
+
 		resp.Diagnostics.AddAttributeWarning(
 			req.Path,
 			"DaVinci Export JSON contains unknown properties",

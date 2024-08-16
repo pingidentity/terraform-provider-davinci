@@ -324,6 +324,13 @@
                     "key": 0.379286774724122,
                     "label": "test123 (number - flow)",
                     "type": "number"
+                  },
+                  {
+                    "name": "test123NEW",
+                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"25\"\n      }\n    ]\n  }\n]",
+                    "key": 0.379286774724122,
+                    "label": "test123NEW (number - flow)",
+                    "type": "number"
                   }
                 ]
               }
@@ -627,6 +634,24 @@
       "type": "property",
       "visibility": "private",
       "name": "test123##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
+      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
+    },
+    {
+      "context": "flow",
+      "createdDate": 1706708761083,
+      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+      "fields": {
+        "type": "number",
+        "displayName": "test123NEW",
+        "value": "20",
+        "mutable": false,
+        "min": 5,
+        "max": 30
+      },
+      "flowId": "c7062a8857740ee2185694bb855f8f21",
+      "type": "property",
+      "visibility": "private",
+      "name": "test123NEW##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
       "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
     }
   ],

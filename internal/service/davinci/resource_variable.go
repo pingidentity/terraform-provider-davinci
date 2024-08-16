@@ -7,290 +7,586 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/boolvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
+	stringvalidatorinternal "github.com/pingidentity/terraform-provider-davinci/internal/framework/stringvalidator"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
+	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
-	dv "github.com/samir-gandhi/davinci-client-go/davinci"
+	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
-func ResourceVariable() *schema.Resource {
-	return &schema.Resource{
-		CreateContext: resourceVariableCreate,
-		ReadContext:   resourceVariableRead,
-		UpdateContext: resourceVariableUpdate,
-		DeleteContext: resourceVariableDelete,
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the variable.  This field is immutable and will trigger a replace plan if changed.",
-				ForceNew:    true,
-			},
-			"context": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"company", "flowInstance", "user"}, false),
-				Description:  "The variable context.  Must be one of: `company`, `flowInstance`, `user`.   This field is immutable and will trigger a replace plan if changed.",
-				ForceNew:     true,
-			},
-			"environment_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The ID of the PingOne environment to create the DaVinci connection. Must be a valid PingOne resource ID. This field is immutable and will trigger a replace plan if changed.",
+// Types
+type VariableResource serviceClientType
 
-				ValidateDiagFunc: validation.ToDiagFunc(verify.ValidP1ResourceID),
-				ForceNew:         true,
+type VariableResourceModel struct {
+	Id            types.String `tfsdk:"id"`
+	EnvironmentId types.String `tfsdk:"environment_id"`
+	FlowId        types.String `tfsdk:"flow_id"`
+	Name          types.String `tfsdk:"name"`
+	Context       types.String `tfsdk:"context"`
+	Description   types.String `tfsdk:"description"`
+	Type          types.String `tfsdk:"type"`
+	Mutable       types.Bool   `tfsdk:"mutable"`
+	Value         types.String `tfsdk:"value"`
+	EmptyValue    types.Bool   `tfsdk:"empty_value"`
+	ValueService  types.String `tfsdk:"value_service"`
+	Min           types.Int64  `tfsdk:"min"`
+	Max           types.Int64  `tfsdk:"max"`
+}
+
+// Framework interfaces
+var (
+	_ resource.Resource                = &VariableResource{}
+	_ resource.ResourceWithConfigure   = &VariableResource{}
+	_ resource.ResourceWithModifyPlan  = &VariableResource{}
+	_ resource.ResourceWithImportState = &VariableResource{}
+)
+
+const (
+	contextCompany      = "company"
+	contextFlowInstance = "flowInstance"
+	contextUser         = "user"
+	contextFlow         = "flow"
+)
+
+// New Object
+func NewVariableResource() resource.Resource {
+	return &VariableResource{}
+}
+
+// Metadata
+func (r *VariableResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_variable"
+}
+
+// Schema.
+func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+
+	const attrMinLength = 1
+
+	flowIdDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the ID of the flow to which the variable is assigned.  This field is required when the `context` field is set to `flow`.",
+	).AppendMarkdownString("Must be a valid PingOne resource ID.").RequiresReplace()
+
+	nameDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the name of the variable.",
+	).RequiresReplace()
+
+	contexts := []string{contextCompany, contextFlowInstance, contextUser, contextFlow}
+	contextDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the context of the variable.",
+	).AllowedValues(utils.StringSliceToAnySlice(contexts)...).RequiresReplace()
+
+	descriptionDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the description of the variable.",
+	)
+
+	varTypes := []string{"string", "number", "boolean", "object", "secret"}
+	typeDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the variable's data type.",
+	).AllowedValues(utils.StringSliceToAnySlice(varTypes)...)
+
+	mutableDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.",
+	).DefaultValue(true)
+
+	valueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.",
+	).ConflictsWith([]string{"value", "empty_value"})
+
+	valueServiceDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A string that specifies the value of the variable in the service, the type will be inferred from the value specified in the `type` parameter.",
+	)
+
+	EmptyValueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"A boolean that specifies whether the variable's `value` must be kept as an empty string.",
+	).ConflictsWith([]string{"value", "empty_value"})
+
+	minDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"An integer that specifies the minimum value of the variable, if the `type` parameter is set as `number`.",
+	).DefaultValue(0)
+
+	maxDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"An integer that specifies the maximum value of the variable, if the `type` parameter is set as `number`.",
+	).DefaultValue(2000)
+
+	resp.Schema = schema.Schema{
+		// This description is used by the documentation generator and the language server.
+		Description: "Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
+
+		Attributes: map[string]schema.Attribute{
+			"id": framework.Attr_ID(),
+
+			"environment_id": framework.Attr_LinkID(
+				framework.SchemaAttributeDescriptionFromMarkdown("The ID of the PingOne environment to manage the DaVinci variable in."),
+			),
+
+			"flow_id": schema.StringAttribute{
+				Description:         flowIdDescription.Description,
+				MarkdownDescription: flowIdDescription.MarkdownDescription,
+				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+				Validators: []validator.String{
+					verify.P1DVResourceIDValidator(),
+					stringvalidatorinternal.IsRequiredIfMatchesPathValue(
+						types.StringValue(contextFlow),
+						path.MatchRelative().AtParent().AtName("context"),
+					),
+					stringvalidatorinternal.ConflictsIfMatchesPathValue(
+						types.StringValue(contextCompany),
+						path.MatchRelative().AtParent().AtName("context"),
+					),
+					stringvalidatorinternal.ConflictsIfMatchesPathValue(
+						types.StringValue(contextFlowInstance),
+						path.MatchRelative().AtParent().AtName("context"),
+					),
+					stringvalidatorinternal.ConflictsIfMatchesPathValue(
+						types.StringValue(contextUser),
+						path.MatchRelative().AtParent().AtName("context"),
+					),
+				},
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "A string that specifies the description of the variable.",
+
+			"name": schema.StringAttribute{
+				Description:         nameDescription.Description,
+				MarkdownDescription: nameDescription.MarkdownDescription,
+				Required:            true,
+
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(attrMinLength),
+				},
+
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
-			"type": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validation.StringInSlice([]string{"string", "number", "boolean", "object"}, false),
-				Description:  "The variable's data type.  Must be one of `string`, `number`, `boolean`, `object`.",
+
+			"context": schema.StringAttribute{
+				Description:         contextDescription.Description,
+				MarkdownDescription: contextDescription.MarkdownDescription,
+				Required:            true,
+
+				Validators: []validator.String{
+					stringvalidator.OneOf(contexts...),
+				},
+
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
-			"mutable": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.",
+
+			"description": schema.StringAttribute{
+				Description:         descriptionDescription.Description,
+				MarkdownDescription: descriptionDescription.MarkdownDescription,
+				Optional:            true,
 			},
-			"value": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Variable value as string, type will be inferred from the value specified in the `type` parameter.",
-				Sensitive:   true,
+
+			"type": schema.StringAttribute{
+				Description:         typeDescription.Description,
+				MarkdownDescription: typeDescription.MarkdownDescription,
+				Required:            true,
+
+				Validators: []validator.String{
+					stringvalidator.OneOf(varTypes...),
+				},
 			},
-			"min": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "The minimum value of the variable, if the `type` parameter is set as `number`.",
-				Default:     0,
+
+			"mutable": schema.BoolAttribute{
+				Description:         mutableDescription.Description,
+				MarkdownDescription: mutableDescription.MarkdownDescription,
+				Optional:            true,
+				Computed:            true,
+
+				Default: booldefault.StaticBool(true),
 			},
-			"max": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "The maximum value of the variable, if the `type` parameter is set as `number`.",
-				Default:     2000,
+
+			"value": schema.StringAttribute{
+				Description:         valueDescription.Description,
+				MarkdownDescription: valueDescription.MarkdownDescription,
+				Optional:            true,
+				Sensitive:           true,
+
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(attrMinLength),
+					stringvalidator.ConflictsWith(
+						path.MatchRelative().AtParent().AtName("value"),
+						path.MatchRelative().AtParent().AtName("empty_value"),
+					),
+				},
 			},
-		},
-		Importer: &schema.ResourceImporter{
-			StateContext: resourceVariableImport,
+
+			"empty_value": schema.BoolAttribute{
+				Description:         EmptyValueDescription.Description,
+				MarkdownDescription: EmptyValueDescription.MarkdownDescription,
+				Optional:            true,
+
+				Validators: []validator.Bool{
+					boolvalidator.ConflictsWith(
+						path.MatchRelative().AtParent().AtName("value"),
+						path.MatchRelative().AtParent().AtName("empty_value"),
+					),
+				},
+			},
+
+			"value_service": schema.StringAttribute{
+				Description:         valueServiceDescription.Description,
+				MarkdownDescription: valueServiceDescription.MarkdownDescription,
+				Computed:            true,
+				Sensitive:           true,
+			},
+
+			"min": schema.Int64Attribute{
+				Description:         minDescription.Description,
+				MarkdownDescription: minDescription.MarkdownDescription,
+				Optional:            true,
+				Computed:            true,
+
+				Default: int64default.StaticInt64(0),
+			},
+
+			"max": schema.Int64Attribute{
+				Description:         maxDescription.Description,
+				MarkdownDescription: maxDescription.MarkdownDescription,
+				Optional:            true,
+				Computed:            true,
+
+				Default: int64default.StaticInt64(2000),
+			},
 		},
 	}
 }
 
-func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
-	var diags diag.Diagnostics
+func (p *VariableResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
 
-	variablePayload := getVariableAttributes(d)
-
-	environmentID := d.Get("environment_id").(string)
-
-	sdkRes, err := sdk.DoRetryable(
-		ctx,
-		c,
-		environmentID,
-		func() (interface{}, *http.Response, error) {
-			return c.CreateVariableWithResponse(environmentID, &variablePayload)
-		},
-	)
-
-	if err != nil {
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
-	}
-	res, ok := sdkRes.(map[string]dv.Variable)
-	if !ok {
-		err = fmt.Errorf("Unable to parse response from Davinci API for variable")
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
+	// Destruction plan
+	if req.Plan.Raw.IsNull() {
+		return
 	}
 
-	if len(res) != 1 {
-		return diag.Errorf("Received error while attempting to create variable")
-	}
-	for i := range res {
-		d.SetId(fmt.Sprint(i))
+	var varValuePlan *string
+	resp.Diagnostics.Append(resp.Plan.GetAttribute(ctx, path.Root("value"), &varValuePlan)...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	resourceVariableRead(ctx, d, meta)
+	var varEmptyValuePlan *bool
+	resp.Diagnostics.Append(resp.Plan.GetAttribute(ctx, path.Root("empty_value"), &varEmptyValuePlan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	return diags
+	if varEmptyValuePlan != nil && *varEmptyValuePlan {
+		resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringNull())
+	} else {
+
+		if varValuePlan != nil {
+			resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringValue(*varValuePlan))
+		}
+	}
 }
 
-func resourceVariableRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
-	var diags diag.Diagnostics
-
-	variableName := d.Id()
-
-	environmentID := d.Get("environment_id").(string)
-
-	params := dv.Params{
-		Page:  "0",
-		Limit: "100",
+func (r *VariableResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	// Prevent panic if the provider has not been configured.
+	if req.ProviderData == nil {
+		return
 	}
 
-	sdkRes, err := sdk.DoRetryable(
-		ctx,
-		c,
-		environmentID,
-		func() (interface{}, *http.Response, error) {
-			return c.ReadVariablesWithResponse(environmentID, &params)
-		},
-	)
-
-	if err != nil {
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
-	}
-	resp, ok := sdkRes.(map[string]dv.Variable)
+	resourceConfig, ok := req.ProviderData.(framework.ResourceType)
 	if !ok {
-		err = fmt.Errorf("Unable to cast variable type to response from Davinci API for variable with name: %s", variableName)
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected the provider client, got: %T. Please report this issue to the provider maintainers.", req.ProviderData),
+		)
+
+		return
 	}
 
-	//variable not found
-	if len(resp) == 0 {
-		d.SetId("")
-		return diags
+	r.Client = resourceConfig.Client
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialised",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.",
+		)
+		return
+	}
+}
+
+func (r *VariableResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan, state VariableResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
 	}
 
-	found := false
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	for key, res := range resp {
-		if strings.Contains(key, variableName) {
-			found = true
+	// Build the model for the API
+	variablePayload := plan.expand()
 
-			s := strings.Split(variableName, "##SK##")
-			name := s[0]
-			context := s[1]
-			if err := d.Set("name", name); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("context", context); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("environment_id", res.CompanyID); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("type", res.Type); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("mutable", res.Mutable); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("description", res.DisplayName); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("value", res.Value); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("min", res.Min); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
-			if err := d.Set("max", res.Max); err != nil {
-				diags = append(diags, diag.FromErr(err)...)
-				return diags
-			}
+	environmentID := plan.EnvironmentId.ValueString()
+
+	var response interface{}
+	var err error
+
+	if plan.Context.ValueString() != contextFlow {
+		// we create variables for anything other than "flow" context
+		response, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.CreateVariableWithResponse(environmentID, variablePayload)
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error creating variable",
+				fmt.Sprintf("Error creating variable: %s. %s", *variablePayload.Name, err),
+			)
+			return
+		}
+	} else {
+		// we override "flow" variables
+		response, err = sdk.DoRetryable(
+			ctx,
+			r.Client,
+			environmentID,
+			func() (any, *http.Response, error) {
+				return r.Client.UpdateVariableWithResponse(environmentID, variablePayload)
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Error overriding flow variable",
+				fmt.Sprintf("Error overriding flow variable: %s. %s", *variablePayload.Name, err),
+			)
+			return
 		}
 	}
 
-	if !found {
-		d.SetId("")
+	res, ok := response.(map[string]davinci.Variable)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Error creating variable",
+			"Unable to parse response from Davinci API for variable",
+		)
+		return
 	}
 
-	return diags
+	if len(res) != 1 {
+		resp.Diagnostics.AddError(
+			"Error creating variable",
+			"Received error while attempting to create variable",
+		)
+		return
+	}
+
+	// Create the state to save
+	state = plan
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(state.toState(res)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
-func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
+func (r *VariableResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *VariableResourceModel
 
-	c := meta.(*dv.APIClient)
-
-	environmentID := d.Get("environment_id").(string)
-
-	if d.HasChanges("name", "context") {
-		return diag.Errorf(`Updates to name and context are not allowed`)
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
 	}
 
-	variablePayload := getVariableAttributes(d)
+	// Read Terraform prior state data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	environmentID := data.EnvironmentId.ValueString()
+	variableID := data.Id.ValueString()
+
+	response, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (interface{}, *http.Response, error) {
+			return r.Client.ReadVariableWithResponse(environmentID, variableID)
+		},
+	)
+	if err != nil {
+		// if err starts with "Variable not found" then return
+		if strings.Contains(err.Error(), "Variable not found") {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+
+		resp.Diagnostics.AddError(
+			"Error reading variable",
+			fmt.Sprintf("Error reading variable: %s", err),
+		)
+
+		return
+	}
+	res, ok := response.(map[string]davinci.Variable)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Error creating variable",
+			"Unable to parse response from Davinci API for variable",
+		)
+		return
+	}
+
+	if len(res) != 1 {
+		resp.Diagnostics.AddError(
+			"Error reading variable",
+			"Received error while attempting to read variable, more than one variable returned",
+		)
+		return
+	}
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(data.toState(res)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *VariableResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state VariableResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
+	}
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Build the model for the API
+	variablePayload := plan.expand()
+
+	environmentID := plan.EnvironmentId.ValueString()
+
+	response, err := sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (any, *http.Response, error) {
+			return r.Client.UpdateVariableWithResponse(environmentID, variablePayload)
+		},
+	)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error updating variable",
+			fmt.Sprintf("Error updating variable: %s. %s", *variablePayload.Name, err),
+		)
+		return
+	}
+
+	res, ok := response.(map[string]davinci.Variable)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Error updating variable",
+			"Unable to parse response from Davinci API for variable",
+		)
+		return
+	}
+
+	if len(res) != 1 {
+		resp.Diagnostics.AddError(
+			"Error updating variable",
+			"Received error while attempting to updating variable",
+		)
+		return
+	}
+
+	// Create the state to save
+	state = plan
+
+	// Save updated data into Terraform state
+	resp.Diagnostics.Append(state.toState(res)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
+}
+
+func (r *VariableResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data VariableResourceModel
+
+	if r.Client == nil {
+		resp.Diagnostics.AddError(
+			"Client not initialized",
+			"Expected the DaVinci client, got nil.  Please report this issue to the provider maintainers.")
+		return
+	}
+
+	// Read Terraform plan data into the model
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	environmentID := data.EnvironmentId.ValueString()
+	variableID := data.Id.ValueString()
 
 	sdkRes, err := sdk.DoRetryable(
 		ctx,
-		c,
+		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return c.UpdateVariableWithResponse(environmentID, &variablePayload)
+			return r.Client.DeleteVariableWithResponse(environmentID, variableID)
 		},
 	)
 
 	if err != nil {
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
+		if strings.Contains(err.Error(), "Variable not found") {
+			return
+		}
+
+		resp.Diagnostics.AddError(
+			"Error deleting variable",
+			fmt.Sprintf("Error deleting variable: %s", err),
+		)
 	}
-	resp, ok := sdkRes.(map[string]dv.Variable)
-	if !ok || len(resp) != 1 {
-		err = fmt.Errorf("Unable to parse update response from Davinci API for variable with name: %v", *variablePayload.Name)
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
+	res, ok := sdkRes.(*davinci.Message)
+	if !ok || res.Message == nil || *res.Message == "" {
+		resp.Diagnostics.AddWarning(
+			"Unexpected response",
+			fmt.Sprintf("Unable to parse delete response from Davinci API on variable id: %v", variableID),
+		)
+	}
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	return resourceVariableRead(ctx, d, meta)
 }
 
-func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	c := meta.(*dv.APIClient)
-	var diags diag.Diagnostics
-
-	variableName := d.Id()
-
-	environmentID := d.Get("environment_id").(string)
-
-	sdkRes, err := sdk.DoRetryable(
-		ctx,
-		c,
-		environmentID,
-		func() (interface{}, *http.Response, error) {
-			return c.DeleteVariableWithResponse(environmentID, variableName)
-		},
-	)
-
-	if err != nil {
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
-	}
-	resp, ok := sdkRes.(*dv.Message)
-	if !ok || resp.Message == nil || *resp.Message == "" {
-		err = fmt.Errorf("Unable to parse delete response from Davinci API for variable with name: %s", variableName)
-		diags = append(diags, diag.FromErr(err)...)
-		return diags
-	}
-
-	d.SetId("")
-
-	return diags
-}
-
-func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
+func (r *VariableResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 
 	idComponents := []framework.ImportComponent{
 		{
@@ -304,115 +600,150 @@ func resourceVariableImport(ctx context.Context, d *schema.ResourceData, meta in
 		},
 	}
 
-	attributes, err := framework.ParseImportID(d.Id(), idComponents...)
+	attributes, err := framework.ParseImportID(req.ID, idComponents...)
 	if err != nil {
-		return nil, err
+		resp.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			err.Error(),
+		)
+		return
 	}
 
-	if err = d.Set("environment_id", attributes["environment_id"]); err != nil {
-		return nil, err
+	for _, idComponent := range idComponents {
+		pathKey := idComponent.Label
+
+		if idComponent.PrimaryID {
+			pathKey = "id"
+		}
+
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root(pathKey), attributes[idComponent.Label])...)
 	}
-
-	d.SetId(attributes["davinci_variable_id"])
-
-	resourceVariableRead(ctx, d, meta)
-
-	return []*schema.ResourceData{d}, nil
 }
 
-func getVariableAttributes(d *schema.ResourceData) dv.VariablePayload {
-	variablePayload := dv.VariablePayload{
-		Context: d.Get("context").(string),
-		Type:    d.Get("type").(string),
-	}
+func (p *VariableResourceModel) expand() *davinci.VariablePayload {
 
-	if v, ok := d.Get("name").(string); ok {
-		variablePayload.Name = &v
-	}
-
-	if flowId, ok := d.GetOk("flow_id"); ok {
-		if v, ok := flowId.(string); ok {
-			variablePayload.FlowId = &v
-		}
-	}
-	if mutable, ok := d.GetOk("mutable"); ok {
-		if v, ok := mutable.(bool); ok {
-			variablePayload.Mutable = &v
-		}
-	}
-	if description, ok := d.GetOk("description"); ok {
-		if v, ok := description.(string); ok {
-			variablePayload.Description = &v
-		}
-	}
-	if value, ok := d.GetOk("value"); ok {
-		if v, ok := value.(string); ok {
-			variablePayload.Value = &v
-		}
-	}
-	if min, ok := d.GetOk("min"); ok {
-		if v, ok := min.(int); ok {
-			variablePayload.Min = &v
-		}
-	}
-	if max, ok := d.GetOk("max"); ok {
-		if v, ok := max.(int); ok {
-			variablePayload.Max = &v
-		}
-	}
-	return variablePayload
-}
-
-// Framework
-type VariableResourceModel struct {
-	Id          types.String `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	Description types.String `tfsdk:"description"`
-	FlowId      types.String `tfsdk:"flow_id"`
-	Context     types.String `tfsdk:"context"`
-	Type        types.String `tfsdk:"type"`
-	Value       types.String `tfsdk:"value"`
-	Mutable     types.Bool   `tfsdk:"mutable"`
-	Min         types.Int64  `tfsdk:"min"`
-	Max         types.Int64  `tfsdk:"max"`
-}
-
-func (p *VariableResourceModel) expand() *dv.VariablePayload {
-
-	data := dv.VariablePayload{
+	data := davinci.VariablePayload{
 		Context: p.Context.ValueString(),
 		Type:    p.Type.ValueString(),
 	}
 
-	if !p.Name.IsNull() {
+	if !p.Name.IsNull() && !p.Name.IsUnknown() {
 		data.Name = p.Name.ValueStringPointer()
 	}
 
-	if !p.Description.IsNull() {
+	if !p.Description.IsNull() && !p.Description.IsUnknown() {
 		data.Description = p.Description.ValueStringPointer()
 	}
 
-	if !p.FlowId.IsNull() {
-		data.FlowId = p.FlowId.ValueStringPointer()
-	}
-
-	if !p.Value.IsNull() {
+	if !p.Value.IsNull() && !p.Value.IsUnknown() {
 		data.Value = p.Value.ValueStringPointer()
 	}
 
-	if !p.Mutable.IsNull() {
+	if !p.EmptyValue.IsNull() && !p.EmptyValue.IsUnknown() {
+		v := ""
+		data.Value = &v
+	}
+
+	if !p.Min.IsNull() && !p.Min.IsUnknown() {
+		v := int(p.Min.ValueInt64())
+		data.Min = &v
+	}
+
+	if !p.Max.IsNull() && !p.Max.IsUnknown() {
+		v := int(p.Max.ValueInt64())
+		data.Max = &v
+	}
+
+	if !p.Mutable.IsNull() && !p.Mutable.IsUnknown() {
 		data.Mutable = p.Mutable.ValueBoolPointer()
 	}
 
-	if !p.Min.IsNull() {
-		min := int(p.Min.ValueInt64())
-		data.Min = &min
-	}
-
-	if !p.Max.IsNull() {
-		max := int(p.Max.ValueInt64())
-		data.Max = &max
+	if !p.FlowId.IsNull() && !p.FlowId.IsUnknown() {
+		data.FlowId = p.FlowId.ValueStringPointer()
 	}
 
 	return &data
+}
+
+func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if len(apiObject) == 0 {
+		diags.AddError(
+			"Data object missing",
+			"Cannot convert the data object to state as the data object is nil.  Please report this to the provider maintainers.",
+		)
+
+		return diags
+	}
+
+	if len(apiObject) > 1 {
+		diags.AddError(
+			"Too many data objects",
+			"Cannot convert the data object to state as there are multiple returned.  Please report this to the provider maintainers.",
+		)
+
+		return diags
+	}
+
+	var variableKey string
+	var variableObject davinci.Variable
+	for i, v := range apiObject {
+		variableKey = i
+		variableObject = v
+	}
+
+	s := strings.Split(variableKey, "##SK##")
+	variableName := s[0]
+	variableContext := s[1]
+
+	p.Id = framework.StringToTF(variableKey)
+	//p.EnvironmentId = framework.StringToTF(apiObject.CompanyID)
+	//p.FlowId = framework.StringToTF(variableObject.FlowID)
+	p.Name = framework.StringToTF(variableName)
+	p.Context = framework.StringToTF(variableContext)
+
+	if v := variableObject.DisplayName; v != nil {
+		p.Description = framework.StringToTF(*v)
+	} else {
+		p.Description = types.StringNull()
+	}
+
+	if v := variableObject.Type; v != nil {
+		p.Type = framework.StringToTF(*v)
+	} else {
+		p.Type = types.StringNull()
+	}
+
+	if v := variableObject.Mutable; v != nil {
+		p.Mutable = framework.BoolToTF(*v)
+	} else {
+		p.Mutable = types.BoolValue(false) // comes back null if false
+	}
+
+	// if v := variableObject.Value; v != nil {
+	// 	p.Value = framework.StringToTF(*v)
+	// } else {
+	// 	p.Value = types.StringNull()
+	// }
+
+	if v := variableObject.Value; v != nil && *v != "" {
+		p.ValueService = framework.StringToTF(*v)
+	} else {
+		p.ValueService = types.StringNull()
+	}
+
+	if v := variableObject.Min; v != nil {
+		p.Min = framework.Int32ToTF(int32(*v))
+	} else {
+		p.Min = types.Int64Null()
+	}
+
+	if v := variableObject.Max; v != nil {
+		p.Max = framework.Int32ToTF(int32(*v))
+	} else {
+		p.Max = types.Int64Null()
+	}
+
+	return diags
 }

@@ -2,6 +2,7 @@ package davinci
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -42,6 +43,14 @@ type FlowResourceModel struct {
 	FlowVariables         types.Set                     `tfsdk:"flow_variables"`
 }
 
+type FlowVariableResourceModel struct {
+	Id      types.String `tfsdk:"id"`
+	FlowId  types.String `tfsdk:"flow_id"`
+	Name    types.String `tfsdk:"name"`
+	Context types.String `tfsdk:"context"`
+	Type    types.String `tfsdk:"type"`
+}
+
 type FlowConnectionLinkResourceModel struct {
 	Id                        types.String `tfsdk:"id"`
 	ReplaceImportConnectionId types.String `tfsdk:"replace_import_connection_id"`
@@ -56,16 +65,11 @@ type FlowSubflowLinkResourceModel struct {
 
 var (
 	flowVariablesTFObjectTypes = map[string]attr.Type{
-		"id":          types.StringType,
-		"name":        types.StringType,
-		"description": types.StringType,
-		"flow_id":     types.StringType,
-		"context":     types.StringType,
-		"type":        types.StringType,
-		"value":       types.StringType,
-		"mutable":     types.BoolType,
-		"min":         types.Int64Type,
-		"max":         types.Int64Type,
+		"id":      types.StringType,
+		"name":    types.StringType,
+		"flow_id": types.StringType,
+		"context": types.StringType,
+		"type":    types.StringType,
 	}
 )
 
@@ -77,6 +81,7 @@ var (
 		IgnoreUnmappedProperties:  false,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        false,
+		IgnoreFlowVariables:       false,
 	}
 
 	flowConfigurationJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -86,6 +91,7 @@ var (
 		IgnoreUnmappedProperties:  false,
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
+		IgnoreFlowVariables:       true,
 	}
 
 	flowExportJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -95,6 +101,7 @@ var (
 		IgnoreUnmappedProperties:  true, // because we don't do calculation with this object
 		IgnoreVersionMetadata:     false,
 		IgnoreFlowMetadata:        false,
+		IgnoreFlowVariables:       true, // because this is handled by another resource
 	}
 )
 
@@ -169,22 +176,6 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 
 	flowVariablesTypeDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.",
-	)
-
-	flowVariablesValueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"A string that represents the variable's default value.",
-	)
-
-	flowVariablesMutableDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.",
-	)
-
-	flowVariablesMinDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"The minimum value of the variable, if the `type` parameter is set as `number`.",
-	)
-
-	flowVariablesMaxDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"The maximum value of the variable, if the `type` parameter is set as `number`.",
 	)
 
 	resp.Schema = schema.Schema{
@@ -278,11 +269,6 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 							Computed:    true,
 						},
 
-						"description": schema.StringAttribute{
-							Description: framework.SchemaAttributeDescriptionFromMarkdown("A string that specifies the description of the variable.").Description,
-							Computed:    true,
-						},
-
 						"flow_id": schema.StringAttribute{
 							Description: framework.SchemaAttributeDescriptionFromMarkdown("The flow ID that the variable belongs to, which should match the ID of this resource.").Description,
 							Computed:    true,
@@ -297,30 +283,6 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 						"type": schema.StringAttribute{
 							Description:         flowVariablesTypeDescription.Description,
 							MarkdownDescription: flowVariablesTypeDescription.MarkdownDescription,
-							Computed:            true,
-						},
-
-						"value": schema.StringAttribute{
-							Description:         flowVariablesValueDescription.Description,
-							MarkdownDescription: flowVariablesValueDescription.MarkdownDescription,
-							Computed:            true,
-						},
-
-						"mutable": schema.BoolAttribute{
-							Description:         flowVariablesMutableDescription.Description,
-							MarkdownDescription: flowVariablesMutableDescription.MarkdownDescription,
-							Computed:            true,
-						},
-
-						"min": schema.Int64Attribute{
-							Description:         flowVariablesMinDescription.Description,
-							MarkdownDescription: flowVariablesMinDescription.MarkdownDescription,
-							Computed:            true,
-						},
-
-						"max": schema.Int64Attribute{
-							Description:         flowVariablesMaxDescription.Description,
-							MarkdownDescription: flowVariablesMaxDescription.MarkdownDescription,
 							Computed:            true,
 						},
 					},
@@ -528,6 +490,26 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 
 	resp.Plan.SetAttribute(ctx, path.Root("flow_configuration_json"), flowConfigurationJSON)
 
+	if !req.State.Raw.IsNull() {
+		var state FlowResourceModel
+
+		// Read Terraform plan data into the model
+		resp.Diagnostics.Append(resp.Plan.Get(ctx, &plan)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		// Read Terraform state data into the model
+		resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+
+		if !plan.FlowJSON.Equal(state.FlowJSON) || !plan.FlowConfigurationJSON.Equal(state.FlowConfigurationJSON) || !plan.FlowVariables.Equal(state.FlowVariables) {
+			resp.Plan.SetAttribute(ctx, path.Root("flow_export_json"), types.StringUnknown())
+		}
+	}
+
 }
 
 func (p *FlowResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
@@ -660,7 +642,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionWithResponse(environmentID, createFlow.FlowID, nil)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, false)
 		},
 	)
 	if err != nil {
@@ -713,7 +695,7 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, false)
 		},
 	)
 
@@ -799,7 +781,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	// Variables
 	if !plan.FlowVariables.Equal(state.FlowVariables) {
-		var flowVarPlan, flowVarState []VariableResourceModel
+		var flowVarPlan, flowVarState []FlowVariableResourceModel
 		resp.Diagnostics.Append(plan.FlowVariables.ElementsAs(ctx, &flowVarPlan, false)...)
 		resp.Diagnostics.Append(state.FlowVariables.ElementsAs(ctx, &flowVarState, false)...)
 		// If there are errors, keep going as it's a read to state left
@@ -825,8 +807,8 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 							)
 							if err != nil {
 								resp.Diagnostics.AddError(
-									"Error adding flow variable",
-									fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
+									fmt.Sprintf("Error adding %s variable", flowVariable.Context),
+									fmt.Sprintf("Error adding %s variable %s as part of flow update: %s", flowVariable.Context, *flowVariable.Name, err),
 								)
 							}
 						}
@@ -846,10 +828,13 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 						},
 					)
 					if err != nil {
-						resp.Diagnostics.AddError(
-							"Error adding flow variable",
-							fmt.Sprintf("Error adding flow variable as part of flow update: %s", err),
-						)
+						// if error starts with "Record already exists" then ignore it
+						if !strings.HasPrefix(err.Error(), "Record already exists") {
+							resp.Diagnostics.AddError(
+								fmt.Sprintf("Error adding %s variable", flowVariable.Context),
+								fmt.Sprintf("Error adding %s variable %s as part of flow update: %s", flowVariable.Context, *flowVariable.Name, err),
+							)
+						}
 					}
 				}
 			}
@@ -863,7 +848,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 					}
 				}
 
-				if !flowVarPlanFound {
+				if !flowVarPlanFound && flowVar.Context.Equal(types.StringValue(contextFlow)) {
 					// remove the variable
 					_, err := sdk.DoRetryable(
 						ctx,
@@ -874,10 +859,12 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 						},
 					)
 					if err != nil {
-						resp.Diagnostics.AddError(
-							"Error removing flow variable",
-							fmt.Sprintf("Error removing flow variable as part of flow update: %s", err),
-						)
+						if !strings.HasPrefix(err.Error(), "Error deleting record") {
+							resp.Diagnostics.AddError(
+								fmt.Sprintf("Error removing %s variable", flowVar.Context.ValueString()),
+								fmt.Sprintf("Error removing %s variable %s as part of flow update: %s", flowVar.Context.ValueString(), flowVar.Name.ValueString(), err),
+							)
+						}
 					}
 				}
 			}
@@ -891,7 +878,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionWithResponse(environmentID, flowID, nil)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, false)
 		},
 	)
 	if err != nil {
@@ -1180,6 +1167,27 @@ func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.Flow
 	return &data, diags
 }
 
+func (p *FlowVariableResourceModel) expand() *davinci.VariablePayload {
+
+	mutableValue := true
+
+	data := davinci.VariablePayload{
+		Context: p.Context.ValueString(),
+		Type:    p.Type.ValueString(),
+		Mutable: &mutableValue,
+	}
+
+	if !p.Name.IsNull() && !p.Name.IsUnknown() {
+		data.Name = p.Name.ValueStringPointer()
+	}
+
+	if !p.FlowId.IsNull() && !p.FlowId.IsUnknown() {
+		data.FlowId = p.FlowId.ValueStringPointer()
+	}
+
+	return &data
+}
+
 func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -1206,7 +1214,7 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 
 	p.FlowConfigurationJSON = framework.DaVinciExportTypeToTF(string(jsonConfigurationBytes[:]), flowConfigurationJsonCmpOptsConfiguration)
 
-	jsonBytes, err := davinci.Marshal(apiObject, davinci.ExportCmpOpts{})
+	jsonBytes, err := json.Marshal(apiObject)
 	if err != nil {
 		diags.AddError(
 			"Error converting the flow object to JSON",
@@ -1265,16 +1273,11 @@ func flowVariablesToTF(apiObject []davinci.FlowVariable) (types.Set, diag.Diagno
 		}
 
 		attributesMap := map[string]attr.Value{
-			"id":          framework.StringToTF(variable.Name),
-			"name":        framework.StringToTF(varStateSimpleName[0]),
-			"description": framework.StringOkToTF(variable.Label, true),
-			"flow_id":     framework.StringOkToTF(variable.FlowID, true),
-			"context":     framework.StringOkToTF(variable.Context, true),
-			"type":        framework.StringOkToTF(variable.Fields.Type, true),
-			"value":       framework.StringOkToTF(variable.Fields.Value, true),
-			"mutable":     framework.BoolOkToTF(variable.Fields.Mutable, true),
-			"min":         framework.Int32OkToTF(variable.Fields.Min, true),
-			"max":         framework.Int32OkToTF(variable.Fields.Max, true),
+			"id":      framework.StringToTF(variable.Name),
+			"name":    framework.StringToTF(varStateSimpleName[0]),
+			"flow_id": framework.StringOkToTF(variable.FlowID, true),
+			"context": framework.StringOkToTF(variable.Context, true),
+			"type":    framework.StringOkToTF(variable.Fields.Type, true),
 		}
 
 		flattenedObj, d := types.ObjectValue(flowVariablesTFObjectTypes, attributesMap)

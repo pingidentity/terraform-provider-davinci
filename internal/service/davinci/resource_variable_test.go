@@ -10,6 +10,7 @@ import (
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/service/davinci"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
+	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 func TestAccResourceVariable_RemovalDrift(t *testing.T) {
@@ -94,6 +95,7 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 			resource.TestCheckResourceAttr(resourceFullName, "context", "company"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", fmt.Sprintf(("desc-%s"), name)),
 			resource.TestCheckResourceAttr(resourceFullName, "value", "7"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
 			resource.TestCheckResourceAttr(resourceFullName, "type", "number"),
 			resource.TestCheckResourceAttr(resourceFullName, "min", "5"),
 			resource.TestCheckResourceAttr(resourceFullName, "max", "10"),
@@ -108,8 +110,9 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", name),
 			resource.TestCheckResourceAttr(resourceFullName, "context", "company"),
-			resource.TestCheckResourceAttr(resourceFullName, "description", ""),
-			resource.TestCheckResourceAttr(resourceFullName, "value", ""),
+			resource.TestCheckNoResourceAttr(resourceFullName, "description"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
 			resource.TestCheckResourceAttr(resourceFullName, "type", "number"),
 			resource.TestCheckResourceAttr(resourceFullName, "min", "0"),
 			resource.TestCheckResourceAttr(resourceFullName, "max", "2000"),
@@ -165,6 +168,7 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"context", // This shouldn't be ignored, can be solved on migration to the plugin framework
+					"value",   // This shouldn't be ignored, can be solved on migration to the plugin framework
 				},
 			},
 		},
@@ -195,6 +199,7 @@ func testAccResourceVariable_Full_FlowInstanceContext(t *testing.T, withBootstra
 			resource.TestCheckResourceAttr(resourceFullName, "context", "flowInstance"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", fmt.Sprintf(("desc-%s"), name)),
 			resource.TestCheckResourceAttr(resourceFullName, "value", "7"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
 			resource.TestCheckResourceAttr(resourceFullName, "type", "number"),
 			resource.TestCheckResourceAttr(resourceFullName, "min", "5"),
 			resource.TestCheckResourceAttr(resourceFullName, "max", "10"),
@@ -209,8 +214,9 @@ func testAccResourceVariable_Full_FlowInstanceContext(t *testing.T, withBootstra
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", name),
 			resource.TestCheckResourceAttr(resourceFullName, "context", "flowInstance"),
-			resource.TestCheckResourceAttr(resourceFullName, "description", ""),
-			resource.TestCheckResourceAttr(resourceFullName, "value", ""),
+			resource.TestCheckNoResourceAttr(resourceFullName, "description"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
 			resource.TestCheckResourceAttr(resourceFullName, "type", "number"),
 			resource.TestCheckResourceAttr(resourceFullName, "min", "0"),
 			resource.TestCheckResourceAttr(resourceFullName, "max", "2000"),
@@ -266,6 +272,7 @@ func testAccResourceVariable_Full_FlowInstanceContext(t *testing.T, withBootstra
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"context", // This shouldn't be ignored, can be solved on migration to the plugin framework
+					"value",   // This shouldn't be ignored, can be solved on migration to the plugin framework
 				},
 			},
 		},
@@ -296,6 +303,7 @@ func testAccResourceVariable_Full_UserContext(t *testing.T, withBootstrapConfig 
 			resource.TestCheckResourceAttr(resourceFullName, "context", "user"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", fmt.Sprintf(("desc-%s"), name)),
 			resource.TestCheckResourceAttr(resourceFullName, "value", "7"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
 			resource.TestCheckResourceAttr(resourceFullName, "type", "number"),
 			resource.TestCheckResourceAttr(resourceFullName, "min", "5"),
 			resource.TestCheckResourceAttr(resourceFullName, "max", "10"),
@@ -310,8 +318,9 @@ func testAccResourceVariable_Full_UserContext(t *testing.T, withBootstrapConfig 
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", name),
 			resource.TestCheckResourceAttr(resourceFullName, "context", "user"),
-			resource.TestCheckResourceAttr(resourceFullName, "description", ""),
-			resource.TestCheckResourceAttr(resourceFullName, "value", ""),
+			resource.TestCheckNoResourceAttr(resourceFullName, "description"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
 			resource.TestCheckResourceAttr(resourceFullName, "type", "number"),
 			resource.TestCheckResourceAttr(resourceFullName, "min", "0"),
 			resource.TestCheckResourceAttr(resourceFullName, "max", "2000"),
@@ -367,6 +376,7 @@ func testAccResourceVariable_Full_UserContext(t *testing.T, withBootstrapConfig 
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"context", // This shouldn't be ignored, can be solved on migration to the plugin framework
+					"value",   // This shouldn't be ignored, can be solved on migration to the plugin framework
 				},
 			},
 		},
@@ -412,6 +422,138 @@ func TestAccResourceVariable_ChangeDataType(t *testing.T) {
 	})
 }
 
+// func testAccResourceVariable_Values_UserContext(t *testing.T) {
+// 	testAccResourceVariable_Values(t, "user")
+// }
+
+func TestAccResourceVariable_Values_CompanyContext(t *testing.T) {
+	testAccResourceVariable_Values(t, "company", "testVariable")
+}
+
+func TestAccResourceVariable_Values_FlowInstanceContext(t *testing.T) {
+	testAccResourceVariable_Values(t, "flowInstance", "flowInstanceVariable1")
+}
+
+func TestAccResourceVariable_Values_FlowContext(t *testing.T) {
+	testAccResourceVariable_Values(t, "flow", "fdgdfgfdg")
+}
+
+func testAccResourceVariable_Values(t *testing.T, context, variableName string) {
+
+	resourceBase := "davinci_variable"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s-%s", resourceBase, resourceName, context)
+	flowResourceFullName := fmt.Sprintf("davinci_flow.%s", resourceName)
+
+	name := resourceName
+
+	withBootstrapConfig := false
+
+	var variableID, flowID, environmentID string
+
+	dynamicValueStep := resource.TestStep{
+		Config: testAccResourceVariable_DynamicValue_Hcl(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			davinci.Variable_GetIDs(resourceFullName, &environmentID, &variableID),
+			davinci.Flow_GetIDs(flowResourceFullName, &environmentID, &flowID),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value_service"),
+		),
+	}
+
+	emptyValueStep := resource.TestStep{
+		Config: testAccResourceVariable_EmptyValue_Hcl(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			davinci.Variable_GetIDs(resourceFullName, &environmentID, &variableID),
+			davinci.Flow_GetIDs(flowResourceFullName, &environmentID, &flowID),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value"),
+			resource.TestCheckResourceAttr(resourceFullName, "empty_value", "true"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value_service"),
+		),
+	}
+
+	staticValueStep1 := resource.TestStep{
+		Config: testAccResourceVariable_StaticValue_Hcl(resourceName, name, withBootstrapConfig, "myvar"),
+		Check: resource.ComposeTestCheckFunc(
+			davinci.Variable_GetIDs(resourceFullName, &environmentID, &variableID),
+			davinci.Flow_GetIDs(flowResourceFullName, &environmentID, &flowID),
+			resource.TestCheckResourceAttr(resourceFullName, "value", "myvar"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckResourceAttr(resourceFullName, "value_service", "myvar"),
+		),
+	}
+
+	staticValueStep2 := resource.TestStep{
+		Config: testAccResourceVariable_StaticValue_Hcl(resourceName, name, withBootstrapConfig, "myvar2"),
+		Check: resource.ComposeTestCheckFunc(
+			davinci.Variable_GetIDs(resourceFullName, &environmentID, &variableID),
+			davinci.Flow_GetIDs(flowResourceFullName, &environmentID, &flowID),
+			resource.TestCheckResourceAttr(resourceFullName, "value", "myvar2"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckResourceAttr(resourceFullName, "value_service", "myvar2"),
+		),
+	}
+
+	mutable := true
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
+		Steps: []resource.TestStep{
+			dynamicValueStep,
+			{
+				Config: testAccResourceVariable_DynamicValue_Hcl(resourceName, name, withBootstrapConfig),
+				PreConfig: func() {
+					davinci.Variable_RandomVariableValue_PreConfig(t, environmentID, &flowID, &dv.VariablePayload{
+						Name:    &variableName,
+						Context: context,
+						Type:    "string",
+						Mutable: &mutable,
+					})
+				},
+				ExpectNonEmptyPlan: false,
+				PlanOnly:           true,
+			},
+			emptyValueStep,
+			{
+				Config: testAccResourceVariable_EmptyValue_Hcl(resourceName, name, withBootstrapConfig),
+				PreConfig: func() {
+					davinci.Variable_RandomVariableValue_PreConfig(t, environmentID, &flowID, &dv.VariablePayload{
+						Name:    &variableName,
+						Context: context,
+						Type:    "string",
+						Mutable: &mutable,
+					})
+				},
+				ExpectNonEmptyPlan: true,
+				PlanOnly:           true,
+			},
+			staticValueStep1,
+			{
+				Config: testAccResourceVariable_StaticValue_Hcl(resourceName, name, withBootstrapConfig, "myvar"),
+				PreConfig: func() {
+					davinci.Variable_RandomVariableValue_PreConfig(t, environmentID, &flowID, &dv.VariablePayload{
+						Name:    &variableName,
+						Context: context,
+						Type:    "string",
+						Mutable: &mutable,
+					})
+				},
+				ExpectNonEmptyPlan: true,
+				PlanOnly:           true,
+			},
+			staticValueStep2,
+		},
+	})
+}
+
 func TestAccResourceVariable_BadParameters(t *testing.T) {
 
 	resourceBase := "davinci_variable"
@@ -438,19 +580,19 @@ func TestAccResourceVariable_BadParameters(t *testing.T) {
 			{
 				ResourceName: resourceFullName,
 				ImportState:  true,
-				ExpectError:  regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_variable_id" and must match regex: .*`),
+				ExpectError:  regexp.MustCompile(`Unexpected Import Identifier`),
 			},
 			{
 				ResourceName:  resourceFullName,
 				ImportStateId: "/",
 				ImportState:   true,
-				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_variable_id" and must match regex: .*`),
+				ExpectError:   regexp.MustCompile(`Unexpected Import Identifier`),
 			},
 			{
 				ResourceName:  resourceFullName,
 				ImportStateId: "badformat/badformat",
 				ImportState:   true,
-				ExpectError:   regexp.MustCompile(`Invalid import ID specified \(".*"\).  The ID should be in the format "environment_id/davinci_variable_id" and must match regex: .*`),
+				ExpectError:   regexp.MustCompile(`Unexpected Import Identifier`),
 			},
 		},
 	})
@@ -522,4 +664,139 @@ func testAccResourceVariable_UserContext_Full_Hcl(resourceName, name string, wit
 
 func testAccResourceVariable_UserContext_Minimal_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
 	return testAccResourceVariable_Minimal_Hcl(resourceName, name, "user", withBootstrapConfig)
+}
+
+func testAccResourceVariable_DynamicValue_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/full-basic-vars.json")
+	if err != nil {
+		return ""
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-company" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable"
+  context     = "company"
+  description = "testVariable description"
+  type        = "string"
+}
+
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  type        = "string"
+}`, resourceName)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company]`, resourceName)
+
+	postvariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flow" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdg"
+  context     = "flow"
+  description = "fdgdfgfdg description"
+  type        = "string"
+}`, resourceName)
+
+	hcl, _ = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl
+}
+
+func testAccResourceVariable_StaticValue_Hcl(resourceName, name string, withBootstrapConfig bool, variableValue string) (hcl string) {
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/full-basic-vars.json")
+	if err != nil {
+		return ""
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-company" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable"
+  context     = "company"
+  description = "testVariable description"
+  type        = "string"
+  value       = "%[2]s"
+}
+
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  type        = "string"
+  value       = "%[2]s"
+}`, resourceName, variableValue)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company]`, resourceName)
+
+	postvariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flow" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdg"
+  context     = "flow"
+  description = "fdgdfgfdg description"
+  type        = "string"
+  value       = "%[2]s"
+}`, resourceName, variableValue)
+
+	hcl, _ = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl
+}
+
+func testAccResourceVariable_EmptyValue_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/full-basic-vars.json")
+	if err != nil {
+		return ""
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-company" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable"
+  context     = "company"
+  description = "testVariable description"
+  type        = "string"
+  empty_value = true
+}
+
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  type        = "string"
+  empty_value = true
+}`, resourceName)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company]`, resourceName)
+
+	postvariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flow" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdg"
+  context     = "flow"
+  description = "fdgdfgfdg description"
+  type        = "string"
+  empty_value = true
+}`, resourceName)
+
+	hcl, _ = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl
 }

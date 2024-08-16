@@ -322,8 +322,8 @@
                     "name": "test123",
                     "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"test456\"\n      }\n    ]\n  }\n]",
                     "key": 0.379286774724122,
-                    "label": "test123 (number - flow)",
-                    "type": "number"
+                    "label": "test123 (string - flow)",
+                    "type": "string"
                   }
                 ]
               }
@@ -616,9 +616,9 @@
       "createdDate": 1706708761083,
       "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
       "fields": {
-        "type": "number",
+        "type": "string",
         "displayName": "test123",
-        "value": "10",
+        "value": "test",
         "mutable": true,
         "min": 4,
         "max": 20

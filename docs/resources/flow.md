@@ -9,9 +9,37 @@ description: |-
 
 Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 
+!> When flow, flow instance or company variables are embedded in the `flow_json`, only the `context`, `type` and `name` of the variables are managed by this resource.  To manage the mutability, value, description, minimum and maximum values of an imported variable, the `davinci_variable` resource must be used.
+
+~> When using "company" or "flow instance" variables, it is recommended to define these variables using the `davinci_variable` resource before the flows that depend on them. This is shown in the example using the `depends_on` meta argument.
+
+~> When using "flow" variables, it is recommended to declare these variables using the `davinci_variable` resource after the flows that depends on them have been imported, as shown in the example.
+
 ## Example Usage
 
 ```terraform
+resource "davinci_variable" "my_awesome_region_variable" {
+  environment_id = var.environment_id
+
+  context = "company"
+
+  name        = "region"
+  description = "a company variable referenced in the main flow"
+  value       = "northamerica"
+  type        = "string"
+}
+
+resource "davinci_variable" "my_awesome_language_variable" {
+  environment_id = var.environment_id
+
+  context = "flowInstance"
+
+  name        = "language"
+  description = "a flow instance variable referenced in the sub flow and the main flow"
+  value       = "en"
+  type        = "string"
+}
+
 resource "davinci_connection" "my_awesome_flow_connector" {
   environment_id = var.environment_id
 
@@ -20,6 +48,10 @@ resource "davinci_connection" "my_awesome_flow_connector" {
 }
 
 resource "davinci_flow" "my_awesome_subflow" {
+  depends_on = [
+    davinci_variable.my_awesome_language_variable,
+  ]
+
   environment_id = var.environment_id
 
   name      = "My Awesome Subflow"
@@ -33,6 +65,11 @@ resource "davinci_flow" "my_awesome_subflow" {
 }
 
 resource "davinci_flow" "my_awesome_main_flow" {
+  depends_on = [
+    davinci_variable.my_awesome_region_variable,
+    davinci_variable.my_awesome_language_variable,
+  ]
+
   environment_id = var.environment_id
 
   name      = "My Awesome Main Flow"
@@ -49,6 +86,18 @@ resource "davinci_flow" "my_awesome_main_flow" {
     name                         = davinci_connection.my_awesome_flow_connector.name
     replace_import_connection_id = "33329a264e268ab31fb19637debf1ea3"
   }
+}
+
+resource "davinci_variable" "my_awesome_context_variable" {
+  environment_id = var.environment_id
+
+  context = "flow"
+  flow_id = davinci_flow.my_awesome_main_flow.id
+
+  name        = "userContextCode"
+  description = "a flow variable used in the main flow"
+  type        = "number"
+  min         = "10"
 }
 ```
 
@@ -107,15 +156,10 @@ Optional:
 Read-Only:
 
 - `context` (String) The variable context.  Should always return `flow`.
-- `description` (String) A string that specifies the description of the variable.
 - `flow_id` (String) The flow ID that the variable belongs to, which should match the ID of this resource.
 - `id` (String) The DaVinci internal ID of the variable.
-- `max` (Number) The maximum value of the variable, if the `type` parameter is set as `number`.
-- `min` (Number) The minimum value of the variable, if the `type` parameter is set as `number`.
-- `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.
 - `name` (String) The user friendly name of the variable in the UI.
 - `type` (String) The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.
-- `value` (String) A string that represents the variable's default value.
 
 ## Import
 

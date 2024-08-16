@@ -116,9 +116,6 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 				"context": regexp.MustCompile(`^flow$`),
 				"flow_id": verify.P1DVResourceIDRegexpFullString,
 				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
-				"max":     regexp.MustCompile(`^2000$`),
-				"min":     regexp.MustCompile(`^0$`),
-				"mutable": regexp.MustCompile(`^true$`),
 				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
 				"type":    regexp.MustCompile(`^string$`),
 			}),
@@ -126,12 +123,8 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 				"context": regexp.MustCompile(`^flow$`),
 				"flow_id": verify.P1DVResourceIDRegexpFullString,
 				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
-				"max":     regexp.MustCompile(`^20$`),
-				"min":     regexp.MustCompile(`^4$`),
-				"mutable": regexp.MustCompile(`^true$`),
 				"name":    regexp.MustCompile(`^test123$`),
 				"type":    regexp.MustCompile(`^number$`),
-				"value":   regexp.MustCompile(`^10$`),
 			}),
 		),
 	}
@@ -858,6 +851,372 @@ func TestAccResourceFlow_BrokenFlow(t *testing.T) {
 				Config:      brokenStepHcl,
 				ExpectError: regexp.MustCompile(`Error importing flow`),
 			},
+		},
+	})
+}
+
+func TestAccResourceFlow_Variables_Clean(t *testing.T) {
+	testAccResourceFlow_Variables(t, false)
+}
+
+func TestAccResourceFlow_Variables_WithBootstrap(t *testing.T) {
+	testAccResourceFlow_Variables(t, true)
+}
+
+func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	name := resourceName
+
+	fullStepHcl, fullStepJson, err := testAccResourceFlow_Full_Variables(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	fullStep := resource.TestStep{
+		Config: fullStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", fullStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+		),
+	}
+
+	addVariableStepHcl, addVariableStepJson, err := testAccResourceFlow_Full_Variables_AddVariable(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	addVariableStep := resource.TestStep{
+		Config: addVariableStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", addVariableStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "3"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123NEW##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123NEW$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+		),
+	}
+
+	removeVariableStepHcl, removeVariableStepJson, err := testAccResourceFlow_Full_Variables_RemoveVariable(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	removeVariableStep := resource.TestStep{
+		Config: removeVariableStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", removeVariableStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "1"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+		),
+	}
+
+	modifyVariableStepHcl, modifyVariableStepJson, err := testAccResourceFlow_Full_Variables_ModifyVariable(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	modifyVariableStep := resource.TestStep{
+		Config:   modifyVariableStepHcl,
+		SkipFunc: func() (bool, error) { return true, nil }, // API caching issue
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", modifyVariableStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+		),
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+
+			if withBootstrapConfig {
+				t.Skipf("Skipping test with bootstrap config: https://github.com/pingidentity/terraform-provider-davinci/issues/266")
+			}
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Flow_CheckDestroy(),
+		Steps: []resource.TestStep{
+			fullStep,
+			modifyVariableStep,
+			addVariableStep,
+			removeVariableStep,
+		},
+	})
+}
+
+func TestAccResourceFlow_Variables_Overridden_Clean(t *testing.T) {
+	testAccResourceFlow_Variables_Overridden(t, false)
+}
+
+func TestAccResourceFlow_Variables_Overridden_WithBootstrap(t *testing.T) {
+	testAccResourceFlow_Variables_Overridden(t, true)
+}
+
+func testAccResourceFlow_Variables_Overridden(t *testing.T, withBootstrapConfig bool) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	name := resourceName
+
+	fullStepHcl, fullStepJson, err := testAccResourceFlow_Full_Variables_Overridden(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	fullStep := resource.TestStep{
+		Config: fullStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", fullStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "4"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flowInstance$`),
+				"id":      regexp.MustCompile(`^flowInstanceVariable1##SK##flowInstance$`),
+				"name":    regexp.MustCompile(`^flowInstanceVariable1$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^company$`),
+				"id":      regexp.MustCompile(`^testVariable##SK##company$`),
+				"name":    regexp.MustCompile(`^testVariable$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+		),
+	}
+
+	addVariableStepHcl, addVariableStepJson, err := testAccResourceFlow_Full_Variables_Overridden_AddVariable(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	addVariableStep := resource.TestStep{
+		Config: addVariableStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", addVariableStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "6"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdgNEW##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdgNEW$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flowInstance$`),
+				"id":      regexp.MustCompile(`^flowInstanceVariable1##SK##flowInstance$`),
+				"name":    regexp.MustCompile(`^flowInstanceVariable1$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^company$`),
+				"id":      regexp.MustCompile(`^testVariable##SK##company$`),
+				"name":    regexp.MustCompile(`^testVariable$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^company$`),
+				"id":      regexp.MustCompile(`^testVariable2##SK##company$`),
+				"name":    regexp.MustCompile(`^testVariable2$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+		),
+	}
+
+	removeVariableStepHcl, removeVariableStepJson, err := testAccResourceFlow_Full_Variables_Overridden_RemoveVariable(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	removeVariableStep := resource.TestStep{
+		Config: removeVariableStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", removeVariableStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "2"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flowInstance$`),
+				"id":      regexp.MustCompile(`^flowInstanceVariable1##SK##flowInstance$`),
+				"name":    regexp.MustCompile(`^flowInstanceVariable1$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+		),
+	}
+
+	modifyVariableStepHcl, modifyVariableStepJson, err := testAccResourceFlow_Full_Variables_Overridden_ModifyVariable(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	modifyVariableStep := resource.TestStep{
+		Config:   modifyVariableStepHcl,
+		SkipFunc: func() (bool, error) { return true, nil }, // API caching issue
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", modifyVariableStepJson)),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
+			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "4"),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^fdgdfgfdg##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^fdgdfgfdg$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flowInstance$`),
+				"id":      regexp.MustCompile(`^flowInstanceVariable1##SK##flowInstance$`),
+				"name":    regexp.MustCompile(`^flowInstanceVariable1$`),
+				"type":    regexp.MustCompile(`^string$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^flow$`),
+				"flow_id": verify.P1DVResourceIDRegexpFullString,
+				"id":      regexp.MustCompile(fmt.Sprintf(`^test123##SK##flow##SK##%s$`, verify.P1DVResourceIDRegexp.String())),
+				"name":    regexp.MustCompile(`^test123$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+			resource.TestMatchTypeSetElemNestedAttrs(resourceFullName, "flow_variables.*", map[string]*regexp.Regexp{
+				"context": regexp.MustCompile(`^company$`),
+				"id":      regexp.MustCompile(`^testVariable##SK##company$`),
+				"name":    regexp.MustCompile(`^testVariable$`),
+				"type":    regexp.MustCompile(`^number$`),
+			}),
+		),
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+
+			if withBootstrapConfig {
+				t.Skipf("Skipping test with bootstrap config: https://github.com/pingidentity/terraform-provider-davinci/issues/266")
+			}
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Flow_CheckDestroy(),
+		Steps: []resource.TestStep{
+			fullStep,
+			modifyVariableStep,
+			addVariableStep,
+			removeVariableStep,
 		},
 	})
 }
@@ -1742,286 +2101,340 @@ EOT
   connection_link {
     id                           = davinci_connection.%[3]s-error.id
     name                         = davinci_connection.%[3]s-error.name
-    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+    replace_import_connection_id = "fa497c1ceaea43c0886d8d360874a53d"
+  }
+
+  // Variables connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-variables.id
+    name                         = davinci_connection.%[3]s-variables.name
+    replace_import_connection_id = "9f8f97e94ad87e184960633b424d80b6"
+  }
+
+  // Http connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-http.id
+    name                         = davinci_connection.%[3]s-http.name
+    replace_import_connection_id = "9cb5e3fdbbf0eeb602e0ff332ad79e5d"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, false), commonHcl, resourceName), nil
 }
 
-// // tests for changes other than graph data.
-// func TestAccResourceFlow_SchemaChanges(t *testing.T) {
+func testAccResourceFlow_Variable(resourceName, name string, withBootstrapConfig bool, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL string) (hcl string, err error) {
 
-// 	resourceBase := "davinci_flow"
-// 	resourceName := acctest.ResourceNameGen()
-// 	testFlows := acctest.FlowsForTests(resourceName)
-// 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.Simple.Name)
+	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", err
+	}
 
-// 	resource.ParallelTest(t, resource.TestCase{
-// 		PreCheck: func() {
-// 			acctest.PreCheckClient(t)
-// 			acctest.PreCheckNewEnvironment(t)
-// 		},
-// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-// 		ExternalProviders: acctest.ExternalProviders,
-// 		ErrorCheck:        acctest.ErrorCheck(t),
-// 		CheckDestroy:      davinci.Flow_CheckDestroy(),
-// 		Steps: []resource.TestStep{
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 				),
-// 			},
-// 			//change flow_json.settings only
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.SimpleSettingDrift.Hcl}),
-// 				Check: resource.ComposeAggregateTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 					testAccCheckAttributeSimpleFlowSetting(resourceFullName),
-// 				),
-// 			},
-// 			//revert to simple. This likely is not actually reverting because
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 				),
-// 			},
-// 			//change flow_json.inputSchema only
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.SimpleInputSchemaDrift.Hcl}),
-// 				Check: resource.ComposeAggregateTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 					testAccCheckAttributeSimpleFlowInputSchema(resourceFullName),
-// 				),
-// 			},
-// 			//revert to simple
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 				),
-// 			},
-// 			//change flow_json.outputSchema only
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.SimpleOutputSchemaDrift.Hcl}),
-// 				Check: resource.ComposeAggregateTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 					testAccCheckAttributeSimpleFlowOutputSchema(resourceFullName),
-// 				),
-// 			},
-// 			//revert to simple
-// 			{
-// 				Config: testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.Simple.Hcl}),
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 				),
-// 			},
-// 		},
-// 	})
-// }
+	return fmt.Sprintf(`
+%[1]s
 
-// func testAccCheckAttributeSimpleFlowSetting(resourceFullName string) resource.TestCheckFunc {
-// 	return func(s *terraform.State) error {
-// 		fj, err := acctest.GetAttributeFromState(s, resourceFullName, "flow_json")
-// 		if err != nil {
-// 			return err
-// 		}
+%[2]s
 
-// 		var flow dv.Flow
-// 		err = json.Unmarshal([]byte(fj), &flow)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		flowSettingsMap := flow.Settings.(map[string]interface{})
+%[5]s
 
-// 		flowHttpTimeoutInSeconds := acctest.SchemaAttributeFloat64{
-// 			AttributeName: "flowHttpTimeoutInSeconds",
-// 			ExpectedValue: 300,
-// 			ActualValue:   flowSettingsMap["flowHttpTimeoutInSeconds"].(float64),
-// 		}
+resource "davinci_flow" "%[3]s" {
+  %[6]s
 
-// 		csp := acctest.SchemaAttributeString{
-// 			AttributeName: "csp",
-// 			ExpectedValue: "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
-// 			ActualValue:   flowSettingsMap["csp"].(string),
-// 		}
+  environment_id = pingone_environment.%[3]s.id
 
-// 		return acctest.ComposeCompare(
-// 			flowHttpTimeoutInSeconds.Compare(),
-// 			csp.Compare(),
-// 		)
-// 	}
-// }
+  name        = "my awesome flow"
+  description = "my awesome flow description"
 
-// func testAccCheckAttributeSimpleFlowInputSchema(resourceFullName string) resource.TestCheckFunc {
-// 	return func(s *terraform.State) error {
-// 		fj, err := acctest.GetAttributeFromState(s, resourceFullName, "flow_json")
-// 		if err != nil {
-// 			return err
-// 		}
+  flow_json = <<EOT
+%[4]s
+EOT
 
-// 		var flow dv.Flow
-// 		err = json.Unmarshal([]byte(fj), &flow)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		//sample inputSchemaJson: {  "isInputSchemaSaved": true,
-// 		// "inputSchemaCompiled": {
-// 		//   "parameters": {
-// 		//     "type": "object",
-// 		//     "properties": {
-// 		//       "foo": {
-// 		//         "description": "fooDesc",
-// 		//         "preferredDataType": "string",
-// 		//         "isExpanded": true,
-// 		//         "type": "string",
-// 		//         "name": "foo"
-// 		//       }
-// 		//     },
-// 		//     "additionalProperties": false,
-// 		//     "required": [
-// 		//       "foo"
-// 		//     ]
-// 		//   }
-// 		// },
-// 		// "inputSchema": [
-// 		//   {
-// 		//     "propertyName": "foo",
-// 		//     "description": "fooDesc",
-// 		//     "preferredDataType": "string",
-// 		//     "preferredControlType": "textField",
-// 		//     "isExpanded": true,
-// 		//     "required": true
-// 		//   }
-// 		// ],}
+  // Variables connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-variables.id
+    name                         = davinci_connection.%[3]s-variables.name
+    replace_import_connection_id = "06922a684039827499bdbdd97f49827b"
+  }
 
-// 		fsMap := flow.InputSchema[0].(map[string]interface{})
-// 		inputSchemaPropName := acctest.SchemaAttributeString{
-// 			AttributeName: "Input Schema propertyName'foo'",
-// 			ExpectedValue: "foo",
-// 			ActualValue:   fsMap["propertyName"].(string),
-// 		}
+  // Http connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-http.id
+    name                         = davinci_connection.%[3]s-http.name
+    replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
+  }
 
-// 		isInputSchemaSaved := acctest.SchemaAttributeBoolean{
-// 			AttributeName: "isInputSchemaSaved",
-// 			ExpectedValue: true,
-// 			ActualValue:   flow.IsInputSchemaSaved,
-// 		}
+  // Functions connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-functions.id
+    name                         = davinci_connection.%[3]s-functions.name
+    replace_import_connection_id = "de650ca45593b82c49064ead10b9fe17"
+  }
 
-// 		var inputSchemaCompiledPropFooDesc string
-// 		inputSchemaCompiledMap, ok := flow.InputSchemaCompiled.(map[string]interface{})
-// 		if ok {
-// 			inputSchemaCompiledMap, ok = inputSchemaCompiledMap["parameters"].(map[string]interface{})
-// 			if ok {
-// 				inputSchemaCompiledMap, ok = inputSchemaCompiledMap["properties"].(map[string]interface{})
-// 				if ok {
-// 					inputSchemaCompiledMap, ok = inputSchemaCompiledMap["foo"].(map[string]interface{})
-// 					if ok {
-// 						inputSchemaCompiledPropFooDesc = inputSchemaCompiledMap["description"].(string)
-// 					}
-// 				}
-// 			}
-// 		}
+  // Flow connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-flow.id
+    name                         = davinci_connection.%[3]s-flow.name
+    replace_import_connection_id = "2581eb287bb1d9bd29ae9886d675f89f"
+  }
 
-// 		inputSchemaCompiled := acctest.SchemaAttributeString{
-// 			AttributeName: "inputSchemaCompiled",
-// 			ExpectedValue: "fooDesc",
-// 			ActualValue:   inputSchemaCompiledPropFooDesc,
-// 		}
+  // Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
 
-// 		return acctest.ComposeCompare(
-// 			inputSchemaPropName.Compare(),
-// 			isInputSchemaSaved.Compare(),
-// 			inputSchemaCompiled.Compare(),
-// 		)
-// 	}
-// }
+  // Subflow 2
+  subflow_link {
+    id                        = davinci_flow.%[3]s-subflow-2.id
+    name                      = davinci_flow.%[3]s-subflow-2.name
+    replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
+  }
 
-// func testAccCheckAttributeSimpleFlowOutputSchema(resourceFullName string) resource.TestCheckFunc {
-// 	return func(s *terraform.State) error {
-// 		fj, err := acctest.GetAttributeFromState(s, resourceFullName, "flow_json")
-// 		if err != nil {
-// 			return err
-// 		}
+  // Subflow 1
+  subflow_link {
+    id                        = davinci_flow.%[3]s-subflow-1.id
+    name                      = davinci_flow.%[3]s-subflow-1.name
+    replace_import_subflow_id = "00f66e8926ced6ef5b83619fde4a314a"
+  }
+}
 
-// 		var flow dv.Flow
-// 		err = json.Unmarshal([]byte(fj), &flow)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		//sample inputSchemaJson: {
-// 		// "outputSchemaCompiled": {
-// 		//     "output": {
-// 		//       "type": "object",
-// 		//       "additionalProperties": true,
-// 		//       "properties": {
-// 		//         "far": {
-// 		//           "type": "string"
-// 		//         }
-// 		//       }
-// 		//     }
-// 		//   }
-// 		// }
-// 		var outputMap map[string]interface{}
-// 		if flow.OutputSchemaCompiled.Output != nil {
-// 			outputMap = flow.OutputSchemaCompiled.Output.(map[string]interface{})
-// 			outputPropertiesMap := outputMap["properties"].(map[string]interface{})
+%[7]s`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL), nil
+}
 
-// 			outputSchemaCompiled := acctest.SchemaAttributeMap{
-// 				AttributeName: "outputSchemaCompiled",
-// 				ExpectedValue: map[string]interface{}{"type": "string"},
-// 				ActualValue:   outputPropertiesMap["far"].(map[string]interface{}),
-// 			}
-// 			return outputSchemaCompiled.Compare()
-// 		}
-// 		return fmt.Errorf("outputSchemaCompiled is nil")
-// 	}
-// }
+func testAccResourceFlow_Full_Variables(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
 
-// func TestAccResourceFlow_FlowContextVarFlow(t *testing.T) {
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic.json")
+	if err != nil {
+		return "", "", err
+	}
 
-// 	resourceBase := "davinci_flow"
-// 	resourceName := acctest.ResourceNameGen()
-// 	testFlows := acctest.FlowsForTests(resourceName)
-// 	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, testFlows.FlowContextVarFlow.Name)
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, "", "", "")
 
-// 	hcl := testAccResourceFlow_SimpleFlows_Hcl(resourceName, []string{testFlows.FlowContextVarFlow.Hcl})
+	return hcl, mainFlowJson, err
+}
 
-// 	resource.ParallelTest(t, resource.TestCase{
-// 		PreCheck: func() {
-// 			acctest.PreCheckClient(t)
-// 			acctest.PreCheckNewEnvironment(t)
-// 		},
-// 		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
-// 		ExternalProviders: acctest.ExternalProviders,
-// 		ErrorCheck:        acctest.ErrorCheck(t),
-// 		CheckDestroy:      davinci.Flow_CheckDestroy(),
-// 		Steps: []resource.TestStep{
-// 			{
-// 				Config: hcl,
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
-// 					resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
-// 					resource.TestCheckResourceAttrSet(resourceFullName, "deploy"),
-// 				),
-// 			},
-// 		},
-// 	})
-// }
+func testAccResourceFlow_Full_Variables_AddVariable(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-add-variable.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, "", "", "")
+
+	return hcl, mainFlowJson, err
+}
+
+func testAccResourceFlow_Full_Variables_RemoveVariable(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-remove-variable.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, "", "", "")
+
+	return hcl, mainFlowJson, err
+}
+
+func testAccResourceFlow_Full_Variables_ModifyVariable(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-modify-variable.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, "", "", "")
+
+	return hcl, mainFlowJson, err
+}
+
+func testAccResourceFlow_Full_Variables_Overridden(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-vars.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-company" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable"
+  context     = "company"
+  description = "testVariable description"
+  value       = "testVariable value"
+  type        = "string"
+}
+
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  value       = "flowInstanceVariable1 value"
+  type        = "string"
+}`, resourceName)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company]`, resourceName)
+
+	postvariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flow" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdg"
+  context     = "flow"
+  description = "fdgdfgfdg description"
+  value       = "fdgdfgfdg value"
+  type        = "string"
+}`, resourceName)
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl, mainFlowJson, err
+}
+
+func testAccResourceFlow_Full_Variables_Overridden_AddVariable(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-vars-add-variable.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-company" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable"
+  context     = "company"
+  description = "testVariable description"
+  value       = "testVariable value"
+  type        = "string"
+}
+
+resource "davinci_variable" "%[1]s-company2" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable2"
+  context     = "company"
+  description = "testVariable2 description"
+  value       = "testVariable2 value"
+  type        = "string"
+}
+
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  value       = "flowInstanceVariable1 value"
+  type        = "string"
+}`, resourceName)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company, davinci_variable.%[1]s-company2]`, resourceName)
+
+	postvariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flow" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdg"
+  context     = "flow"
+  description = "fdgdfgfdg description"
+  value       = "fdgdfgfdg value"
+  type        = "string"
+}
+
+resource "davinci_variable" "%[1]s-flow2" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdgNEW"
+  context     = "flow"
+  description = "fdgdfgfdgNEW description"
+  value       = "fdgdfgfdgNEW value"
+  type        = "string"
+}`, resourceName)
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl, mainFlowJson, err
+}
+
+func testAccResourceFlow_Full_Variables_Overridden_RemoveVariable(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-vars-remove-variable.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  value       = "flowInstanceVariable1 value"
+  type        = "string"
+}`, resourceName)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance]`, resourceName)
+
+	postvariablesHCL := ``
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl, mainFlowJson, err
+}
+
+func testAccResourceFlow_Full_Variables_Overridden_ModifyVariable(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-vars-modify-variable.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	prevariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-company" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable"
+  context     = "company"
+  description = "testVariable description"
+  value       = "testVariable value"
+  type        = "number"
+}
+
+resource "davinci_variable" "%[1]s-flowInstance" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "flowInstanceVariable1"
+  context     = "flowInstance"
+  description = "flowInstanceVariable1 description"
+  value       = "flowInstanceVariable1 value"
+  type        = "string"
+}`, resourceName)
+
+	prevariablesDependsHCL := fmt.Sprintf(`depends_on = [davinci_variable.%[1]s-flowInstance, davinci_variable.%[1]s-company]`, resourceName)
+
+	postvariablesHCL := fmt.Sprintf(`
+resource "davinci_variable" "%[1]s-flow" {
+  environment_id = pingone_environment.%[1]s.id
+  flow_id        = davinci_flow.%[1]s.id
+
+  name        = "fdgdfgfdg"
+  context     = "flow"
+  description = "fdgdfgfdg description"
+  value       = "fdgdfgfdg value"
+  type        = "number"
+}`, resourceName)
+
+	hcl, err = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
+
+	return hcl, mainFlowJson, err
+}
 
 func TestAccResourceFlow_BadParameters(t *testing.T) {
 
