@@ -1,0 +1,11 @@
+```release-note:note
+Bump `github.com/samir-gandhi/davinci-client-go` from 0.3.0 => 0.4.0
+```
+
+```release-note:note
+Bump `github.com/golangci/golangci-lint` from 1.59.1 => 1.60.1
+```
+
+```release-note:bug
+`resource/davinci_flow`: Resolve warnings that state that DaVinci JSON files contain unknown properties (August 2024).
+```
