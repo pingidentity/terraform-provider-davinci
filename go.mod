@@ -15,7 +15,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.16.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
-	github.com/katbyte/terrafmt v0.5.3
+	github.com/katbyte/terrafmt v0.5.4
 	github.com/patrickcping/pingone-go-sdk-v2 v0.12.3
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.43.0
 	github.com/pavius/impi v0.0.3
