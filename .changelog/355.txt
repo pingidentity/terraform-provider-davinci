@@ -1,0 +1,3 @@
+```release-note:note
+Bump pingone Terraform provider in documentation.
+```
