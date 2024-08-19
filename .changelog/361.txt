@@ -1,0 +1,11 @@
+```release-note:bug
+`resource/davinci_variable`: Fixed panic crash when attempting to create a new flow variable that does not already exist.
+```
+
+```release-note:bug
+`resource/davinci_variable`: Fixed "Error reading variable: json: cannot unmarshal object into Go struct field" error on all variables when a flow sets a flow variable value to an object type.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fixed issue on import where flow and flow instance variables lose their value setting when using the Variables Connector node.
+```
