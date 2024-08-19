@@ -94,7 +94,7 @@ jobs:
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.7.*'
+          - '1.9.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -214,7 +214,7 @@ jobs:
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.7.*'
+          - '1.9.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -334,7 +334,7 @@ jobs:
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.7.*'
+          - '1.9.*'
     steps:
 
     - name: Check out code into the Go module directory
@@ -454,7 +454,7 @@ jobs:
       matrix:
         # list whatever Terraform versions here you would like to support
         terraform:
-          - '1.7.*'
+          - '1.9.*'
     steps:
 
     - name: Check out code into the Go module directory

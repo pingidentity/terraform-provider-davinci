@@ -42,7 +42,8 @@ test: build
 
 testacc: build
 	@echo "==> Running acceptance tests..."
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m -parallel 15
+	TF_ACC=1 go test $$(go list ./internal/client/...) -v $(TESTARGS) -timeout 120m -parallel 15
+	TF_ACC=1 go test $$(go list ./internal/service/...) -v $(TESTARGS) -timeout 120m -parallel 15
 
 sweep: build
 	@echo "==> Running sweep..."
