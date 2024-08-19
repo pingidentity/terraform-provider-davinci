@@ -2,6 +2,7 @@ package davinci
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -349,37 +350,38 @@ func (r *VariableResource) Create(ctx context.Context, req resource.CreateReques
 	var response interface{}
 	var err error
 
-	if plan.Context.ValueString() != contextFlow {
-		// we create variables for anything other than "flow" context
-		response, err = sdk.DoRetryable(
-			ctx,
-			r.Client,
-			environmentID,
-			func() (any, *http.Response, error) {
-				return r.Client.CreateVariableWithResponse(environmentID, variablePayload)
-			},
-		)
-		if err != nil {
+	response, err = sdk.DoRetryable(
+		ctx,
+		r.Client,
+		environmentID,
+		func() (any, *http.Response, error) {
+			return r.Client.CreateVariableWithResponse(environmentID, variablePayload)
+		},
+	)
+	if err != nil {
+		if strings.Contains(err.Error(), "Record already exists") {
+			if plan.Context.ValueString() == contextFlow {
+				// we override "flow" variables
+				response, err = sdk.DoRetryable(
+					ctx,
+					r.Client,
+					environmentID,
+					func() (any, *http.Response, error) {
+						return r.Client.UpdateVariableWithResponse(environmentID, variablePayload)
+					},
+				)
+				if err != nil {
+					resp.Diagnostics.AddError(
+						"Error overriding flow variable",
+						fmt.Sprintf("Error overriding flow variable: %s. %s", *variablePayload.Name, err),
+					)
+					return
+				}
+			}
+		} else {
 			resp.Diagnostics.AddError(
 				"Error creating variable",
 				fmt.Sprintf("Error creating variable: %s. %s", *variablePayload.Name, err),
-			)
-			return
-		}
-	} else {
-		// we override "flow" variables
-		response, err = sdk.DoRetryable(
-			ctx,
-			r.Client,
-			environmentID,
-			func() (any, *http.Response, error) {
-				return r.Client.UpdateVariableWithResponse(environmentID, variablePayload)
-			},
-		)
-		if err != nil {
-			resp.Diagnostics.AddError(
-				"Error overriding flow variable",
-				fmt.Sprintf("Error overriding flow variable: %s. %s", *variablePayload.Name, err),
 			)
 			return
 		}
@@ -727,9 +729,27 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 	// 	p.Value = types.StringNull()
 	// }
 
-	if v := variableObject.Value; v != nil && *v != "" {
-		value := *v
-		value = regexp.MustCompile(`^\*+$`).ReplaceAllString(value, p.Value.ValueString())
+	if v := variableObject.Value; v != nil {
+
+		value := ""
+		// switch type of v
+		switch v.(type) {
+		case string:
+			value = v.(string)
+			value = regexp.MustCompile(`^\*+$`).ReplaceAllString(value, p.Value.ValueString())
+		case bool:
+			value = fmt.Sprintf("%v", v)
+		case int:
+			value = fmt.Sprintf("%d", v)
+		default:
+			bytes, err := json.Marshal(v)
+			if err != nil {
+				diags.AddError("Error marshalling variable value", err.Error())
+				return diags
+			}
+			value = string(bytes)
+		}
+		
 		p.ValueService = framework.StringToTF(value)
 	} else {
 		p.ValueService = types.StringNull()
