@@ -72,6 +72,7 @@ $ export PINGONE_REGION="NorthAmerica"
 $ # Optional if using PingOne TF provider
 $ export PINGONE_CLIENT_ID="client-id"
 $ export PINGONE_CLIENT_SECRET="client-secret"
+$ export PINGONE_REGION_CODE="NA"
 $ terraform plan
 ```
 
@@ -88,7 +89,7 @@ terraform {
     }
     pingone = {
       source  = "pingidentity/pingone"
-      version = "~> 0.25"
+      version = ">= 1.0, < 2.0"
     }
   }
 }
@@ -104,7 +105,7 @@ provider "pingone" {
   client_id      = var.pingone_admin_client_id
   client_secret  = var.pingone_admin_client_secret
   environment_id = var.pingone_admin_environment_id
-  region         = var.pingone_region
+  region_code    = var.pingone_region_code
 }
 
 resource "pingone_environment" "dv_example" {
@@ -112,18 +113,18 @@ resource "pingone_environment" "dv_example" {
   description = "A new trial environment for DaVinci Terraform configuration-as-code."
   license_id  = var.license_id
 
-  service {
-    type = "SSO"
-  }
-
-  service {
-    type = "MFA"
-  }
-
-  service {
-    type = "DaVinci"
-    tags = ["DAVINCI_MINIMAL"]
-  }
+  services = [
+    {
+      type = "SSO"
+    },
+    {
+      type = "MFA"
+    },
+    {
+      type = "DaVinci"
+      tags = ["DAVINCI_MINIMAL"]
+    }
+  ]
 }
 
 resource "davinci_flow" "mainflow" {
