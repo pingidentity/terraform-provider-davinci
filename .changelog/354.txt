@@ -1,0 +1,3 @@
+```release-note:note
+Updated connector reference guide with latest connector definitions.
+```
