@@ -1,5 +1,10 @@
 ## 0.4.1 (Unreleased)
 
+NOTES:
+
+* Bump pingone Terraform provider in documentation. ([#355](https://github.com/pingidentity/terraform-provider-davinci/issues/355))
+* Updated connector reference guide with latest connector definitions. ([#354](https://github.com/pingidentity/terraform-provider-davinci/issues/354))
+
 ## 0.4.0 (19 August 2024)
 
 BREAKING CHANGES:
