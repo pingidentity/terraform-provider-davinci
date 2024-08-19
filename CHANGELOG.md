@@ -1,5 +1,9 @@
 ## 0.4.1 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_variable`: Fix "Provider produced inconsistent result after apply" when defining a variable of `type` = `secret`. ([#358](https://github.com/pingidentity/terraform-provider-davinci/issues/358))
+
 ## 0.4.0 (19 August 2024)
 
 BREAKING CHANGES:
