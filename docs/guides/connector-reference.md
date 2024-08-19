@@ -11,24 +11,6 @@ Below is a list of all available DaVinci Connections available for use in `davin
 If the `value` type of a property is not defined it must be inferred.
 
 
-## (Demo) PingOne Authorize HTTP request and response
-
-Connector ID (`connector_id` in the resource): `pingauthadapter`
-
-*No properties*
-
-
-Example:
-```terraform
-resource "davinci_connection" "pingauthadapter" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "pingauthadapter"
-  name         = "My awesome pingauthadapter"
-}
-```
-
-
 ## 1Kosmos connector
 
 Connector ID (`connector_id` in the resource): `connector1Kosmos`
@@ -182,6 +164,46 @@ resource "davinci_connection" "connectorAbuseipdb" {
     name  = "apiKey"
     type  = "string"
     value = var.connectorabuseipdb_property_api_key
+  }
+}
+```
+
+
+## ActiveCampaign API
+
+Connector ID (`connector_id` in the resource): `connector-oai-activecampaignapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the ActiveCampaign API. Console display name: "API Key".
+* `authApiVersion` (string): The version of the ActiveCampaign API. Console display name: "API Version".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-activecampaignapi" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-activecampaignapi"
+  name         = "My awesome connector-oai-activecampaignapi"
+
+  property {
+    name  = "authApiKey"
+    type  = "string"
+    value = var.connector-oai-activecampaignapi_property_auth_api_key
+  }
+
+  property {
+    name  = "authApiVersion"
+    type  = "string"
+    value = var.connector-oai-activecampaignapi_property_auth_api_version
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-activecampaignapi_property_base_path
   }
 }
 ```
@@ -728,6 +750,39 @@ resource "davinci_connection" "authenticIdConnector" {
     name  = "secretToken"
     type  = "string"
     value = var.authenticidconnector_property_secret_token
+  }
+}
+```
+
+
+## Authomize API
+
+Connector ID (`connector_id` in the resource): `connector-oai-authomizeapireference`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): Your Authomize API key. Console display name: "API Key".
+* `basePath` (string): The base URL for the Authomize API, such as "https://api.authomize.com". Console display name: "Base URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-authomizeapireference" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-authomizeapireference"
+  name         = "My awesome connector-oai-authomizeapireference"
+
+  property {
+    name  = "authApiKey"
+    type  = "string"
+    value = var.connector-oai-authomizeapireference_property_auth_api_key
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-authomizeapireference_property_base_path
   }
 }
 ```
@@ -1462,6 +1517,60 @@ resource "davinci_connection" "cookieConnector" {
 ```
 
 
+## Copper API
+
+Connector ID (`connector_id` in the resource): `connector-oai-copperdeveloperapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+* `contentType` (string): Content type. Console display name: "Content-Type".
+* `xPWAccessToken` (string): API Key. Console display name: "X-PW-AccessToken".
+* `xPWApplication` (string): Application. Console display name: "X-PW-Application".
+* `xPWUserEmail` (string): Email address of token owner. Console display name: "X-PW-UserEmail".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-copperdeveloperapi" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-copperdeveloperapi"
+  name         = "My awesome connector-oai-copperdeveloperapi"
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-copperdeveloperapi_property_base_path
+  }
+
+  property {
+    name  = "contentType"
+    type  = "string"
+    value = var.connector-oai-copperdeveloperapi_property_content_type
+  }
+
+  property {
+    name  = "xPWAccessToken"
+    type  = "string"
+    value = var.connector-oai-copperdeveloperapi_property_x_p_w_access_token
+  }
+
+  property {
+    name  = "xPWApplication"
+    type  = "string"
+    value = var.connector-oai-copperdeveloperapi_property_x_p_w_application
+  }
+
+  property {
+    name  = "xPWUserEmail"
+    type  = "string"
+    value = var.connector-oai-copperdeveloperapi_property_x_p_w_user_email
+  }
+}
+```
+
+
 ## Credova
 
 Connector ID (`connector_id` in the resource): `credovaConnector`
@@ -1725,6 +1834,32 @@ resource "davinci_connection" "devicePolicyConnector" {
 ```
 
 
+## DigiLocker
+
+Connector ID (`connector_id` in the resource): `digilockerConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `oauth2` (json):  Console display name: "Oauth2 Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "digilockerConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "digilockerConnector"
+  name         = "My awesome digilockerConnector"
+
+  property {
+    name  = "oauth2"
+    type  = "json"
+    value = jsonencode({})
+  }
+}
+```
+
+
 ## Digidentity
 
 Connector ID (`connector_id` in the resource): `digidentityConnector`
@@ -1746,6 +1881,53 @@ resource "davinci_connection" "digidentityConnector" {
     name  = "oauth2"
     type  = "json"
     value = jsonencode({})
+  }
+}
+```
+
+
+## Druva inSync Cloud API
+
+Connector ID (`connector_id` in the resource): `connector-oai-druvainsynccloud`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authClientId` (string): The Client ID of the authenticating application. Console display name: "Client ID".
+* `authClientSecret` (string): The Secret Key for the authenticating application. Console display name: "Secret Key".
+* `authTokenUrl` (string): The URL used to obtain an access token. Console display name: "Token URL".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-druvainsynccloud" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-druvainsynccloud"
+  name         = "My awesome connector-oai-druvainsynccloud"
+
+  property {
+    name  = "authClientId"
+    type  = "string"
+    value = var.connector-oai-druvainsynccloud_property_auth_client_id
+  }
+
+  property {
+    name  = "authClientSecret"
+    type  = "string"
+    value = var.connector-oai-druvainsynccloud_property_auth_client_secret
+  }
+
+  property {
+    name  = "authTokenUrl"
+    type  = "string"
+    value = var.connector-oai-druvainsynccloud_property_auth_token_url
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-druvainsynccloud_property_base_path
   }
 }
 ```
@@ -1805,6 +1987,74 @@ resource "davinci_connection" "entrustConnector" {
     name  = "serviceDomain"
     type  = "string"
     value = var.entrustconnector_property_service_domain
+  }
+}
+```
+
+
+## Equifax
+
+Connector ID (`connector_id` in the resource): `equifaxConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseUrl` (string): Base URL for Equifax API. Console display name: "Base URL".
+* `clientId` (string): When you Create a New App, Equifax will assign a Client ID per environment for the API Product. Console display name: "Client ID".
+* `clientSecret` (string): When you Create a New App, Equifax will assign a Client Secret per environment for the API Product. Console display name: "Client Secret".
+* `equifaxSoapApiEnvironment` (string): SOAP API WSDL Environment. Console display name: "SOAP API Environment".
+* `memberNumber` (string): Unique Identifier of Customer. Please contact Equifax Sales Representative during client onboarding for this value. Console display name: "Member Number".
+* `password` (string): Password provided by Equifax for SOAP API. Console display name: "Password for SOAP API".
+* `username` (string): Username provided by Equifax for SOAP API. Console display name: "Username for SOAP API".
+
+
+Example:
+```terraform
+resource "davinci_connection" "equifaxConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "equifaxConnector"
+  name         = "My awesome equifaxConnector"
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.equifaxconnector_property_base_url
+  }
+
+  property {
+    name  = "clientId"
+    type  = "string"
+    value = var.equifaxconnector_property_client_id
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.equifaxconnector_property_client_secret
+  }
+
+  property {
+    name  = "equifaxSoapApiEnvironment"
+    type  = "string"
+    value = var.equifaxconnector_property_equifax_soap_api_environment
+  }
+
+  property {
+    name  = "memberNumber"
+    type  = "string"
+    value = var.equifaxconnector_property_member_number
+  }
+
+  property {
+    name  = "password"
+    type  = "string"
+    value = var.equifaxconnector_property_password
+  }
+
+  property {
+    name  = "username"
+    type  = "string"
+    value = var.equifaxconnector_property_username
   }
 }
 ```
@@ -2124,6 +2374,46 @@ resource "davinci_connection" "flowConnector" {
 ```
 
 
+## Forter
+
+Connector ID (`connector_id` in the resource): `forterConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiVersion` (string): API Version. Console display name: " Forter API Version".
+* `secretKey` (string): Secret Key from Forter tenant. Console display name: "Forter Secret Key".
+* `siteId` (string): Site ID from Forter tenant. Console display name: "Forter SiteID".
+
+
+Example:
+```terraform
+resource "davinci_connection" "forterConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "forterConnector"
+  name         = "My awesome forterConnector"
+
+  property {
+    name  = "apiVersion"
+    type  = "string"
+    value = var.forterconnector_property_api_version
+  }
+
+  property {
+    name  = "secretKey"
+    type  = "string"
+    value = var.forterconnector_property_secret_key
+  }
+
+  property {
+    name  = "siteId"
+    type  = "string"
+    value = var.forterconnector_property_site_id
+  }
+}
+```
+
+
 ## Freshdesk
 
 Connector ID (`connector_id` in the resource): `connectorFreshdesk`
@@ -2257,6 +2547,46 @@ resource "davinci_connection" "gbgConnector" {
     name  = "username"
     type  = "string"
     value = var.gbgconnector_property_username
+  }
+}
+```
+
+
+## GitHub API
+
+Connector ID (`connector_id` in the resource): `connector-oai-github`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiVersion` (string): The GitHub v3 REST API version, such as "2022-11-28". Console display name: "API Version".
+* `authBearerToken` (string): The authentication bearer token that has access to GitHub v3 REST API. Console display name: "Authentication Bearer Token".
+* `basePath` (string): The base URL for the GitHub API, such as "https://api.github.com". Console display name: "API URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-github" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-github"
+  name         = "My awesome connector-oai-github"
+
+  property {
+    name  = "apiVersion"
+    type  = "string"
+    value = var.connector-oai-github_property_api_version
+  }
+
+  property {
+    name  = "authBearerToken"
+    type  = "string"
+    value = var.connector-oai-github_property_auth_bearer_token
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-github_property_base_path
   }
 }
 ```
@@ -2422,7 +2752,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `connectionId` (string):  Console display name: "Select an OpenID token management connection for signed HTTP responses.".
 * `recaptchaSecretKey` (string): The Secret Key from reCAPTCHA Admin dashboard. Console display name: "reCAPTCHA v2 Secret Key".
 * `recaptchaSiteKey` (string): The Site Key from reCAPTCHA Admin dashboard. Console display name: "reCAPTCHA v2 Site Key".
-* `whiteList` (string): Enter the URLs of trusted sites that host your HTML content. Console display name: "Trusted Sites".
+* `whiteList` (string): Enter the hostname for the trusted sites that host your HTML. Note: Ensure that the content hosted on these sites can be trusted and that publishing safeguards are in place to prevent unexpected issues. Console display name: "Trusted Sites".
 
 
 Example:
@@ -2651,6 +2981,39 @@ resource "davinci_connection" "connectorHello" {
 ```
 
 
+## HubSpot Companies API
+
+Connector ID (`connector_id` in the resource): `connector-oai-hubspotcompanies`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authBearerToken` (string): The authenticating token. Console display name: "Bearer token".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-hubspotcompanies" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-hubspotcompanies"
+  name         = "My awesome connector-oai-hubspotcompanies"
+
+  property {
+    name  = "authBearerToken"
+    type  = "string"
+    value = var.connector-oai-hubspotcompanies_property_auth_bearer_token
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-hubspotcompanies_property_base_path
+  }
+}
+```
+
+
 ## Hubspot
 
 Connector ID (`connector_id` in the resource): `connectorHubspot`
@@ -2736,6 +3099,32 @@ resource "davinci_connection" "idranddConnector" {
 ```
 
 
+## ID.me - Community Verification
+
+Connector ID (`connector_id` in the resource): `idmecommunityConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `openId` (json):  Console display name: "OpenId Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "idmecommunityConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "idmecommunityConnector"
+  name         = "My awesome idmecommunityConnector"
+
+  property {
+    name  = "openId"
+    type  = "json"
+    value = var.idmecommunityconnector_property_open_id
+  }
+}
+```
+
+
 ## ID.me - Identity Verification
 
 Connector ID (`connector_id` in the resource): `connectorIdMeIdentity`
@@ -2783,6 +3172,39 @@ resource "davinci_connection" "idMeConnector" {
     name  = "oauth2"
     type  = "json"
     value = jsonencode({})
+  }
+}
+```
+
+
+## IDEMIA
+
+Connector ID (`connector_id` in the resource): `idemiaConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string):  Console display name: "API Key".
+* `baseUrl` (string): Base Url for IDEMIA API. Can be found in the dashboard documents. Console display name: "IDEMIA API base URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "idemiaConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "idemiaConnector"
+  name         = "My awesome idemiaConnector"
+
+  property {
+    name  = "apikey"
+    type  = "string"
+    value = var.idemiaconnector_property_apikey
+  }
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.idemiaconnector_property_base_url
   }
 }
 ```
@@ -3727,6 +4149,39 @@ resource "davinci_connection" "pingOneLDAPConnector" {
 ```
 
 
+## LaunchDarkly API
+
+Connector ID (`connector_id` in the resource): `connector-oai-launchdarklyrestapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the LaunchDarkly REST API. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-launchdarklyrestapi" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-launchdarklyrestapi"
+  name         = "My awesome connector-oai-launchdarklyrestapi"
+
+  property {
+    name  = "authApiKey"
+    type  = "string"
+    value = var.connector-oai-launchdarklyrestapi_property_auth_api_key
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-launchdarklyrestapi_property_base_path
+  }
+}
+```
+
+
 ## LexisNexis
 
 Connector ID (`connector_id` in the resource): `lexisnexisV2Connector`
@@ -3904,6 +4359,140 @@ resource "davinci_connection" "connectorMailgun" {
     name  = "mailgunDomain"
     type  = "string"
     value = var.connectormailgun_property_mailgun_domain
+  }
+}
+```
+
+
+## Mailjet API
+
+Connector ID (`connector_id` in the resource): `connector-oai-mailjetapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authPassword` (string): API Secret Key. Console display name: "API Secret Key".
+* `authUsername` (string): API Key. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-mailjetapi" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-mailjetapi"
+  name         = "My awesome connector-oai-mailjetapi"
+
+  property {
+    name  = "authPassword"
+    type  = "string"
+    value = var.connector-oai-mailjetapi_property_auth_password
+  }
+
+  property {
+    name  = "authUsername"
+    type  = "string"
+    value = var.connector-oai-mailjetapi_property_auth_username
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-mailjetapi_property_base_path
+  }
+}
+```
+
+
+## Melissa Global Address
+
+Connector ID (`connector_id` in the resource): `melissaConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): License Key is the API key that you can retrieve from Melissa Admin Portal. Console display name: "License Key".
+
+
+Example:
+```terraform
+resource "davinci_connection" "melissaConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "melissaConnector"
+  name         = "My awesome melissaConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.melissaconnector_property_api_key
+  }
+}
+```
+
+
+## Microsoft Dynamics - Customer Insights
+
+Connector ID (`connector_id` in the resource): `microsoftDynamicsCustomerInsightsConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseURL` (string): Base URL. Console display name: "Base URL".
+* `clientId` (string): Client ID. Console display name: "Client ID".
+* `clientSecret` (string): Client Secret. Console display name: "Client Secret".
+* `environmentName` (string): Environment Name. Console display name: "Environment Name".
+* `grantType` (string): Grant Type. Console display name: "Grant Type".
+* `tenant` (string): Tenant. Console display name: "Tenant".
+* `version` (string): Web API Version. Console display name: "Version".
+
+
+Example:
+```terraform
+resource "davinci_connection" "microsoftDynamicsCustomerInsightsConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "microsoftDynamicsCustomerInsightsConnector"
+  name         = "My awesome microsoftDynamicsCustomerInsightsConnector"
+
+  property {
+    name  = "baseURL"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_base_u_r_l
+  }
+
+  property {
+    name  = "clientId"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_client_id
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_client_secret
+  }
+
+  property {
+    name  = "environmentName"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_environment_name
+  }
+
+  property {
+    name  = "grantType"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_grant_type
+  }
+
+  property {
+    name  = "tenant"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_tenant
+  }
+
+  property {
+    name  = "version"
+    type  = "string"
+    value = var.microsoftdynamicscustomerinsightsconnector_property_version
   }
 }
 ```
@@ -4855,6 +5444,24 @@ resource "davinci_connection" "pingOneAuthenticationConnector" {
 ```
 
 
+## PingOne Authorize - API Access Management
+
+Connector ID (`connector_id` in the resource): `pingauthadapter`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "pingauthadapter" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "pingauthadapter"
+  name         = "My awesome pingauthadapter"
+}
+```
+
+
 ## PingOne Authorize
 
 Connector ID (`connector_id` in the resource): `pingOneAuthorizeConnector`
@@ -5281,6 +5888,32 @@ resource "davinci_connection" "pingOneSSOConnector" {
 ```
 
 
+## Private ID
+
+Connector ID (`connector_id` in the resource): `privateidConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "privateidConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "privateidConnector"
+  name         = "My awesome privateidConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.privateidconnector_property_custom_auth
+  }
+}
+```
+
+
 ## Prove International
 
 Connector ID (`connector_id` in the resource): `proveConnector`
@@ -5598,6 +6231,39 @@ resource "davinci_connection" "samlConnector" {
 
   connector_id = "samlConnector"
   name         = "My awesome samlConnector"
+}
+```
+
+
+## SAP Identity API
+
+Connector ID (`connector_id` in the resource): `connector-oai-sapidentityapis`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the SAP Identity APIs. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-sapidentityapis" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-sapidentityapis"
+  name         = "My awesome connector-oai-sapidentityapis"
+
+  property {
+    name  = "authApiKey"
+    type  = "string"
+    value = var.connector-oai-sapidentityapis_property_auth_api_key
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-sapidentityapis_property_base_path
+  }
 }
 ```
 
@@ -6149,6 +6815,32 @@ resource "davinci_connection" "connectorShopify" {
 ```
 
 
+## Sift
+
+Connector ID (`connector_id` in the resource): `siftConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): API Key from Sift Tenant. Console display name: "Sift API Key".
+
+
+Example:
+```terraform
+resource "davinci_connection" "siftConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "siftConnector"
+  name         = "My awesome siftConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.siftconnector_property_api_key
+  }
+}
+```
+
+
 ## Signicat
 
 Connector ID (`connector_id` in the resource): `connectorSignicat`
@@ -6170,6 +6862,86 @@ resource "davinci_connection" "connectorSignicat" {
     name  = "customAuth"
     type  = "json"
     value = jsonencode({})
+  }
+}
+```
+
+
+## Silverfort
+
+Connector ID (`connector_id` in the resource): `silverfortConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Silverfort Risk API Key. Console display name: "Risk API Key".
+* `appUserSecret` (string): Silverfort App User Secret. Console display name: "App User Secret".
+* `consoleApi` (string): Silverfort App User ID. Console display name: "App User ID".
+
+
+Example:
+```terraform
+resource "davinci_connection" "silverfortConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "silverfortConnector"
+  name         = "My awesome silverfortConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.silverfortconnector_property_api_key
+  }
+
+  property {
+    name  = "appUserSecret"
+    type  = "string"
+    value = var.silverfortconnector_property_app_user_secret
+  }
+
+  property {
+    name  = "consoleApi"
+    type  = "string"
+    value = var.silverfortconnector_property_console_api
+  }
+}
+```
+
+
+## Sinch
+
+Connector ID (`connector_id` in the resource): `sinchConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `acceptLanguage` (string): Language of SMS sent, if using Sinch provided templates will be chosen based on Accept-Language header. Examples include, but are not limited to pl-PL, no-NO, en-US. Console display name: "Language".
+* `applicationKey` (string): Verification Application Key from your Sinch Account. Console display name: "Sinch Application Key".
+* `secretKey` (string): Verification Secret Key from your Sinch Account. Console display name: "Sinch Secret Key".
+
+
+Example:
+```terraform
+resource "davinci_connection" "sinchConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "sinchConnector"
+  name         = "My awesome sinchConnector"
+
+  property {
+    name  = "acceptLanguage"
+    type  = "string"
+    value = var.sinchconnector_property_accept_language
+  }
+
+  property {
+    name  = "applicationKey"
+    type  = "string"
+    value = var.sinchconnector_property_application_key
+  }
+
+  property {
+    name  = "secretKey"
+    type  = "string"
+    value = var.sinchconnector_property_secret_key
   }
 }
 ```
@@ -6492,6 +7264,210 @@ resource "davinci_connection" "tmtConnector" {
     name  = "apiUrl"
     type  = "string"
     value = var.tmtconnector_property_api_url
+  }
+}
+```
+
+
+## Tableau
+
+Connector ID (`connector_id` in the resource): `connectorTableau`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `addFlowPermissionsRequestBody` (string): Add Flow Permissions Request Body in XML Format. Example: <tsRequest><task><flowRun><flow id="flow-id"/><flowRunSpec><flowParameterSpecs><flowParameterSpec parameterId="parameter-id" overrideValue= "overrideValue"/><flowParameterSpecs><flowRunSpec></flowRun></task></tsRequest>. Console display name: "Add Flow Permissions Request Body in XML Format.".
+* `addUsertoSiteRequestBody` (string): Add User to Site Request Body in XML Format. Example: <tsRequest><user name="user-name" siteRole="site-role" authSetting="auth-setting" /></tsRequest>. Console display name: "Add User to Site Request Body in XML Format.".
+* `apiVersion` (string): The version of the API to use, such as 3.16. Console display name: "api-version".
+* `authId` (string): The Tableau-Auth sent along with every request. Console display name: "auth-ID".
+* `createScheduleBody` (string): This should contain the entire XML. Eg: <tsRequest><schedule name="schedule-name"priority="schedule-priority"type="schedule-type"frequency="schedule-frequency"executionOrder="schedule-execution-order"><frequencyDetails start="start-time" end="end-time"><intervals><interval interval-expression /></intervals></frequencyDetails></schedule></tsRequest>. Console display name: "XML file format to be used for creating schedule".
+* `datasourceId` (string): The ID of the flow. Console display name: "datasource-id".
+* `flowId` (string): The flow-id value for the flow you want to add permissions to. Console display name: "flow-id".
+* `groupId` (string): The ID of the group. Console display name: "group-id".
+* `jobId` (string): The ID of the job. Console display name: "job-id".
+* `scheduleId` (string): The ID of the schedule that you are associating with the data source. Console display name: "schedule-id".
+* `serverUrl` (string): The tableau server URL Example: https://www.tableau.com:8030. Console display name: "server-url".
+* `siteId` (string): The ID of the site that contains the view. Console display name: "site-id".
+* `taskId` (string): The ID of the extract refresh task. Console display name: "task-id".
+* `updateScheduleRequestBody` (string): This should contain the entire XML. Eg: <tsRequest><schedule name="hourly-schedule-1" priority="50" type="Extract" frequency="Hourly" executionOrder="Parallel"><frequencyDetails start="18:30:00" end="23:00:00"><intervals><interval hours="2" /></intervals></frequencyDetails></schedule></tsRequest>. Console display name: "XML file format to be used for updating schedule".
+* `updateUserRequestBody` (string): Update User Request Body in XML Format. <tsRequest><user fullName="new-full-name" email="new-email" password="new-password" siteRole="new-site-role" authSetting="new-auth-setting" /></tsRequest>. Console display name: "Update User Request Body in XML Format.".
+* `userId` (string): The ID of the user to get/give information for. Console display name: "user-id".
+* `workbookId` (string): The ID of the workbook to add to the schedule. Console display name: "workbook-id".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorTableau" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorTableau"
+  name         = "My awesome connectorTableau"
+
+  property {
+    name  = "addFlowPermissionsRequestBody"
+    type  = "string"
+    value = var.connectortableau_property_add_flow_permissions_request_body
+  }
+
+  property {
+    name  = "addUsertoSiteRequestBody"
+    type  = "string"
+    value = var.connectortableau_property_add_userto_site_request_body
+  }
+
+  property {
+    name  = "apiVersion"
+    type  = "string"
+    value = var.connectortableau_property_api_version
+  }
+
+  property {
+    name  = "authId"
+    type  = "string"
+    value = var.connectortableau_property_auth_id
+  }
+
+  property {
+    name  = "createScheduleBody"
+    type  = "string"
+    value = var.connectortableau_property_create_schedule_body
+  }
+
+  property {
+    name  = "datasourceId"
+    type  = "string"
+    value = var.connectortableau_property_datasource_id
+  }
+
+  property {
+    name  = "flowId"
+    type  = "string"
+    value = var.connectortableau_property_flow_id
+  }
+
+  property {
+    name  = "groupId"
+    type  = "string"
+    value = var.connectortableau_property_group_id
+  }
+
+  property {
+    name  = "jobId"
+    type  = "string"
+    value = var.connectortableau_property_job_id
+  }
+
+  property {
+    name  = "scheduleId"
+    type  = "string"
+    value = var.connectortableau_property_schedule_id
+  }
+
+  property {
+    name  = "serverUrl"
+    type  = "string"
+    value = var.connectortableau_property_server_url
+  }
+
+  property {
+    name  = "siteId"
+    type  = "string"
+    value = var.connectortableau_property_site_id
+  }
+
+  property {
+    name  = "taskId"
+    type  = "string"
+    value = var.connectortableau_property_task_id
+  }
+
+  property {
+    name  = "updateScheduleRequestBody"
+    type  = "string"
+    value = var.connectortableau_property_update_schedule_request_body
+  }
+
+  property {
+    name  = "updateUserRequestBody"
+    type  = "string"
+    value = var.connectortableau_property_update_user_request_body
+  }
+
+  property {
+    name  = "userId"
+    type  = "string"
+    value = var.connectortableau_property_user_id
+  }
+
+  property {
+    name  = "workbookId"
+    type  = "string"
+    value = var.connectortableau_property_workbook_id
+  }
+}
+```
+
+
+## Talend Identities Management API
+
+Connector ID (`connector_id` in the resource): `connector-oai-talendim`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authBearerToken` (string): The authenticating token. Console display name: "Bearer Token".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-talendim" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-talendim"
+  name         = "My awesome connector-oai-talendim"
+
+  property {
+    name  = "authBearerToken"
+    type  = "string"
+    value = var.connector-oai-talendim_property_auth_bearer_token
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-talendim_property_base_path
+  }
+}
+```
+
+
+## Talend SCIM API
+
+Connector ID (`connector_id` in the resource): `connector-oai-talendscim`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authBearerToken` (string): The authenticating token. Console display name: "Bearer Token".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-talendscim" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-talendscim"
+  name         = "My awesome connector-oai-talendscim"
+
+  property {
+    name  = "authBearerToken"
+    type  = "string"
+    value = var.connector-oai-talendscim_property_auth_bearer_token
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-talendscim_property_base_path
   }
 }
 ```
@@ -6865,6 +7841,32 @@ resource "davinci_connection" "transunionConnector" {
     name  = "otpUsername"
     type  = "string"
     value = var.transunionconnector_property_otp_username
+  }
+}
+```
+
+
+## Treasure Data
+
+Connector ID (`connector_id` in the resource): `treasureDataConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Treasure Data API Key. Console display name: "API Key".
+
+
+Example:
+```terraform
+resource "davinci_connection" "treasureDataConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "treasureDataConnector"
+  name         = "My awesome treasureDataConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.treasuredataconnector_property_api_key
   }
 }
 ```
@@ -7375,6 +8377,39 @@ resource "davinci_connection" "variablesConnector" {
 ```
 
 
+## Venafi Account Service API
+
+Connector ID (`connector_id` in the resource): `connector-oai-venafi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the Venafi as a Service API for Account Service Operations. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connector-oai-venafi" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connector-oai-venafi"
+  name         = "My awesome connector-oai-venafi"
+
+  property {
+    name  = "authApiKey"
+    type  = "string"
+    value = var.connector-oai-venafi_property_auth_api_key
+  }
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connector-oai-venafi_property_base_path
+  }
+}
+```
+
+
 ## Vericlouds
 
 Connector ID (`connector_id` in the resource): `connectorVericlouds`
@@ -7719,6 +8754,100 @@ resource "davinci_connection" "connectorZendesk" {
 ```
 
 
+## Zoop.one
+
+Connector ID (`connector_id` in the resource): `zoopConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `agencyId` (string):  Console display name: "Zoop Agency ID".
+* `apiKey` (string):  Console display name: "Zoop API Key".
+* `apiUrl` (string):  Console display name: "Zoop API URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "zoopConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "zoopConnector"
+  name         = "My awesome zoopConnector"
+
+  property {
+    name  = "agencyId"
+    type  = "string"
+    value = var.zoopconnector_property_agency_id
+  }
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.zoopconnector_property_api_key
+  }
+
+  property {
+    name  = "apiUrl"
+    type  = "string"
+    value = var.zoopconnector_property_api_url
+  }
+}
+```
+
+
+## Zscaler ZIA
+
+Connector ID (`connector_id` in the resource): `connectorZscaler`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `basePath` (string): basePath. Console display name: "Base Path".
+* `baseURL` (string): baseURL. Console display name: "Base URL".
+* `zscalerAPIkey` (string): Zscaler APIkey. Console display name: "Zscaler APIkey".
+* `zscalerPassword` (string): Zscaler Domain Password. Console display name: "Zscaler Password".
+* `zscalerUsername` (string): Zscaler Domain Username. Console display name: "Zscaler Username".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorZscaler" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorZscaler"
+  name         = "My awesome connectorZscaler"
+
+  property {
+    name  = "basePath"
+    type  = "string"
+    value = var.connectorzscaler_property_base_path
+  }
+
+  property {
+    name  = "baseURL"
+    type  = "string"
+    value = var.base_url
+  }
+
+  property {
+    name  = "zscalerAPIkey"
+    type  = "string"
+    value = var.zscaler_api_key
+  }
+
+  property {
+    name  = "zscalerPassword"
+    type  = "string"
+    value = var.connectorzscaler_property_zscaler_password
+  }
+
+  property {
+    name  = "zscalerUsername"
+    type  = "string"
+    value = var.connectorzscaler_property_zscaler_username
+  }
+}
+```
+
+
 ## iProov
 
 Connector ID (`connector_id` in the resource): `iproovConnector`
@@ -7941,437 +9070,41 @@ resource "davinci_connection" "iproovConnector" {
 ```
 
 
-## iovation
+## iProov
 
-Connector ID (`connector_id` in the resource): `iovationConnector`
+Connector ID (`connector_id` in the resource): `iproovV2Connector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
 
-* `apiUrl` (string):  Console display name: "API Server URL".
-* `javascriptCdnUrl` (string): iovation loader javascript CDN. Console display name: "iovation loader Javascript CDN URL".
-* `subKey` (string): This will be an iovation assigned value that tracks requests from your site. This is primarily used for debugging and troubleshooting purposes. Console display name: "Sub Key".
-* `subscriberAccount` (string):  Console display name: "Subscriber Account".
-* `subscriberId` (string):  Console display name: "Subscriber ID".
-* `subscriberPasscode` (string):  Console display name: "Subscriber Passcode".
-* `version` (string): This is the version of the script to load. The value should either correspond to a specific version you wish to use, or one of the following aliases to get the latest version of the code: general5 - the latest stable version of the javascript, early5 - the latest available version of the javascript. Console display name: "Version".
+* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
+* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
+* `tenant` (string): The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
 
 
 Example:
 ```terraform
-resource "davinci_connection" "iovationConnector" {
+resource "davinci_connection" "iproovV2Connector" {
   environment_id = var.pingone_environment_id
 
-  connector_id = "iovationConnector"
-  name         = "My awesome iovationConnector"
-
-  property {
-    name  = "apiUrl"
-    type  = "string"
-    value = var.iovationconnector_property_api_url
-  }
-
-  property {
-    name  = "javascriptCdnUrl"
-    type  = "string"
-    value = var.iovationconnector_property_javascript_cdn_url
-  }
-
-  property {
-    name  = "subKey"
-    type  = "string"
-    value = var.iovationconnector_property_sub_key
-  }
-
-  property {
-    name  = "subscriberAccount"
-    type  = "string"
-    value = var.iovationconnector_property_subscriber_account
-  }
-
-  property {
-    name  = "subscriberId"
-    type  = "string"
-    value = var.iovationconnector_property_subscriber_id
-  }
-
-  property {
-    name  = "subscriberPasscode"
-    type  = "string"
-    value = var.iovationconnector_property_subscriber_passcode
-  }
-
-  property {
-    name  = "version"
-    type  = "string"
-    value = var.iovationconnector_property_version
-  }
-}
-```
-
-
-## ipgeolocation.io
-
-Connector ID (`connector_id` in the resource): `connectorIPGeolocationio`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): Developer subscription API key. Console display name: "API key".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorIPGeolocationio" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorIPGeolocationio"
-  name         = "My awesome connectorIPGeolocationio"
+  connector_id = "iproovV2Connector"
+  name         = "My awesome iproovV2Connector"
 
   property {
     name  = "apiKey"
     type  = "string"
-    value = var.connectoripgeolocationio_property_api_key
-  }
-}
-```
-
-
-## ipregistry
-
-Connector ID (`connector_id` in the resource): `connectorIPregistry`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): API Key used to authenticate to the ipregistry.co API. Console display name: "API Key".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorIPregistry" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorIPregistry"
-  name         = "My awesome connectorIPregistry"
-
-  property {
-    name  = "apiKey"
-    type  = "string"
-    value = var.connectoripregistry_property_api_key
-  }
-}
-```
-
-
-## ipstack
-
-Connector ID (`connector_id` in the resource): `connectorIPStack`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `allowInsecureIPStackConnection` (string): The Free IPStack Subscription Plan does not support HTTPS connections. For more information refer to https://ipstack.com/plan. Console display name: "Allow Insecure ipstack Connection?".
-* `apiKey` (string): The ipstack API key to use the service. Console display name: "API key".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorIPStack" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorIPStack"
-  name         = "My awesome connectorIPStack"
-
-  property {
-    name  = "allowInsecureIPStackConnection"
-    type  = "string"
-    value = var.allow_insecure_ip_stack_connection
-  }
-
-  property {
-    name  = "apiKey"
-    type  = "string"
-    value = var.connectoripstack_property_api_key
-  }
-}
-```
-
-
-## neoEYED
-
-Connector ID (`connector_id` in the resource): `neoeyedConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `appKey` (string): Unique key for the application. Console display name: "Application Key".
-* `javascriptCdnUrl` (string): URL of javascript CDN of neoEYED. Console display name: "Javascript CDN URL".
-
-
-Example:
-```terraform
-resource "davinci_connection" "neoeyedConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "neoeyedConnector"
-  name         = "My awesome neoeyedConnector"
-
-  property {
-    name  = "appKey"
-    type  = "string"
-    value = var.neoeyedconnector_property_app_key
-  }
-
-  property {
-    name  = "javascriptCdnUrl"
-    type  = "string"
-    value = var.neoeyedconnector_property_javascript_cdn_url
-  }
-}
-```
-
-
-## randomuser.me
-
-Connector ID (`connector_id` in the resource): `connectorRandomUserMe`
-
-*No properties*
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorRandomUserMe" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorRandomUserMe"
-  name         = "My awesome connectorRandomUserMe"
-}
-```
-
-
-## tru.ID
-
-Connector ID (`connector_id` in the resource): `connectorTruid`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `customAuth` (json):  Console display name: "Custom Parameters".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorTruid" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorTruid"
-  name         = "My awesome connectorTruid"
-
-  property {
-    name  = "customAuth"
-    type  = "json"
-    value = jsonencode({})
-  }
-}
-```
-
-onsole display name: "Custom Title".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `enableCameraSelector` (boolean):  Console display name: "Enable Camera Selector".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `javascriptCSSUrl` (string):  Console display name: "CSS URL".
-* `javascriptCdnUrl` (string):  Console display name: "Javascript CDN URL".
-* `kioskMode` (boolean):  Console display name: "Kiosk Mode".
-* `logo` (string): You can use a custom logo by simply passing a relative link, absolute path or data URI to your logo. If you do not want a logo to show pass the logo attribute as null. Console display name: "Logo".
-* `password` (string):  Console display name: "Password".
-* `secret` (string):  Console display name: "Secret".
-* `showCountdown` (boolean):  Console display name: "Show Countdown".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `startScreenTitle` (string):  Console display name: "Start Screen Title".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-* `username` (string):  Console display name: "Username".
-
-
-Example:
-```terraform
-resource "davinci_connection" "iproovConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "iproovConnector"
-  name         = "My awesome iproovConnector"
-
-  property {
-    name  = "allowLandscape"
-    type  = "boolean"
-    value = var.iproovconnector_property_allow_landscape
-  }
-
-  property {
-    name  = "apiKey"
-    type  = "string"
-    value = var.iproovconnector_property_api_key
-  }
-
-  property {
-    name  = "authDescription"
-    type  = "string"
-    value = var.iproovconnector_property_auth_description
-  }
-
-  property {
-    name  = "baseUrl"
-    type  = "string"
-    value = var.iproovconnector_property_base_url
-  }
-
-  property {
-    name  = "color1"
-    type  = "string"
-    value = var.iproovconnector_property_color1
-  }
-
-  property {
-    name  = "color2"
-    type  = "string"
-    value = var.iproovconnector_property_color2
-  }
-
-  property {
-    name  = "color3"
-    type  = "string"
-    value = var.iproovconnector_property_color3
-  }
-
-  property {
-    name  = "color4"
-    type  = "string"
-    value = var.iproovconnector_property_color4
-  }
-
-  property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.iproovconnector_property_connector_name
-  }
-
-  property {
-    name  = "customTitle"
-    type  = "string"
-    value = var.iproovconnector_property_custom_title
-  }
-
-  property {
-    name  = "description"
-    type  = "string"
-    value = var.iproovconnector_property_description
-  }
-
-  property {
-    name  = "details1"
-    type  = "string"
-    value = var.iproovconnector_property_details1
-  }
-
-  property {
-    name  = "details2"
-    type  = "string"
-    value = var.iproovconnector_property_details2
-  }
-
-  property {
-    name  = "enableCameraSelector"
-    type  = "boolean"
-    value = var.iproovconnector_property_enable_camera_selector
-  }
-
-  property {
-    name  = "iconUrl"
-    type  = "string"
-    value = var.iproovconnector_property_icon_url
-  }
-
-  property {
-    name  = "iconUrlPng"
-    type  = "string"
-    value = var.iproovconnector_property_icon_url_png
-  }
-
-  property {
-    name  = "javascriptCSSUrl"
-    type  = "string"
-    value = var.javascript_css_url
-  }
-
-  property {
-    name  = "javascriptCdnUrl"
-    type  = "string"
-    value = var.iproovconnector_property_javascript_cdn_url
-  }
-
-  property {
-    name  = "kioskMode"
-    type  = "boolean"
-    value = var.iproovconnector_property_kiosk_mode
-  }
-
-  property {
-    name  = "logo"
-    type  = "string"
-    value = var.iproovconnector_property_logo
-  }
-
-  property {
-    name  = "password"
-    type  = "string"
-    value = var.iproovconnector_property_password
+    value = var.iproovv2connector_property_api_key
   }
 
   property {
     name  = "secret"
     type  = "string"
-    value = var.iproovconnector_property_secret
+    value = var.iproovv2connector_property_secret
   }
 
   property {
-    name  = "showCountdown"
-    type  = "boolean"
-    value = var.iproovconnector_property_show_countdown
-  }
-
-  property {
-    name  = "showCredAddedOn"
-    type  = "boolean"
-    value = var.iproovconnector_property_show_cred_added_on
-  }
-
-  property {
-    name  = "showCredAddedVia"
-    type  = "boolean"
-    value = var.iproovconnector_property_show_cred_added_via
-  }
-
-  property {
-    name  = "startScreenTitle"
+    name  = "tenant"
     type  = "string"
-    value = var.iproovconnector_property_start_screen_title
-  }
-
-  property {
-    name  = "title"
-    type  = "string"
-    value = var.iproovconnector_property_title
-  }
-
-  property {
-    name  = "toolTip"
-    type  = "string"
-    value = var.iproovconnector_property_tool_tip
-  }
-
-  property {
-    name  = "username"
-    type  = "string"
-    value = var.iproovconnector_property_username
+    value = var.iproovv2connector_property_tenant
   }
 }
 ```
