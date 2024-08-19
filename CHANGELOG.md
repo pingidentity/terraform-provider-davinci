@@ -1,10 +1,3 @@
-## 0.4.1 (Unreleased)
-
-NOTES:
-
-* Bump pingone Terraform provider in documentation. ([#355](https://github.com/pingidentity/terraform-provider-davinci/issues/355))
-* Updated connector reference guide with latest connector definitions. ([#354](https://github.com/pingidentity/terraform-provider-davinci/issues/354))
-
 ## 0.4.0 (19 August 2024)
 
 BREAKING CHANGES:
@@ -13,6 +6,7 @@ BREAKING CHANGES:
 
 NOTES:
 
+* `resource/davinci_variable`: Migrated to plugin framework. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
 * Bump `github.com/golangci/golangci-lint` from 1.59.0 => 1.59.1 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/golangci/golangci-lint` from 1.59.1 => 1.60.1 ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
 * Bump `github.com/hashicorp/go-getter` from 1.7.4 => 1.7.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
@@ -21,8 +15,9 @@ NOTES:
 * Bump `github.com/patrickcping/pingone-go-sdk-v2/management` from 0.39.0 => 0.43.0 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/patrickcping/pingone-go-sdk-v2` from 0.11.9 => 0.12.3 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
 * Bump `github.com/samir-gandhi/davinci-client-go` from 0.3.0 => 0.4.0 ([#350](https://github.com/pingidentity/terraform-provider-davinci/issues/350))
-* `resource/davinci_variable`: Migrated to plugin framework. ([#344](https://github.com/pingidentity/terraform-provider-davinci/issues/344))
 * bump go version from 1.22.3 => 1.22.5 ([#345](https://github.com/pingidentity/terraform-provider-davinci/issues/345))
+* Bump pingone Terraform provider in documentation. ([#355](https://github.com/pingidentity/terraform-provider-davinci/issues/355))
+* Updated connector reference guide with latest connector definitions. ([#354](https://github.com/pingidentity/terraform-provider-davinci/issues/354))
 
 ENHANCEMENTS:
 
