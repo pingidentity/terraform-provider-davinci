@@ -728,7 +728,9 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 	// }
 
 	if v := variableObject.Value; v != nil && *v != "" {
-		p.ValueService = framework.StringToTF(*v)
+		value := *v
+		value = regexp.MustCompile(`^\*+$`).ReplaceAllString(value, p.Value.ValueString())
+		p.ValueService = framework.StringToTF(value)
 	} else {
 		p.ValueService = types.StringNull()
 	}
