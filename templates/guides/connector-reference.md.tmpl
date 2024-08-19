@@ -11,17 +11,6 @@ Below is a list of all available DaVinci Connections available for use in `davin
 If the `value` type of a property is not defined it must be inferred.
 
 
-## (Demo) PingOne Authorize HTTP request and response
-
-Connector ID (`connector_id` in the resource): `pingauthadapter`
-
-*No properties*
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/pingauthadapter.tf") }}
-
-
 ## 1Kosmos connector
 
 Connector ID (`connector_id` in the resource): `connector1Kosmos`
@@ -89,6 +78,21 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorAbuseipdb.tf") }}
+
+
+## ActiveCampaign API
+
+Connector ID (`connector_id` in the resource): `connector-oai-activecampaignapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the ActiveCampaign API. Console display name: "API Key".
+* `authApiVersion` (string): The version of the ActiveCampaign API. Console display name: "API Version".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-activecampaignapi.tf") }}
 
 
 ## Acuant
@@ -249,6 +253,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/authenticIdConnector.tf") }}
+
+
+## Authomize API
+
+Connector ID (`connector_id` in the resource): `connector-oai-authomizeapireference`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): Your Authomize API key. Console display name: "API Key".
+* `basePath` (string): The base URL for the Authomize API, such as "https://api.authomize.com". Console display name: "Base URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-authomizeapireference.tf") }}
 
 
 ## Authomize Incident Connector
@@ -540,6 +558,23 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/cookieConnector.tf") }}
 
 
+## Copper API
+
+Connector ID (`connector_id` in the resource): `connector-oai-copperdeveloperapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+* `contentType` (string): Content type. Console display name: "Content-Type".
+* `xPWAccessToken` (string): API Key. Console display name: "X-PW-AccessToken".
+* `xPWApplication` (string): Application. Console display name: "X-PW-Application".
+* `xPWUserEmail` (string): Email address of token owner. Console display name: "X-PW-UserEmail".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-copperdeveloperapi.tf") }}
+
+
 ## Credova
 
 Connector ID (`connector_id` in the resource): `credovaConnector`
@@ -651,6 +686,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/devicePolicyConnector.tf") }}
 
 
+## DigiLocker
+
+Connector ID (`connector_id` in the resource): `digilockerConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `oauth2` (json):  Console display name: "Oauth2 Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/digilockerConnector.tf") }}
+
+
 ## Digidentity
 
 Connector ID (`connector_id` in the resource): `digidentityConnector`
@@ -662,6 +710,22 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/digidentityConnector.tf") }}
+
+
+## Druva inSync Cloud API
+
+Connector ID (`connector_id` in the resource): `connector-oai-druvainsynccloud`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authClientId` (string): The Client ID of the authenticating application. Console display name: "Client ID".
+* `authClientSecret` (string): The Secret Key for the authenticating application. Console display name: "Secret Key".
+* `authTokenUrl` (string): The URL used to obtain an access token. Console display name: "Token URL".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-druvainsynccloud.tf") }}
 
 
 ## Duo
@@ -689,6 +753,25 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/entrustConnector.tf") }}
+
+
+## Equifax
+
+Connector ID (`connector_id` in the resource): `equifaxConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseUrl` (string): Base URL for Equifax API. Console display name: "Base URL".
+* `clientId` (string): When you Create a New App, Equifax will assign a Client ID per environment for the API Product. Console display name: "Client ID".
+* `clientSecret` (string): When you Create a New App, Equifax will assign a Client Secret per environment for the API Product. Console display name: "Client Secret".
+* `equifaxSoapApiEnvironment` (string): SOAP API WSDL Environment. Console display name: "SOAP API Environment".
+* `memberNumber` (string): Unique Identifier of Customer. Please contact Equifax Sales Representative during client onboarding for this value. Console display name: "Member Number".
+* `password` (string): Password provided by Equifax for SOAP API. Console display name: "Password for SOAP API".
+* `username` (string): Username provided by Equifax for SOAP API. Console display name: "Username for SOAP API".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/equifaxConnector.tf") }}
 
 
 ## Error Message
@@ -772,6 +855,21 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/flowConnector.tf") }}
 
 
+## Forter
+
+Connector ID (`connector_id` in the resource): `forterConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiVersion` (string): API Version. Console display name: " Forter API Version".
+* `secretKey` (string): Secret Key from Forter tenant. Console display name: "Forter Secret Key".
+* `siteId` (string): Site ID from Forter tenant. Console display name: "Forter SiteID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/forterConnector.tf") }}
+
+
 ## Freshdesk
 
 Connector ID (`connector_id` in the resource): `connectorFreshdesk`
@@ -826,6 +924,21 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/gbgConnector.tf") }}
+
+
+## GitHub API
+
+Connector ID (`connector_id` in the resource): `connector-oai-github`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiVersion` (string): The GitHub v3 REST API version, such as "2022-11-28". Console display name: "API Version".
+* `authBearerToken` (string): The authentication bearer token that has access to GitHub v3 REST API. Console display name: "Authentication Bearer Token".
+* `basePath` (string): The base URL for the GitHub API, such as "https://api.github.com". Console display name: "API URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-github.tf") }}
 
 
 ## GitHub Login
@@ -905,7 +1018,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `connectionId` (string):  Console display name: "Select an OpenID token management connection for signed HTTP responses.".
 * `recaptchaSecretKey` (string): The Secret Key from reCAPTCHA Admin dashboard. Console display name: "reCAPTCHA v2 Secret Key".
 * `recaptchaSiteKey` (string): The Site Key from reCAPTCHA Admin dashboard. Console display name: "reCAPTCHA v2 Site Key".
-* `whiteList` (string): Enter the URLs of trusted sites that host your HTML content. Console display name: "Trusted Sites".
+* `whiteList` (string): Enter the hostname for the trusted sites that host your HTML. Note: Ensure that the content hosted on these sites can be trusted and that publishing safeguards are in place to prevent unexpected issues. Console display name: "Trusted Sites".
 
 
 Example:
@@ -995,6 +1108,20 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorHello.tf") }}
 
 
+## HubSpot Companies API
+
+Connector ID (`connector_id` in the resource): `connector-oai-hubspotcompanies`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authBearerToken` (string): The authenticating token. Console display name: "Bearer token".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-hubspotcompanies.tf") }}
+
+
 ## Hubspot
 
 Connector ID (`connector_id` in the resource): `connectorHubspot`
@@ -1035,6 +1162,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/idranddConnector.tf") }}
 
 
+## ID.me - Community Verification
+
+Connector ID (`connector_id` in the resource): `idmecommunityConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `openId` (json):  Console display name: "OpenId Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/idmecommunityConnector.tf") }}
+
+
 ## ID.me - Identity Verification
 
 Connector ID (`connector_id` in the resource): `connectorIdMeIdentity`
@@ -1059,6 +1199,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/idMeConnector.tf") }}
+
+
+## IDEMIA
+
+Connector ID (`connector_id` in the resource): `idemiaConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string):  Console display name: "API Key".
+* `baseUrl` (string): Base Url for IDEMIA API. Can be found in the dashboard documents. Console display name: "IDEMIA API base URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/idemiaConnector.tf") }}
 
 
 ## IDI Data
@@ -1342,6 +1496,20 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneLDAPConnector.tf") }}
 
 
+## LaunchDarkly API
+
+Connector ID (`connector_id` in the resource): `connector-oai-launchdarklyrestapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the LaunchDarkly REST API. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-launchdarklyrestapi.tf") }}
+
+
 ## LexisNexis
 
 Connector ID (`connector_id` in the resource): `lexisnexisV2Connector`
@@ -1420,6 +1588,53 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorMailgun.tf") }}
+
+
+## Mailjet API
+
+Connector ID (`connector_id` in the resource): `connector-oai-mailjetapi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authPassword` (string): API Secret Key. Console display name: "API Secret Key".
+* `authUsername` (string): API Key. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-mailjetapi.tf") }}
+
+
+## Melissa Global Address
+
+Connector ID (`connector_id` in the resource): `melissaConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): License Key is the API key that you can retrieve from Melissa Admin Portal. Console display name: "License Key".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/melissaConnector.tf") }}
+
+
+## Microsoft Dynamics - Customer Insights
+
+Connector ID (`connector_id` in the resource): `microsoftDynamicsCustomerInsightsConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseURL` (string): Base URL. Console display name: "Base URL".
+* `clientId` (string): Client ID. Console display name: "Client ID".
+* `clientSecret` (string): Client Secret. Console display name: "Client Secret".
+* `environmentName` (string): Environment Name. Console display name: "Environment Name".
+* `grantType` (string): Grant Type. Console display name: "Grant Type".
+* `tenant` (string): Tenant. Console display name: "Tenant".
+* `version` (string): Web API Version. Console display name: "Version".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/microsoftDynamicsCustomerInsightsConnector.tf") }}
 
 
 ## Microsoft Intune
@@ -1704,6 +1919,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneAuthenticationConnector.tf") }}
 
 
+## PingOne Authorize - API Access Management
+
+Connector ID (`connector_id` in the resource): `pingauthadapter`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingauthadapter.tf") }}
+
+
 ## PingOne Authorize
 
 Connector ID (`connector_id` in the resource): `pingOneAuthorizeConnector`
@@ -1856,6 +2082,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneSSOConnector.tf") }}
 
 
+## Private ID
+
+Connector ID (`connector_id` in the resource): `privateidConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/privateidConnector.tf") }}
+
+
 ## Prove International
 
 Connector ID (`connector_id` in the resource): `proveConnector`
@@ -1964,6 +2203,20 @@ Connector ID (`connector_id` in the resource): `samlConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/samlConnector.tf") }}
+
+
+## SAP Identity API
+
+Connector ID (`connector_id` in the resource): `connector-oai-sapidentityapis`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the SAP Identity APIs. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-sapidentityapis.tf") }}
 
 
 ## SEON
@@ -2164,6 +2417,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorShopify.tf") }}
 
 
+## Sift
+
+Connector ID (`connector_id` in the resource): `siftConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): API Key from Sift Tenant. Console display name: "Sift API Key".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/siftConnector.tf") }}
+
+
 ## Signicat
 
 Connector ID (`connector_id` in the resource): `connectorSignicat`
@@ -2175,6 +2441,36 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorSignicat.tf") }}
+
+
+## Silverfort
+
+Connector ID (`connector_id` in the resource): `silverfortConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Silverfort Risk API Key. Console display name: "Risk API Key".
+* `appUserSecret` (string): Silverfort App User Secret. Console display name: "App User Secret".
+* `consoleApi` (string): Silverfort App User ID. Console display name: "App User ID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/silverfortConnector.tf") }}
+
+
+## Sinch
+
+Connector ID (`connector_id` in the resource): `sinchConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `acceptLanguage` (string): Language of SMS sent, if using Sinch provided templates will be chosen based on Accept-Language header. Examples include, but are not limited to pl-PL, no-NO, en-US. Console display name: "Language".
+* `applicationKey` (string): Verification Application Key from your Sinch Account. Console display name: "Sinch Application Key".
+* `secretKey` (string): Verification Secret Key from your Sinch Account. Console display name: "Sinch Secret Key".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/sinchConnector.tf") }}
 
 
 ## Singpass Login
@@ -2315,6 +2611,63 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/tmtConnector.tf") }}
 
 
+## Tableau
+
+Connector ID (`connector_id` in the resource): `connectorTableau`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `addFlowPermissionsRequestBody` (string): Add Flow Permissions Request Body in XML Format. Example: <tsRequest><task><flowRun><flow id="flow-id"/><flowRunSpec><flowParameterSpecs><flowParameterSpec parameterId="parameter-id" overrideValue= "overrideValue"/><flowParameterSpecs><flowRunSpec></flowRun></task></tsRequest>. Console display name: "Add Flow Permissions Request Body in XML Format.".
+* `addUsertoSiteRequestBody` (string): Add User to Site Request Body in XML Format. Example: <tsRequest><user name="user-name" siteRole="site-role" authSetting="auth-setting" /></tsRequest>. Console display name: "Add User to Site Request Body in XML Format.".
+* `apiVersion` (string): The version of the API to use, such as 3.16. Console display name: "api-version".
+* `authId` (string): The Tableau-Auth sent along with every request. Console display name: "auth-ID".
+* `createScheduleBody` (string): This should contain the entire XML. Eg: <tsRequest><schedule name="schedule-name"priority="schedule-priority"type="schedule-type"frequency="schedule-frequency"executionOrder="schedule-execution-order"><frequencyDetails start="start-time" end="end-time"><intervals><interval interval-expression /></intervals></frequencyDetails></schedule></tsRequest>. Console display name: "XML file format to be used for creating schedule".
+* `datasourceId` (string): The ID of the flow. Console display name: "datasource-id".
+* `flowId` (string): The flow-id value for the flow you want to add permissions to. Console display name: "flow-id".
+* `groupId` (string): The ID of the group. Console display name: "group-id".
+* `jobId` (string): The ID of the job. Console display name: "job-id".
+* `scheduleId` (string): The ID of the schedule that you are associating with the data source. Console display name: "schedule-id".
+* `serverUrl` (string): The tableau server URL Example: https://www.tableau.com:8030. Console display name: "server-url".
+* `siteId` (string): The ID of the site that contains the view. Console display name: "site-id".
+* `taskId` (string): The ID of the extract refresh task. Console display name: "task-id".
+* `updateScheduleRequestBody` (string): This should contain the entire XML. Eg: <tsRequest><schedule name="hourly-schedule-1" priority="50" type="Extract" frequency="Hourly" executionOrder="Parallel"><frequencyDetails start="18:30:00" end="23:00:00"><intervals><interval hours="2" /></intervals></frequencyDetails></schedule></tsRequest>. Console display name: "XML file format to be used for updating schedule".
+* `updateUserRequestBody` (string): Update User Request Body in XML Format. <tsRequest><user fullName="new-full-name" email="new-email" password="new-password" siteRole="new-site-role" authSetting="new-auth-setting" /></tsRequest>. Console display name: "Update User Request Body in XML Format.".
+* `userId` (string): The ID of the user to get/give information for. Console display name: "user-id".
+* `workbookId` (string): The ID of the workbook to add to the schedule. Console display name: "workbook-id".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorTableau.tf") }}
+
+
+## Talend Identities Management API
+
+Connector ID (`connector_id` in the resource): `connector-oai-talendim`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authBearerToken` (string): The authenticating token. Console display name: "Bearer Token".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-talendim.tf") }}
+
+
+## Talend SCIM API
+
+Connector ID (`connector_id` in the resource): `connector-oai-talendscim`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authBearerToken` (string): The authenticating token. Console display name: "Bearer Token".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-talendscim.tf") }}
+
+
 ## Teleport
 
 Connector ID (`connector_id` in the resource): `nodeConnector`
@@ -2411,6 +2764,19 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/transunionConnector.tf") }}
+
+
+## Treasure Data
+
+Connector ID (`connector_id` in the resource): `treasureDataConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Treasure Data API Key. Console display name: "API Key".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/treasureDataConnector.tf") }}
 
 
 ## Trulioo
@@ -2539,6 +2905,20 @@ Connector ID (`connector_id` in the resource): `variablesConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/variablesConnector.tf") }}
+
+
+## Venafi Account Service API
+
+Connector ID (`connector_id` in the resource): `connector-oai-venafi`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authApiKey` (string): The authentication key to the Venafi as a Service API for Account Service Operations. Console display name: "API Key".
+* `basePath` (string): The base URL for contacting the API. Console display name: "Base Path".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connector-oai-venafi.tf") }}
 
 
 ## Vericlouds
@@ -2683,6 +3063,38 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorZendesk.tf") }}
 
 
+## Zoop.one
+
+Connector ID (`connector_id` in the resource): `zoopConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `agencyId` (string):  Console display name: "Zoop Agency ID".
+* `apiKey` (string):  Console display name: "Zoop API Key".
+* `apiUrl` (string):  Console display name: "Zoop API URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/zoopConnector.tf") }}
+
+
+## Zscaler ZIA
+
+Connector ID (`connector_id` in the resource): `connectorZscaler`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `basePath` (string): basePath. Console display name: "Base Path".
+* `baseURL` (string): baseURL. Console display name: "Base URL".
+* `zscalerAPIkey` (string): Zscaler APIkey. Console display name: "Zscaler APIkey".
+* `zscalerPassword` (string): Zscaler Domain Password. Console display name: "Zscaler Password".
+* `zscalerUsername` (string): Zscaler Domain Username. Console display name: "Zscaler Username".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorZscaler.tf") }}
+
+
 ## iProov
 
 Connector ID (`connector_id` in the resource): `iproovConnector`
@@ -2724,126 +3136,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/iproovConnector.tf") }}
 
 
-## iovation
+## iProov
 
-Connector ID (`connector_id` in the resource): `iovationConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiUrl` (string):  Console display name: "API Server URL".
-* `javascriptCdnUrl` (string): iovation loader javascript CDN. Console display name: "iovation loader Javascript CDN URL".
-* `subKey` (string): This will be an iovation assigned value that tracks requests from your site. This is primarily used for debugging and troubleshooting purposes. Console display name: "Sub Key".
-* `subscriberAccount` (string):  Console display name: "Subscriber Account".
-* `subscriberId` (string):  Console display name: "Subscriber ID".
-* `subscriberPasscode` (string):  Console display name: "Subscriber Passcode".
-* `version` (string): This is the version of the script to load. The value should either correspond to a specific version you wish to use, or one of the following aliases to get the latest version of the code: general5 - the latest stable version of the javascript, early5 - the latest available version of the javascript. Console display name: "Version".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/iovationConnector.tf") }}
-
-
-## ipgeolocation.io
-
-Connector ID (`connector_id` in the resource): `connectorIPGeolocationio`
+Connector ID (`connector_id` in the resource): `iproovV2Connector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
 
-* `apiKey` (string): Developer subscription API key. Console display name: "API key".
+* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
+* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
+* `tenant` (string): The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
 
 
 Example:
-{{ tffile (printf "%s" "examples/connectors/connectorIPGeolocationio.tf") }}
-
-
-## ipregistry
-
-Connector ID (`connector_id` in the resource): `connectorIPregistry`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): API Key used to authenticate to the ipregistry.co API. Console display name: "API Key".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorIPregistry.tf") }}
-
-
-## ipstack
-
-Connector ID (`connector_id` in the resource): `connectorIPStack`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `allowInsecureIPStackConnection` (string): The Free IPStack Subscription Plan does not support HTTPS connections. For more information refer to https://ipstack.com/plan. Console display name: "Allow Insecure ipstack Connection?".
-* `apiKey` (string): The ipstack API key to use the service. Console display name: "API key".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorIPStack.tf") }}
-
-
-## neoEYED
-
-Connector ID (`connector_id` in the resource): `neoeyedConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `appKey` (string): Unique key for the application. Console display name: "Application Key".
-* `javascriptCdnUrl` (string): URL of javascript CDN of neoEYED. Console display name: "Javascript CDN URL".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/neoeyedConnector.tf") }}
-
-
-## randomuser.me
-
-Connector ID (`connector_id` in the resource): `connectorRandomUserMe`
-
-*No properties*
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorRandomUserMe.tf") }}
-
-
-## tru.ID
-
-Connector ID (`connector_id` in the resource): `connectorTruid`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `customAuth` (json):  Console display name: "Custom Parameters".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorTruid.tf") }}
-
-onsole display name: "Custom Title".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `enableCameraSelector` (boolean):  Console display name: "Enable Camera Selector".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `javascriptCSSUrl` (string):  Console display name: "CSS URL".
-* `javascriptCdnUrl` (string):  Console display name: "Javascript CDN URL".
-* `kioskMode` (boolean):  Console display name: "Kiosk Mode".
-* `logo` (string): You can use a custom logo by simply passing a relative link, absolute path or data URI to your logo. If you do not want a logo to show pass the logo attribute as null. Console display name: "Logo".
-* `password` (string):  Console display name: "Password".
-* `secret` (string):  Console display name: "Secret".
-* `showCountdown` (boolean):  Console display name: "Show Countdown".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `startScreenTitle` (string):  Console display name: "Start Screen Title".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-* `username` (string):  Console display name: "Username".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/iproovConnector.tf") }}
+{{ tffile (printf "%s" "examples/connectors/iproovV2Connector.tf") }}
 
 
 ## iovation
