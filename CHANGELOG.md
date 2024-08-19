@@ -1,5 +1,11 @@
 ## 0.4.1 (Unreleased)
 
+NOTES:
+
+* Bump `github.com/hashicorp/terraform-plugin-framework-validators` from 0.12.0 => 0.13.0 ([#356](https://github.com/pingidentity/terraform-provider-davinci/issues/356))
+* Bump `github.com/katbyte/terrafmt` from 0.5.3 => 0.5.4 ([#356](https://github.com/pingidentity/terraform-provider-davinci/issues/356))
+* Bump `github.com/terraform-linters/tflint` from 0.51.1 => 0.53.0 ([#356](https://github.com/pingidentity/terraform-provider-davinci/issues/356))
+
 BUG FIXES:
 
 * `resource/davinci_variable`: Fix "Provider produced inconsistent result after apply" when defining a variable of `type` = `secret`. ([#358](https://github.com/pingidentity/terraform-provider-davinci/issues/358))
