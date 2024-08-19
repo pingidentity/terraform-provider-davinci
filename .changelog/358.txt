@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_variable`: Fix "Provider produced inconsistent result after apply" when defining a variable of `type` = `secret`.
+```
