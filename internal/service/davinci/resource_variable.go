@@ -103,8 +103,8 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 	).DefaultValue(true)
 
 	valueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.",
-	).ConflictsWith([]string{"value", "empty_value"})
+		"A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.  Note that if the `type` is `secret`, the provider will not be able to remediate the value's configuration drift in the DaVinci service.",
+	).ConflictsWith([]string{"empty_value"})
 
 	valueServiceDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"A string that specifies the value of the variable in the service, the type will be inferred from the value specified in the `type` parameter.",
@@ -112,7 +112,7 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 
 	EmptyValueDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"A boolean that specifies whether the variable's `value` must be kept as an empty string.",
-	).ConflictsWith([]string{"value", "empty_value"})
+	).ConflictsWith([]string{"value"})
 
 	minDescription := framework.SchemaAttributeDescriptionFromMarkdown(
 		"An integer that specifies the minimum value of the variable, if the `type` parameter is set as `number`.",
@@ -728,7 +728,9 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 	// }
 
 	if v := variableObject.Value; v != nil && *v != "" {
-		p.ValueService = framework.StringToTF(*v)
+		value := *v
+		value = regexp.MustCompile(`^\*+$`).ReplaceAllString(value, p.Value.ValueString())
+		p.ValueService = framework.StringToTF(value)
 	} else {
 		p.ValueService = types.StringNull()
 	}

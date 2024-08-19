@@ -149,12 +149,12 @@ resource "davinci_variable" "my_awesome_usercontext_variable" {
 ### Optional
 
 - `description` (String) A string that specifies the description of the variable.
-- `empty_value` (Boolean) A boolean that specifies whether the variable's `value` must be kept as an empty string.  Conflicts with `value`, `empty_value`.
+- `empty_value` (Boolean) A boolean that specifies whether the variable's `value` must be kept as an empty string.  Conflicts with `value`.
 - `flow_id` (String) A string that specifies the ID of the flow to which the variable is assigned.  This field is required when the `context` field is set to `flow`.  Must be a valid PingOne resource ID.  This field is immutable and will trigger a replace plan if changed.
 - `max` (Number) An integer that specifies the maximum value of the variable, if the `type` parameter is set as `number`.  Defaults to `2000`.
 - `min` (Number) An integer that specifies the minimum value of the variable, if the `type` parameter is set as `number`.  Defaults to `0`.
 - `mutable` (Boolean) A boolean that specifies whether the variable is mutable.  If `true`, the variable can be modified by the flow. If `false`, the variable is read-only and cannot be modified by the flow.  Defaults to `true`.
-- `value` (String, Sensitive) A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.  Conflicts with `value`, `empty_value`.
+- `value` (String, Sensitive) A string that specifies the default value of the variable, the type will be inferred from the value specified in the `type` parameter.  If left blank or omitted, the resource will not track the variable's value in state.  If the variable value should be tracked in state as an empty string, use the `empty_value` parameter.  Note that if the `type` is `secret`, the provider will not be able to remediate the value's configuration drift in the DaVinci service.  Conflicts with `empty_value`.
 
 ### Read-Only
 

@@ -86,6 +86,8 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 
 	name := resourceName
 
+	var variableID, environmentID string
+
 	fullStep := resource.TestStep{
 		Config: testAccResourceVariable_CompanyContext_Full_Hcl(resourceName, name, withBootstrapConfig),
 		Check: resource.ComposeTestCheckFunc(
@@ -120,6 +122,45 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 		),
 	}
 
+	secretDynamicStep := resource.TestStep{
+		Config: testAccResourceVariable_CompanyContext_SecretDynamic_Hcl(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			davinci.Variable_GetIDs(resourceFullName, &environmentID, &variableID),
+			resource.TestMatchResourceAttr(resourceFullName, "id", regexp.MustCompile(`^[a-zA-Z0-9]+##SK##company$`)),
+			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "name", name),
+			resource.TestCheckResourceAttr(resourceFullName, "context", "company"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "description"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "value"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckResourceAttr(resourceFullName, "type", "secret"),
+			resource.TestCheckResourceAttr(resourceFullName, "min", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "max", "2000"),
+			resource.TestCheckResourceAttr(resourceFullName, "mutable", "true"),
+		),
+	}
+
+	secretStaticStep := resource.TestStep{
+		Config: testAccResourceVariable_CompanyContext_SecretStatic_Hcl(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			davinci.Variable_GetIDs(resourceFullName, &environmentID, &variableID),
+			resource.TestMatchResourceAttr(resourceFullName, "id", regexp.MustCompile(`^[a-zA-Z0-9]+##SK##company$`)),
+			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "name", name),
+			resource.TestCheckResourceAttr(resourceFullName, "context", "company"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "description"),
+			resource.TestCheckResourceAttr(resourceFullName, "value", "mysecret"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckResourceAttr(resourceFullName, "type", "secret"),
+			resource.TestCheckResourceAttr(resourceFullName, "min", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "max", "2000"),
+			resource.TestCheckResourceAttr(resourceFullName, "mutable", "true"),
+		),
+	}
+
+	variableName := name
+	mutable := true
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.PreCheckClient(t)
@@ -150,6 +191,26 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 					return true, nil // skip due to https://github.com/pingidentity/terraform-provider-davinci/issues/253
 				},
 			},
+			{
+				Config:  testAccResourceVariable_CompanyContext_Full_Hcl(resourceName, name, withBootstrapConfig),
+				Destroy: true,
+			},
+			// Test secret
+			secretDynamicStep,
+			{
+				Config: testAccResourceVariable_CompanyContext_SecretDynamic_Hcl(resourceName, name, withBootstrapConfig),
+				PreConfig: func() {
+					davinci.Variable_RandomVariableValue_PreConfig(t, environmentID, nil, &dv.VariablePayload{
+						Name:    &variableName,
+						Context: "company",
+						Type:    "secret",
+						Mutable: &mutable,
+					})
+				},
+				ExpectNonEmptyPlan: false,
+				PlanOnly:           true,
+			},
+			secretStaticStep,
 			fullStep,
 			// Test importing the resource
 			{
@@ -648,6 +709,35 @@ func testAccResourceVariable_CompanyContext_Full_Hcl(resourceName, name string, 
 
 func testAccResourceVariable_CompanyContext_Minimal_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
 	return testAccResourceVariable_Minimal_Hcl(resourceName, name, "company", withBootstrapConfig)
+}
+
+func testAccResourceVariable_CompanyContext_SecretDynamic_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	context := "company"
+	return fmt.Sprintf(`
+%[1]s
+
+resource "davinci_variable" "%[2]s" {
+  environment_id = pingone_environment.%[2]s.id
+  name           = "%[3]s"
+  context        = "%[4]s"
+  type           = "secret"
+}
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, context)
+}
+
+func testAccResourceVariable_CompanyContext_SecretStatic_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	context := "company"
+	return fmt.Sprintf(`
+%[1]s
+
+resource "davinci_variable" "%[2]s" {
+  environment_id = pingone_environment.%[2]s.id
+  name           = "%[3]s"
+  context        = "%[4]s"
+  type           = "secret"
+  value          = "mysecret"
+}
+`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, context)
 }
 
 func testAccResourceVariable_FlowInstanceContext_Full_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
