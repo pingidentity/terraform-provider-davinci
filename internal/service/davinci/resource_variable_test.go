@@ -121,7 +121,7 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 			resource.TestCheckResourceAttr(resourceFullName, "mutable", "true"),
 		),
 	}
-	
+
 	secretDynamicStep := resource.TestStep{
 		Config: testAccResourceVariable_CompanyContext_SecretDynamic_Hcl(resourceName, name, withBootstrapConfig),
 		Check: resource.ComposeTestCheckFunc(
@@ -139,7 +139,7 @@ func testAccResourceVariable_Full_CompanyContext(t *testing.T, withBootstrapConf
 			resource.TestCheckResourceAttr(resourceFullName, "mutable", "true"),
 		),
 	}
-	
+
 	secretStaticStep := resource.TestStep{
 		Config: testAccResourceVariable_CompanyContext_SecretStatic_Hcl(resourceName, name, withBootstrapConfig),
 		Check: resource.ComposeTestCheckFunc(
@@ -735,7 +735,7 @@ resource "davinci_variable" "%[2]s" {
   name           = "%[3]s"
   context        = "%[4]s"
   type           = "secret"
-  value = "mysecret"
+  value          = "mysecret"
 }
 `, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), resourceName, name, context)
 }
