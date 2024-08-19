@@ -35,7 +35,7 @@ terraform {
   required_providers {
     davinci = {
       source  = "pingidentity/davinci"
-      version = "~> 0.3"
+      version = "~> 0.4"
     }
   }
 }
@@ -55,7 +55,7 @@ terraform {
   required_providers {
     davinci = {
       source  = "pingidentity/davinci"
-      version = "~> 0.3"
+      version = "~> 0.4"
     }
   }
 }
@@ -84,7 +84,7 @@ terraform {
   required_providers {
     davinci = {
       source  = "pingidentity/davinci"
-      version = "~> 0.3"
+      version = "~> 0.4"
     }
     pingone = {
       source  = "pingidentity/pingone"
