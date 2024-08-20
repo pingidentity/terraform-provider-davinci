@@ -315,13 +315,15 @@
                     "name": "fdgdfgfdg",
                     "key": 0.8936786494474329,
                     "label": "fdgdfgfdg (string - flow)",
-                    "type": "string"
+                    "type": "string",
+                    "value": "fdgdfgfdgValue"
                   },
                   {
                     "name": "test123",
                     "key": 0.379286774724122,
                     "label": "test123 (number - flow)",
-                    "type": "number"
+                    "type": "number",
+                    "value": "5"
                   }
                 ]
               }
@@ -376,7 +378,8 @@
                     "name": "flowInstanceVariable1",
                     "key": 0.09068454768967449,
                     "label": "flowInstanceVariable1 (string - flowInstance)",
-                    "type": "string"
+                    "type": "string",
+                    "value": "flowInstanceVariable1Value"
                   }
                 ]
               }
@@ -431,7 +434,8 @@
                     "name": "testuser",
                     "key": 0.9814043007447408,
                     "label": "testuser (string - flowInstance)",
-                    "type": "string"
+                    "type": "string",
+                    "value": "testuserValue"
                   }
                 ]
               }

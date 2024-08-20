@@ -82,6 +82,11 @@ var (
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        false,
 		IgnoreFlowVariables:       false,
+		NodeOpts: &davinci.ExportNodeCmpOpts{
+			VariablesConnector: &davinci.ExportNodeVariablesCmpOpts{
+				ExpectVariableValues: true, // The input field needs validation
+			},
+		},
 	}
 
 	flowConfigurationJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -92,6 +97,11 @@ var (
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
 		IgnoreFlowVariables:       true,
+		NodeOpts: &davinci.ExportNodeCmpOpts{
+			VariablesConnector: &davinci.ExportNodeVariablesCmpOpts{
+				ExpectVariableValues: false, // We don't need to validate this
+			},
+		},
 	}
 
 	flowExportJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -102,6 +112,11 @@ var (
 		IgnoreVersionMetadata:     false,
 		IgnoreFlowMetadata:        false,
 		IgnoreFlowVariables:       true, // because this is handled by another resource
+		NodeOpts: &davinci.ExportNodeCmpOpts{
+			VariablesConnector: &davinci.ExportNodeVariablesCmpOpts{
+				ExpectVariableValues: false, // We don't need to validate this
+			},
+		},
 	}
 )
 
@@ -642,7 +657,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, false)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, true)
 		},
 	)
 	if err != nil {
@@ -695,7 +710,7 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, false)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, true)
 		},
 	)
 
@@ -878,7 +893,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, false)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, true)
 		},
 	)
 	if err != nil {

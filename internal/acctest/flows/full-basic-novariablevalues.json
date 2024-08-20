@@ -1,5 +1,5 @@
 {
-  "companyId": "942b4724-d83d-418c-966c-ed7d352a985c",
+  "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb",
   "authTokenExpireIds": [],
   "connectorIds": [
     "httpConnector",
@@ -8,19 +8,19 @@
     "flowConnector",
     "variablesConnector"
   ],
-  "createdDate": 1723638023970,
-  "currentVersion": 1,
+  "createdDate": 1706708769850,
+  "currentVersion": 8,
   "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
-  "deployedDate": 1723638024066,
-  "description": "Imported on Wed Aug 14 2024 12:20:23 GMT+0000 (Coordinated Universal Time)",
+  "deployedDate": 1706709739837,
+  "description": "",
   "flowStatus": "enabled",
   "isOutputSchemaSaved": false,
   "name": "full-basic",
-  "publishedVersion": 1,
+  "publishedVersion": 8,
   "timeouts": "null",
-  "updatedDate": 1723638024104,
-  "flowId": "8236d08b476a5cf7b981fa53f6971019",
-  "versionId": 1,
+  "updatedDate": 1706709739837,
+  "flowId": "c7062a8857740ee2185694bb855f8f21",
+  "versionId": 8,
   "graphData": {
     "elements": {
       "nodes": [
@@ -28,9 +28,9 @@
           "data": {
             "id": "1u2m5vzr49",
             "nodeType": "CONNECTION",
-            "connectionId": "481e952e6b11db8360587b8711620786",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "HTTP",
+            "name": "Http",
             "label": "Http",
             "status": "configured",
             "capabilityName": "customHtmlMessage",
@@ -77,9 +77,9 @@
           "data": {
             "id": "nx0o1b2cmw",
             "nodeType": "CONNECTION",
-            "connectionId": "548ea933f35b9787ae12ad130f78045b",
+            "connectionId": "de650ca45593b82c49064ead10b9fe17",
             "connectorId": "functionsConnector",
-            "name": "abcd123-functions",
+            "name": "Functions",
             "label": "Functions",
             "status": "configured",
             "capabilityName": "AEqualsB",
@@ -137,9 +137,9 @@
           "data": {
             "id": "ikt13crnhy",
             "nodeType": "CONNECTION",
-            "connectionId": "481e952e6b11db8360587b8711620786",
+            "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "HTTP",
+            "name": "Http",
             "label": "Http",
             "status": "configured",
             "capabilityName": "createSuccessResponse",
@@ -163,9 +163,9 @@
           "data": {
             "id": "vsp1ewtr9m",
             "nodeType": "CONNECTION",
-            "connectionId": "fa497c1ceaea43c0886d8d360874a53d",
+            "connectionId": "53ab83a4a4ab919d9f2cb02d9e111ac8",
             "connectorId": "errorConnector",
-            "name": "abcd123-error",
+            "name": "Error Message",
             "label": "Error Message",
             "status": "configured",
             "capabilityName": "customErrorMessage",
@@ -193,9 +193,9 @@
           "data": {
             "id": "xb74p6rkd8",
             "nodeType": "CONNECTION",
-            "connectionId": "84e29d2409ba66c0caf53f9cad0a2049",
+            "connectionId": "2581eb287bb1d9bd29ae9886d675f89f",
             "connectorId": "flowConnector",
-            "name": "abcd123-flow",
+            "name": "Flow Connector",
             "label": "Flow Conductor",
             "status": "configured",
             "capabilityName": "startUiSubFlow",
@@ -229,9 +229,9 @@
           "data": {
             "id": "kq5ybvwvro",
             "nodeType": "CONNECTION",
-            "connectionId": "84e29d2409ba66c0caf53f9cad0a2049",
+            "connectionId": "2581eb287bb1d9bd29ae9886d675f89f",
             "connectorId": "flowConnector",
-            "name": "abcd123-flow",
+            "name": "Flow Connector",
             "label": "Flow Conductor",
             "status": "configured",
             "capabilityName": "startUiSubFlow",
@@ -301,9 +301,9 @@
           "data": {
             "id": "3zvjdgdljx",
             "nodeType": "CONNECTION",
-            "connectionId": "9f8f97e94ad87e184960633b424d80b6",
+            "connectionId": "06922a684039827499bdbdd97f49827b",
             "connectorId": "variablesConnector",
-            "name": "abcd123-variables",
+            "name": "Variables",
             "label": "Variables",
             "status": "configured",
             "capabilityName": "saveFlowValue",
@@ -589,11 +589,12 @@
     }
   },
   "flowColor": "#E3F0FF",
-  "savedDate": 1723638023903,
+  "savedDate": 1706708769645,
   "variables": [
     {
       "context": "flow",
-      "createdDate": 1723638023769,
+      "createdDate": 1706708735989,
+      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
       "fields": {
         "type": "string",
         "displayName": "",
@@ -601,16 +602,16 @@
         "min": 0,
         "max": 2000
       },
-      "flowId": "8236d08b476a5cf7b981fa53f6971019",
-      "id": "bfaf14e8-0756-4e78-800e-90f558391368",
+      "flowId": "c7062a8857740ee2185694bb855f8f21",
       "type": "property",
       "visibility": "private",
-      "name": "fdgdfgfdg##SK##flow##SK##8236d08b476a5cf7b981fa53f6971019",
-      "companyId": "942b4724-d83d-418c-966c-ed7d352a985c"
+      "name": "fdgdfgfdg##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
+      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
     },
     {
       "context": "flow",
-      "createdDate": 1723638023768,
+      "createdDate": 1706708761083,
+      "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
       "fields": {
         "type": "number",
         "displayName": "test123",
@@ -618,12 +619,11 @@
         "min": 4,
         "max": 20
       },
-      "flowId": "8236d08b476a5cf7b981fa53f6971019",
-      "id": "0389e818-4dd2-4203-b82f-ee5948f93287",
+      "flowId": "c7062a8857740ee2185694bb855f8f21",
       "type": "property",
       "visibility": "private",
-      "name": "test123##SK##flow##SK##8236d08b476a5cf7b981fa53f6971019",
-      "companyId": "942b4724-d83d-418c-966c-ed7d352a985c"
+      "name": "test123##SK##flow##SK##c7062a8857740ee2185694bb855f8f21",
+      "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb"
     }
   ],
   "connections": []

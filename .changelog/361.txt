@@ -1,0 +1,23 @@
+```release-note:bug
+`resource/davinci_variable`: Fixed panic crash when attempting to create a new flow variable that does not already exist.
+```
+
+```release-note:bug
+`resource/davinci_variable`: Fixed "Error reading variable: json: cannot unmarshal object into Go struct field" error on all variables when a flow sets a flow variable value to an object type.
+```
+
+```release-note:breaking-change
+`resource/davinci_flow`: Reverted the ability to use flow exports with variable values removed.  Variable values are required when importing flows using this provider.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Resolve warnings that state that DaVinci JSON files contain unknown properties when using flow variable nodes.
+```
+
+```release-note:note
+`resource/davinci_flow`: Enhanced error messages that result from invalid flow formats.
+```
+
+```release-note:note
+Bump `github.com/samir-gandhi/davinci-client-go` from 0.4.0 => 0.5.0
+```

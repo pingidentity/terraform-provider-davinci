@@ -1014,6 +1014,37 @@ func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
 	})
 }
 
+
+
+func TestAccResourceFlow_Variables_Invalid(t *testing.T) {
+
+	resourceName := acctest.ResourceNameGen()
+
+	name := resourceName
+
+	fullStepHcl, _, err := testAccResourceFlow_Full_VariablesRedacted(resourceName, name, false)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Flow_CheckDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: fullStepHcl,
+				ExpectError: regexp.MustCompile(`Invalid DaVinci Flow Export String Value`),
+			},
+		},
+	})
+}
+
 func TestAccResourceFlow_Variables_Overridden_Clean(t *testing.T) {
 	testAccResourceFlow_Variables_Overridden(t, false)
 }
@@ -1307,6 +1338,84 @@ EOT
 func testAccResourceFlow_Full_WithMappingIDs_HCL(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
 
 	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", "", err
+	}
+
+	return fmt.Sprintf(`
+%[1]s
+
+%[2]s
+
+resource "davinci_flow" "%[3]s" {
+  environment_id = pingone_environment.%[3]s.id
+
+  name        = "my awesome flow"
+  description = "my awesome flow description"
+
+  flow_json = <<EOT
+%[4]s
+EOT
+
+  // Variables connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-variables.id
+    name                         = davinci_connection.%[3]s-variables.name
+    replace_import_connection_id = "06922a684039827499bdbdd97f49827b"
+  }
+
+  // Http connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-http.id
+    name                         = davinci_connection.%[3]s-http.name
+    replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
+  }
+
+  // Functions connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-functions.id
+    name                         = davinci_connection.%[3]s-functions.name
+    replace_import_connection_id = "de650ca45593b82c49064ead10b9fe17"
+  }
+
+  // Flow connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-flow.id
+    name                         = davinci_connection.%[3]s-flow.name
+    replace_import_connection_id = "2581eb287bb1d9bd29ae9886d675f89f"
+  }
+
+  // Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
+
+  // Subflow 2
+  subflow_link {
+    id                        = davinci_flow.%[3]s-subflow-2.id
+    name                      = davinci_flow.%[3]s-subflow-2.name
+    replace_import_subflow_id = "07503fed5c02849dbbd5ee932da654b2"
+  }
+
+  // Subflow 1
+  subflow_link {
+    id                        = davinci_flow.%[3]s-subflow-1.id
+    name                      = davinci_flow.%[3]s-subflow-1.name
+    replace_import_subflow_id = "00f66e8926ced6ef5b83619fde4a314a"
+  }
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
+}
+
+func testAccResourceFlow_Full_VariablesRedacted(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-basic-novariablevalues.json")
 	if err != nil {
 		return "", "", err
 	}
