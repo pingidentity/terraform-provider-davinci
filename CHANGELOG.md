@@ -1,14 +1,23 @@
 ## 0.4.1 (Unreleased)
 
+BREAKING CHANGES:
+
+* `resource/davinci_flow`: Reverted the ability to use flow exports with variable values removed.  Variable values are required when importing flows using this provider. ([#361](https://github.com/pingidentity/terraform-provider-davinci/issues/361))
+
 NOTES:
 
 * Bump `github.com/hashicorp/terraform-plugin-framework-validators` from 0.12.0 => 0.13.0 ([#356](https://github.com/pingidentity/terraform-provider-davinci/issues/356))
 * Bump `github.com/katbyte/terrafmt` from 0.5.3 => 0.5.4 ([#356](https://github.com/pingidentity/terraform-provider-davinci/issues/356))
+* Bump `github.com/samir-gandhi/davinci-client-go` from 0.4.0 => 0.5.0 ([#361](https://github.com/pingidentity/terraform-provider-davinci/issues/361))
 * Bump `github.com/terraform-linters/tflint` from 0.51.1 => 0.53.0 ([#356](https://github.com/pingidentity/terraform-provider-davinci/issues/356))
+* `resource/davinci_flow`: Enhanced error messages that result from invalid flow formats. ([#361](https://github.com/pingidentity/terraform-provider-davinci/issues/361))
 
 BUG FIXES:
 
+* `resource/davinci_flow`: Resolve warnings that state that DaVinci JSON files contain unknown properties when using flow variable nodes. ([#361](https://github.com/pingidentity/terraform-provider-davinci/issues/361))
 * `resource/davinci_variable`: Fix "Provider produced inconsistent result after apply" when defining a variable of `type` = `secret`. ([#358](https://github.com/pingidentity/terraform-provider-davinci/issues/358))
+* `resource/davinci_variable`: Fixed "Error reading variable: json: cannot unmarshal object into Go struct field" error on all variables when a flow sets a flow variable value to an object type. ([#361](https://github.com/pingidentity/terraform-provider-davinci/issues/361))
+* `resource/davinci_variable`: Fixed panic crash when attempting to create a new flow variable that does not already exist. ([#361](https://github.com/pingidentity/terraform-provider-davinci/issues/361))
 
 ## 0.4.0 (19 August 2024)
 
