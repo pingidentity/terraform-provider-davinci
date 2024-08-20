@@ -657,7 +657,7 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, false)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, createFlow.FlowID, nil, true)
 		},
 	)
 	if err != nil {
@@ -710,7 +710,7 @@ func (r *FlowResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, false)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, true)
 		},
 	)
 
@@ -893,7 +893,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		r.Client,
 		environmentID,
 		func() (interface{}, *http.Response, error) {
-			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, false)
+			return r.Client.ReadFlowVersionOptionalVariableWithResponse(environmentID, flowID, nil, true)
 		},
 	)
 	if err != nil {
