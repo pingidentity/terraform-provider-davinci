@@ -15,5 +15,5 @@
 ```
 
 ```release-note:note
-`resource/davinci_flow`: Enhanced errors that result from invalid flow formats.
+`resource/davinci_flow`: Enhanced error messages that result from invalid flow formats.
 ```
