@@ -3,6 +3,7 @@ package davinciexporttype
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -88,6 +89,7 @@ func (v ParsedValue) StringSemanticEquals(ctx context.Context, newValuable baset
 		IgnoreVersionMetadata:     v.IgnoreVersionMetadata,
 		IgnoreFlowMetadata:        v.IgnoreFlowMetadata,
 		IgnoreFlowVariables:       v.IgnoreFlowVariables,
+		NodeOpts:                  v.NodeOpts,
 	}), diags
 }
 
@@ -97,17 +99,8 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		return
 	}
 
-	ok, _, _, err := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{})
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"DaVinci Export JSON String Validation Error",
-			"An unexpected error was encountered while validating the DaVinci Export JSON string.  This is always an error in the provider. "+
-				"Please report the following to the provider developer:\n\n"+err.Error(),
-		)
-		return	
-	}
-		
-	if ok {
+	err := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{})
+	if err == nil {
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
@@ -118,8 +111,22 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		return
 	}
 
+	var equatesEmptyError *davinci.EquatesEmptyTypeError
+	switch {
+	case errors.Is(err, davinci.ErrEmptyFlow), errors.As(err, &equatesEmptyError): // Isn't a multi-flow export, this is good so we break here
+		break
+	default:
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid DaVinci Flow Export String Value",
+			"A string value was provided that is not valid DaVinci Export JSON for this provider.\n\n"+
+			v.parseValidationErrorMessage(err) + "\n",
+		)
+		return
+	}
+
 	// Validate just the config of the export
-	ok, errorCode, _, err := davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
+	err = davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
 		IgnoreConfig:              v.IgnoreConfig,
 		IgnoreDesignerCues:        v.IgnoreDesignerCues,
 		IgnoreEnvironmentMetadata: v.IgnoreEnvironmentMetadata,
@@ -127,26 +134,28 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		IgnoreVersionMetadata:     v.IgnoreVersionMetadata,
 		IgnoreFlowMetadata:        v.IgnoreFlowMetadata,
 		IgnoreFlowVariables:       v.IgnoreFlowVariables,
+		NodeOpts:                  v.NodeOpts,
 	})
-	
-	if !ok {
+
+	if err != nil {
 		tflog.Debug(ctx, "Invalid DaVinci Flow Export String Value", map[string]interface{}{
-			"error code": string(errorCode),
-			//"diff":       &diff, - we don't want to expose this in the logs as it may contain sensitive information
-			"error":      err,
+			"error": err,
 		})
+
+		
+
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
-			"A string value was provided that is not valid DaVinci Export JSON string format.\n\n"+
-				"Please re-export the DaVinci flow.  If the flow JSON has been correctly exported from the DaVinci environment (and can be re-imported), please report this error to the provider maintainers.\n",
+			"A string value was provided that is not valid DaVinci Export JSON for this provider.\n\n"+
+			v.parseValidationErrorMessage(err) + "\n",
 		)
 
 		return
 	}
 
 	// Warn in case there are AdditionalProperties in the import file (since these aren't cleanly handled in the SDK, while they are preserved on import, there may be unpredictable results in diff calculation)
-	ok, errorCode, _, err = davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
+	err = davinci.ValidFlowExport([]byte(v.ValueString()), davinci.ExportCmpOpts{
 		IgnoreConfig:              true,
 		IgnoreDesignerCues:        true,
 		IgnoreEnvironmentMetadata: true,
@@ -154,19 +163,18 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
 		IgnoreFlowVariables:       true,
+		NodeOpts:                  v.NodeOpts,
 	})
-	
-	if !v.IgnoreUnmappedProperties && !ok {
+
+	if !v.IgnoreUnmappedProperties && err != nil {
 		tflog.Debug(ctx, "Invalid DaVinci Flow Export String Value", map[string]interface{}{
-			"error code": string(errorCode),
-			//"diff":       &diff, - we don't want to expose this in the logs as it may contain sensitive information
-			"error":      err,
+			"error": err,
 		})
 
 		resp.Diagnostics.AddAttributeWarning(
 			req.Path,
 			"DaVinci Export JSON contains unknown properties",
-			"The DaVinci Flow Export contains properties that cannot be validated.  These parameters will be preserved on import to the DaVinci service, but there may be unpredictable results in difference calculation.\n",
+			v.parseValidationErrorMessage(err) + "\n",
 		)
 	}
 }
@@ -194,5 +202,35 @@ func NewParsedPointerValue(value *string, cmpOpts davinci.ExportCmpOpts) ParsedV
 	return ParsedValue{
 		StringValue:   basetypes.NewStringPointerValue(value),
 		ExportCmpOpts: cmpOpts,
+	}
+}
+
+func (v ParsedValue) parseValidationErrorMessage(err error) string {
+	var equatesEmptyError *davinci.EquatesEmptyTypeError
+	var missingRequiredFlowFieldsError *davinci.MissingRequiredFlowFieldsTypeError
+	var unknownAdditionalFieldsError *davinci.UnknownAdditionalFieldsTypeError
+	var minFlowDefsError *davinci.MinFlowDefinitionsExceededTypeError
+	var maxFlowDefsError *davinci.MaxFlowDefinitionsExceededTypeError
+	switch {
+		case errors.Is(err, davinci.ErrInvalidJson):
+			return "The DaVinci Flow Export JSON is not valid JSON.  Please re-export the DaVinci flow."
+		case errors.Is(err, davinci.ErrEmptyFlow):
+			return "The DaVinci Flow Export JSON is empty.  Please re-export the DaVinci flow."
+		case errors.Is(err, davinci.ErrNoFlowDefinition):
+			return "No flow definition found in the DaVinci Flow Export JSON.  Expecting exactly one flow definition.  Please re-export the DaVinci flow."
+		case errors.Is(err, davinci.ErrMissingSaveVariableValues):
+			return "Save flow variable nodes are present but are missing variable values in the DaVinci Flow Export JSON.  Please re-export the DaVinci flow ensuring that variable values are included."
+		case errors.As(err, &equatesEmptyError):
+			return "The DaVinci Flow Export JSON has been evaluated to be empty according to plan diff criteria.  Please re-export the DaVinci flow."
+		case errors.As(err, &missingRequiredFlowFieldsError):
+			return "The DaVinci Flow Export JSON has been evaluated to be missing required fields.  Please re-export the DaVinci flow."
+		case errors.As(err, &unknownAdditionalFieldsError):
+			return "The DaVinci Flow Export contains unknown properties that cannot be validated.  These parameters will be preserved on import to the DaVinci service, but there may be unpredictable results in difference calculation."
+		case errors.As(err, &minFlowDefsError):
+			return fmt.Sprintf("There are not enough flows exported in the flow group.  Expecting a minimum of %d", minFlowDefsError.Min)
+		case errors.As(err, &maxFlowDefsError):
+			return fmt.Sprintf("There are too many flows exported in the flow group.  Expecting a maximum of %d", maxFlowDefsError.Max)
+		default:
+			return fmt.Sprintf("An unexpected error was encountered while validating the DaVinci Export JSON string: %s.  This is always an error in the provider and should be reported to the provider maintainers. ", err)
 	}
 }
