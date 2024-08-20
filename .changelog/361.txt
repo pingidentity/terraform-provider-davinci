@@ -6,6 +6,14 @@
 `resource/davinci_variable`: Fixed "Error reading variable: json: cannot unmarshal object into Go struct field" error on all variables when a flow sets a flow variable value to an object type.
 ```
 
+```release-note:breaking-change
+`resource/davinci_flow`: Reverted the ability to use flow exports with variable values removed.  Variable values are required when importing flows using this provider.
+```
+
 ```release-note:bug
-`resource/davinci_flow`: Fixed issue on import where flow and flow instance variables lose their value setting when using the Variables Connector node.
+`resource/davinci_flow`: Resolve warnings that state that DaVinci JSON files contain unknown properties when using flow variable nodes.
+```
+
+```release-note:note
+`resource/davinci_flow`: Enhanced errors that result from invalid flow formats.
 ```
