@@ -82,6 +82,11 @@ var (
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        false,
 		IgnoreFlowVariables:       false,
+		NodeOpts: &davinci.ExportNodeCmpOpts{
+			VariablesConnector: &davinci.ExportNodeVariablesCmpOpts{
+				ExpectVariableValues: true, // The input field needs validation
+			},
+		},
 	}
 
 	flowConfigurationJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -92,6 +97,11 @@ var (
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
 		IgnoreFlowVariables:       true,
+		NodeOpts: &davinci.ExportNodeCmpOpts{
+			VariablesConnector: &davinci.ExportNodeVariablesCmpOpts{
+				ExpectVariableValues: false, // We don't need to validate this
+			},
+		},
 	}
 
 	flowExportJsonCmpOptsConfiguration = davinci.ExportCmpOpts{
@@ -102,6 +112,11 @@ var (
 		IgnoreVersionMetadata:     false,
 		IgnoreFlowMetadata:        false,
 		IgnoreFlowVariables:       true, // because this is handled by another resource
+		NodeOpts: &davinci.ExportNodeCmpOpts{
+			VariablesConnector: &davinci.ExportNodeVariablesCmpOpts{
+				ExpectVariableValues: false, // We don't need to validate this
+			},
+		},
 	}
 )
 
