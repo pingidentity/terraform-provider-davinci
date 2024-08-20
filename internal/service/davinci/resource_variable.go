@@ -733,9 +733,9 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 
 		value := ""
 		// switch type of v
-		switch v.(type) {
+		switch v := v.(type) {
 		case string:
-			value = v.(string)
+			value = v
 			value = regexp.MustCompile(`^\*+$`).ReplaceAllString(value, p.Value.ValueString())
 		case bool:
 			value = fmt.Sprintf("%v", v)
