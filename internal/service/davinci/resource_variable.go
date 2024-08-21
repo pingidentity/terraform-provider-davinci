@@ -20,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/pingidentity/terraform-provider-davinci/internal/framework"
 	stringvalidatorinternal "github.com/pingidentity/terraform-provider-davinci/internal/framework/stringvalidator"
 	"github.com/pingidentity/terraform-provider-davinci/internal/sdk"
@@ -278,25 +279,29 @@ func (p *VariableResource) ModifyPlan(ctx context.Context, req resource.ModifyPl
 		return
 	}
 
-	var varValuePlan *string
+	var varValuePlan basetypes.StringValue
 	resp.Diagnostics.Append(resp.Plan.GetAttribute(ctx, path.Root("value"), &varValuePlan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	var varEmptyValuePlan *bool
+	var varEmptyValuePlan basetypes.BoolValue
 	resp.Diagnostics.Append(resp.Plan.GetAttribute(ctx, path.Root("empty_value"), &varEmptyValuePlan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	if varEmptyValuePlan != nil && *varEmptyValuePlan {
+	if !varEmptyValuePlan.IsNull() && !varEmptyValuePlan.IsUnknown() {
 		resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringNull())
 	} else {
 
-		if varValuePlan != nil {
-			resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringValue(*varValuePlan))
+		if !varValuePlan.IsNull() && !varValuePlan.IsUnknown() {
+			resp.Plan.SetAttribute(ctx, path.Root("value_service"), varValuePlan)
 		}
+	}
+
+	if varEmptyValuePlan.IsUnknown() || varValuePlan.IsUnknown() {
+		resp.Plan.SetAttribute(ctx, path.Root("value_service"), types.StringUnknown())
 	}
 }
 

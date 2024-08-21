@@ -615,6 +615,50 @@ func testAccResourceVariable_Values(t *testing.T, context, variableName string) 
 	})
 }
 
+func TestAccResourceVariable_UnknownValue(t *testing.T) {
+
+	resourceBase := "davinci_variable"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	name := resourceName
+
+	withBootstrapConfig := false
+
+	step1 := resource.TestStep{
+		Config: testAccResourceVariable_UnknownValue1_Hcl(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttr(resourceFullName, "value", "testVariable##SK##company"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckResourceAttr(resourceFullName, "value_service", "testVariable##SK##company"),
+		),
+	}
+
+	step2 := resource.TestStep{
+		Config: testAccResourceVariable_UnknownValue2_Hcl(resourceName, name, withBootstrapConfig),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttr(resourceFullName, "value", "testVariable3##SK##company"),
+			resource.TestCheckNoResourceAttr(resourceFullName, "empty_value"),
+			resource.TestCheckResourceAttr(resourceFullName, "value_service", "testVariable3##SK##company"),
+		),
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Variable_CheckDestroy(),
+		Steps: []resource.TestStep{
+			step1,
+			step2,
+		},
+	})
+}
+
 func TestAccResourceVariable_BadParameters(t *testing.T) {
 
 	resourceBase := "davinci_variable"
@@ -843,6 +887,49 @@ resource "davinci_variable" "%[1]s-flow" {
 	hcl, _ = testAccResourceFlow_Variable(resourceName, name, withBootstrapConfig, mainFlowJson, prevariablesHCL, prevariablesDependsHCL, postvariablesHCL)
 
 	return hcl
+}
+
+func testAccResourceVariable_UnknownValue1_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	hcl = fmt.Sprintf(`
+resource "davinci_variable" "%[1]s" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable2"
+  context     = "company"
+  description = "testVariable2 description"
+  type        = "string"
+  value       = davinci_variable.%[1]s-company.id
+}
+
+%s`, resourceName, testAccResourceVariable_StaticValue_Hcl(resourceName, name, withBootstrapConfig, "myVal123"))
+
+	return
+}
+
+func testAccResourceVariable_UnknownValue2_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
+	hcl = fmt.Sprintf(`
+resource "davinci_variable" "%[1]s" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable2"
+  context     = "company"
+  description = "testVariable2 description"
+  type        = "string"
+  value       = davinci_variable.%[1]s-test.id
+}
+
+resource "davinci_variable" "%[1]s-test" {
+  environment_id = pingone_environment.%[1]s.id
+
+  name        = "testVariable3"
+  context     = "company"
+  description = "testVariable3 description"
+  type        = "string"
+}
+
+%s`, resourceName, testAccResourceVariable_StaticValue_Hcl(resourceName, name, withBootstrapConfig, "myVal123"))
+
+	return
 }
 
 func testAccResourceVariable_EmptyValue_Hcl(resourceName, name string, withBootstrapConfig bool) (hcl string) {
