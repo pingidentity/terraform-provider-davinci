@@ -163,7 +163,6 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		IgnoreVersionMetadata:     true,
 		IgnoreFlowMetadata:        true,
 		IgnoreFlowVariables:       true,
-		NodeOpts:                  v.NodeOpts,
 	})
 
 	if !v.IgnoreUnmappedProperties && err != nil {
