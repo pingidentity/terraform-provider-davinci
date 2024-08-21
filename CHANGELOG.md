@@ -1,5 +1,9 @@
 ## 0.4.2 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_flow`: Remove node specific validation from the additional (unknown) properties validation check. ([#363](https://github.com/pingidentity/terraform-provider-davinci/issues/363))
+
 ## 0.4.1 (21 August 2024)
 
 BREAKING CHANGES:
