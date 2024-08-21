@@ -3,6 +3,7 @@
 BUG FIXES:
 
 * `resource/davinci_flow`: Remove node specific validation from the additional (unknown) properties validation check. ([#363](https://github.com/pingidentity/terraform-provider-davinci/issues/363))
+* `resource/davinci_variable`: Fix "Value Conversion Error" when defining variables with unknown values. ([#365](https://github.com/pingidentity/terraform-provider-davinci/issues/365))
 
 ## 0.4.1 (21 August 2024)
 
