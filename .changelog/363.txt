@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Remove node specific validation from the additional (unknown) properties validation check.
+```
