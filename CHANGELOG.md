@@ -1,5 +1,9 @@
 ## 0.4.3 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix validation to test whether the flow JSON contains multiple flows in one file.  Only single flows are supported. ([#367](https://github.com/pingidentity/terraform-provider-davinci/issues/367))
+
 ## 0.4.2 (22 August 2024)
 
 BUG FIXES:
