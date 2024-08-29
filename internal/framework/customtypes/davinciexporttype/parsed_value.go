@@ -99,8 +99,21 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		return
 	}
 
-	err := davinci.ValidFlowsInfoExport([]byte(v.ValueString()), davinci.ExportCmpOpts{})
-	if err == nil {
+	var flows davinci.Flows
+
+	// should really use the actual validator
+	err := davinci.Unmarshal([]byte(v.ValueString()), &flows, davinci.ExportCmpOpts{})
+	if err != nil {
+		resp.Diagnostics.AddAttributeError(
+			req.Path,
+			"Invalid DaVinci Flow Export String Value",
+			"A string value was provided that is not valid DaVinci Export JSON for this provider.\n\n"+
+				v.parseValidationErrorMessage(err)+"\n",
+		)
+		return
+	}
+
+	if len(flows.Flow) > 0 {
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
@@ -108,20 +121,6 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 				"Please re-export the DaVinci flow without subflows included.\n",
 		)
 
-		return
-	}
-
-	var equatesEmptyError *davinci.EquatesEmptyTypeError
-	switch {
-	case errors.Is(err, davinci.ErrEmptyFlow), errors.As(err, &equatesEmptyError): // Isn't a multi-flow export, this is good so we break here
-		break
-	default:
-		resp.Diagnostics.AddAttributeError(
-			req.Path,
-			"Invalid DaVinci Flow Export String Value",
-			"A string value was provided that is not valid DaVinci Export JSON for this provider.\n\n"+
-			v.parseValidationErrorMessage(err) + "\n",
-		)
 		return
 	}
 
@@ -142,13 +141,11 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 			"error": err,
 		})
 
-		
-
 		resp.Diagnostics.AddAttributeError(
 			req.Path,
 			"Invalid DaVinci Flow Export String Value",
 			"A string value was provided that is not valid DaVinci Export JSON for this provider.\n\n"+
-			v.parseValidationErrorMessage(err) + "\n",
+				v.parseValidationErrorMessage(err)+"\n",
 		)
 
 		return
@@ -173,7 +170,7 @@ func (v ParsedValue) ValidateAttribute(ctx context.Context, req xattr.ValidateAt
 		resp.Diagnostics.AddAttributeWarning(
 			req.Path,
 			"DaVinci Export JSON contains unknown properties",
-			v.parseValidationErrorMessage(err) + "\n",
+			v.parseValidationErrorMessage(err)+"\n",
 		)
 	}
 }
@@ -211,25 +208,25 @@ func (v ParsedValue) parseValidationErrorMessage(err error) string {
 	var minFlowDefsError *davinci.MinFlowDefinitionsExceededTypeError
 	var maxFlowDefsError *davinci.MaxFlowDefinitionsExceededTypeError
 	switch {
-		case errors.Is(err, davinci.ErrInvalidJson):
-			return "The DaVinci Flow Export JSON is not valid JSON.  Please re-export the DaVinci flow."
-		case errors.Is(err, davinci.ErrEmptyFlow):
-			return "The DaVinci Flow Export JSON is empty.  Please re-export the DaVinci flow."
-		case errors.Is(err, davinci.ErrNoFlowDefinition):
-			return "No flow definition found in the DaVinci Flow Export JSON.  Expecting exactly one flow definition.  Please re-export the DaVinci flow."
-		case errors.Is(err, davinci.ErrMissingSaveVariableValues):
-			return "Save flow variable nodes are present but are missing variable values in the DaVinci Flow Export JSON.  Please re-export the DaVinci flow ensuring that variable values are included."
-		case errors.As(err, &equatesEmptyError):
-			return "The DaVinci Flow Export JSON has been evaluated to be empty according to plan diff criteria.  Please re-export the DaVinci flow."
-		case errors.As(err, &missingRequiredFlowFieldsError):
-			return "The DaVinci Flow Export JSON has been evaluated to be missing required fields.  Please re-export the DaVinci flow."
-		case errors.As(err, &unknownAdditionalFieldsError):
-			return "The DaVinci Flow Export contains unknown properties that cannot be validated.  These parameters will be preserved on import to the DaVinci service, but there may be unpredictable results in difference calculation."
-		case errors.As(err, &minFlowDefsError):
-			return fmt.Sprintf("There are not enough flows exported in the flow group.  Expecting a minimum of %d", minFlowDefsError.Min)
-		case errors.As(err, &maxFlowDefsError):
-			return fmt.Sprintf("There are too many flows exported in the flow group.  Expecting a maximum of %d", maxFlowDefsError.Max)
-		default:
-			return fmt.Sprintf("An unexpected error was encountered while validating the DaVinci Export JSON string: %s.  This is always an error in the provider and should be reported to the provider maintainers. ", err)
+	case errors.Is(err, davinci.ErrInvalidJson):
+		return "The DaVinci Flow Export JSON is not valid JSON.  Please re-export the DaVinci flow."
+	case errors.Is(err, davinci.ErrEmptyFlow):
+		return "The DaVinci Flow Export JSON is empty.  Please re-export the DaVinci flow."
+	case errors.Is(err, davinci.ErrNoFlowDefinition):
+		return "No flow definition found in the DaVinci Flow Export JSON.  Expecting exactly one flow definition.  Please re-export the DaVinci flow."
+	case errors.Is(err, davinci.ErrMissingSaveVariableValues):
+		return "Save flow variable nodes are present but are missing variable values in the DaVinci Flow Export JSON.  Please re-export the DaVinci flow ensuring that variable values are included."
+	case errors.As(err, &equatesEmptyError):
+		return "The DaVinci Flow Export JSON has been evaluated to be empty according to plan diff criteria.  Please re-export the DaVinci flow."
+	case errors.As(err, &missingRequiredFlowFieldsError):
+		return "The DaVinci Flow Export JSON has been evaluated to be missing required fields.  Please re-export the DaVinci flow."
+	case errors.As(err, &unknownAdditionalFieldsError):
+		return "The DaVinci Flow Export contains unknown properties that cannot be validated.  These parameters will be preserved on import to the DaVinci service, but there may be unpredictable results in difference calculation."
+	case errors.As(err, &minFlowDefsError):
+		return fmt.Sprintf("There are not enough flows exported in the flow group.  Expecting a minimum of %d", minFlowDefsError.Min)
+	case errors.As(err, &maxFlowDefsError):
+		return fmt.Sprintf("There are too many flows exported in the flow group.  Expecting a maximum of %d", maxFlowDefsError.Max)
+	default:
+		return fmt.Sprintf("An unexpected error was encountered while validating the DaVinci Export JSON string: %s.  This is always an error in the provider and should be reported to the provider maintainers. ", err)
 	}
 }

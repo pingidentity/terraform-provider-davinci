@@ -1014,8 +1014,6 @@ func testAccResourceFlow_Variables(t *testing.T, withBootstrapConfig bool) {
 	})
 }
 
-
-
 func TestAccResourceFlow_Variables_Invalid(t *testing.T) {
 
 	resourceName := acctest.ResourceNameGen()
@@ -1038,7 +1036,7 @@ func TestAccResourceFlow_Variables_Invalid(t *testing.T) {
 		CheckDestroy:             davinci.Flow_CheckDestroy(),
 		Steps: []resource.TestStep{
 			{
-				Config: fullStepHcl,
+				Config:      fullStepHcl,
 				ExpectError: regexp.MustCompile(`Invalid DaVinci Flow Export String Value`),
 			},
 		},
@@ -2558,6 +2556,11 @@ func TestAccResourceFlow_BadParameters(t *testing.T) {
 		t.Fatalf("Failed to get HCL: %v", err)
 	}
 
+	multipleExportStepHcl, err := testAccResourceFlow_MultipleExport_HCL(resourceName, name, false)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck: func() {
 			acctest.PreCheckClient(t)
@@ -2568,6 +2571,11 @@ func TestAccResourceFlow_BadParameters(t *testing.T) {
 		ErrorCheck:               acctest.ErrorCheck(t),
 		CheckDestroy:             davinci.Flow_CheckDestroy(),
 		Steps: []resource.TestStep{
+			// Configure
+			{
+				Config:      multipleExportStepHcl,
+				ExpectError: regexp.MustCompile(`Invalid DaVinci Flow Export String Value`),
+			},
 			// Configure
 			{
 				Config: minimalStepHcl,
@@ -2592,4 +2600,37 @@ func TestAccResourceFlow_BadParameters(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccResourceFlow_MultipleExport_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+
+	mainFlowJson, err := acctest.ReadFlowJsonFileRaw("flows/multiple-flows.json")
+	if err != nil {
+		return "", err
+	}
+
+	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf(`
+%[1]s
+
+%[2]s
+
+resource "davinci_flow" "%[3]s" {
+  environment_id = pingone_environment.%[3]s.id
+
+  flow_json = <<EOT
+%[4]s
+EOT
+
+  // Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), nil
 }
