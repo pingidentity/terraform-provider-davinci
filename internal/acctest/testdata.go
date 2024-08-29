@@ -49,3 +49,17 @@ func ReadFlowJsonFile(path string) (string, error) {
 
 	return string(mainFlowJsonBytes), nil
 }
+
+// takes path to json file, adjusts flow name attribute to include unique resource name, and returns json string
+func ReadFlowJsonFileRaw(path string) (string, error) {
+	_, currentPath, _, ok := runtime.Caller(0)
+	if !ok {
+		return "", fmt.Errorf("failed to get current path")
+	}
+	flowByte, err := os.ReadFile(filepath.Join(filepath.Dir(currentPath), filepath.Clean(path)))
+	if err != nil {
+		return "", err
+	}
+
+	return string(flowByte), nil
+}
