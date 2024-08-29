@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fix validation to test whether the flow JSON contains multiple flows in one file.  Only single flows are supported.
+```
