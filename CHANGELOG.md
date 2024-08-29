@@ -1,5 +1,10 @@
 ## 0.4.3 (Unreleased)
 
+NOTES:
+
+* Bump `github.com/golangci/golangci-lint` from 1.60.1 => 1.60.3 ([#368](https://github.com/pingidentity/terraform-provider-davinci/issues/368))
+* Bump `github.com/samir-gandhi/davinci-client-go` from 0.5.0 => 0.6.0 ([#368](https://github.com/pingidentity/terraform-provider-davinci/issues/368))
+
 BUG FIXES:
 
 * `resource/davinci_flow`: Fix validation to test whether the flow JSON contains multiple flows in one file.  Only single flows are supported. ([#367](https://github.com/pingidentity/terraform-provider-davinci/issues/367))
