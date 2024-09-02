@@ -4,6 +4,7 @@ NOTES:
 
 * Bump `github.com/samir-gandhi/davinci-client-go` from 0.6.0 => 0.6.1 ([#370](https://github.com/pingidentity/terraform-provider-davinci/issues/370))
 * Bump `github.com/samir-gandhi/dvgenerate` from 0.0.11 => 0.0.12 ([#370](https://github.com/pingidentity/terraform-provider-davinci/issues/370))
+* Update Connector Reference Guide. ([#371](https://github.com/pingidentity/terraform-provider-davinci/issues/371))
 
 ## 0.4.3 (29 August 2024)
 
