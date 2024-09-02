@@ -1,0 +1,7 @@
+```release-note:note
+Bump `github.com/samir-gandhi/davinci-client-go` from 0.6.0 => 0.6.1
+```
+
+```release-note:note
+Bump `github.com/samir-gandhi/dvgenerate` from 0.0.11 => 0.0.12
+```
