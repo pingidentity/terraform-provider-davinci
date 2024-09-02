@@ -8043,6 +8043,32 @@ resource "davinci_connection" "twilioConnector" {
 ```
 
 
+## TypingDNA
+
+Connector ID (`connector_id` in the resource): `typingdnaConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "typingdnaConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "typingdnaConnector"
+  name         = "My awesome typingdnaConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.typingdnaconnector_property_custom_auth
+  }
+}
+```
+
+
 ## UnifyID
 
 Connector ID (`connector_id` in the resource): `unifyIdConnector`
