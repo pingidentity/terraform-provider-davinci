@@ -1,5 +1,13 @@
 ## 0.4.5 (Unreleased)
 
+NOTES:
+
+* Bump `github.com/golangci/golangci-lint` from 1.60.3 to 1.61.0 ([#378](https://github.com/pingidentity/terraform-provider-davinci/issues/378))
+* Bump `github.com/hashicorp/terraform-plugin-framework-validators` from 0.13.0 to 0.14.0 ([#378](https://github.com/pingidentity/terraform-provider-davinci/issues/378))
+* Bump `github.com/hashicorp/terraform-plugin-framework` from 1.11.0 to 1.12.0 ([#378](https://github.com/pingidentity/terraform-provider-davinci/issues/378))
+* Bump `github.com/hashicorp/terraform-plugin-go` from 0.23.0 to 0.24.0 ([#378](https://github.com/pingidentity/terraform-provider-davinci/issues/378))
+* Update Connector Reference Guide (October 2024). ([#377](https://github.com/pingidentity/terraform-provider-davinci/issues/377))
+
 ## 0.4.4 (2 September 2024)
 
 NOTES:
