@@ -4273,24 +4273,6 @@ resource "davinci_connection" "locationPolicyConnector" {
 ```
 
 
-## MFA Container
-
-Connector ID (`connector_id` in the resource): `mfaContainerConnector`
-
-*No properties*
-
-
-Example:
-```terraform
-resource "davinci_connection" "mfaContainerConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "mfaContainerConnector"
-  name         = "My awesome mfaContainerConnector"
-}
-```
-
-
 ## Mailchimp
 
 Connector ID (`connector_id` in the resource): `connectorMailchimp`
@@ -9284,6 +9266,46 @@ resource "davinci_connection" "connectorIPStack" {
     name  = "apiKey"
     type  = "string"
     value = var.connectoripstack_property_api_key
+  }
+}
+```
+
+
+## mParticle
+
+Connector ID (`connector_id` in the resource): `mparticleConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientID` (string): Client ID from mParticle tenant. Console display name: "Client ID".
+* `clientSecret` (string): Client Secret from mParticle tenant. Console display name: "Client Secret".
+* `pod` (string): Pod from mParticle tenant. Only required for 'Upload an event batch' capability. Console display name: "Pod".
+
+
+Example:
+```terraform
+resource "davinci_connection" "mparticleConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "mparticleConnector"
+  name         = "My awesome mparticleConnector"
+
+  property {
+    name  = "clientID"
+    type  = "string"
+    value = var.mparticleconnector_property_client_i_d
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.mparticleconnector_property_client_secret
+  }
+
+  property {
+    name  = "pod"
+    type  = "string"
+    value = var.mparticleconnector_property_pod
   }
 }
 ```

@@ -1550,17 +1550,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/locationPolicyConnector.tf") }}
 
 
-## MFA Container
-
-Connector ID (`connector_id` in the resource): `mfaContainerConnector`
-
-*No properties*
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/mfaContainerConnector.tf") }}
-
-
 ## Mailchimp
 
 Connector ID (`connector_id` in the resource): `connectorMailchimp`
@@ -3221,6 +3210,21 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorIPStack.tf") }}
+
+
+## mParticle
+
+Connector ID (`connector_id` in the resource): `mparticleConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientID` (string): Client ID from mParticle tenant. Console display name: "Client ID".
+* `clientSecret` (string): Client Secret from mParticle tenant. Console display name: "Client Secret".
+* `pod` (string): Pod from mParticle tenant. Only required for 'Upload an event batch' capability. Console display name: "Pod".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/mparticleConnector.tf") }}
 
 
 ## neoEYED
