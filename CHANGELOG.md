@@ -1,4 +1,4 @@
-## 0.4.5 (Unreleased)
+## 0.4.5 (22 October 2024)
 
 NOTES:
 
