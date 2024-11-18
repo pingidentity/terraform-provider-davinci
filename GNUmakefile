@@ -11,7 +11,7 @@ default: install
 
 tools:
 	@echo "==> Installing tools..."
-	go generate -tags tools tools/tools.go
+	go generate -tags tools tools/main.go
 
 fmtcheck:
 	@echo "==> Formatting Terraform documentation examples with terraform fmt..."

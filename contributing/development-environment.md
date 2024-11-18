@@ -3,7 +3,7 @@
 ## Requirements
 
 - [Terraform](https://www.terraform.io/downloads.html) 1.1+ (to run acceptance tests)
-- [Go](https://golang.org/doc/install) 1.21+ (to build and test the provider plugin)
+- [Go](https://golang.org/doc/install) 1.23.3+ (to build and test the provider plugin)
 
 ## Quick Start
 
@@ -78,7 +78,7 @@ Occasionally, development may include changes to the [DaVinci GO SDK](https://gi
 ```
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.21
+go 1.23.3
 
 replace github.com/samir-gandhi/davinci-client-go => ../davinci-client-go
 
@@ -94,6 +94,6 @@ require (
 Once updated, run the following to update the vendor cache and build the project:
 
 ```shell
-$ go mod vendor
+$ go work vendor
 $ make build
 ```
