@@ -50,8 +50,35 @@ func FetchTaggedEnvironmentsByPrefix(ctx context.Context, apiClient *management.
 
 	resp, diags := ParseResponse(
 		ctx,
-		func() (interface{}, *http.Response, error) {
-			return apiClient.EnvironmentsApi.ReadAllEnvironments(ctx).Filter(filter).Execute()
+		func() (any, *http.Response, error) {
+			pagedIterator := apiClient.EnvironmentsApi.ReadAllEnvironments(ctx).Filter(filter).Execute()
+
+			returnEnvironments := make([]management.Environment, 0)
+
+			var initialHttpResponse *http.Response
+
+			for pageCursor, err := range pagedIterator {
+				if err != nil {
+					return nil, pageCursor.HTTPResponse, err
+				}
+
+				if initialHttpResponse == nil {
+					initialHttpResponse = pageCursor.HTTPResponse
+				}
+
+				if environments, ok := pageCursor.EntityArray.Embedded.GetEnvironmentsOk(); ok {
+
+					for _, environment := range environments {
+						if environment.GetName() == "Administrators" {
+							return nil, nil, fmt.Errorf("Unsafe filter, Administrators environment present: %s", filter)
+						}
+					}
+
+					returnEnvironments = append(returnEnvironments, environments...)
+				}
+			}
+
+			return returnEnvironments, initialHttpResponse, nil
 		},
 		"ReadAllEnvironments",
 		CustomErrorResourceNotFoundWarning,
@@ -80,20 +107,9 @@ func FetchTaggedEnvironmentsByPrefix(ctx context.Context, apiClient *management.
 		return nil, fmt.Errorf("Error getting environments for sweep")
 	}
 
-	respList := resp.(*management.EntityArray)
+	respList := resp.([]management.Environment)
 
-	if environments, ok := respList.Embedded.GetEnvironmentsOk(); ok {
-
-		for _, environment := range environments {
-			if environment.GetName() == "Administrators" {
-				return nil, fmt.Errorf("Unsafe filter, Administrators environment present: %s", filter)
-			}
-		}
-		return environments, nil
-	} else {
-		return make([]management.Environment, 0), nil
-	}
-
+	return respList, nil
 }
 
 func CreateTestEnvironment(ctx context.Context, apiClient *management.APIClient, region management.EnumRegionCode, index string) error {
