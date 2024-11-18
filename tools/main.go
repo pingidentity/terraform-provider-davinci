@@ -1,7 +1,7 @@
 //go:build tools
 // +build tools
 
-package tools
+package main
 
 //go:generate go install github.com/bflad/tfproviderlint/cmd/tfproviderlintx
 //go:generate go install github.com/golangci/golangci-lint/cmd/golangci-lint
@@ -9,6 +9,7 @@ package tools
 //go:generate go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 //go:generate go install github.com/katbyte/terrafmt
 //go:generate go install github.com/pavius/impi/cmd/impi
+//go:generate go install github.com/samir-gandhi/dvgenerate/cmd/generate
 //go:generate go install github.com/terraform-linters/tflint
 
 import (

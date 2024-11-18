@@ -20,7 +20,7 @@ fmtcheck:
 build:
 	@echo "==> Building..."
 	go mod tidy
-	go mod vendor
+	go work vendor
 	go build -v .
 
 install: build
