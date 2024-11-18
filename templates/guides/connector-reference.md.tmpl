@@ -123,6 +123,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/adobemarketoConnector.tf") }}
 
 
+## Akamai MFA
+
+Connector ID (`connector_id` in the resource): `akamaiConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/akamaiConnector.tf") }}
+
+
 ## Allthenticate
 
 Connector ID (`connector_id` in the resource): `connectorAllthenticate`
@@ -1634,7 +1647,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 * `clientId` (string): Client ID. Console display name: "Client ID".
 * `clientSecret` (string): Client Secret. Console display name: "Client Secret".
-* `domainName` (string): Domain Name. Console display name: "Domain Name".
 * `grantType` (string): Grant Type. Console display name: "Grant Type".
 * `scope` (string): Scope. Console display name: "Scope".
 * `tenant` (string): Tenant. Console display name: "Tenant".
@@ -2963,6 +2975,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connector443id.tf") }}
+
+
+## Vidos
+
+Connector ID (`connector_id` in the resource): `mailchainConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Enter your Vidos API Key obtained from the Vidos Dashboard with appropriate resolver or verifier permissions (visit https://dashboard.vidos.id/iam/api-keys). Console display name: "Vidos API Key".
+* `version` (string): The verification API specification version. Console display name: "Verifier Version".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/mailchainConnector.tf") }}
 
 
 ## Webhook

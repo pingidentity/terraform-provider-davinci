@@ -17,12 +17,6 @@ resource "davinci_connection" "connectorMicrosoftIntune" {
   }
 
   property {
-    name  = "domainName"
-    type  = "string"
-    value = var.connectormicrosoftintune_property_domain_name
-  }
-
-  property {
     name  = "grantType"
     type  = "string"
     value = var.connectormicrosoftintune_property_grant_type
