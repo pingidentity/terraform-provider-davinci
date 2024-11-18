@@ -275,6 +275,32 @@ resource "davinci_connection" "adobemarketoConnector" {
 ```
 
 
+## Akamai MFA
+
+Connector ID (`connector_id` in the resource): `akamaiConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "akamaiConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "akamaiConnector"
+  name         = "My awesome akamaiConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.akamaiconnector_property_custom_auth
+  }
+}
+```
+
+
 ## Allthenticate
 
 Connector ID (`connector_id` in the resource): `connectorAllthenticate`
@@ -4488,7 +4514,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 * `clientId` (string): Client ID. Console display name: "Client ID".
 * `clientSecret` (string): Client Secret. Console display name: "Client Secret".
-* `domainName` (string): Domain Name. Console display name: "Domain Name".
 * `grantType` (string): Grant Type. Console display name: "Grant Type".
 * `scope` (string): Scope. Console display name: "Scope".
 * `tenant` (string): Tenant. Console display name: "Tenant".
@@ -4512,12 +4537,6 @@ resource "davinci_connection" "connectorMicrosoftIntune" {
     name  = "clientSecret"
     type  = "string"
     value = var.connectormicrosoftintune_property_client_secret
-  }
-
-  property {
-    name  = "domainName"
-    type  = "string"
-    value = var.connectormicrosoftintune_property_domain_name
   }
 
   property {
@@ -8512,6 +8531,39 @@ resource "davinci_connection" "connector443id" {
     name  = "apiKey"
     type  = "string"
     value = var.connector443id_property_api_key
+  }
+}
+```
+
+
+## Vidos
+
+Connector ID (`connector_id` in the resource): `mailchainConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Enter your Vidos API Key obtained from the Vidos Dashboard with appropriate resolver or verifier permissions (visit https://dashboard.vidos.id/iam/api-keys). Console display name: "Vidos API Key".
+* `version` (string): The verification API specification version. Console display name: "Verifier Version".
+
+
+Example:
+```terraform
+resource "davinci_connection" "mailchainConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "mailchainConnector"
+  name         = "My awesome mailchainConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.mailchainconnector_property_api_key
+  }
+
+  property {
+    name  = "version"
+    type  = "string"
+    value = var.mailchainconnector_property_version
   }
 }
 ```
