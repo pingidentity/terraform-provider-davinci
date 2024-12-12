@@ -1,5 +1,10 @@
 ## 0.4.7 (Unreleased)
 
+NOTES:
+
+* bump `github.com/samir-gandhi/davinci-client-go` 0.6.1 => 0.7.1 ([#389](https://github.com/pingidentity/terraform-provider-davinci/issues/389))
+* bump `golang.org/x/crypto` 0.28.0 => 0.31.0 ([#393](https://github.com/pingidentity/terraform-provider-davinci/issues/393))
+
 ## 0.4.6 (18 November 2024)
 
 NOTES:
