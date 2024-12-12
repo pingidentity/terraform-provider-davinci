@@ -13,23 +13,22 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.35.0
 	github.com/patrickcping/pingone-go-sdk-v2 v0.12.4
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.44.0
-	github.com/samir-gandhi/davinci-client-go v0.6.1
+	github.com/samir-gandhi/davinci-client-go v0.7.1
 )
 
 require (
 	github.com/ProtonMail/go-crypto v1.1.0-alpha.2 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
-	github.com/go-playground/locales v0.14.0 // indirect
-	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.11.1 // indirect
-	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.23.0 // indirect
+	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.7.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.10.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.21.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/risk v0.17.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/verify v0.8.0 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/mod v0.21.0 // indirect
@@ -42,6 +41,7 @@ require (
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/fatih/color v1.17.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-test/deep v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
