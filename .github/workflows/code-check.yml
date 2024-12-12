@@ -73,6 +73,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: 'go.mod'
+
+      - uses: hashicorp/setup-terraform@v3
       
       - run: cd tools && go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
       - run: cd tools && go install github.com/katbyte/terrafmt
