@@ -33,8 +33,8 @@ generate: build generateconnectorref fmtcheck
 
 generateconnectorref: build
 	@echo "==> Generating connector docs & examples..."
-	rm examples/connectors/*.tf
-	go run github.com/samir-gandhi/dvgenerate/cmd/generate
+	rm examples/connectors/*.tf || true
+	go run github.com/pingidentity/terraform-provider-davinci/dvgenerate/cmd/generate
 	
 test: build
 	@echo "==> Running tests..."
