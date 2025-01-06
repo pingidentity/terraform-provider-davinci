@@ -10,7 +10,6 @@ package main
 //go:generate go install github.com/katbyte/terrafmt
 //go:generate go install github.com/patrickcping/davinci-pingcli
 //go:generate go install github.com/pavius/impi/cmd/impi
-//go:generate go install github.com/samir-gandhi/dvgenerate/cmd/generate
 //go:generate go install github.com/terraform-linters/tflint
 
 import (
@@ -21,6 +20,5 @@ import (
 	_ "github.com/katbyte/terrafmt"
 	_ "github.com/patrickcping/davinci-pingcli"
 	_ "github.com/pavius/impi/cmd/impi"
-	_ "github.com/samir-gandhi/dvgenerate/cmd/generate"
 	_ "github.com/terraform-linters/tflint"
 )
