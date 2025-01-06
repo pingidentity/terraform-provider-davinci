@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
+	"slices"
 	"strings"
 	"text/template"
 	"unicode"
 
 	"github.com/pingidentity/terraform-provider-davinci/dvgenerate/internal"
-	dv "github.com/samir-gandhi/davinci-client-go/davinci"
+	"github.com/samir-gandhi/davinci-client-go/davinci"
 )
 
 type connectorDocData struct {
@@ -120,138 +120,100 @@ func writeTemplateFile(t *template.Template, fileName string, overwrite bool, da
 }
 
 func readConnectors() (connectionByName, error) {
-	c, err := dvClient()
-	if err != nil {
-		return nil, err
-	}
-	environment_id := os.Getenv("PINGONE_ENVIRONMENT_ID")
-	connectors, err := c.ReadConnectors(&environment_id, nil)
+
+	connectorSchema := []davinci.Connector{}
+	err := davinci.Unmarshal(internal.ConnectorSchemaBytes, &connectorSchema, davinci.ExportCmpOpts{
+		IgnoreEnvironmentMetadata: true,
+	})
 	if err != nil {
 		return nil, err
 	}
 
 	connectorList := make(connectionByName, 0)
+	for _, connectorSchemaItem := range connectorSchema {
 
-	for _, conn := range connectors {
+		connectorDocData := connectorDocData{}
 
-		var connectorId, connectorName string
-
-		if v := conn.ConnectorID; v != nil {
-			connectorId = *v
+		if v := connectorSchemaItem.ConnectorID; v != nil {
+			connectorDocData.ConnectorId = *v
 		} else {
-			connectorId = "No value"
+			connectorDocData.ConnectorId = "No value"
 		}
 
-		if v := conn.Name; v != nil {
-			connectorName = *v
+		if v := connectorSchemaItem.Name; v != nil {
+			connectorDocData.ConnectorName = *v
 		} else {
-			connectorName = "No name"
+			connectorDocData.ConnectorName = "No name"
 		}
 
-		connectorProperties := make(connectionPropertyByName, 0)
-		if acv := conn.AccountConfigView; acv != nil {
-			for key, prop := range conn.Properties {
-
-				for _, acv := range acv.Items {
-
-					if acvProperty := acv.PropertyName; acvProperty != nil && *acvProperty == key {
-
-						description := prop.Info
-
-						if description != nil && strings.TrimSpace(*description) != "" && !strings.HasSuffix(strings.TrimSpace(*description), ".") {
-							descriptionTemp := fmt.Sprintf("%s.", *description)
-							description = &descriptionTemp
-						}
-
-						var propertyType string
-						if prop.Type != nil {
-							switch *prop.Type {
-							case "string", "boolean", "number", "":
-								propertyType = *prop.Type
-							default:
-								propertyType = "json"
-							}
-						} else {
-							propertyType = "string"
-						}
-
-						connectorProperty := connectorDocPropertyData{
-							Name:               key,
-							Type:               &propertyType,
-							Description:        description,
-							ConsoleDisplayName: prop.DisplayName,
-						}
-
-						exampleFound := false
-						if v, ok := internal.ExampleValues[connectorId][key]; ok {
-							connectorProperty.Value = &v.Value
-
-							if v.OverridingType != nil {
-								connectorProperty.Type = v.OverridingType
-							}
-
-							exampleFound = true
-						}
-
-						if !exampleFound {
-							defaultValue := fmt.Sprintf("var.%s_property_%s", strings.ToLower(connectorId), camelToSnake(key))
-							connectorProperty.Value = &defaultValue
-						}
-
-						connectorProperties = append(connectorProperties, connectorProperty)
-					}
+		if connectorSchemaItem.Properties != nil {
+			connectorProperties := make(connectionPropertyByName, 0)
+			for propertyName, property := range connectorSchemaItem.Properties {
+				propertyType := "string"
+				if v := property.Type; v != nil {
+					propertyType = *v
 				}
+
+				propertyType = rewritePropertyType(propertyType)
+
+				description := property.Info
+
+				if description != nil && strings.TrimSpace(*description) != "" && !strings.HasSuffix(strings.TrimSpace(*description), ".") {
+					descriptionTemp := fmt.Sprintf("%s.", *description)
+					description = &descriptionTemp
+				}
+
+				connectorProperty := connectorDocPropertyData{
+					Name:               propertyName,
+					Type:               &propertyType,
+					Description:        description,
+					ConsoleDisplayName: property.DisplayName,
+				}
+
+				exampleFound := false
+				if v, ok := internal.ExampleValues[connectorDocData.ConnectorId][propertyName]; ok {
+					connectorProperty.Value = &v.Value
+
+					if v.OverridingType != nil {
+						connectorProperty.Type = v.OverridingType
+					}
+
+					exampleFound = true
+				}
+
+				if !exampleFound {
+					defaultValue := fmt.Sprintf("var.%s_property_%s", strings.ToLower(connectorDocData.ConnectorId), camelToSnake(propertyName))
+					connectorProperty.Value = &defaultValue
+				}
+
+				connectorProperties = append(connectorProperties, connectorProperty)
 			}
+
+			slices.SortFunc(connectorProperties, func(i, j connectorDocPropertyData) int {
+				return strings.Compare(i.Name, j.Name)
+			})
+			connectorDocData.Properties = connectorProperties
 		}
 
-		sort.Sort(connectorProperties)
-
-		connectorList = append(connectorList, connectorDocData{
-			ConnectorName: connectorName,
-			ConnectorId:   connectorId,
-			Properties:    connectorProperties,
-		})
+		connectorList = append(connectorList, connectorDocData)
 	}
 
-	sort.Sort(connectorList)
+	slices.SortFunc(connectorList, func(i, j connectorDocData) int {
+		return strings.Compare(i.ConnectorName, j.ConnectorName)
+	})
 
 	return connectorList, nil
 }
 
-func dvClient() (*dv.APIClient, error) {
-	e := ""
-	username := os.Getenv("PINGONE_USERNAME")
-	if username == "" {
-		e = e + "PINGONE_USERNAME "
-	}
-	password := os.Getenv("PINGONE_PASSWORD")
-	if password == "" {
-		e = e + "PINGONE_PASSWORD "
-	}
-	region := os.Getenv("PINGONE_REGION")
-	if region == "" {
-		e = e + "PINGONE_REGION "
-	}
-	environment_id := os.Getenv("PINGONE_ENVIRONMENT_ID")
-	if environment_id == "" {
-		e = e + "PINGONE_ENVIRONMENT_ID "
-	}
-	if e != "" {
-		return nil, fmt.Errorf("missing environment variables: %s", e)
+func rewritePropertyType(dvSchemaPropertyType string) (propertyType string) {
+	switch dvSchemaPropertyType {
+	case "string", "boolean", "number", "":
+		propertyType = dvSchemaPropertyType
+	default:
+		propertyType = "json"
 	}
 
-	cInput := dv.ClientInput{
-		Username:        username,
-		Password:        password,
-		PingOneRegion:   region,
-		PingOneSSOEnvId: environment_id,
-	}
-	c, err := dv.NewClient(&cInput)
-	if err != nil {
-		return nil, err
-	}
-
-	return c, nil
+	return
 }
 
 type connectionPropertyByName []connectorDocPropertyData
