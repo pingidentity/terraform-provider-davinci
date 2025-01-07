@@ -1394,6 +1394,24 @@
     }
   },
   {
+    "name": "CLEAR",
+    "connectorId": "connectorClear",
+    "connectorCategories": [
+      {
+        "name": "Verify",
+        "value": "verify"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
+        "info": ""
+      }
+    }
+  },
+  {
     "name": "Clearbit",
     "connectorId": "connectorClearbit",
     "connectorCategories": [
