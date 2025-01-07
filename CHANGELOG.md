@@ -1,5 +1,9 @@
 ## 0.4.8 (Unreleased)
 
+NOTES:
+
+* Update Connector Reference Guide (07 January 2025). ([#407](https://github.com/pingidentity/terraform-provider-davinci/issues/407))
+
 ## 0.4.7 (13 December 2024)
 
 NOTES:
