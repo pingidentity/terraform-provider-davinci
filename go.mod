@@ -6,13 +6,13 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/terraform-plugin-framework v1.13.0
-	github.com/hashicorp/terraform-plugin-framework-validators v0.15.0
+	github.com/hashicorp/terraform-plugin-framework-validators v0.16.0
 	github.com/hashicorp/terraform-plugin-go v0.25.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.17.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.35.0
-	github.com/patrickcping/pingone-go-sdk-v2 v0.12.4
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.44.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.12.5
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.45.0
 	github.com/samir-gandhi/davinci-client-go v0.7.1
 )
 
@@ -27,7 +27,7 @@ require (
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.7.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.10.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.21.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.17.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.18.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/verify v0.8.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
@@ -76,7 +76,7 @@ require (
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.15.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect

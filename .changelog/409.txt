@@ -1,0 +1,15 @@
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.15.0 => 0.16.0
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.4 => 0.12.5
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.44.0 => 0.45.0
+```
+
+```release-note:note
+bump `golang.org/x/net` 0.28.0 => 0.33.0
+```
