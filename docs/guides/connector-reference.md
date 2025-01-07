@@ -1266,6 +1266,32 @@ resource "davinci_connection" "castleConnector" {
 ```
 
 
+## CLEAR
+
+Connector ID (`connector_id` in the resource): `connectorClear`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorClear" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorClear"
+  name         = "My awesome connectorClear"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.connectorclear_property_custom_auth
+  }
+}
+```
+
+
 ## Challenge
 
 Connector ID (`connector_id` in the resource): `challengeConnector`
