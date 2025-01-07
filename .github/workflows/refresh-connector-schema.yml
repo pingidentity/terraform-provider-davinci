@@ -113,7 +113,7 @@ jobs:
             const pr = await github.rest.pulls.create({
               owner,
               repo,
-              title: 'Update Connector Schema (${formattedDate})',
+              title: `Update Connector Schema (${formattedDate})`,
               body: 'Connector Schema has changed.  Please review.',
               head: BRANCH_NAME,
               base: 'main'
