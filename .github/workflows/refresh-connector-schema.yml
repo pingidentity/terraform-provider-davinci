@@ -116,7 +116,8 @@ jobs:
               title: `Update Connector Schema (${formattedDate})`,
               body: 'Connector Schema has changed.  Please review.',
               head: BRANCH_NAME,
-              base: 'main'
+              base: 'main',
+              labels: ['Documentation']
             });
             core.setOutput('PR_NUMBER', pr.data.number);
               
