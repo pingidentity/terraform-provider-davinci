@@ -108,10 +108,12 @@ jobs:
           script: |
             const { BRANCH_NAME } = process.env
             const { repo, owner } = context.repo;
+            const date = new Date();
+            const formattedDate = `${String(date.getDate()).padStart(2, '0')}-${date.toLocaleString('default', { month: 'short' })}-${date.getFullYear()}`;
             const pr = await github.rest.pulls.create({
               owner,
               repo,
-              title: 'Update Connector Schema $(date +'%Y-%m-%d')',
+              title: 'Update Connector Schema (${formattedDate})',
               body: 'Connector Schema has changed.  Please review.',
               head: BRANCH_NAME,
               base: 'main'
