@@ -1,0 +1,15 @@
+resource "davinci_connection" "{{ .ConnectorId }}" {
+  environment_id = var.pingone_environment_id
+
+  connector_id   = "{{ .ConnectorId }}"
+  name           = "My awesome {{ .ConnectorId }}"
+{{with .Properties -}}
+{{ range . }}
+  property {
+    name  = "{{ .Name }}"
+    type  = "{{ .Type }}"
+    value = {{ .Value }}
+  }
+{{ end -}}
+{{ end -}}
+}

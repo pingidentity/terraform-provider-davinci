@@ -1067,19 +1067,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/humanCompromisedConnector.tf") }}
 
 
-## HYPR Adapt
-
-Connector ID (`connector_id` in the resource): `connectorHyprAdapt`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `accessToken` (string): Access Token. Console display name: "HYPR Adapt Access Token".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorHyprAdapt.tf") }}
-
-
 ## HYPR
 
 Connector ID (`connector_id` in the resource): `hyprConnector`
@@ -1091,6 +1078,19 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/hyprConnector.tf") }}
+
+
+## HYPR Adapt
+
+Connector ID (`connector_id` in the resource): `connectorHyprAdapt`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `accessToken` (string): Access Token. Console display name: "HYPR Adapt Access Token".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorHyprAdapt.tf") }}
 
 
 ## Have I Been Pwned
@@ -1175,6 +1175,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/idranddConnector.tf") }}
 
 
+## ID.me
+
+Connector ID (`connector_id` in the resource): `idMeConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `oauth2` (json):  Console display name: "Oauth2 Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/idMeConnector.tf") }}
+
+
 ## ID.me - Community Verification
 
 Connector ID (`connector_id` in the resource): `idmecommunityConnector`
@@ -1199,19 +1212,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorIdMeIdentity.tf") }}
-
-
-## ID.me
-
-Connector ID (`connector_id` in the resource): `idMeConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `oauth2` (json):  Console display name: "Oauth2 Parameters".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/idMeConnector.tf") }}
 
 
 ## IDEMIA
@@ -1353,6 +1353,21 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorJamf.tf") }}
 
 
+## Jira
+
+Connector ID (`connector_id` in the resource): `jiraConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): You may need to create a token from Jira with your credentials, if you haven't created one. Console display name: "Jira API token".
+* `apiUrl` (string): Base URL of the Jira instance. Console display name: "Base Url".
+* `email` (string): Email used for your Jira account. Console display name: "Email Address".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/jiraConnector.tf") }}
+
+
 ## Jira Service Desk
 
 Connector ID (`connector_id` in the resource): `connectorJiraServiceDesk`
@@ -1368,21 +1383,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorJiraServiceDesk.tf") }}
-
-
-## Jira
-
-Connector ID (`connector_id` in the resource): `jiraConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): You may need to create a token from Jira with your credentials, if you haven't created one. Console display name: "Jira API token".
-* `apiUrl` (string): Base URL of the Jira instance. Console display name: "Base Url".
-* `email` (string): Email used for your Jira account. Console display name: "Email Address".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/jiraConnector.tf") }}
 
 
 ## Jumio
@@ -1836,6 +1836,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connector-oai-pingaccessadministrativeapi.tf") }}
 
 
+## PingFederate
+
+Connector ID (`connector_id` in the resource): `pingFederateConnectorV2`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `openId` (json):  Console display name: "OpenId Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingFederateConnectorV2.tf") }}
+
+
 ## PingFederate Administration
 
 Connector ID (`connector_id` in the resource): `connector-oai-pfadminapi`
@@ -1852,19 +1865,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connector-oai-pfadminapi.tf") }}
 
 
-## PingFederate
-
-Connector ID (`connector_id` in the resource): `pingFederateConnectorV2`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `openId` (json):  Console display name: "OpenId Parameters".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/pingFederateConnectorV2.tf") }}
-
-
 ## PingID
 
 Connector ID (`connector_id` in the resource): `pingIdConnector`
@@ -1876,6 +1876,22 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/pingIdConnector.tf") }}
+
+
+## PingOne
+
+Connector ID (`connector_id` in the resource): `pingOneSSOConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
+* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
+* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
+* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingOneSSOConnector.tf") }}
 
 
 ## PingOne Advanced Identity Cloud Access Request
@@ -1920,17 +1936,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneAuthenticationConnector.tf") }}
 
 
-## PingOne Authorize - API Access Management
-
-Connector ID (`connector_id` in the resource): `pingauthadapter`
-
-*No properties*
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/pingauthadapter.tf") }}
-
-
 ## PingOne Authorize
 
 Connector ID (`connector_id` in the resource): `pingOneAuthorizeConnector`
@@ -1944,6 +1949,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneAuthorizeConnector.tf") }}
+
+
+## PingOne Authorize - API Access Management
+
+Connector ID (`connector_id` in the resource): `pingauthadapter`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingauthadapter.tf") }}
 
 
 ## PingOne Credentials
@@ -2067,22 +2083,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneVerifyConnector.tf") }}
 
 
-## PingOne
-
-Connector ID (`connector_id` in the resource): `pingOneSSOConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
-* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
-* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
-* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/pingOneSSOConnector.tf") }}
-
-
 ## Private ID
 
 Connector ID (`connector_id` in the resource): `privateidConnector`
@@ -2094,23 +2094,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/privateidConnector.tf") }}
-
-
-## Prove International
-
-Connector ID (`connector_id` in the resource): `proveConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `baseUrl` (string):  Console display name: "Prove Base URL".
-* `clientId` (string):  Console display name: "Prove Client ID".
-* `grantType` (string):  Console display name: "Prove Grant Type".
-* `password` (string):  Console display name: "Prove Password".
-* `username` (string):  Console display name: "Prove Username".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/proveConnector.tf") }}
 
 
 ## Prove
@@ -2131,6 +2114,23 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/payfoneConnector.tf") }}
+
+
+## Prove International
+
+Connector ID (`connector_id` in the resource): `proveConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseUrl` (string):  Console display name: "Prove Base URL".
+* `clientId` (string):  Console display name: "Prove Client ID".
+* `grantType` (string):  Console display name: "Prove Grant Type".
+* `password` (string):  Console display name: "Prove Password".
+* `username` (string):  Console display name: "Prove Username".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/proveConnector.tf") }}
 
 
 ## RSA
@@ -2182,6 +2182,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorIdiVERIFIED.tf") }}
 
 
+## SAML
+
+Connector ID (`connector_id` in the resource): `samlConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/samlConnector.tf") }}
+
+
 ## SAML IdP
 
 Connector ID (`connector_id` in the resource): `samlIdpConnector`
@@ -2193,17 +2204,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/samlIdpConnector.tf") }}
-
-
-## SAML
-
-Connector ID (`connector_id` in the resource): `samlConnector`
-
-*No properties*
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/samlConnector.tf") }}
 
 
 ## SAP Identity API
@@ -2267,23 +2267,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorIdentityNow.tf") }}
 
 
-## Salesforce Marketing Cloud (BETA)
-
-Connector ID (`connector_id` in the resource): `connectorSalesforceMarketingCloud`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `SalesforceMarketingCloudURL` (string): URL for Salesforce Marketing Cloud. Example: https://YOUR_SUBDOMAIN.rest.marketingcloudapis.com. Console display name: "Salesforce Marketing Cloud URL".
-* `accountId` (string): Account identifier, or MID, of the target business unit. Use to switch between business units. If you don’t specify account_id, the returned access token is in the context of the business unit that created the integration. Console display name: "Account ID".
-* `clientId` (string): Client ID issued when you create the API integration in Installed Packages. Console display name: "Client ID".
-* `clientSecret` (string): Client secret issued when you create the API integration in Installed Packages. Console display name: "Client Secret".
-* `scope` (string): Space-separated list of data-access permissions for your application. Console display name: "Scope".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorSalesforceMarketingCloud.tf") }}
-
-
 ## Salesforce
 
 Connector ID (`connector_id` in the resource): `salesforceConnector`
@@ -2299,6 +2282,23 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/salesforceConnector.tf") }}
+
+
+## Salesforce Marketing Cloud (BETA)
+
+Connector ID (`connector_id` in the resource): `connectorSalesforceMarketingCloud`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `SalesforceMarketingCloudURL` (string): URL for Salesforce Marketing Cloud. Example: https://YOUR_SUBDOMAIN.rest.marketingcloudapis.com. Console display name: "Salesforce Marketing Cloud URL".
+* `accountId` (string): Account identifier, or MID, of the target business unit. Use to switch between business units. If you don’t specify account_id, the returned access token is in the context of the business unit that created the integration. Console display name: "Account ID".
+* `clientId` (string): Client ID issued when you create the API integration in Installed Packages. Console display name: "Client ID".
+* `clientSecret` (string): Client secret issued when you create the API integration in Installed Packages. Console display name: "Client Secret".
+* `scope` (string): Space-separated list of data-access permissions for your application. Console display name: "Scope".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorSalesforceMarketingCloud.tf") }}
 
 
 ## Saviynt Connector Flows
@@ -2805,7 +2805,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `authMessageTemplate` (string):  Console display name: "Text Message Template (Authentication)".
 * `authToken` (string):  Console display name: "Auth Token".
 * `connectorName` (string):  Console display name: "Connector Name".
-* `connectorName` (string):  Console display name: "Connector Name".
 * `description` (string):  Console display name: "Description".
 * `details1` (string):  Console display name: "Credentials Details 1".
 * `details2` (string):  Console display name: "Credentials Details 2".
@@ -3125,6 +3124,21 @@ Example:
 
 ## iProov
 
+Connector ID (`connector_id` in the resource): `iproovV2Connector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
+* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
+* `tenant` (string): The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/iproovV2Connector.tf") }}
+
+
+## iProov
+
 Connector ID (`connector_id` in the resource): `iproovConnector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
@@ -3162,21 +3176,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/iproovConnector.tf") }}
-
-
-## iProov
-
-Connector ID (`connector_id` in the resource): `iproovV2Connector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
-* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
-* `tenant` (string): The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/iproovV2Connector.tf") }}
 
 
 ## iovation
