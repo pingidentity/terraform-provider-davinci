@@ -38,3 +38,7 @@ vendor
 env*.sh
 
 terraform-provider-davinci
+
+# Go workspace file
+go.work
+go.work.sum
