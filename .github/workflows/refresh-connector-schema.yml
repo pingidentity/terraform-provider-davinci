@@ -59,7 +59,45 @@ jobs:
           git add .
           git commit -m "Update connector schema"
           git push
-  
+
+      - name: Get dependencies
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+        run: |
+          go mod download
+      
+      - name: Check dependencies
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+        run: |
+          make depscheck
+      
+      - name: Vet
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+        run: |
+          make vet
+      
+      - name: Build
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+        run: |
+          make build
+
+      - uses: hashicorp/setup-terraform@v3
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+      
+      - run: cd tools && go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+      - run: cd tools && go install github.com/katbyte/terrafmt
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+      - run: make generate
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+
+      - name: Commit changes
+        id: commit_generated_doc_changes
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+        run: |
+          git add .
+          git commit -m "Update generated documentation/code"
+          git push
+
       - name: Create PR
         id: create_pr
         if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
@@ -73,8 +111,15 @@ jobs:
             const pr = await github.rest.pulls.create({
               owner,
               repo,
-              title: 'Update Connector Schema',
+              title: 'Update Connector Schema $(date +'%Y-%m-%d')',
               body: 'Connector Schema has changed.  Please review.',
               head: BRANCH_NAME,
               base: 'main'
             });
+            core.setOutput('PR_NUMBER', pr.data.number);
+              
+      - name: Add changelog entry
+        id: create_changelog_entry
+        if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
+        run: |
+          echo -e "\`\`\`release-note:note\nUpdate Connector Reference Guide ($(date +'%d %B %Y')).\n\`\`\`" > .changelog/${{ steps.create_pr.outputs.PR_NUMBER }}.txt
