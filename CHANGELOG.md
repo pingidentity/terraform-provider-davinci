@@ -3,6 +3,10 @@
 NOTES:
 
 * Update Connector Reference Guide (07 January 2025). ([#407](https://github.com/pingidentity/terraform-provider-davinci/issues/407))
+* bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.15.0 => 0.16.0 ([#409](https://github.com/pingidentity/terraform-provider-davinci/issues/409))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.44.0 => 0.45.0 ([#409](https://github.com/pingidentity/terraform-provider-davinci/issues/409))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.4 => 0.12.5 ([#409](https://github.com/pingidentity/terraform-provider-davinci/issues/409))
+* bump `golang.org/x/net` 0.28.0 => 0.33.0 ([#409](https://github.com/pingidentity/terraform-provider-davinci/issues/409))
 
 ## 0.4.7 (13 December 2024)
 
