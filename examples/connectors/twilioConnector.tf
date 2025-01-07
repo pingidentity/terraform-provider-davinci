@@ -35,12 +35,6 @@ resource "davinci_connection" "twilioConnector" {
   }
 
   property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.twilioconnector_property_connector_name
-  }
-
-  property {
     name  = "description"
     type  = "string"
     value = var.twilioconnector_property_description
