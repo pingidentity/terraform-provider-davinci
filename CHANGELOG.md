@@ -2,7 +2,9 @@
 
 NOTES:
 
+* Confirm support for the Australia / Asia-Pacific region for `.com.au` region tenants. ([#413](https://github.com/pingidentity/terraform-provider-davinci/issues/413))
 * `resource/davinci_connection`: Corrected Connector Reference guide link on resource documentation. ([#412](https://github.com/pingidentity/terraform-provider-davinci/issues/412))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.7.1 => 0.8.0 ([#413](https://github.com/pingidentity/terraform-provider-davinci/issues/413))
 
 ## 0.4.8 (8 January 2025)
 
