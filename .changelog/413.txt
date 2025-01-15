@@ -1,0 +1,7 @@
+```release-note:note
+Confirm support for the Australia / Asia-Pacific region for `.com.au` region tenants.
+```
+
+```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.7.1 => 0.8.0
+```

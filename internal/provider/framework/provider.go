@@ -58,7 +58,7 @@ func (p *davinciProvider) Schema(ctx context.Context, req provider.SchemaRequest
 	)
 
 	regionDescription := framework.SchemaAttributeDescriptionFromMarkdown(
-		"The PingOne region to use.  Options are `AsiaPacific` `Canada` `Europe` and `NorthAmerica`.  Default value can be set with the `PINGONE_REGION` environment variable.",
+		"The PingOne region to use.  Options are `Australia-AsiaPacific` (for `.com.au` tenants) `AsiaPacific` (for `.asia` tenants) `Canada` (for `.ca` tenants) `Europe` (for `.eu` tenants) and `NorthAmerica` (for `.com` tenants).  Default value can be set with the `PINGONE_REGION` environment variable.",
 	)
 
 	environmentIDDescription := framework.SchemaAttributeDescriptionFromMarkdown(

@@ -48,7 +48,7 @@ func New(version string) func() *schema.Provider {
 					Type:             schema.TypeString,
 					Optional:         true,
 					DefaultFunc:      schema.EnvDefaultFunc("PINGONE_REGION", nil),
-					Description:      "The PingOne region to use.  Options are `AsiaPacific` `Canada` `Europe` and `NorthAmerica`.  Default value can be set with the `PINGONE_REGION` environment variable.",
+					Description:      "The PingOne region to use.  Options are `Australia-AsiaPacific` (for `.com.au` tenants) `AsiaPacific` (for `.asia` tenants) `Canada` (for `.ca` tenants) `Europe` (for `.eu` tenants) and `NorthAmerica` (for `.com` tenants).  Default value can be set with the `PINGONE_REGION` environment variable.",
 					ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice(model.RegionsAvailableList(), false)),
 				},
 				"environment_id": {
