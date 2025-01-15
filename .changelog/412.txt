@@ -1,0 +1,3 @@
+```release-note:note
+`resource/davinci_connection`: Corrected Connector Reference guide link on resource documentation.
+```
