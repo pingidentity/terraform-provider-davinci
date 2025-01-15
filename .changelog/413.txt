@@ -1,0 +1,3 @@
+```release-note:note
+Confirm support for the Australia / Asia-Pacific region for `.com.au` region tenants.
+```
