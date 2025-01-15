@@ -157,6 +157,126 @@ jobs:
       run: |
         make sweep
 
+  prepare-au:
+    name: Prepare AU
+    runs-on: ubuntu-latest
+
+    env:
+      PINGONE_USERNAME: ${{ secrets.AU_PINGONE_USERNAME }}
+      PINGONE_PASSWORD: ${{ secrets.AU_PINGONE_PASSWORD }}
+      PINGONE_CLIENT_ID: ${{ secrets.AU_PINGONE_CLIENT_ID }}
+      PINGONE_CLIENT_SECRET: ${{ secrets.AU_PINGONE_CLIENT_SECRET }}
+      PINGONE_ENVIRONMENT_ID: ${{ secrets.AU_PINGONE_ENVIRONMENT_ID }}
+      PINGONE_REGION: "Australia-AsiaPacific"
+      PINGONE_LICENSE_ID: ${{ secrets.AU_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
+
+    timeout-minutes: 5
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+        cache: true
+      id: go
+
+    - name: Get dependencies
+      run: |
+        go mod download
+
+    - name: Sweep to prepare
+      run: |
+        make sweep
+
+  # run acceptance tests in a matrix with Terraform core versions
+  test-au:
+    name: Acceptance Test AU
+    needs: [prepare-au, build]
+    runs-on: ubuntu-latest
+
+    env:
+      PINGONE_USERNAME: ${{ secrets.AU_PINGONE_USERNAME }}
+      PINGONE_PASSWORD: ${{ secrets.AU_PINGONE_PASSWORD }}
+      PINGONE_CLIENT_ID: ${{ secrets.AU_PINGONE_CLIENT_ID }}
+      PINGONE_CLIENT_SECRET: ${{ secrets.AU_PINGONE_CLIENT_SECRET }}
+      PINGONE_ENVIRONMENT_ID: ${{ secrets.AU_PINGONE_ENVIRONMENT_ID }}
+      PINGONE_REGION: "Australia-AsiaPacific"
+      PINGONE_LICENSE_ID: ${{ secrets.AU_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
+
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        # list whatever Terraform versions here you would like to support
+        terraform:
+          - '1.10.*'
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+        cache: true
+      id: go
+
+    - uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ matrix.terraform }}
+        terraform_wrapper: false
+
+    - name: Get dependencies
+      run: |
+        go mod download
+
+    - name: TF acceptance tests
+      timeout-minutes: 180
+      run: |
+        make testacc
+
+  cleanup-au:
+    name: Clean up AU
+    needs: test-au
+    runs-on: ubuntu-latest
+
+    env:
+      PINGONE_USERNAME: ${{ secrets.AU_PINGONE_USERNAME }}
+      PINGONE_PASSWORD: ${{ secrets.AU_PINGONE_PASSWORD }}
+      PINGONE_CLIENT_ID: ${{ secrets.AU_PINGONE_CLIENT_ID }}
+      PINGONE_CLIENT_SECRET: ${{ secrets.AU_PINGONE_CLIENT_SECRET }}
+      PINGONE_ENVIRONMENT_ID: ${{ secrets.AU_PINGONE_ENVIRONMENT_ID }}
+      PINGONE_REGION: "Australia-AsiaPacific"
+      PINGONE_LICENSE_ID: ${{ secrets.AU_PINGONE_LICENSE_ID }}
+      PINGONE_TESTING_PROVIDER_VERSION: "test"
+
+    timeout-minutes: 5
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+        cache: true
+      id: go
+
+    - name: Get dependencies
+      run: |
+        go mod download
+
+    - name: Sweep to prepare
+      run: |
+        make sweep
+
   prepare-ca:
     name: Prepare CA
     runs-on: ubuntu-latest
