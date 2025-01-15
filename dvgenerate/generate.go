@@ -105,6 +105,7 @@ func writeTemplateFile(t *template.Template, fileName string, overwrite bool, da
 		return fmt.Errorf("failed to check if file exists: %v", err)
 	}
 
+	fileName = filepath.Clean(fileName)
 	outputFile, err := os.Create(fileName)
 	if err != nil {
 		return err

@@ -1,3 +1,9 @@
+## 0.4.9 (Unreleased)
+
+NOTES:
+
+* `resource/davinci_connection`: Corrected Connector Reference guide link on resource documentation. ([#412](https://github.com/pingidentity/terraform-provider-davinci/issues/412))
+
 ## 0.4.8 (8 January 2025)
 
 NOTES:
