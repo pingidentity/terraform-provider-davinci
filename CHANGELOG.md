@@ -1,4 +1,4 @@
-## 0.4.9 (Unreleased)
+## 0.4.9 (16 January 2025)
 
 NOTES:
 
