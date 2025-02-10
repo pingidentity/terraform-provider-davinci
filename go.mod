@@ -11,8 +11,8 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.17.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.35.0
-	github.com/patrickcping/pingone-go-sdk-v2 v0.12.5
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.45.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.12.8
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.48.0
 	github.com/samir-gandhi/davinci-client-go v0.8.0
 )
 
@@ -26,13 +26,13 @@ require (
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.7.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.10.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.21.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.22.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/risk v0.18.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/verify v0.8.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/mod v0.21.0 // indirect
-	golang.org/x/oauth2 v0.24.0 // indirect
+	golang.org/x/oauth2 v0.25.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/tools v0.24.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1 // indirect
