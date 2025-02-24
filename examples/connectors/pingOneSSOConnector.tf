@@ -23,6 +23,12 @@ resource "davinci_connection" "pingOneSSOConnector" {
   }
 
   property {
+    name  = "envRegionInfo"
+    type  = "string"
+    value = var.pingonessoconnector_property_env_region_info
+  }
+
+  property {
     name  = "region"
     type  = "string"
     value = var.pingonessoconnector_property_region
