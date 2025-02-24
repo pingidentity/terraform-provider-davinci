@@ -1,0 +1,19 @@
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-go` 0.25.0 => 0.26.0
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-mux` 0.17.0 => 0.18.0
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.35.0 => 2.36.1
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.5 => 0.12.11
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.45.0 => 0.51.0
+```
