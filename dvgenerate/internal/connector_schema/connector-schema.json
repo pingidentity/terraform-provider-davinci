@@ -4587,8 +4587,8 @@
     "connectorId": "microsoftIdpConnector",
     "connectorCategories": [
       {
-        "name": "Authenticate",
-        "value": "authenticate"
+        "name": "Identity Provider (IDP)",
+        "value": "idp"
       }
     ],
     "properties": {
@@ -5471,6 +5471,11 @@
         "createdDate": 1694542169598,
         "preferredControlType": "textField",
         "info": "Your PingOne environment ID."
+      },
+      "envRegionInfo": {
+        "displayName": "The default PingOne environment is configured automatically.",
+        "preferredControlType": "label",
+        "info": "If you want to connect with a different PingOne environment, enter the environment and credential information below."
       },
       "region": {
         "type": "string",
