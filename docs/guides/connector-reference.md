@@ -5375,6 +5375,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
 * `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
 * `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
+* `envRegionInfo` (string): If you want to connect with a different PingOne environment, enter the environment and credential information below. Console display name: "The default PingOne environment is configured automatically.".
 * `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
 
 
@@ -5402,6 +5403,12 @@ resource "davinci_connection" "pingOneSSOConnector" {
     name  = "envId"
     type  = "string"
     value = var.pingone_worker_app_environment_id
+  }
+
+  property {
+    name  = "envRegionInfo"
+    type  = "string"
+    value = var.pingonessoconnector_property_env_region_info
   }
 
   property {
