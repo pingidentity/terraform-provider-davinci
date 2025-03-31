@@ -1,5 +1,16 @@
 ## 0.4.11 (Unreleased)
 
+NOTES:
+
+* Update Connector Reference Guide (31 March 2025). ([#460](https://github.com/pingidentity/terraform-provider-davinci/issues/460))
+* Upgraded go version to 1.24.1. See the go [release policy](https://go.dev/doc/devel/release#policy). ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+* bump `github.com/google/go-cmp` 0.6.0 => 0.7.0 ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+* bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.16.0 => 0.17.0 ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.13.0 => 1.14.1 ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.51.0 => 0.53.0 ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.11 => 0.12.13 ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+* bump `golang.org/x/net` 0.34.0 => 0.36.0 (CVE-2025-22870) ([#458](https://github.com/pingidentity/terraform-provider-davinci/issues/458))
+
 ## 0.4.10 (25 February 2025)
 
 NOTES:
