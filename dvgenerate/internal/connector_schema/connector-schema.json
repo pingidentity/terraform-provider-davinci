@@ -1793,7 +1793,7 @@
     }
   },
   {
-    "name": "Red Violet",
+    "name": "IDI coreIDENTITY",
     "connectorId": "connectorIdiVERIFIED",
     "connectorCategories": [
       {
@@ -1805,12 +1805,12 @@
       "apiSecret": {
         "displayName": "API Secret",
         "preferredControlType": "textField",
-        "info": "Please enter your API secret that Red Violet has provided you"
+        "info": "Please enter your API secret that IDI coreIDENTITY has provided you"
       },
       "companyKey": {
         "displayName": "Company Key",
         "preferredControlType": "textField",
-        "info": "Please enter the company key that Red Violet has assigned"
+        "info": "Please enter the company key that IDI coreIDENTITY has assigned"
       },
       "idiEnv": {
         "type": "string",
@@ -1821,12 +1821,12 @@
       "siteKey": {
         "displayName": "Site Key",
         "preferredControlType": "textField",
-        "info": "Please enter your site key that Red Violet has provided you"
+        "info": "Please enter your site key that IDI coreIDENTITY has provided you"
       },
       "uniqueUrl": {
         "displayName": "Unique URL",
         "preferredControlType": "textField",
-        "info": "Please enter your unique URL that Red Violet has provided you"
+        "info": "Please enter your unique URL that IDI coreIDENTITY has provided you"
       }
     }
   },
@@ -2372,7 +2372,7 @@
     }
   },
   {
-    "name": "Svipe",
+    "name": "iProov OIDC",
     "connectorId": "connectorSvipe",
     "connectorCategories": [
       {
@@ -3985,7 +3985,7 @@
     }
   },
   {
-    "name": "iProov",
+    "name": "iProov API",
     "connectorId": "iproovV2Connector",
     "connectorCategories": [
       {
@@ -4009,7 +4009,7 @@
       "tenant": {
         "displayName": "iProov Tenant",
         "preferredControlType": "textField",
-        "info": "The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information."
+        "info": "The iProov tenant URL (do not include https://). This can be obtained from your iPortal account. Please contact support@iproov.com for more information."
       }
     }
   },
