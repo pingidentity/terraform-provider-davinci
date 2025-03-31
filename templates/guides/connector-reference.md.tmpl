@@ -1259,6 +1259,23 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/skPeopleIntelligenceConnector.tf") }}
 
 
+## IDI coreIDENTITY
+
+Connector ID (`connector_id` in the resource): `connectorIdiVERIFIED`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiSecret` (string): Please enter your API secret that IDI coreIDENTITY has provided you. Console display name: "API Secret".
+* `companyKey` (string): Please enter the company key that IDI coreIDENTITY has assigned. Console display name: "Company Key".
+* `idiEnv` (string): Please choose which coreIDENTITY environment you would like to query . Console display name: "Environment".
+* `siteKey` (string): Please enter your site key that IDI coreIDENTITY has provided you. Console display name: "Site Key".
+* `uniqueUrl` (string): Please enter your unique URL that IDI coreIDENTITY has provided you. Console display name: "Unique URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorIdiVERIFIED.tf") }}
+
+
 ## IDmelon
 
 Connector ID (`connector_id` in the resource): `connectorIdmelon`
@@ -2179,23 +2196,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/inveridConnector.tf") }}
 
 
-## Red Violet
-
-Connector ID (`connector_id` in the resource): `connectorIdiVERIFIED`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiSecret` (string): Please enter your API secret that Red Violet has provided you. Console display name: "API Secret".
-* `companyKey` (string): Please enter the company key that Red Violet has assigned. Console display name: "Company Key".
-* `idiEnv` (string): Please choose which coreIDENTITY environment you would like to query . Console display name: "Environment".
-* `siteKey` (string): Please enter your site key that Red Violet has provided you. Console display name: "Site Key".
-* `uniqueUrl` (string): Please enter your unique URL that Red Violet has provided you. Console display name: "Unique URL".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorIdiVERIFIED.tf") }}
-
-
 ## SAML
 
 Connector ID (`connector_id` in the resource): `samlConnector`
@@ -2596,19 +2596,6 @@ Connector ID (`connector_id` in the resource): `stringsConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/stringsConnector.tf") }}
-
-
-## Svipe
-
-Connector ID (`connector_id` in the resource): `connectorSvipe`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `customAuth` (json):  Console display name: "Custom Parameters".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorSvipe.tf") }}
 
 
 ## TMT Analysis
@@ -3138,21 +3125,6 @@ Example:
 
 ## iProov
 
-Connector ID (`connector_id` in the resource): `iproovV2Connector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
-* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
-* `tenant` (string): The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/iproovV2Connector.tf") }}
-
-
-## iProov
-
 Connector ID (`connector_id` in the resource): `iproovConnector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
@@ -3190,6 +3162,34 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/iproovConnector.tf") }}
+
+
+## iProov API
+
+Connector ID (`connector_id` in the resource): `iproovV2Connector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
+* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
+* `tenant` (string): The iProov tenant URL (do not include https://). This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/iproovV2Connector.tf") }}
+
+
+## iProov OIDC
+
+Connector ID (`connector_id` in the resource): `connectorSvipe`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorSvipe.tf") }}
 
 
 ## iovation
