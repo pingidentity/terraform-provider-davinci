@@ -3323,6 +3323,60 @@ resource "davinci_connection" "skPeopleIntelligenceConnector" {
 ```
 
 
+## IDI coreIDENTITY
+
+Connector ID (`connector_id` in the resource): `connectorIdiVERIFIED`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiSecret` (string): Please enter your API secret that IDI coreIDENTITY has provided you. Console display name: "API Secret".
+* `companyKey` (string): Please enter the company key that IDI coreIDENTITY has assigned. Console display name: "Company Key".
+* `idiEnv` (string): Please choose which coreIDENTITY environment you would like to query . Console display name: "Environment".
+* `siteKey` (string): Please enter your site key that IDI coreIDENTITY has provided you. Console display name: "Site Key".
+* `uniqueUrl` (string): Please enter your unique URL that IDI coreIDENTITY has provided you. Console display name: "Unique URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorIdiVERIFIED" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorIdiVERIFIED"
+  name         = "My awesome connectorIdiVERIFIED"
+
+  property {
+    name  = "apiSecret"
+    type  = "string"
+    value = var.connectoridiverified_property_api_secret
+  }
+
+  property {
+    name  = "companyKey"
+    type  = "string"
+    value = var.connectoridiverified_property_company_key
+  }
+
+  property {
+    name  = "idiEnv"
+    type  = "string"
+    value = var.connectoridiverified_property_idi_env
+  }
+
+  property {
+    name  = "siteKey"
+    type  = "string"
+    value = var.connectoridiverified_property_site_key
+  }
+
+  property {
+    name  = "uniqueUrl"
+    type  = "string"
+    value = var.connectoridiverified_property_unique_url
+  }
+}
+```
+
+
 ## IDmelon
 
 Connector ID (`connector_id` in the resource): `connectorIdmelon`
@@ -6171,60 +6225,6 @@ resource "davinci_connection" "inveridConnector" {
 ```
 
 
-## Red Violet
-
-Connector ID (`connector_id` in the resource): `connectorIdiVERIFIED`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiSecret` (string): Please enter your API secret that Red Violet has provided you. Console display name: "API Secret".
-* `companyKey` (string): Please enter the company key that Red Violet has assigned. Console display name: "Company Key".
-* `idiEnv` (string): Please choose which coreIDENTITY environment you would like to query . Console display name: "Environment".
-* `siteKey` (string): Please enter your site key that Red Violet has provided you. Console display name: "Site Key".
-* `uniqueUrl` (string): Please enter your unique URL that Red Violet has provided you. Console display name: "Unique URL".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorIdiVERIFIED" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorIdiVERIFIED"
-  name         = "My awesome connectorIdiVERIFIED"
-
-  property {
-    name  = "apiSecret"
-    type  = "string"
-    value = var.connectoridiverified_property_api_secret
-  }
-
-  property {
-    name  = "companyKey"
-    type  = "string"
-    value = var.connectoridiverified_property_company_key
-  }
-
-  property {
-    name  = "idiEnv"
-    type  = "string"
-    value = var.connectoridiverified_property_idi_env
-  }
-
-  property {
-    name  = "siteKey"
-    type  = "string"
-    value = var.connectoridiverified_property_site_key
-  }
-
-  property {
-    name  = "uniqueUrl"
-    type  = "string"
-    value = var.connectoridiverified_property_unique_url
-  }
-}
-```
-
-
 ## SAML
 
 Connector ID (`connector_id` in the resource): `samlConnector`
@@ -7233,32 +7233,6 @@ resource "davinci_connection" "stringsConnector" {
 
   connector_id = "stringsConnector"
   name         = "My awesome stringsConnector"
-}
-```
-
-
-## Svipe
-
-Connector ID (`connector_id` in the resource): `connectorSvipe`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `customAuth` (json):  Console display name: "Custom Parameters".
-
-
-Example:
-```terraform
-resource "davinci_connection" "connectorSvipe" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "connectorSvipe"
-  name         = "My awesome connectorSvipe"
-
-  property {
-    name  = "customAuth"
-    type  = "json"
-    value = jsonencode({})
-  }
 }
 ```
 
@@ -8936,46 +8910,6 @@ resource "davinci_connection" "connectorZscaler" {
 
 ## iProov
 
-Connector ID (`connector_id` in the resource): `iproovV2Connector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
-* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
-* `tenant` (string): The iProov tenant URL. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
-
-
-Example:
-```terraform
-resource "davinci_connection" "iproovV2Connector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "iproovV2Connector"
-  name         = "My awesome iproovV2Connector"
-
-  property {
-    name  = "apiKey"
-    type  = "string"
-    value = var.iproovv2connector_property_api_key
-  }
-
-  property {
-    name  = "secret"
-    type  = "string"
-    value = var.iproovv2connector_property_secret
-  }
-
-  property {
-    name  = "tenant"
-    type  = "string"
-    value = var.iproovv2connector_property_tenant
-  }
-}
-```
-
-
-## iProov
-
 Connector ID (`connector_id` in the resource): `iproovConnector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
@@ -9191,6 +9125,72 @@ resource "davinci_connection" "iproovConnector" {
     name  = "username"
     type  = "string"
     value = var.iproovconnector_property_username
+  }
+}
+```
+
+
+## iProov API
+
+Connector ID (`connector_id` in the resource): `iproovV2Connector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Your iProov Service Provider API key. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov API Key".
+* `secret` (string): Your iProov Service Provider Secret. This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Secret".
+* `tenant` (string): The iProov tenant URL (do not include https://). This can be obtained from your iPortal account. Please contact support@iproov.com for more information. Console display name: "iProov Tenant".
+
+
+Example:
+```terraform
+resource "davinci_connection" "iproovV2Connector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "iproovV2Connector"
+  name         = "My awesome iproovV2Connector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.iproovv2connector_property_api_key
+  }
+
+  property {
+    name  = "secret"
+    type  = "string"
+    value = var.iproovv2connector_property_secret
+  }
+
+  property {
+    name  = "tenant"
+    type  = "string"
+    value = var.iproovv2connector_property_tenant
+  }
+}
+```
+
+
+## iProov OIDC
+
+Connector ID (`connector_id` in the resource): `connectorSvipe`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorSvipe" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorSvipe"
+  name         = "My awesome connectorSvipe"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = jsonencode({})
   }
 }
 ```
