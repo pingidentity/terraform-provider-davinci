@@ -1,4 +1,4 @@
-## 0.4.11 (Unreleased)
+## 0.4.11 (01 April 2025)
 
 NOTES:
 
