@@ -3599,6 +3599,24 @@
     }
   },
   {
+    "name": "IDmission - OIDC",
+    "connectorId": "idmissionOidcConnector",
+    "connectorCategories": [
+      {
+        "name": "Verify",
+        "value": "verify"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
+        "info": ""
+      }
+    }
+  },
+  {
     "name": "IdRamp",
     "connectorId": "idrampOidcConnector",
     "connectorCategories": [

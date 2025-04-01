@@ -3541,6 +3541,32 @@ resource "davinci_connection" "idmissionConnector" {
 ```
 
 
+## IDmission - OIDC
+
+Connector ID (`connector_id` in the resource): `idmissionOidcConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "idmissionOidcConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "idmissionOidcConnector"
+  name         = "My awesome idmissionOidcConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.idmissionoidcconnector_property_custom_auth
+  }
+}
+```
+
+
 ## IdRamp
 
 Connector ID (`connector_id` in the resource): `idrampOidcConnector`
