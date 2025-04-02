@@ -2,6 +2,8 @@ module github.com/pingidentity/terraform-provider-davinci
 
 go 1.24.1
 
+replace github.com/samir-gandhi/davinci-client-go => github.com/samir-gandhi/davinci-client-go v0.8.1-0.20250402153206-248ddafd75fa
+
 require (
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-multierror v1.1.1

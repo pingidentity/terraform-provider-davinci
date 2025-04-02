@@ -31,3 +31,7 @@ func StringSliceToAnySlice(v []string) []any {
 	}
 	return result
 }
+
+func StringPtr(s string) *string {
+    return &s
+}
