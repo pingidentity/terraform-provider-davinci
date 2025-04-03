@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest"
 	"github.com/pingidentity/terraform-provider-davinci/internal/acctest/service/davinci"
+	"github.com/pingidentity/terraform-provider-davinci/internal/utils"
 	"github.com/pingidentity/terraform-provider-davinci/internal/verify"
 	dv "github.com/samir-gandhi/davinci-client-go/davinci"
 )
@@ -519,11 +520,11 @@ func TestAccResourceFlow_ComputeDifferences_ModifySettings(t *testing.T) {
 		BaselineFlow: flow,
 		ModifiedFlow: func() dv.Flow {
 			newFlow := flow
-			newFlow.Settings = map[string]interface{}{
-				"csp":                           "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
-				"intermediateLoadingScreenCSS":  "",
-				"intermediateLoadingScreenHTML": "",
-				"flowHttpTimeoutInSeconds":      301,
+			newFlow.Settings = &dv.FlowSettings{
+				Csp:                           utils.StringPtr("worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';"),
+				IntermediateLoadingScreenCSS:  utils.StringPtr(""),
+				IntermediateLoadingScreenHTML: utils.StringPtr(""),
+				FlowHttpTimeoutInSeconds:      utils.Int32Ptr(301),
 			}
 
 			return newFlow

@@ -11,3 +11,7 @@ func SafeIntToInt32(value int) (int32, error) {
 	}
 	return int32(value), nil
 }
+
+func Int32Ptr(d int32) *int32 {
+	return &d
+}
