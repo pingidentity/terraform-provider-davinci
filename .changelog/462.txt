@@ -1,0 +1,7 @@
+```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.8.0 => 0.9.0
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" when the `settings.logLevel` value is re-defined by the DaVinci service.
+```
