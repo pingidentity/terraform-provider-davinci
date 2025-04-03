@@ -1,5 +1,14 @@
 ## 0.4.12 (Unreleased)
 
+NOTES:
+
+* Update Connector Reference Guide (01 April 2025). ([#461](https://github.com/pingidentity/terraform-provider-davinci/issues/461))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.8.0 => 0.9.0 ([#462](https://github.com/pingidentity/terraform-provider-davinci/issues/462))
+
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" when the `settings.logLevel` value is re-defined by the DaVinci service. ([#462](https://github.com/pingidentity/terraform-provider-davinci/issues/462))
+
 ## 0.4.11 (01 April 2025)
 
 NOTES:
