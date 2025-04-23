@@ -364,7 +364,7 @@ func (r *VariableResource) Create(ctx context.Context, req resource.CreateReques
 		},
 	)
 	if err != nil {
-		if strings.Contains(err.Error(), "already exists") {
+		if strings.Contains(strings.ToLower(err.Error()), strings.ToLower("already exists")) {
 			if plan.Context.ValueString() == contextFlow {
 				// we override "flow" variables
 				response, err = sdk.DoRetryable(
@@ -571,7 +571,7 @@ func (r *VariableResource) Delete(ctx context.Context, req resource.DeleteReques
 	)
 
 	if err != nil {
-		if strings.Contains(err.Error(), "not found") {
+		if strings.Contains(strings.ToLower(err.Error()), strings.ToLower("not found")) {
 			return
 		}
 
