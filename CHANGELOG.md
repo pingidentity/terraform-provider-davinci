@@ -1,5 +1,9 @@
 ## 0.4.13 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_variable`: Fix "Error creating variable: [variable name]. Construct already exists" error when defining flow context variables that have been implicitly created by flow import. ([#467](https://github.com/pingidentity/terraform-provider-davinci/issues/467))
+
 ## 0.4.12 (03 April 2025)
 
 NOTES:
