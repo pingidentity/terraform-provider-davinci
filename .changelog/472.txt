@@ -1,0 +1,7 @@
+```release-note:bug
+`resource/davinci_flow`: Fix "Error adding company variable [variable name] as part of flow update: Construct already exists" error when updating flow imports.
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fix "Error removing flow variable [variable name] as part of flow update: Construct not found" error when updating flow imports.
+```
