@@ -1,5 +1,9 @@
 ## 0.4.13 (Unreleased)
 
+NOTES:
+
+* bump `golang.org/x/net` 0.36.0 => 0.38.0 (Resolves dependency alert CVE-2025-22872) ([#465](https://github.com/pingidentity/terraform-provider-davinci/issues/465))
+
 BUG FIXES:
 
 * `resource/davinci_variable`: Fix "Error creating variable: [variable name]. Construct already exists" error when defining flow context variables that have been implicitly created by flow import. ([#467](https://github.com/pingidentity/terraform-provider-davinci/issues/467))
