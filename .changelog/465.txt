@@ -1,0 +1,3 @@
+```release-note:note
+bump `golang.org/x/net` 0.36.0 => 0.38.0 (Resolves dependency alert CVE-2025-22872)
+```
