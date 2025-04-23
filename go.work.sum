@@ -636,6 +636,7 @@ gocloud.dev v0.40.0 h1:f8LgP+4WDqOG/RXoUcyLpeIAGOcAbZrZbDQCUee10ng=
 gocloud.dev v0.40.0/go.mod h1:drz+VyYNBvrMTW0KZiBAYEdl8lbNZx+OQ7oQvdrFmSQ=
 golang.org/x/arch v0.1.0 h1:oMxhUYsO9VsR1dcoVUjJjIGhx1LXol3989T/yZ59Xsw=
 golang.org/x/crypto v0.29.0/go.mod h1:+F4F4N5hv6v38hfeYwTdx20oUvLLc+QfrE9Ax9HtgRg=
+golang.org/x/crypto v0.33.0/go.mod h1:bVdXmD7IV/4GdElGPozy6U7lWdRXA4qyRVGJV57uQ5M=
 golang.org/x/image v0.0.0-20220302094943-723b81ca9867 h1:TcHcE0vrmgzNH1v3ppjcMGbhG5+9fMuvOmUYwNEF4q4=
 golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 h1:VLliZ0d+/avPrXXH+OakdXhpJuEoBZuwh1m2j7U6Iug=
 golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028 h1:4+4C/Iv2U4fMZBiMCc98MG1In4gJY5YRhtpDNeDeHWs=
