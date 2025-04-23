@@ -3663,6 +3663,46 @@ resource "davinci_connection" "connectorInfinipoint" {
 ```
 
 
+## Intellicheck
+
+Connector ID (`connector_id` in the resource): `intellicheckConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): API Key from your Intellicheck tenant. Console display name: "API Key".
+* `baseUrl` (string): Base URL from your Intellicheck tenant (Including protocol - https://). Console display name: "Base URL".
+* `customerId` (string): Customer ID from your Intellicheck tenant. Console display name: "Customer ID".
+
+
+Example:
+```terraform
+resource "davinci_connection" "intellicheckConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "intellicheckConnector"
+  name         = "My awesome intellicheckConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.intellicheckconnector_property_api_key
+  }
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.intellicheckconnector_property_base_url
+  }
+
+  property {
+    name  = "customerId"
+    type  = "string"
+    value = var.intellicheckconnector_property_customer_id
+  }
+}
+```
+
+
 ## Jamf
 
 Connector ID (`connector_id` in the resource): `connectorJamf`
@@ -4068,6 +4108,46 @@ resource "davinci_connection" "kbaConnector" {
     name  = "toolTip"
     type  = "string"
     value = var.kbaconnector_property_tool_tip
+  }
+}
+```
+
+
+## KYXStart
+
+Connector ID (`connector_id` in the resource): `kyxstartConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): KYXStart Client ID. Console display name: "Client ID".
+* `clientSecret` (string): KYXStart Client Secret. Console display name: "Client Secret".
+* `tenantName` (string): Tenant Name from KYXStart Account. Console display name: "Tenant Name".
+
+
+Example:
+```terraform
+resource "davinci_connection" "kyxstartConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "kyxstartConnector"
+  name         = "My awesome kyxstartConnector"
+
+  property {
+    name  = "clientId"
+    type  = "string"
+    value = var.kyxstartconnector_property_client_id
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.kyxstartconnector_property_client_secret
+  }
+
+  property {
+    name  = "tenantName"
+    type  = "string"
+    value = var.kyxstartconnector_property_tenant_name
   }
 }
 ```
