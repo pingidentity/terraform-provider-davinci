@@ -2,6 +2,7 @@
 
 NOTES:
 
+* Update Connector Reference Guide (23 April 2025). ([#469](https://github.com/pingidentity/terraform-provider-davinci/issues/469))
 * bump `golang.org/x/net` 0.36.0 => 0.38.0 (Resolves dependency alert CVE-2025-22872) ([#465](https://github.com/pingidentity/terraform-provider-davinci/issues/465))
 
 BUG FIXES:
