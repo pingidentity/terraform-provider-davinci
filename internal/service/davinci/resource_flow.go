@@ -843,8 +843,8 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 						},
 					)
 					if err != nil {
-						// if error starts with "Record already exists" then ignore it
-						if !strings.HasPrefix(err.Error(), "Record already exists") {
+						// if error contains "already exists" then ignore it
+						if !strings.Contains(strings.ToLower(err.Error()), "already exists") {
 							resp.Diagnostics.AddError(
 								fmt.Sprintf("Error adding %s variable", flowVariable.Context),
 								fmt.Sprintf("Error adding %s variable %s as part of flow update: %s", flowVariable.Context, *flowVariable.Name, err),
@@ -874,7 +874,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 						},
 					)
 					if err != nil {
-						if !strings.HasPrefix(err.Error(), "Error deleting record") {
+						if !strings.Contains(strings.ToLower(err.Error()), "not found") {
 							resp.Diagnostics.AddError(
 								fmt.Sprintf("Error removing %s variable", flowVar.Context.ValueString()),
 								fmt.Sprintf("Error removing %s variable %s as part of flow update: %s", flowVar.Context.ValueString(), flowVar.Name.ValueString(), err),
