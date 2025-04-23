@@ -7,6 +7,8 @@ NOTES:
 
 BUG FIXES:
 
+* `resource/davinci_flow`: Fix "Error adding company variable [variable name] as part of flow update: Construct already exists" error when updating flow imports. ([#472](https://github.com/pingidentity/terraform-provider-davinci/issues/472))
+* `resource/davinci_flow`: Fix "Error removing flow variable [variable name] as part of flow update: Construct not found" error when updating flow imports. ([#472](https://github.com/pingidentity/terraform-provider-davinci/issues/472))
 * `resource/davinci_variable`: Fix "Error creating variable: [variable name]. Construct already exists" error when defining flow context variables that have been implicitly created by flow import. ([#467](https://github.com/pingidentity/terraform-provider-davinci/issues/467))
 
 ## 0.4.12 (03 April 2025)
