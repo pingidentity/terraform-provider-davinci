@@ -3690,6 +3690,39 @@
     }
   },
   {
+    "name": "Intellicheck",
+    "connectorId": "intellicheckConnector",
+    "connectorCategories": [
+      {
+        "name": "Verify",
+        "value": "verify"
+      }
+    ],
+    "properties": {
+      "apiKey": {
+        "type": "string",
+        "displayName": "API Key",
+        "createdDate": 1694542169671,
+        "preferredControlType": "textField",
+        "info": "API Key from your Intellicheck tenant"
+      },
+      "baseUrl": {
+        "type": "string",
+        "displayName": "Base URL",
+        "createdDate": 1694542169717,
+        "preferredControlType": "textField",
+        "info": "Base URL from your Intellicheck tenant (Including protocol - https://)"
+      },
+      "customerId": {
+        "type": "string",
+        "displayName": "Customer ID",
+        "createdDate": 1694542169613,
+        "preferredControlType": "textField",
+        "info": "Customer ID from your Intellicheck tenant"
+      }
+    }
+  },
+  {
     "name": "ReadID by Inverid",
     "connectorId": "inveridConnector",
     "connectorCategories": [
@@ -4432,6 +4465,37 @@
         "createdDate": 1694542169555,
         "preferredControlType": "textField",
         "info": ""
+      }
+    }
+  },
+  {
+    "name": "KYXStart",
+    "connectorId": "kyxstartConnector",
+    "connectorCategories": [
+      {
+        "name": "Verify",
+        "value": "verify"
+      }
+    ],
+    "properties": {
+      "clientId": {
+        "type": "string",
+        "displayName": "Client ID",
+        "createdDate": 1694542169628,
+        "preferredControlType": "textField",
+        "info": "KYXStart Client ID"
+      },
+      "clientSecret": {
+        "type": "string",
+        "displayName": "Client Secret",
+        "createdDate": 1694542169713,
+        "preferredControlType": "textField",
+        "info": "KYXStart Client Secret"
+      },
+      "tenantName": {
+        "displayName": "Tenant Name",
+        "preferredControlType": "textField",
+        "info": "Tenant Name from KYXStart Account"
       }
     }
   },
