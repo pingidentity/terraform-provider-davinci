@@ -1381,6 +1381,21 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorInfinipoint.tf") }}
 
 
+## Intellicheck
+
+Connector ID (`connector_id` in the resource): `intellicheckConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): API Key from your Intellicheck tenant. Console display name: "API Key".
+* `baseUrl` (string): Base URL from your Intellicheck tenant (Including protocol - https://). Console display name: "Base URL".
+* `customerId` (string): Customer ID from your Intellicheck tenant. Console display name: "Customer ID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/intellicheckConnector.tf") }}
+
+
 ## Jamf
 
 Connector ID (`connector_id` in the resource): `connectorJamf`
@@ -1484,6 +1499,21 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/kbaConnector.tf") }}
+
+
+## KYXStart
+
+Connector ID (`connector_id` in the resource): `kyxstartConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): KYXStart Client ID. Console display name: "Client ID".
+* `clientSecret` (string): KYXStart Client Secret. Console display name: "Client Secret".
+* `tenantName` (string): Tenant Name from KYXStart Account. Console display name: "Tenant Name".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/kyxstartConnector.tf") }}
 
 
 ## Kaizen Secure Voiz
