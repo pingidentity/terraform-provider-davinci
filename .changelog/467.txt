@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_variable`: Fix "Error creating variable: [variable name]. Construct already exists" error when defining flow context variables that have been implicitly created by flow import.
+```
