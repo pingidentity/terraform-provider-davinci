@@ -2011,6 +2011,24 @@
     }
   },
   {
+    "name": "Microsoft Edge for Business",
+    "connectorId": "connectorMicrosoftEdge",
+    "connectorCategories": [
+      {
+        "name": "Authorize",
+        "value": "authorize"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
+        "info": ""
+      }
+    }
+  },
+  {
     "name": "Microsoft Intune",
     "connectorId": "connectorMicrosoftIntune",
     "connectorCategories": [
