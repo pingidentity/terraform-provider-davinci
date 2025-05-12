@@ -3,6 +3,8 @@
 NOTES:
 
 * Update Connector Reference Guide (12 May 2025). ([#480](https://github.com/pingidentity/terraform-provider-davinci/issues/480))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.53.0 => 0.54.0 ([#482](https://github.com/pingidentity/terraform-provider-davinci/issues/482))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.13 => 0.12.14 ([#482](https://github.com/pingidentity/terraform-provider-davinci/issues/482))
 * bump `github.com/samir-gandhi/davinci-client-go` 0.9.0 => 0.10.0 ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
 
 BUG FIXES:
