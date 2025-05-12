@@ -521,10 +521,16 @@ func TestAccResourceFlow_ComputeDifferences_ModifySettings(t *testing.T) {
 		ModifiedFlow: func() dv.Flow {
 			newFlow := flow
 			newFlow.Settings = &dv.FlowSettings{
-				Csp:                           utils.StringPtr("worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';"),
-				IntermediateLoadingScreenCSS:  utils.StringPtr(""),
-				IntermediateLoadingScreenHTML: utils.StringPtr(""),
-				FlowHttpTimeoutInSeconds:      utils.Int32Ptr(301),
+				Csp: &dv.FlowSettingsStringValue{
+					ValueString: utils.StringPtr("worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';"),
+				},
+				IntermediateLoadingScreenCSS: &dv.FlowSettingsStringValue{
+					ValueString: utils.StringPtr(""),
+				},
+				IntermediateLoadingScreenHTML: &dv.FlowSettingsStringValue{
+					ValueString: utils.StringPtr(""),
+				},
+				FlowHttpTimeoutInSeconds: utils.Int32Ptr(301),
 			}
 
 			return newFlow
@@ -788,6 +794,37 @@ func testAccResourceFlow_ComputeDifferences(t *testing.T, cd computeDifferencesT
 			},
 			{
 				Config: modifiedHcl,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+				),
+			},
+		},
+	})
+}
+
+func TestAccResourceFlow_EmptyObjectsInSettings(t *testing.T) {
+
+	resourceBase := "davinci_flow"
+	resourceName := acctest.ResourceNameGen()
+	resourceFullName := fmt.Sprintf("%s.%s", resourceBase, resourceName)
+
+	baseLineHcl, err := testAccResourceFlow_Minimal_EmptyObjectsInSettings_HCL(resourceName, resourceName, false)
+	if err != nil {
+		t.Fatalf("Failed to get baseline flow HCL: %v", err)
+	}
+
+	resource.ParallelTest(t, resource.TestCase{
+		PreCheck: func() {
+			acctest.PreCheckClient(t)
+			acctest.PreCheckNewEnvironment(t)
+		},
+		ProtoV6ProviderFactories: acctest.ProtoV6ProviderFactories,
+		ExternalProviders:        acctest.ExternalProviders,
+		ErrorCheck:               acctest.ErrorCheck(t),
+		CheckDestroy:             davinci.Flow_CheckDestroy(),
+		Steps: []resource.TestStep{
+			{
+				Config: baseLineHcl,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
 				),
@@ -1556,6 +1593,127 @@ EOT
     replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
   }
 }`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
+}
+
+func testAccResourceFlow_Minimal_EmptyObjectsInSettings_HCL(resourceName, name string, withBootstrapConfig bool) (hcl string, err error) {
+	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf(`
+%[1]s
+
+%[2]s
+
+resource "davinci_flow" "%[3]s" {
+  environment_id = pingone_environment.%[3]s.id
+
+  description = "This is an updated description"
+
+  flow_json = <<EOT
+{
+    "companyId": "2c6123ae-108f-4d11-bcc2-6c8f4dfa9fdb",
+    "authTokenExpireIds": [],
+    "connectorIds": [
+      "errorConnector"
+    ],
+    "createdDate": 1707837216607,
+    "currentVersion": 4,
+    "customerId": "db5f4450b2bd8a56ce076dec0c358a9a",
+    "deployedDate": 1707837221226,
+    "description": "This is a fallback description",
+    "flowStatus": "enabled",
+    "isOutputSchemaSaved": false,
+    "name": "simple",
+    "publishedVersion": 4,
+    "settings": {
+      "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
+      "intermediateLoadingScreenCSS": {},
+      "intermediateLoadingScreenHTML": {},
+      "useCustomCSS": false,
+      "cssLinks": [],
+      "logLevel": 3,
+      "useBetaAlgorithm": true,
+      "useCustomScript": false,
+      "jsLinks": [],
+      "flowHttpTimeoutInSeconds": 180,
+      "flowTimeoutInSeconds": 0,
+      "requireAuthenticationToInitiate": false
+    },
+    "timeouts": "null",
+    "updatedDate": 1707837221226,
+    "flowId": "8f93840f61b58b043a0a38439a1c6640",
+    "versionId": 4,
+    "graphData": {
+      "elements": {
+        "nodes": [
+          {
+            "data": {
+              "id": "2pzouq7el7",
+              "nodeType": "CONNECTION",
+              "connectionId": "53ab83a4a4ab919d9f2cb02d9e111ac8",
+              "connectorId": "errorConnector",
+              "name": "Error Message",
+              "label": "Error Message",
+              "status": "configured",
+              "capabilityName": "customErrorMessage",
+              "type": "action",
+              "properties": {
+                "errorMessage": {
+                  "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"This is an error\"\n      }\n    ]\n  }\n]"
+                },
+                "errorDescription": {
+                  "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"This is an error, really\"\n      }\n    ]\n  }\n]"
+                }
+              }
+            },
+            "position": {
+              "x": 400,
+              "y": 400
+            },
+            "group": "nodes",
+            "removed": false,
+            "selected": false,
+            "selectable": true,
+            "locked": false,
+            "grabbable": true,
+            "pannable": false,
+            "classes": ""
+          }
+        ]
+      },
+      "data": {},
+      "zoomingEnabled": true,
+      "userZoomingEnabled": true,
+      "zoom": 1,
+      "minZoom": 1e-50,
+      "maxZoom": 1e+50,
+      "panningEnabled": true,
+      "userPanningEnabled": true,
+      "pan": {
+        "x": 0,
+        "y": 0
+      },
+      "boxSelectionEnabled": true,
+      "renderer": {
+        "name": "null"
+      }
+    },
+    "flowColor": "#FFC8C1",
+    "savedDate": 1707837216592,
+    "variables": [],
+    "connections": []
+  }
+EOT
+
+  // Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName), nil
 }
 
 func testAccResourceFlow_Common_WithoutMappingIDs_HCL_Resources(resourceName, name string) (hcl string, err error) {
