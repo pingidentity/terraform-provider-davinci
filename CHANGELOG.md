@@ -3,6 +3,12 @@
 NOTES:
 
 * Update Connector Reference Guide (12 May 2025). ([#480](https://github.com/pingidentity/terraform-provider-davinci/issues/480))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.9.0 => 0.10.0 ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
+
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" when `settings.cssLinks` and `settings.jsLinks` properties are exported as empty arrays. ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
+* `resource/davinci_flow`: Fix incorrect "A string value was provided that is not valid DaVinci Export JSON for this provider" error when `settings.intermediateLoadingScreenCSS` and `settings.intermediateLoadingScreenHTML` are exported as empty objects. ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
 
 ## 0.4.13 (23 April 2025)
 
