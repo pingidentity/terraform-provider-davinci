@@ -4692,6 +4692,32 @@ resource "davinci_connection" "microsoftDynamicsCustomerInsightsConnector" {
 ```
 
 
+## Microsoft Edge for Business
+
+Connector ID (`connector_id` in the resource): `connectorMicrosoftEdge`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorMicrosoftEdge" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorMicrosoftEdge"
+  name         = "My awesome connectorMicrosoftEdge"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.connectormicrosoftedge_property_custom_auth
+  }
+}
+```
+
+
 ## Microsoft Intune
 
 Connector ID (`connector_id` in the resource): `connectorMicrosoftIntune`
