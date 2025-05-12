@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.36.1
 	github.com/patrickcping/pingone-go-sdk-v2 v0.12.13
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.53.0
-	github.com/samir-gandhi/davinci-client-go v0.9.0
+	github.com/samir-gandhi/davinci-client-go v0.10.0
 )
 
 require (
