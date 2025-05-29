@@ -13,3 +13,10 @@
 
 ## Documentation
 - If a Terraform schema is changed, use `make generate` to regenerate the Terraform documentation, `make lint` to check linting.
+- If any HCL example file is changed, use `make generate` to regenerate the Terraform documentation.
+
+## Project version
+
+- When updating the project version, the version number should be incremented in the makefile.
+- The `CHANGELOG.md` file should be updated with a new version header, and "Unreleased" should be used in lieu of a release date.
+- If the version number is a minor or major version, the example HCL files in `examples/provider/*.tf` also need to be updated.
