@@ -1,6 +1,6 @@
 module github.com/pingidentity/terraform-provider-davinci/dvgenerate
 
-go 1.24.1
+go 1.24.3
 
 require github.com/samir-gandhi/davinci-client-go v0.10.0
 
