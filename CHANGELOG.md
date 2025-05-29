@@ -1,3 +1,16 @@
+## 0.4.15 (Unreleased)
+
+NOTES:
+
+* Upgraded go version to 1.24.3 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.17.0 => 0.18.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.14.1 => 1.15.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-go` 0.26.0 => 0.28.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-mux` 0.18.0 => 0.20.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.36.1 => 2.37.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.54.0 => 0.57.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.14 => 0.12.17 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+
 ## 0.4.14 (13 May 2025)
 
 NOTES:
