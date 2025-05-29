@@ -1,0 +1,23 @@
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-framework` 1.14.1 => 1.15.0
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.17.0 => 0.18.0
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-go` 0.26.0 => 0.28.0
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.36.1 => 2.37.0
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.54.0 => 0.57.0
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.14 => 0.12.17
+```
