@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int32validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -16,6 +17,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int32default"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -38,6 +40,7 @@ type FlowResourceModel struct {
 	Deploy                types.Bool                    `tfsdk:"deploy"`
 	Name                  types.String                  `tfsdk:"name"`
 	Description           types.String                  `tfsdk:"description"`
+	LogLevel              types.Int32                   `tfsdk:"log_level"`
 	ConnectionLinks       types.Set                     `tfsdk:"connection_link"`
 	SubFlowLinks          types.Set                     `tfsdk:"subflow_link"`
 	FlowVariables         types.Set                     `tfsdk:"flow_variables"`
@@ -193,6 +196,10 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 		"The variable's data type.  Expected to be one of `string`, `number`, `boolean`, `object`.",
 	)
 
+	logLevelDescription := framework.SchemaAttributeDescriptionFromMarkdown(
+		"An integer that specifies the log level for the flow. Valid values are: `1` (no logging), `2` (info logging - default), and `3` (debug logging).",
+	)
+
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		Description: "Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
@@ -264,6 +271,17 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				Computed:            true,
 
 				Default: booldefault.StaticBool(true),
+			},
+
+			"log_level": schema.Int32Attribute{
+				Description:         logLevelDescription.Description,
+				MarkdownDescription: logLevelDescription.MarkdownDescription,
+				Optional:            true,
+				Computed:            true,
+				Default:             int32default.StaticInt32(2),
+				Validators: []validator.Int32{
+					int32validator.OneOf(1, 2, 3),
+				},
 			},
 
 			"flow_variables": schema.SetNestedAttribute{
@@ -537,6 +555,7 @@ func (p *FlowResource) ValidateConfig(ctx context.Context, req resource.Validate
 	}
 
 	resp.Diagnostics.Append(validateConnectionSubflowLinkMappings(ctx, config.FlowJSON, config.ConnectionLinks, config.SubFlowLinks, true)...)
+	resp.Diagnostics.Append(validateLogLevel(ctx, config.LogLevel, true)...)
 
 }
 
@@ -635,6 +654,18 @@ func (r *FlowResource) Create(ctx context.Context, req resource.CreateRequest, r
 	}
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	if !plan.LogLevel.IsNull() && !plan.LogLevel.IsUnknown() {
+		// Set the log level
+		logLevel := plan.LogLevel.ValueInt32()
+		if daVinciImport.FlowInfo.FlowUpdateConfiguration.Settings == nil {
+			daVinciImport.FlowInfo.FlowUpdateConfiguration.Settings = &davinci.FlowSettings{
+				LogLevel: &logLevel,
+			}
+		} else {
+			daVinciImport.FlowInfo.FlowUpdateConfiguration.Settings.LogLevel = &logLevel
+		}
 	}
 
 	// do an update for the settings
@@ -786,6 +817,24 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		daVinciUpdate := &davinci.FlowUpdate{
 			Name:        plan.Name.ValueStringPointer(),
 			Description: plan.Description.ValueStringPointer(),
+		}
+
+		if !plan.LogLevel.IsNull() && !plan.LogLevel.IsUnknown() {
+			var d diag.Diagnostics
+			daVinciUpdate, d = plan.expandUpdate(state)
+			resp.Diagnostics.Append(d...)
+			if resp.Diagnostics.HasError() {
+				return
+			}
+			// Set the log level
+			logLevel := plan.LogLevel.ValueInt32()
+			if daVinciUpdate.FlowUpdateConfiguration.Settings == nil {
+				daVinciUpdate.FlowUpdateConfiguration.Settings = &davinci.FlowSettings{
+					LogLevel: &logLevel,
+				}
+			} else {
+				daVinciUpdate.FlowUpdateConfiguration.Settings.LogLevel = &logLevel
+			}
 		}
 
 		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, false)...)
@@ -1165,6 +1214,19 @@ func (p *FlowResourceModel) expandUpdate(state FlowResourceModel) (*davinci.Flow
 		data.Description = p.Description.ValueStringPointer()
 	}
 
+	if !p.LogLevel.IsNull() && !p.LogLevel.IsUnknown() {
+		// Set the log level
+		logLevel := p.LogLevel.ValueInt32()
+
+		if data.Settings == nil {
+			data.Settings = &davinci.FlowSettings{
+				LogLevel: &logLevel,
+			}
+		} else {
+			data.Settings.LogLevel = &logLevel
+		}
+	}
+
 	err = davinci.Unmarshal([]byte(state.FlowConfigurationJSON.ValueString()), &stateData, davinci.ExportCmpOpts{})
 	if err != nil {
 		diags.AddError(
@@ -1254,6 +1316,13 @@ func (p *FlowResourceModel) toState(apiObject *davinci.Flow) diag.Diagnostics {
 
 	if v := apiObject.Description; v != nil {
 		p.Description = framework.StringToTF(*v)
+	}
+
+	p.LogLevel = types.Int32Null()
+	if settings := apiObject.Settings; settings != nil {
+		if v := settings.LogLevel; v != nil {
+			p.LogLevel = framework.Int32ToTF(*v)
+		}
 	}
 
 	var d diag.Diagnostics
@@ -1370,6 +1439,23 @@ func parseFlowNodeProperties(node davinci.Node) flowConnectionNodeModel {
 }
 
 // Validate if there are connections in the flow that should have a connection mapping, and flow connector instances that should have a subflow mapping
+func validateLogLevel(ctx context.Context, logLevel basetypes.Int32Value, allowUnknownValues bool) (diags diag.Diagnostics) {
+
+	if allowUnknownValues && logLevel.IsUnknown() {
+		return diags
+	}
+
+	if !logLevel.IsNull() && logLevel.ValueInt32() == 3 {
+		diags.AddAttributeWarning(
+			path.Root("log_level"),
+			"Flow debug analytics are enabled",
+			"The log level of the flow is set to `3` (debug).\n\nThis will enable debug analytics for the flow in the DaVinci service which may impact performance and data privacy.  Debug logging should only be enabled for short periods of time for debugging purposes, and must be returned back to `0` (default) or `1` (info) when no longer needed.",
+		)
+	}
+
+	return diags
+}
+
 func validateConnectionSubflowLinkMappings(ctx context.Context, flowJSON davinciexporttype.ParsedValue, connectionLinks basetypes.SetValue, subFlowLinks basetypes.SetValue, allowUnknownValues bool) (diags diag.Diagnostics) {
 
 	if !flowJSON.IsUnknown() && !connectionLinks.IsUnknown() && !subFlowLinks.IsUnknown() {

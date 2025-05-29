@@ -106,6 +106,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "my awesome flow"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", "my awesome flow description"),
+			resource.TestCheckResourceAttr(resourceFullName, "log_level", "3"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", fullStepJson)),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_configuration_json"),
 			resource.TestCheckResourceAttrSet(resourceFullName, "flow_export_json"),
@@ -142,6 +143,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", "This is a fallback description"),
+			resource.TestCheckResourceAttr(resourceFullName, "log_level", "2"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", minimalStepJson)),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
@@ -162,6 +164,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", "This is an updated description"),
+			resource.TestCheckResourceAttr(resourceFullName, "log_level", "0"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", updateStepJson)),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
@@ -1394,6 +1397,8 @@ resource "davinci_flow" "%[3]s" {
   name        = "my awesome flow"
   description = "my awesome flow description"
 
+  log_level = 3
+
   flow_json = <<EOT
 %[4]s
 EOT
@@ -1581,6 +1586,8 @@ resource "davinci_flow" "%[3]s" {
   environment_id = pingone_environment.%[3]s.id
 
   description = "This is an updated description"
+
+  log_level = 1
 
   flow_json = <<EOT
 %[4]s
