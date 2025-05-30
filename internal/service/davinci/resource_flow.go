@@ -555,7 +555,7 @@ func (p *FlowResource) ValidateConfig(ctx context.Context, req resource.Validate
 	}
 
 	resp.Diagnostics.Append(validateConnectionSubflowLinkMappings(ctx, config.FlowJSON, config.ConnectionLinks, config.SubFlowLinks, true)...)
-	resp.Diagnostics.Append(validateLogLevel(ctx, config.LogLevel, true)...)
+	resp.Diagnostics.Append(validateLogLevel(config.LogLevel, true)...)
 
 }
 
@@ -1439,7 +1439,7 @@ func parseFlowNodeProperties(node davinci.Node) flowConnectionNodeModel {
 }
 
 // Validate if there are connections in the flow that should have a connection mapping, and flow connector instances that should have a subflow mapping
-func validateLogLevel(ctx context.Context, logLevel basetypes.Int32Value, allowUnknownValues bool) (diags diag.Diagnostics) {
+func validateLogLevel(logLevel basetypes.Int32Value, allowUnknownValues bool) (diags diag.Diagnostics) {
 
 	if allowUnknownValues && logLevel.IsUnknown() {
 		return diags
@@ -1448,8 +1448,8 @@ func validateLogLevel(ctx context.Context, logLevel basetypes.Int32Value, allowU
 	if !logLevel.IsNull() && logLevel.ValueInt32() == 3 {
 		diags.AddAttributeWarning(
 			path.Root("log_level"),
-			"Flow debug analytics are enabled",
-			"The log level of the flow is set to `3` (debug).\n\nThis will enable debug analytics for the flow in the DaVinci service which may impact performance and data privacy.  Debug logging should only be enabled for short periods of time for debugging purposes, and must be returned back to `0` (default) or `1` (info) when no longer needed.",
+			"Log level set to Debug",
+			"The flow log level is set to Debug. For standard operation, it's recommended to set the log level to Info (1) or None (0) unless active troubleshooting is needed.",
 		)
 	}
 
