@@ -36,5 +36,6 @@ website/vendor
 vendor
 
 env*.sh
+.env
 
 terraform-provider-davinci
