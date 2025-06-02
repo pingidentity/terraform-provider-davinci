@@ -11,6 +11,10 @@ NOTES:
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.54.0 => 0.57.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
 * bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.14 => 0.12.17 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
 
+ENHANCEMENTS:
+
+* `resource/davinci_flow`: Added log_level field as an integer (1-3) to control logging verbosity for flows. Values: 1 (no logging), 2 (info logging - default), and 3 (debug logging). ([#492](https://github.com/pingidentity/terraform-provider-davinci/issues/492))
+
 ## 0.4.14 (13 May 2025)
 
 NOTES:
