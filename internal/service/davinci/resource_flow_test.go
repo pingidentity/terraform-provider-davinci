@@ -164,7 +164,7 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", "This is an updated description"),
-			resource.TestCheckResourceAttr(resourceFullName, "log_level", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "log_level", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", updateStepJson)),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),

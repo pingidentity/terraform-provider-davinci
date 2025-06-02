@@ -837,7 +837,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			}
 		}
 
-		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, false)...)
+		resp.Diagnostics.Append(r.updateFlow(ctx, environmentID, flowID, daVinciUpdate, true)...)
 		if resp.Diagnostics.HasError() {
 			return
 		}
