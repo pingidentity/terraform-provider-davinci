@@ -1,4 +1,4 @@
-## 0.5.0 (Unreleased)
+## 0.5.0 (02 June 2025)
 
 NOTES:
 
