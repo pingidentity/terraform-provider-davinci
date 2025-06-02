@@ -765,7 +765,7 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 		if err != nil {
 			diags.AddError("Error converting min value", err.Error())
 		} else {
-			p.Min = framework.Int32ToTF(safeInt)
+			p.Min = framework.Int32ToInt64TF(safeInt)
 		}
 	} else {
 		p.Min = types.Int64Null()
@@ -776,7 +776,7 @@ func (p *VariableResourceModel) toState(apiObject map[string]davinci.Variable) d
 		if err != nil {
 			diags.AddError("Error converting max value", err.Error())
 		} else {
-			p.Max = framework.Int32ToTF(safeInt)
+			p.Max = framework.Int32ToInt64TF(safeInt)
 		}
 	} else {
 		p.Max = types.Int64Null()
