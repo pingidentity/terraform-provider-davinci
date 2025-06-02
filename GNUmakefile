@@ -4,7 +4,7 @@ DAVINCI_DIR=./internal/service/davinci
 NAMESPACE=pingidentity
 PKG_NAME=davinci
 BINARY=terraform-provider-${NAME}
-VERSION=0.4.15
+VERSION=0.5.0
 OS_ARCH=linux_amd64
 
 default: install
