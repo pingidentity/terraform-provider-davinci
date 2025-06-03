@@ -170,8 +170,8 @@ github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2/go.mod h1:iKH
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rogpeppe/go-internal v1.12.0 h1:exVL4IDcn6na9z1rAb56Vxr+CgyK3nn3O+epU5NdKM8=
 github.com/rogpeppe/go-internal v1.12.0/go.mod h1:E+RYuTGaKKdloAfM02xzb0FW3Paa99yedzYV+kq4uf4=
-github.com/samir-gandhi/davinci-client-go v0.10.0 h1:jJyfnBPQ4BdWy5HASbHMy63kmTJpaajNI7O8FFcqIm4=
-github.com/samir-gandhi/davinci-client-go v0.10.0/go.mod h1:/12KKDJyNUxSUQEaF1EHCJx/PD7nHTBEGsuGNXjpPsU=
+github.com/samir-gandhi/davinci-client-go v0.11.0 h1:Jcos+COGIEg/Vb5CfWLE2UfHmRAxFZOEbAOwBvjFVg4=
+github.com/samir-gandhi/davinci-client-go v0.11.0/go.mod h1:/12KKDJyNUxSUQEaF1EHCJx/PD7nHTBEGsuGNXjpPsU=
 github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3 h1:n661drycOFuPLCN3Uc8sB6B/s6Z4t2xvBgU1htSHuq8=
 github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3/go.mod h1:A0bzQcvG0E7Rwjx0REVgAGH58e96+X0MeOfepqsbeW4=
 github.com/skeema/knownhosts v1.3.1 h1:X2osQ+RAjK76shCbvhHHHVl3ZlgDm8apHEHFqRjnBY8=
