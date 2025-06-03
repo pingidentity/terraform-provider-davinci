@@ -1,4 +1,4 @@
-## 0.5.0 (02 June 2025)
+## 0.5.0 (04 June 2025)
 
 NOTES:
 
@@ -10,6 +10,7 @@ NOTES:
 * bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.36.1 => 2.37.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
 * bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.54.0 => 0.57.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
 * bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.14 => 0.12.17 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.10.0 => 0.11.0 ([#494](https://github.com/pingidentity/terraform-provider-davinci/issues/494))
 
 ENHANCEMENTS:
 
