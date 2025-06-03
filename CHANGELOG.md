@@ -1,3 +1,35 @@
+## 0.5.0 (04 June 2025)
+
+NOTES:
+
+* Upgraded go version to 1.24.3 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.17.0 => 0.18.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.14.1 => 1.15.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-go` 0.26.0 => 0.28.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-mux` 0.18.0 => 0.20.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.36.1 => 2.37.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.54.0 => 0.57.0 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.14 => 0.12.17 ([#493](https://github.com/pingidentity/terraform-provider-davinci/issues/493))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.10.0 => 0.11.0 ([#494](https://github.com/pingidentity/terraform-provider-davinci/issues/494))
+
+ENHANCEMENTS:
+
+* `resource/davinci_flow`: Added log_level field as an integer (1-3) to control logging verbosity for flows. Values: 1 (no logging), 2 (info logging - default), and 3 (debug logging). ([#492](https://github.com/pingidentity/terraform-provider-davinci/issues/492))
+
+## 0.4.14 (13 May 2025)
+
+NOTES:
+
+* Update Connector Reference Guide (12 May 2025). ([#480](https://github.com/pingidentity/terraform-provider-davinci/issues/480))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.53.0 => 0.54.0 ([#482](https://github.com/pingidentity/terraform-provider-davinci/issues/482))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.13 => 0.12.14 ([#482](https://github.com/pingidentity/terraform-provider-davinci/issues/482))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.9.0 => 0.10.0 ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
+
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" when `settings.cssLinks` and `settings.jsLinks` properties are exported as empty arrays. ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
+* `resource/davinci_flow`: Fix incorrect "A string value was provided that is not valid DaVinci Export JSON for this provider" error when `settings.intermediateLoadingScreenCSS` and `settings.intermediateLoadingScreenHTML` are exported as empty objects. ([#481](https://github.com/pingidentity/terraform-provider-davinci/issues/481))
+
 ## 0.4.13 (23 April 2025)
 
 NOTES:
