@@ -1,0 +1,10 @@
+version: "2"
+linters:
+  exclusions:
+    rules:
+      - linters:
+          - staticcheck
+        text: "QF1008:"
+      - linters:
+          - staticcheck
+        text: "ST1005:"
