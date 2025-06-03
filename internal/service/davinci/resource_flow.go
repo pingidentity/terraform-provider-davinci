@@ -485,7 +485,7 @@ func (p *FlowResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 				if v := flowVariable.FlowID; v != nil {
 					flowVariableIDOld := *flowVariable.FlowID
 					flowVariable.FlowID = state.Id.ValueStringPointer()
-					flowVariable.Name = strings.Replace(flowVariable.Name, flowVariableIDOld, state.Id.ValueString(), -1)
+					flowVariable.Name = strings.ReplaceAll(flowVariable.Name, flowVariableIDOld, state.Id.ValueString())
 				}
 
 				flowVariablesPlan = append(flowVariablesPlan, flowVariable)
