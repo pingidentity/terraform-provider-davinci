@@ -4,7 +4,7 @@ go 1.24.3
 
 require (
 	github.com/bflad/tfproviderlint v0.31.0
-	github.com/golangci/golangci-lint/v2 v2.1.6
+	github.com/golangci/golangci-lint v1.64.8
 	github.com/hashicorp/go-changelog v0.0.0-20241111140550-beb7aaabfbd1
 	github.com/hashicorp/terraform-plugin-docs v0.21.0
 	github.com/katbyte/terrafmt v0.5.5
@@ -79,7 +79,7 @@ require (
 	github.com/chavacava/garif v0.1.0 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/ckaznocha/intrange v0.3.1 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/cncf/xds/go v0.0.0-20250121191232-2f005788dc42 // indirect
 	github.com/curioswitch/go-reassign v0.3.0 // indirect
 	github.com/cyberphone/json-canonicalization v0.0.0-20220623050100-57a0ce2678a7 // indirect
@@ -139,7 +139,6 @@ require (
 	github.com/golangci/dupl v0.0.0-20250308024227-f665c8d69b32 // indirect
 	github.com/golangci/go-printf-func-name v0.1.0 // indirect
 	github.com/golangci/gofmt v0.0.0-20250106114630-d62b90e6713d // indirect
-	github.com/golangci/golangci-lint v1.64.8 // indirect
 	github.com/golangci/misspell v0.6.0 // indirect
 	github.com/golangci/plugin-module-register v0.1.1 // indirect
 	github.com/golangci/revgrep v0.8.0 // indirect
