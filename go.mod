@@ -11,24 +11,24 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.20.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.37.0
-	github.com/patrickcping/pingone-go-sdk-v2 v0.12.17
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.57.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.12.18
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.57.1
 	github.com/samir-gandhi/davinci-client-go v0.11.1
 )
 
 require (
 	github.com/ProtonMail/go-crypto v1.1.6 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
-	github.com/cloudflare/circl v1.6.0 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.26.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.8.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.11.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.23.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/risk v0.19.0 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/verify v0.9.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.8.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.11.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.23.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/risk v0.19.1 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/verify v0.9.1 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/mod v0.24.0 // indirect
