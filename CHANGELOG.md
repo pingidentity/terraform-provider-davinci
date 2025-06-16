@@ -3,6 +3,14 @@
 NOTES:
 
 * Update Connector Reference Guide (16 June 2025). ([#501](https://github.com/pingidentity/terraform-provider-davinci/issues/501))
+* bump `github.com/cloudflare/circl` 1.6.0 => 1.6.1 ([#503](https://github.com/pingidentity/terraform-provider-davinci/issues/503))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.57.0 => 0.57.1 ([#503](https://github.com/pingidentity/terraform-provider-davinci/issues/503))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.17 => 0.12.18 ([#503](https://github.com/pingidentity/terraform-provider-davinci/issues/503))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.10.0 => 0.11.1 ([#502](https://github.com/pingidentity/terraform-provider-davinci/issues/502))
+
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix "Invalid DaVinci Flow Export String Value" ("json: cannot unmarshal object into Go value of type string") when flow settings contains complex JavaScript link objects. ([#502](https://github.com/pingidentity/terraform-provider-davinci/issues/502))
 
 ## 0.5.0 (04 June 2025)
 
