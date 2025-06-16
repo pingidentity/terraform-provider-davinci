@@ -980,20 +980,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/githubIdpConnector.tf") }}
 
 
-## Google Analytics (Universal Analytics)
-
-Connector ID (`connector_id` in the resource): `connectorGoogleanalyticsUA`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `trackingID` (string): The tracking ID / web property ID. The format is UA-XXXX-Y. All collected data is associated by this ID. Console display name: "Tracking ID".
-* `version` (string): The Protocol version. The current value is '1'. This will only change when there are changes made that are not backwards compatible. Console display name: "Version".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorGoogleanalyticsUA.tf") }}
-
-
 ## Google Chrome Enterprise Device Trust
 
 Connector ID (`connector_id` in the resource): `connectorGoogleChromeEnterprise`
@@ -1049,21 +1035,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/httpConnector.tf") }}
-
-
-## HUMAN
-
-Connector ID (`connector_id` in the resource): `connectorHuman`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `humanAuthenticationToken` (string): Bearer Token from HUMAN. Console display name: "HUMAN Authentication Token".
-* `humanCustomerID` (string): Customer ID from HUMAN. Console display name: "HUMAN Customer ID".
-* `humanPolicyName` (string): HUMAN mitigation policy name. Console display name: "HUMAN Policy Name".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/connectorHuman.tf") }}
 
 
 ## HUMAN
@@ -1287,35 +1258,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorIdmelon.tf") }}
-
-
-## IDmission
-
-Connector ID (`connector_id` in the resource): `idmissionConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `loginId` (string):  Console display name: "Sign On ID".
-* `merchantId` (string):  Console display name: "Merchant ID".
-* `password` (string):  Console display name: "Password".
-* `productId` (string):  Console display name: "Product ID".
-* `productName` (string):  Console display name: "Product Name".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-* `url` (string):  Console display name: "IDmission Server URL".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/idmissionConnector.tf") }}
 
 
 ## IDmission - OIDC
@@ -3177,47 +3119,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorZscaler.tf") }}
-
-
-## iProov
-
-Connector ID (`connector_id` in the resource): `iproovConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `allowLandscape` (boolean):  Console display name: "Allow Landscape".
-* `apiKey` (string):  Console display name: "API Key".
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `baseUrl` (string):  Console display name: "Base URL".
-* `color1` (string): Ex. #000000. Console display name: "Loading Tint Color".
-* `color2` (string): Ex. #000000. Console display name: "Not Ready Tint Color".
-* `color3` (string): Ex. #000000. Console display name: "Ready Tint Color".
-* `color4` (string): Ex. #000000. Console display name: "Liveness Tint Color".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `customTitle` (string): Specify a custom title to be shown. Defaults to show an iProov-generated message. Set to empty string "" to hide the message entirely.  Console display name: "Custom Title".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `enableCameraSelector` (boolean):  Console display name: "Enable Camera Selector".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `javascriptCSSUrl` (string):  Console display name: "CSS URL".
-* `javascriptCdnUrl` (string):  Console display name: "Javascript CDN URL".
-* `kioskMode` (boolean):  Console display name: "Kiosk Mode".
-* `logo` (string): You can use a custom logo by simply passing a relative link, absolute path or data URI to your logo. If you do not want a logo to show pass the logo attribute as null. Console display name: "Logo".
-* `password` (string):  Console display name: "Password".
-* `secret` (string):  Console display name: "Secret".
-* `showCountdown` (boolean):  Console display name: "Show Countdown".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `startScreenTitle` (string):  Console display name: "Start Screen Title".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-* `username` (string):  Console display name: "Username".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/iproovConnector.tf") }}
 
 
 ## iProov API
