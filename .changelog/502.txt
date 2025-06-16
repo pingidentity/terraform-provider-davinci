@@ -1,0 +1,7 @@
+```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.10.0 => 0.11.1
+```
+
+```release-note:bug
+`resource/davinci_flow`: Fix "Invalid DaVinci Flow Export String Value" ("json: cannot unmarshal object into Go value of type string") when flow settings contains complex JavaScript link objects.
+```
