@@ -2,7 +2,7 @@ module github.com/pingidentity/terraform-provider-davinci/dvgenerate
 
 go 1.24.3
 
-require github.com/samir-gandhi/davinci-client-go v0.11.0
+require github.com/samir-gandhi/davinci-client-go v0.11.1
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
