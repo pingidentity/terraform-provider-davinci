@@ -1,5 +1,9 @@
 ## 0.5.2 (Unreleased)
 
+BUG FIXES:
+
+* `resource/davinci_flow`: Fix log level values in the configuration validator warning message when the debug log level is enabled (`log_level = 3`). ([#507](https://github.com/pingidentity/terraform-provider-davinci/issues/507))
+
 ## 0.5.1 (16 June 2025)
 
 NOTES:
