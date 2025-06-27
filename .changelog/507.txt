@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fix log level values in the configuration validator warning message when the debug log level is enabled (`log_level = 3`).
+```
