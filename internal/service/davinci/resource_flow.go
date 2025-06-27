@@ -1449,7 +1449,7 @@ func validateLogLevel(logLevel basetypes.Int32Value, allowUnknownValues bool) (d
 		diags.AddAttributeWarning(
 			path.Root("log_level"),
 			"Log level set to Debug",
-			"The flow log level is set to Debug. For standard operation, it's recommended to set the log level to Info (1) or None (0) unless active troubleshooting is needed.",
+			"The flow log level is set to Debug. For standard operation, it's recommended to set the log level to Info (2) or None (1) unless active troubleshooting is needed.",
 		)
 	}
 
