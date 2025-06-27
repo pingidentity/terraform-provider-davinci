@@ -1,3 +1,5 @@
+## 0.5.2 (Unreleased)
+
 ## 0.5.1 (16 June 2025)
 
 NOTES:
