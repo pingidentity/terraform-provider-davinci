@@ -4092,6 +4092,46 @@
     }
   },
   {
+    "name": "KF Kerberos Connector",
+    "connectorId": "kfKerberosConnector",
+    "connectorCategories": [
+      {
+        "name": "Authenticate",
+        "value": "authenticate"
+      }
+    ],
+    "properties": {
+      "clientId": {
+        "type": "string",
+        "displayName": "Client ID",
+        "createdDate": 1694542169628,
+        "preferredControlType": "textField",
+        "info": "The Client ID of your PingOne Worker application."
+      },
+      "clientSecret": {
+        "type": "string",
+        "displayName": "Client Secret",
+        "createdDate": 1694542169713,
+        "preferredControlType": "textField",
+        "info": "The Client Secret of your PingOne Worker application."
+      },
+      "envId": {
+        "type": "string",
+        "displayName": "Environment ID",
+        "createdDate": 1694542169598,
+        "preferredControlType": "textField",
+        "info": "Your PingOne environment ID."
+      },
+      "region": {
+        "type": "string",
+        "displayName": "Region",
+        "createdDate": 1694542169605,
+        "preferredControlType": "dropDown",
+        "info": "The region in which your PingOne environment exists."
+      }
+    }
+  },
+  {
     "name": "KYXStart",
     "connectorId": "kyxstartConnector",
     "connectorCategories": [
@@ -5459,6 +5499,25 @@
         "displayName": "SAML Parameters",
         "createdDate": 1694542169717,
         "info": ""
+      }
+    }
+  },
+  {
+    "name": "Scopes",
+    "connectorId": "scopesConnector",
+    "connectorCategories": [
+      {
+        "name": "Core",
+        "value": "core"
+      }
+    ],
+    "properties": {
+      "scopes": {
+        "type": "array",
+        "displayName": "Scopes/Permissions to request user consent for",
+        "createdDate": 1694542169686,
+        "preferredControlType": "tableViewScopes",
+        "info": "An array of scopes"
       }
     }
   },

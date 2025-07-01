@@ -3902,6 +3902,53 @@ resource "davinci_connection" "kbaConnector" {
 ```
 
 
+## KF Kerberos Connector
+
+Connector ID (`connector_id` in the resource): `kfKerberosConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
+* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
+* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
+* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
+
+
+Example:
+```terraform
+resource "davinci_connection" "kfKerberosConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "kfKerberosConnector"
+  name         = "My awesome kfKerberosConnector"
+
+  property {
+    name  = "clientId"
+    type  = "string"
+    value = var.kfkerberosconnector_property_client_id
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.kfkerberosconnector_property_client_secret
+  }
+
+  property {
+    name  = "envId"
+    type  = "string"
+    value = var.kfkerberosconnector_property_env_id
+  }
+
+  property {
+    name  = "region"
+    type  = "string"
+    value = var.kfkerberosconnector_property_region
+  }
+}
+```
+
+
 ## KYXStart
 
 Connector ID (`connector_id` in the resource): `kyxstartConnector`
@@ -6507,6 +6554,32 @@ resource "davinci_connection" "connectorSaviyntFlow" {
     name  = "saviyntUserName"
     type  = "string"
     value = var.connectorsaviyntflow_property_saviynt_user_name
+  }
+}
+```
+
+
+## Scopes
+
+Connector ID (`connector_id` in the resource): `scopesConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `scopes` (json): An array of scopes. Console display name: "Scopes/Permissions to request user consent for".
+
+
+Example:
+```terraform
+resource "davinci_connection" "scopesConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "scopesConnector"
+  name         = "My awesome scopesConnector"
+
+  property {
+    name  = "scopes"
+    type  = "json"
+    value = var.scopesconnector_property_scopes
   }
 }
 ```

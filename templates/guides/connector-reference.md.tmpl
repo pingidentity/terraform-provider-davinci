@@ -1443,6 +1443,22 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/kbaConnector.tf") }}
 
 
+## KF Kerberos Connector
+
+Connector ID (`connector_id` in the resource): `kfKerberosConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
+* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
+* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
+* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/kfKerberosConnector.tf") }}
+
+
 ## KYXStart
 
 Connector ID (`connector_id` in the resource): `kyxstartConnector`
@@ -2327,6 +2343,19 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorSaviyntFlow.tf") }}
+
+
+## Scopes
+
+Connector ID (`connector_id` in the resource): `scopesConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `scopes` (json): An array of scopes. Console display name: "Scopes/Permissions to request user consent for".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/scopesConnector.tf") }}
 
 
 ## Screen
