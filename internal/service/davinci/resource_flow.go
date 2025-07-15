@@ -813,7 +813,7 @@ func (r *FlowResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		if resp.Diagnostics.HasError() {
 			return
 		}
-	} else if !plan.Description.Equal(state.Description) || !plan.Name.Equal(state.Name) {
+	} else if !plan.LogLevel.Equal(state.LogLevel) || !plan.Description.Equal(state.Description) || !plan.Name.Equal(state.Name) {
 		daVinciUpdate := &davinci.FlowUpdate{
 			Name:        plan.Name.ValueStringPointer(),
 			Description: plan.Description.ValueStringPointer(),

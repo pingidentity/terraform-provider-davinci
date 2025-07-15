@@ -164,8 +164,28 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
 			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
 			resource.TestCheckResourceAttr(resourceFullName, "description", "This is an updated description"),
-			resource.TestCheckResourceAttr(resourceFullName, "log_level", "1"),
+			resource.TestCheckResourceAttr(resourceFullName, "log_level", "3"),
 			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", updateStepJson)),
+			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
+			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
+			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "0"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_variables.#", "0"),
+		),
+	}
+
+	updateNoDescriptionStepHcl, updateNoDescriptionStepJson, err := testAccResourceFlow_Minimal_WithMappingIDs_NoDescription_Update_HCL(resourceName, name, withBootstrapConfig)
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	updateNoDescriptionStep := resource.TestStep{
+		Config: updateNoDescriptionStepHcl,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestMatchResourceAttr(resourceFullName, "id", verify.P1DVResourceIDRegexpFullString),
+			resource.TestMatchResourceAttr(resourceFullName, "environment_id", verify.P1ResourceIDRegexpFullString),
+			resource.TestCheckResourceAttr(resourceFullName, "name", "simple"),
+			resource.TestCheckResourceAttr(resourceFullName, "log_level", "3"),
+			resource.TestCheckResourceAttr(resourceFullName, "flow_json", fmt.Sprintf("%s\n", updateNoDescriptionStepJson)),
 			resource.TestCheckResourceAttr(resourceFullName, "connection_link.#", "1"),
 			resource.TestCheckResourceAttr(resourceFullName, "deploy", "true"),
 			resource.TestCheckResourceAttr(resourceFullName, "subflow_link.#", "0"),
@@ -204,6 +224,13 @@ func testAccResourceFlow_Basic(t *testing.T, withBootstrapConfig bool) {
 			// Test updates
 			minimalStep,
 			updateStep,
+			{
+				Config:  updateStepHcl,
+				Destroy: true,
+			},
+			// Test updates without description
+			minimalStep,
+			updateNoDescriptionStep,
 			// Test importing the resource
 			{
 				ResourceName: resourceFullName,
@@ -1618,7 +1645,42 @@ resource "davinci_flow" "%[3]s" {
 
   description = "This is an updated description"
 
-  log_level = 1
+  log_level = 3
+
+  flow_json = <<EOT
+%[4]s
+EOT
+
+  // Error connector
+  connection_link {
+    id                           = davinci_connection.%[3]s-error.id
+    name                         = davinci_connection.%[3]s-error.name
+    replace_import_connection_id = "53ab83a4a4ab919d9f2cb02d9e111ac8"
+  }
+}`, acctest.PingoneEnvironmentSsoHcl(resourceName, withBootstrapConfig), commonHcl, resourceName, mainFlowJson), mainFlowJson, nil
+}
+
+func testAccResourceFlow_Minimal_WithMappingIDs_NoDescription_Update_HCL(resourceName, name string, withBootstrapConfig bool) (hcl, mainFlowJson string, err error) {
+
+	mainFlowJson, err = acctest.ReadFlowJsonFile("flows/full-minimal.json")
+	if err != nil {
+		return "", "", err
+	}
+
+	commonHcl, err := testAccResourceFlow_Common_WithMappingIDs_HCL(resourceName, name)
+	if err != nil {
+		return "", "", err
+	}
+
+	return fmt.Sprintf(`
+%[1]s
+
+%[2]s
+
+resource "davinci_flow" "%[3]s" {
+  environment_id = pingone_environment.%[3]s.id
+
+  log_level = 3
 
   flow_json = <<EOT
 %[4]s
