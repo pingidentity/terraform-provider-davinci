@@ -1,6 +1,6 @@
 module github.com/pingidentity/terraform-provider-davinci/tools
 
-go 1.24.3
+go 1.24.5
 
 require (
 	github.com/bflad/tfproviderlint v0.31.0
@@ -10,7 +10,7 @@ require (
 	github.com/katbyte/terrafmt v0.5.5
 	github.com/patrickcping/davinci-pingcli v0.0.2
 	github.com/pavius/impi v0.0.3
-	github.com/terraform-linters/tflint v0.58.0
+	github.com/terraform-linters/tflint v0.58.1
 )
 
 require (
