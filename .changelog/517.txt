@@ -1,0 +1,3 @@
+```release-note:bug
+`resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" when modifying just the `log_level` field.
+```
