@@ -3,9 +3,13 @@
 NOTES:
 
 * Update Connector Reference Guide (01 July 2025). ([#514](https://github.com/pingidentity/terraform-provider-davinci/issues/514))
+* Upgraded go version to 1.24.5 ([#519](https://github.com/pingidentity/terraform-provider-davinci/issues/519))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.57.1 => 0.59.0 ([#519](https://github.com/pingidentity/terraform-provider-davinci/issues/519))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.12.18 => 0.13.0 ([#519](https://github.com/pingidentity/terraform-provider-davinci/issues/519))
 
 BUG FIXES:
 
+* `resource/davinci_flow`: Fix "Provider produced inconsistent result after apply" when modifying just the `log_level` field. ([#517](https://github.com/pingidentity/terraform-provider-davinci/issues/517))
 * `resource/davinci_flow`: Fix log level values in the configuration validator warning message when the debug log level is enabled (`log_level = 3`). ([#507](https://github.com/pingidentity/terraform-provider-davinci/issues/507))
 
 ## 0.5.1 (16 June 2025)
