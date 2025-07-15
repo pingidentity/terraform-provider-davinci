@@ -8,7 +8,7 @@ The PingOne DaVinci Terraform provider is a plugin for [Terraform](https://www.t
 
 ## Requirements
 * Terraform 1.1+
-* Go 1.24.3+ (for local development builds)
+* go 1.24.5+ (for local development builds)
 
 ## Quickstarts
 

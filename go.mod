@@ -1,6 +1,6 @@
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.24.3
+go 1.24.5
 
 require (
 	github.com/google/go-cmp v0.7.0
@@ -11,8 +11,8 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.20.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.37.0
-	github.com/patrickcping/pingone-go-sdk-v2 v0.12.18
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.57.1
+	github.com/patrickcping/pingone-go-sdk-v2 v0.13.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.59.0
 	github.com/samir-gandhi/davinci-client-go v0.11.1
 )
 
