@@ -2665,6 +2665,44 @@
     }
   },
   {
+    "name": "Constella",
+    "connectorId": "constellaConnector",
+    "connectorCategories": [
+      {
+        "name": "Fraud",
+        "value": "fraud"
+      }
+    ],
+    "properties": {
+      "appToken": {
+        "displayName": "X-AppToken",
+        "preferredControlType": "textField",
+        "info": "Header for authorizing the use of the acquired services"
+      },
+      "baseUrl": {
+        "type": "string",
+        "displayName": "Base URL",
+        "createdDate": 1694542169717,
+        "preferredControlType": "textField",
+        "info": "Base URL from Constella tenant (Including https://)"
+      },
+      "token": {
+        "type": "string",
+        "displayName": "X-Token",
+        "createdDate": 1694542169722,
+        "preferredControlType": "textField",
+        "info": "Header for authenticating the user"
+      },
+      "username": {
+        "type": "string",
+        "displayName": "X-Username",
+        "createdDate": 1694542169587,
+        "preferredControlType": "textField",
+        "info": "Hexadecimal string header for identifying the user"
+      }
+    }
+  },
+  {
     "name": "Cookie",
     "connectorId": "cookieConnector",
     "connectorCategories": [
@@ -3389,6 +3427,50 @@
         "displayName": "Oauth2 Parameters",
         "createdDate": 1694542169672,
         "info": ""
+      }
+    }
+  },
+  {
+    "name": "Ideem",
+    "connectorId": "ideemConnector",
+    "connectorCategories": [
+      {
+        "name": "Authorize",
+        "value": "authorize"
+      }
+    ],
+    "properties": {
+      "applicationEnvironment": {
+        "displayName": "Application Environment",
+        "preferredControlType": "textField",
+        "info": "The name of the Ideem application environment."
+      },
+      "applicationId": {
+        "type": "string",
+        "displayName": "Application ID",
+        "createdDate": 1694542169724,
+        "preferredControlType": "textField",
+        "info": "Ideem Application ID"
+      },
+      "hostURL": {
+        "displayName": "Ideem Host URL",
+        "preferredControlType": "textField",
+        "info": "The host URL of the Ideem environment."
+      },
+      "userIdentifier": {
+        "displayName": "User Identifier",
+        "preferredControlType": "textField",
+        "info": "User Identifier for Ideem"
+      },
+      "validateTokenApiKey": {
+        "displayName": "Validate Token API Key",
+        "preferredControlType": "textField",
+        "info": "Used for the backend /validate-token API call to validate the signed token."
+      },
+      "zsmClientSdkApiKey": {
+        "displayName": "ZSM Client SDK API Key",
+        "preferredControlType": "textField",
+        "info": "Used for the Pingjection JS script (ZSMClientSDK)."
       }
     }
   },
@@ -5518,6 +5600,24 @@
         "createdDate": 1694542169686,
         "preferredControlType": "tableViewScopes",
         "info": "An array of scopes"
+      }
+    }
+  },
+  {
+    "name": "ScrambleID",
+    "connectorId": "scrambleIdConnector",
+    "connectorCategories": [
+      {
+        "name": "Authenticate",
+        "value": "authenticate"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
+        "info": ""
       }
     }
   },

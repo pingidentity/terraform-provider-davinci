@@ -1543,6 +1543,53 @@ resource "davinci_connection" "connectIdConnector" {
 ```
 
 
+## Constella
+
+Connector ID (`connector_id` in the resource): `constellaConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `appToken` (string): Header for authorizing the use of the acquired services. Console display name: "X-AppToken".
+* `baseUrl` (string): Base URL from Constella tenant (Including https://). Console display name: "Base URL".
+* `token` (string): Header for authenticating the user. Console display name: "X-Token".
+* `username` (string): Hexadecimal string header for identifying the user. Console display name: "X-Username".
+
+
+Example:
+```terraform
+resource "davinci_connection" "constellaConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "constellaConnector"
+  name         = "My awesome constellaConnector"
+
+  property {
+    name  = "appToken"
+    type  = "string"
+    value = var.constellaconnector_property_app_token
+  }
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.constellaconnector_property_base_url
+  }
+
+  property {
+    name  = "token"
+    type  = "string"
+    value = var.constellaconnector_property_token
+  }
+
+  property {
+    name  = "username"
+    type  = "string"
+    value = var.constellaconnector_property_username
+  }
+}
+```
+
+
 ## Cookie
 
 Connector ID (`connector_id` in the resource): `cookieConnector`
@@ -3377,6 +3424,67 @@ resource "davinci_connection" "idrampOidcConnector" {
     name  = "customAuth"
     type  = "json"
     value = jsonencode({})
+  }
+}
+```
+
+
+## Ideem
+
+Connector ID (`connector_id` in the resource): `ideemConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `applicationEnvironment` (string): The name of the Ideem application environment. Console display name: "Application Environment".
+* `applicationId` (string): Ideem Application ID. Console display name: "Application ID".
+* `hostURL` (string): The host URL of the Ideem environment. Console display name: "Ideem Host URL".
+* `userIdentifier` (string): User Identifier for Ideem. Console display name: "User Identifier".
+* `validateTokenApiKey` (string): Used for the backend /validate-token API call to validate the signed token. Console display name: "Validate Token API Key".
+* `zsmClientSdkApiKey` (string): Used for the Pingjection JS script (ZSMClientSDK). Console display name: "ZSM Client SDK API Key".
+
+
+Example:
+```terraform
+resource "davinci_connection" "ideemConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "ideemConnector"
+  name         = "My awesome ideemConnector"
+
+  property {
+    name  = "applicationEnvironment"
+    type  = "string"
+    value = var.ideemconnector_property_application_environment
+  }
+
+  property {
+    name  = "applicationId"
+    type  = "string"
+    value = var.ideemconnector_property_application_id
+  }
+
+  property {
+    name  = "hostURL"
+    type  = "string"
+    value = var.ideemconnector_property_host_u_r_l
+  }
+
+  property {
+    name  = "userIdentifier"
+    type  = "string"
+    value = var.ideemconnector_property_user_identifier
+  }
+
+  property {
+    name  = "validateTokenApiKey"
+    type  = "string"
+    value = var.ideemconnector_property_validate_token_api_key
+  }
+
+  property {
+    name  = "zsmClientSdkApiKey"
+    type  = "string"
+    value = var.ideemconnector_property_zsm_client_sdk_api_key
   }
 }
 ```
@@ -6580,6 +6688,32 @@ resource "davinci_connection" "scopesConnector" {
     name  = "scopes"
     type  = "json"
     value = var.scopesconnector_property_scopes
+  }
+}
+```
+
+
+## ScrambleID
+
+Connector ID (`connector_id` in the resource): `scrambleIdConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "scrambleIdConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "scrambleIdConnector"
+  name         = "My awesome scrambleIdConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.scrambleidconnector_property_custom_auth
   }
 }
 ```
