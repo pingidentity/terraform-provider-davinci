@@ -5,14 +5,14 @@ go 1.24.5
 require (
 	github.com/google/go-cmp v0.7.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/hashicorp/terraform-plugin-framework v1.15.0
+	github.com/hashicorp/terraform-plugin-framework v1.15.1
 	github.com/hashicorp/terraform-plugin-framework-validators v0.18.0
 	github.com/hashicorp/terraform-plugin-go v0.28.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.20.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.37.0
-	github.com/patrickcping/pingone-go-sdk-v2 v0.13.0
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.59.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.14.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.60.0
 	github.com/samir-gandhi/davinci-client-go v0.11.1
 )
 
