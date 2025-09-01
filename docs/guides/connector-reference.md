@@ -275,6 +275,24 @@ resource "davinci_connection" "adobemarketoConnector" {
 ```
 
 
+## Akamai Account Protector
+
+Connector ID (`connector_id` in the resource): `akamaiApConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "akamaiApConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "akamaiApConnector"
+  name         = "My awesome akamaiApConnector"
+}
+```
+
+
 ## Akamai MFA
 
 Connector ID (`connector_id` in the resource): `akamaiConnector`
