@@ -73,6 +73,17 @@
     }
   },
   {
+    "name": "Akamai Account Protector",
+    "connectorId": "akamaiApConnector",
+    "connectorCategories": [
+      {
+        "name": "",
+        "value": ""
+      }
+    ],
+    "properties": {}
+  },
+  {
     "name": "Akamai MFA",
     "connectorId": "akamaiConnector",
     "connectorCategories": [
