@@ -275,6 +275,24 @@ resource "davinci_connection" "adobemarketoConnector" {
 ```
 
 
+## Akamai Account Protector
+
+Connector ID (`connector_id` in the resource): `akamaiApConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "akamaiApConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "akamaiApConnector"
+  name         = "My awesome akamaiApConnector"
+}
+```
+
+
 ## Akamai MFA
 
 Connector ID (`connector_id` in the resource): `akamaiConnector`
@@ -2469,6 +2487,24 @@ resource "davinci_connection" "flowConnector" {
     type  = "string"
     value = var.flowconnector_property_pem_public_key
   }
+}
+```
+
+
+## Form
+
+Connector ID (`connector_id` in the resource): `pingOneFormsConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "pingOneFormsConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "pingOneFormsConnector"
+  name         = "My awesome pingOneFormsConnector"
 }
 ```
 
@@ -5767,24 +5803,6 @@ resource "davinci_connection" "pingOneCredentialsConnector" {
 ```
 
 
-## PingOne Forms
-
-Connector ID (`connector_id` in the resource): `pingOneFormsConnector`
-
-*No properties*
-
-
-Example:
-```terraform
-resource "davinci_connection" "pingOneFormsConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "pingOneFormsConnector"
-  name         = "My awesome pingOneFormsConnector"
-}
-```
-
-
 ## PingOne MFA
 
 Connector ID (`connector_id` in the resource): `pingOneMfaConnector`
@@ -6667,32 +6685,6 @@ resource "davinci_connection" "connectorSaviyntFlow" {
 ```
 
 
-## Scopes
-
-Connector ID (`connector_id` in the resource): `scopesConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `scopes` (json): An array of scopes. Console display name: "Scopes/Permissions to request user consent for".
-
-
-Example:
-```terraform
-resource "davinci_connection" "scopesConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "scopesConnector"
-  name         = "My awesome scopesConnector"
-
-  property {
-    name  = "scopes"
-    type  = "json"
-    value = var.scopesconnector_property_scopes
-  }
-}
-```
-
-
 ## ScrambleID
 
 Connector ID (`connector_id` in the resource): `scrambleIdConnector`
@@ -7361,6 +7353,123 @@ resource "davinci_connection" "stringsConnector" {
 
   connector_id = "stringsConnector"
   name         = "My awesome stringsConnector"
+}
+```
+
+
+## Symantec VIP
+
+Connector ID (`connector_id` in the resource): `symc`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authDescription` (string):  Console display name: "Authentication Description".
+* `connectorName` (string):  Console display name: "Connector Name".
+* `description` (string):  Console display name: "Description".
+* `details1` (string):  Console display name: "Credentials Details 1".
+* `details2` (string):  Console display name: "Credentials Details 2".
+* `iconUrl` (string):  Console display name: "Icon URL".
+* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
+* `pfxBase64` (string):  Console display name: "PFX File (Base64 encoded)".
+* `pfxPassword` (string):  Console display name: "PFX Password".
+* `pushLoginEnabled` (boolean):  Console display name: "Enable Push Sign On".
+* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
+* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `title` (string):  Console display name: "Title".
+* `toolTip` (string):  Console display name: "Tooltip".
+
+
+Example:
+```terraform
+resource "davinci_connection" "symc" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "symc"
+  name         = "My awesome symc"
+
+  property {
+    name  = "authDescription"
+    type  = "string"
+    value = var.symc_property_auth_description
+  }
+
+  property {
+    name  = "connectorName"
+    type  = "string"
+    value = var.symc_property_connector_name
+  }
+
+  property {
+    name  = "description"
+    type  = "string"
+    value = var.symc_property_description
+  }
+
+  property {
+    name  = "details1"
+    type  = "string"
+    value = var.symc_property_details1
+  }
+
+  property {
+    name  = "details2"
+    type  = "string"
+    value = var.symc_property_details2
+  }
+
+  property {
+    name  = "iconUrl"
+    type  = "string"
+    value = var.symc_property_icon_url
+  }
+
+  property {
+    name  = "iconUrlPng"
+    type  = "string"
+    value = var.symc_property_icon_url_png
+  }
+
+  property {
+    name  = "pfxBase64"
+    type  = "string"
+    value = var.symc_property_pfx_base64
+  }
+
+  property {
+    name  = "pfxPassword"
+    type  = "string"
+    value = var.symc_property_pfx_password
+  }
+
+  property {
+    name  = "pushLoginEnabled"
+    type  = "boolean"
+    value = var.symc_property_push_login_enabled
+  }
+
+  property {
+    name  = "showCredAddedOn"
+    type  = "boolean"
+    value = var.symc_property_show_cred_added_on
+  }
+
+  property {
+    name  = "showCredAddedVia"
+    type  = "boolean"
+    value = var.symc_property_show_cred_added_via
+  }
+
+  property {
+    name  = "title"
+    type  = "string"
+    value = var.symc_property_title
+  }
+
+  property {
+    name  = "toolTip"
+    type  = "string"
+    value = var.symc_property_tool_tip
+  }
 }
 ```
 
