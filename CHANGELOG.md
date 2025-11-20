@@ -4,6 +4,11 @@ NOTES:
 
 * Update Connector Reference Guide (01 August 2025). ([#523](https://github.com/pingidentity/terraform-provider-davinci/issues/523))
 * Update Connector Reference Guide (01 November 2025). ([#548](https://github.com/pingidentity/terraform-provider-davinci/issues/548))
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.15.0 => 1.16.1 ([#553](https://github.com/pingidentity/terraform-provider-davinci/issues/553))
+* bump `github.com/hashicorp/terraform-plugin-go` 0.28.0 => 0.29.0 ([#553](https://github.com/pingidentity/terraform-provider-davinci/issues/553))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.37.0 => 2.38.1 ([#553](https://github.com/pingidentity/terraform-provider-davinci/issues/553))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.59.0 => 0.61.0 ([#553](https://github.com/pingidentity/terraform-provider-davinci/issues/553))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.13.0 => 0.14.2 ([#553](https://github.com/pingidentity/terraform-provider-davinci/issues/553))
 
 ## 0.5.2 (15 July 2025)
 
