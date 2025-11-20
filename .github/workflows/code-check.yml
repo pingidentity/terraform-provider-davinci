@@ -118,7 +118,7 @@ jobs:
           )" >> $GITHUB_OUTPUT
 
       - name: lint
-        uses: golangci/golangci-lint-action@v8
+        uses: golangci/golangci-lint-action@v9
         with:
           version: "${{ steps.golangci-lint-version.outputs.version }}"
 
