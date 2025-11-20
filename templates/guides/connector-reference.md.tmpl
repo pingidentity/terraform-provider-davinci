@@ -108,6 +108,21 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorAcuant.tf") }}
 
 
+## Adobe Experience Manager
+
+Connector ID (`connector_id` in the resource): `adobeExperienceManagerConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): Public identifier for this connector application. Console display name: "Client ID".
+* `clientSecret` (string): Confidential password that authenticates this connector application. Console display name: "Client Secret".
+* `orgId` (string): Identifier for the Adobe Experience Cloud account. Console display name: "Organization ID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/adobeExperienceManagerConnector.tf") }}
+
+
 ## Adobe Marketo
 
 Connector ID (`connector_id` in the resource): `adobemarketoConnector`
@@ -121,6 +136,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/adobemarketoConnector.tf") }}
+
+
+## Akamai Account Protector
+
+Connector ID (`connector_id` in the resource): `akamaiApConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/akamaiApConnector.tf") }}
 
 
 ## Akamai MFA
@@ -308,6 +334,19 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/azureUserManagementConnector.tf") }}
+
+
+## Babel Street
+
+Connector ID (`connector_id` in the resource): `babelStreetConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): API Key from Babel Street tenant. Console display name: "API Key".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/babelStreetConnector.tf") }}
 
 
 ## Badge
@@ -895,6 +934,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/flowConnector.tf") }}
+
+
+## Form
+
+Connector ID (`connector_id` in the resource): `pingOneFormsConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingOneFormsConnector.tf") }}
 
 
 ## Forter
@@ -2058,17 +2108,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/pingOneCredentialsConnector.tf") }}
 
 
-## PingOne Forms
-
-Connector ID (`connector_id` in the resource): `pingOneFormsConnector`
-
-*No properties*
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/pingOneFormsConnector.tf") }}
-
-
 ## PingOne MFA
 
 Connector ID (`connector_id` in the resource): `pingOneMfaConnector`
@@ -2379,19 +2418,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorSaviyntFlow.tf") }}
 
 
-## Scopes
-
-Connector ID (`connector_id` in the resource): `scopesConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `scopes` (json): An array of scopes. Console display name: "Scopes/Permissions to request user consent for".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/scopesConnector.tf") }}
-
-
 ## ScrambleID
 
 Connector ID (`connector_id` in the resource): `scrambleIdConnector`
@@ -2670,6 +2696,32 @@ Connector ID (`connector_id` in the resource): `stringsConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/stringsConnector.tf") }}
+
+
+## Symantec VIP
+
+Connector ID (`connector_id` in the resource): `symc`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `authDescription` (string):  Console display name: "Authentication Description".
+* `connectorName` (string):  Console display name: "Connector Name".
+* `description` (string):  Console display name: "Description".
+* `details1` (string):  Console display name: "Credentials Details 1".
+* `details2` (string):  Console display name: "Credentials Details 2".
+* `iconUrl` (string):  Console display name: "Icon URL".
+* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
+* `pfxBase64` (string):  Console display name: "PFX File (Base64 encoded)".
+* `pfxPassword` (string):  Console display name: "PFX Password".
+* `pushLoginEnabled` (boolean):  Console display name: "Enable Push Sign On".
+* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
+* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `title` (string):  Console display name: "Title".
+* `toolTip` (string):  Console display name: "Tooltip".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/symc.tf") }}
 
 
 ## TMT Analysis

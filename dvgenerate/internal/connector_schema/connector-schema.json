@@ -42,6 +42,37 @@
     }
   },
   {
+    "name": "Adobe Experience Manager",
+    "connectorId": "adobeExperienceManagerConnector",
+    "connectorCategories": [
+      {
+        "name": "Operate",
+        "value": "operate"
+      }
+    ],
+    "properties": {
+      "clientId": {
+        "type": "string",
+        "displayName": "Client ID",
+        "createdDate": 1694542169628,
+        "preferredControlType": "textField",
+        "info": "Public identifier for this connector application"
+      },
+      "clientSecret": {
+        "type": "string",
+        "displayName": "Client Secret",
+        "createdDate": 1694542169713,
+        "preferredControlType": "textField",
+        "info": "Confidential password that authenticates this connector application"
+      },
+      "orgId": {
+        "displayName": "Organization ID",
+        "preferredControlType": "textField",
+        "info": "Identifier for the Adobe Experience Cloud account"
+      }
+    }
+  },
+  {
     "name": "Adobe Marketo",
     "connectorId": "adobemarketoConnector",
     "connectorCategories": [
@@ -71,6 +102,17 @@
         "info": "The API endpoint for your Adobe Marketo instance, such as \"abc123.mktorest.com/rest\"."
       }
     }
+  },
+  {
+    "name": "Akamai Account Protector",
+    "connectorId": "akamaiApConnector",
+    "connectorCategories": [
+      {
+        "name": "",
+        "value": ""
+      }
+    ],
+    "properties": {}
   },
   {
     "name": "Akamai MFA",
@@ -325,6 +367,25 @@
         "displayName": "Custom Parameters",
         "createdDate": 1694542169719,
         "info": ""
+      }
+    }
+  },
+  {
+    "name": "Babel Street",
+    "connectorId": "babelStreetConnector",
+    "connectorCategories": [
+      {
+        "name": "Operate",
+        "value": "operate"
+      }
+    ],
+    "properties": {
+      "apiKey": {
+        "type": "string",
+        "displayName": "API Key",
+        "createdDate": 1694542169671,
+        "preferredControlType": "textField",
+        "info": "API Key from Babel Street tenant"
       }
     }
   },
@@ -5109,7 +5170,7 @@
     }
   },
   {
-    "name": "PingOne Forms",
+    "name": "Form",
     "connectorId": "pingOneFormsConnector",
     "connectorCategories": [
       {
@@ -5581,25 +5642,6 @@
         "displayName": "SAML Parameters",
         "createdDate": 1694542169717,
         "info": ""
-      }
-    }
-  },
-  {
-    "name": "Scopes",
-    "connectorId": "scopesConnector",
-    "connectorCategories": [
-      {
-        "name": "Core",
-        "value": "core"
-      }
-    ],
-    "properties": {
-      "scopes": {
-        "type": "array",
-        "displayName": "Scopes/Permissions to request user consent for",
-        "createdDate": 1694542169686,
-        "preferredControlType": "tableViewScopes",
-        "info": "An array of scopes"
       }
     }
   },
@@ -6081,6 +6123,116 @@
       }
     ],
     "properties": {}
+  },
+  {
+    "name": "Symantec VIP",
+    "connectorId": "symc",
+    "connectorCategories": [
+      {
+        "name": "Authenticate",
+        "value": "authenticate"
+      }
+    ],
+    "properties": {
+      "authDescription": {
+        "type": "string",
+        "displayName": "Authentication Description",
+        "createdDate": 1694542169716,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "connectorName": {
+        "type": "string",
+        "displayName": "Connector Name",
+        "createdDate": 1694542169723,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "description": {
+        "type": "string",
+        "displayName": "Description",
+        "createdDate": 1694542169636,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "details1": {
+        "type": "string",
+        "displayName": "Credentials Details 1",
+        "createdDate": 1694542169712,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "details2": {
+        "type": "string",
+        "displayName": "Credentials Details 2",
+        "createdDate": 1694542169591,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "iconUrl": {
+        "type": "string",
+        "displayName": "Icon URL",
+        "createdDate": 1694542169721,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "iconUrlPng": {
+        "type": "string",
+        "displayName": "Icon URL in PNG",
+        "createdDate": 1694542169592,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "pfxBase64": {
+        "type": "string",
+        "displayName": "PFX File (Base64 encoded)",
+        "createdDate": 1694542169639,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "pfxPassword": {
+        "type": "string",
+        "displayName": "PFX Password",
+        "createdDate": 1694542169605,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "pushLoginEnabled": {
+        "type": "boolean",
+        "displayName": "Enable Push Sign On",
+        "createdDate": 1694542169638,
+        "preferredControlType": "toggleSwitch",
+        "info": ""
+      },
+      "showCredAddedOn": {
+        "type": "boolean",
+        "displayName": "Show Credentials Added On?",
+        "createdDate": 1694542169614,
+        "preferredControlType": "toggleSwitch",
+        "info": ""
+      },
+      "showCredAddedVia": {
+        "type": "boolean",
+        "displayName": "Show Credentials Added through ?",
+        "createdDate": 1694542169610,
+        "preferredControlType": "toggleSwitch",
+        "info": ""
+      },
+      "title": {
+        "type": "string",
+        "displayName": "Title",
+        "createdDate": 1694542169716,
+        "preferredControlType": "textField",
+        "info": ""
+      },
+      "toolTip": {
+        "type": "string",
+        "displayName": "Tooltip",
+        "createdDate": 1694542169555,
+        "preferredControlType": "textField",
+        "info": ""
+      }
+    }
   },
   {
     "name": "Telesign",
