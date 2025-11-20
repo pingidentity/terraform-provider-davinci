@@ -3,6 +3,7 @@
 NOTES:
 
 * Update Connector Reference Guide (01 August 2025). ([#523](https://github.com/pingidentity/terraform-provider-davinci/issues/523))
+* Update Connector Reference Guide (01 November 2025). ([#548](https://github.com/pingidentity/terraform-provider-davinci/issues/548))
 
 ## 0.5.2 (15 July 2025)
 
