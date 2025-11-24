@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework-validators v0.18.0
 	github.com/hashicorp/terraform-plugin-go v0.29.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
-	github.com/hashicorp/terraform-plugin-mux v0.20.0
+	github.com/hashicorp/terraform-plugin-mux v0.21.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.38.1
 	github.com/patrickcping/pingone-go-sdk-v2 v0.14.2
 	github.com/patrickcping/pingone-go-sdk-v2/management v0.61.0
