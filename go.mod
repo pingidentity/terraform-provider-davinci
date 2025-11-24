@@ -11,8 +11,8 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-mux v0.20.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.38.1
-	github.com/patrickcping/pingone-go-sdk-v2 v0.14.2
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.61.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.14.3
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.62.0
 	github.com/samir-gandhi/davinci-client-go v0.11.1
 )
 
@@ -32,7 +32,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/mod v0.29.0 // indirect
-	golang.org/x/oauth2 v0.31.0 // indirect
+	golang.org/x/oauth2 v0.32.0 // indirect
 	golang.org/x/sync v0.18.0 // indirect
 	golang.org/x/tools v0.38.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250707201910-8d1bb00bc6a7 // indirect
