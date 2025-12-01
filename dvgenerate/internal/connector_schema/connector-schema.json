@@ -1877,6 +1877,24 @@
     }
   },
   {
+    "name": "Island",
+    "connectorId": "connectorIsland",
+    "connectorCategories": [
+      {
+        "name": "Authorize",
+        "value": "authorize"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
+        "info": ""
+      }
+    }
+  },
+  {
     "name": "Jamf",
     "connectorId": "connectorJamf",
     "connectorCategories": [
