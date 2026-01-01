@@ -60,6 +60,9 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 * `accessKeyId` (string): The AWS Access Key. Console display name: "AWS Access Key".
 * `region` (string): The AWS Region. Console display name: "AWS Region".
+* `secondaryAccessKeyId` (string): Optional fallback AWS Access Key used if the primary call times out or cannot connect. Console display name: "Secondary AWS Access Key".
+* `secondaryRegion` (string): Optional fallback AWS Region used if the primary call times out or cannot connect. Console display name: "Secondary AWS Region".
+* `secondarySecretAccessKey` (string): Optional fallback AWS Access Secret used if the primary call times out or cannot connect. Console display name: "Secondary AWS Access Secret".
 * `secretAccessKey` (string): The AWS Access Secret. Console display name: "AWS Access Secret".
 
 
@@ -866,6 +869,19 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/errorConnector.tf") }}
 
 
+## FAPI Baseline (mTLS)
+
+Connector ID (`connector_id` in the resource): `fapiConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/fapiConnector.tf") }}
+
+
 ## Facebook Login
 
 Connector ID (`connector_id` in the resource): `facebookIdpConnector`
@@ -1420,6 +1436,19 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/intellicheckConnector.tf") }}
+
+
+## Island
+
+Connector ID (`connector_id` in the resource): `connectorIsland`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorIsland.tf") }}
 
 
 ## Jamf
@@ -2991,11 +3020,8 @@ Connector ID (`connector_id` in the resource): `userPolicyConnector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
 
-* `passwordExpiryInDays` (number): Choose 0 for never expire. Console display name: "Expires in the specified number of days".
-* `passwordExpiryNotification` (boolean):  Console display name: "Notify user before password expires".
 * `passwordLengthMax` (number):  Console display name: "Maximum Password Length".
 * `passwordLengthMin` (number):  Console display name: "Minimum Password Length".
-* `passwordLockoutAttempts` (number):  Console display name: "Number of failed login attempts before account is locked".
 * `passwordPreviousXPasswords` (number): Choose 0 if any previous passwords are allowed. This is not recommended. Console display name: "Number of unique user passwords associated with a user".
 * `passwordRequireLowercase` (boolean): Should the password contain lowercase characters?. Console display name: "Require Lowercase Characters".
 * `passwordRequireNumbers` (boolean): Should the password contain numbers?. Console display name: "Require Numbers".
@@ -3003,7 +3029,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `passwordRequireUppercase` (boolean): Should the password contain uppercase characters?. Console display name: "Require Uppercase Characters".
 * `passwordSpacesOk` (boolean): Are spaces allowed in the password?. Console display name: "Spaces Accepted".
 * `passwordsEnabled` (boolean):  Console display name: "Passwords Feature Enabled?".
-* `temporaryPasswordExpiryInDays` (number): If an administrator sets a temporary password, choose how long before it expires. Console display name: "Temporary password expires in the specified number of days".
 
 
 Example:
