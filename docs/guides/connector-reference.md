@@ -111,6 +111,9 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 * `accessKeyId` (string): The AWS Access Key. Console display name: "AWS Access Key".
 * `region` (string): The AWS Region. Console display name: "AWS Region".
+* `secondaryAccessKeyId` (string): Optional fallback AWS Access Key used if the primary call times out or cannot connect. Console display name: "Secondary AWS Access Key".
+* `secondaryRegion` (string): Optional fallback AWS Region used if the primary call times out or cannot connect. Console display name: "Secondary AWS Region".
+* `secondarySecretAccessKey` (string): Optional fallback AWS Access Secret used if the primary call times out or cannot connect. Console display name: "Secondary AWS Access Secret".
 * `secretAccessKey` (string): The AWS Access Secret. Console display name: "AWS Access Secret".
 
 
@@ -132,6 +135,24 @@ resource "davinci_connection" "connectorAmazonAwsSecretsManager" {
     name  = "region"
     type  = "string"
     value = "eu-west-1"
+  }
+
+  property {
+    name  = "secondaryAccessKeyId"
+    type  = "string"
+    value = var.connectoramazonawssecretsmanager_property_secondary_access_key_id
+  }
+
+  property {
+    name  = "secondaryRegion"
+    type  = "string"
+    value = var.connectoramazonawssecretsmanager_property_secondary_region
+  }
+
+  property {
+    name  = "secondarySecretAccessKey"
+    type  = "string"
+    value = var.connectoramazonawssecretsmanager_property_secondary_secret_access_key
   }
 
   property {
@@ -2261,6 +2282,32 @@ resource "davinci_connection" "errorConnector" {
 ```
 
 
+## FAPI Baseline (mTLS)
+
+Connector ID (`connector_id` in the resource): `fapiConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "fapiConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "fapiConnector"
+  name         = "My awesome fapiConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.fapiconnector_property_custom_auth
+  }
+}
+```
+
+
 ## Facebook Login
 
 Connector ID (`connector_id` in the resource): `facebookIdpConnector`
@@ -3697,6 +3744,32 @@ resource "davinci_connection" "intellicheckConnector" {
     name  = "customerId"
     type  = "string"
     value = var.intellicheckconnector_property_customer_id
+  }
+}
+```
+
+
+## Island
+
+Connector ID (`connector_id` in the resource): `connectorIsland`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorIsland" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorIsland"
+  name         = "My awesome connectorIsland"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.connectorisland_property_custom_auth
   }
 }
 ```
@@ -8475,11 +8548,8 @@ Connector ID (`connector_id` in the resource): `userPolicyConnector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
 
-* `passwordExpiryInDays` (number): Choose 0 for never expire. Console display name: "Expires in the specified number of days".
-* `passwordExpiryNotification` (boolean):  Console display name: "Notify user before password expires".
 * `passwordLengthMax` (number):  Console display name: "Maximum Password Length".
 * `passwordLengthMin` (number):  Console display name: "Minimum Password Length".
-* `passwordLockoutAttempts` (number):  Console display name: "Number of failed login attempts before account is locked".
 * `passwordPreviousXPasswords` (number): Choose 0 if any previous passwords are allowed. This is not recommended. Console display name: "Number of unique user passwords associated with a user".
 * `passwordRequireLowercase` (boolean): Should the password contain lowercase characters?. Console display name: "Require Lowercase Characters".
 * `passwordRequireNumbers` (boolean): Should the password contain numbers?. Console display name: "Require Numbers".
@@ -8487,7 +8557,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `passwordRequireUppercase` (boolean): Should the password contain uppercase characters?. Console display name: "Require Uppercase Characters".
 * `passwordSpacesOk` (boolean): Are spaces allowed in the password?. Console display name: "Spaces Accepted".
 * `passwordsEnabled` (boolean):  Console display name: "Passwords Feature Enabled?".
-* `temporaryPasswordExpiryInDays` (number): If an administrator sets a temporary password, choose how long before it expires. Console display name: "Temporary password expires in the specified number of days".
 
 
 Example:
@@ -8499,18 +8568,6 @@ resource "davinci_connection" "userPolicyConnector" {
   name         = "My awesome userPolicyConnector"
 
   property {
-    name  = "passwordExpiryInDays"
-    type  = "number"
-    value = var.userpolicyconnector_property_password_expiry_in_days
-  }
-
-  property {
-    name  = "passwordExpiryNotification"
-    type  = "boolean"
-    value = var.userpolicyconnector_property_password_expiry_notification
-  }
-
-  property {
     name  = "passwordLengthMax"
     type  = "number"
     value = var.userpolicyconnector_property_password_length_max
@@ -8520,12 +8577,6 @@ resource "davinci_connection" "userPolicyConnector" {
     name  = "passwordLengthMin"
     type  = "number"
     value = var.userpolicyconnector_property_password_length_min
-  }
-
-  property {
-    name  = "passwordLockoutAttempts"
-    type  = "number"
-    value = var.userpolicyconnector_property_password_lockout_attempts
   }
 
   property {
@@ -8568,12 +8619,6 @@ resource "davinci_connection" "userPolicyConnector" {
     name  = "passwordsEnabled"
     type  = "boolean"
     value = var.userpolicyconnector_property_passwords_enabled
-  }
-
-  property {
-    name  = "temporaryPasswordExpiryInDays"
-    type  = "number"
-    value = var.userpolicyconnector_property_temporary_password_expiry_in_days
   }
 }
 ```
