@@ -1160,6 +1160,21 @@
         "preferredControlType": "textField",
         "info": "The AWS Region"
       },
+      "secondaryAccessKeyId": {
+        "displayName": "Secondary AWS Access Key",
+        "preferredControlType": "textField",
+        "info": "Optional fallback AWS Access Key used if the primary call times out or cannot connect"
+      },
+      "secondaryRegion": {
+        "displayName": "Secondary AWS Region",
+        "preferredControlType": "textField",
+        "info": "Optional fallback AWS Region used if the primary call times out or cannot connect"
+      },
+      "secondarySecretAccessKey": {
+        "displayName": "Secondary AWS Access Secret",
+        "preferredControlType": "textField",
+        "info": "Optional fallback AWS Access Secret used if the primary call times out or cannot connect"
+      },
       "secretAccessKey": {
         "displayName": "AWS Access Secret",
         "preferredControlType": "textField",
@@ -1877,6 +1892,24 @@
     }
   },
   {
+    "name": "Island",
+    "connectorId": "connectorIsland",
+    "connectorCategories": [
+      {
+        "name": "Authorize",
+        "value": "authorize"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
+        "info": ""
+      }
+    }
+  },
+  {
     "name": "Jamf",
     "connectorId": "connectorJamf",
     "connectorCategories": [
@@ -2138,9 +2171,9 @@
         "info": "Secret Key"
       },
       "prismaUsername": {
-        "displayName": "Prisma - Access Key",
+        "displayName": "Username",
         "preferredControlType": "textField",
-        "info": "Access Key"
+        "info": "User name"
       }
     }
   },
@@ -3082,6 +3115,24 @@
         "type": "array",
         "displayName": "Oauth2 Parameters",
         "createdDate": 1694542169672,
+        "info": ""
+      }
+    }
+  },
+  {
+    "name": "FAPI Baseline (mTLS)",
+    "connectorId": "fapiConnector",
+    "connectorCategories": [
+      {
+        "name": "Verify",
+        "value": "verify"
+      }
+    ],
+    "properties": {
+      "customAuth": {
+        "type": "array",
+        "displayName": "Custom Parameters",
+        "createdDate": 1694542169719,
         "info": ""
       }
     }
@@ -4416,6 +4467,44 @@
     }
   },
   {
+    "name": "Microsoft Defender for Endpoint",
+    "connectorId": "microsoftDefenderConnector",
+    "connectorCategories": [
+      {
+        "name": "Operate",
+        "value": "operate"
+      }
+    ],
+    "properties": {
+      "baseUrl": {
+        "type": "string",
+        "displayName": "Base URL",
+        "createdDate": 1694542169717,
+        "preferredControlType": "dropDown",
+        "info": "The regional API endpoint for your Microsoft Defender for Endpoint tenant. Select the region where your tenant data is stored."
+      },
+      "clientId": {
+        "type": "string",
+        "displayName": "Client ID",
+        "createdDate": 1694542169628,
+        "preferredControlType": "textField",
+        "info": "The Application (client) ID assigned to your app registration in the Microsoft Entra admin center"
+      },
+      "clientSecret": {
+        "type": "string",
+        "displayName": "Client Secret",
+        "createdDate": 1694542169713,
+        "preferredControlType": "textField",
+        "info": "The confidential client secret generated for your application to authenticate against the Microsoft identity platform"
+      },
+      "tenantId": {
+        "displayName": "Tenant ID",
+        "preferredControlType": "textField",
+        "info": "The unique identifier of your Microsoft Entra ID (Azure AD) tenant"
+      }
+    }
+  },
+  {
     "name": "Microsoft Dynamics - Customer Insights",
     "connectorId": "microsoftDynamicsCustomerInsightsConnector",
     "connectorCategories": [
@@ -4475,8 +4564,8 @@
     "connectorId": "microsoftIdpConnector",
     "connectorCategories": [
       {
-        "name": "Identity Provider (IDP)",
-        "value": "idp"
+        "name": "Authenticate",
+        "value": "authenticate"
       }
     ],
     "properties": {
@@ -4503,6 +4592,49 @@
         "displayName": "Custom Parameters",
         "createdDate": 1694542169719,
         "info": ""
+      }
+    }
+  },
+  {
+    "name": "Mitek",
+    "connectorId": "mitekConnector",
+    "connectorCategories": [
+      {
+        "name": "Authorize",
+        "value": "authorize"
+      }
+    ],
+    "properties": {
+      "clientId": {
+        "type": "string",
+        "displayName": "Client ID",
+        "createdDate": 1694542169628,
+        "preferredControlType": "textField",
+        "info": "Mitek Client ID"
+      },
+      "clientSecret": {
+        "type": "string",
+        "displayName": "Client Secret",
+        "createdDate": 1694542169713,
+        "preferredControlType": "textField",
+        "info": "Mitek Client Secret"
+      },
+      "hostURL": {
+        "displayName": "Mitek Host URL",
+        "preferredControlType": "textField",
+        "info": "The host URL of the Mitek API (do not include `https://`)"
+      },
+      "requstAPIVersion": {
+        "displayName": "Request API Version",
+        "preferredControlType": "textField",
+        "info": "Mitek Request API Version"
+      },
+      "skWebhookUri": {
+        "type": "string",
+        "displayName": "Redirect Webhook URI",
+        "createdDate": 1694542169615,
+        "preferredControlType": "textField",
+        "info": "Use this url as the Webhook URL in the Third Party Integration's configuration"
       }
     }
   },
@@ -5675,6 +5807,40 @@
     "properties": {}
   },
   {
+    "name": "Secret Double Octopus",
+    "connectorId": "secretDoubleOctopusConnector",
+    "connectorCategories": [
+      {
+        "name": "Operate",
+        "value": "operate"
+      }
+    ],
+    "properties": {
+      "apiToken": {
+        "displayName": "API Token",
+        "preferredControlType": "textField",
+        "info": "The 128-character API Token found in the Management Console under Service > Sign-On tab"
+      },
+      "baseUrl": {
+        "type": "string",
+        "displayName": "Base URL",
+        "createdDate": 1694542169717,
+        "preferredControlType": "textField",
+        "info": "The root URL of your Secret Double Octopus authentication server (e.g., https://sdo.example.com)"
+      },
+      "serviceId": {
+        "displayName": "Service ID",
+        "preferredControlType": "textField",
+        "info": "The service UUID found in the REST Endpoint URL field in the Management Console under Service > Sign-On tab"
+      },
+      "x509Certificate": {
+        "displayName": "X.509 Certificate",
+        "preferredControlType": "textArea",
+        "info": "The public certificate from SDO used to verify response signatures, found in the Management Console under Service > Sign-On tab"
+      }
+    }
+  },
+  {
     "name": "SecurID",
     "connectorId": "securIdConnector",
     "connectorCategories": [
@@ -6811,20 +6977,6 @@
       }
     ],
     "properties": {
-      "passwordExpiryInDays": {
-        "type": "number",
-        "displayName": "Expires in the specified number of days",
-        "createdDate": 1694542169605,
-        "preferredControlType": "textField",
-        "info": "Choose 0 for never expire"
-      },
-      "passwordExpiryNotification": {
-        "type": "boolean",
-        "displayName": "Notify user before password expires",
-        "createdDate": 1694542169653,
-        "preferredControlType": "toggleSwitch",
-        "info": ""
-      },
       "passwordLengthMax": {
         "type": "number",
         "displayName": "Maximum Password Length",
@@ -6836,13 +6988,6 @@
         "type": "number",
         "displayName": "Minimum Password Length",
         "createdDate": 1694542169598,
-        "preferredControlType": "textField",
-        "info": ""
-      },
-      "passwordLockoutAttempts": {
-        "type": "number",
-        "displayName": "Number of failed login attempts before account is locked",
-        "createdDate": 1694542169734,
         "preferredControlType": "textField",
         "info": ""
       },
@@ -6894,13 +7039,6 @@
         "createdDate": 1694542169652,
         "preferredControlType": "toggleSwitch",
         "info": ""
-      },
-      "temporaryPasswordExpiryInDays": {
-        "type": "number",
-        "displayName": "Temporary password expires in the specified number of days",
-        "createdDate": 1694542169720,
-        "preferredControlType": "textField",
-        "info": "If an administrator sets a temporary password, choose how long before it expires."
       }
     }
   },
