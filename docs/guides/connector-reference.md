@@ -111,6 +111,9 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 * `accessKeyId` (string): The AWS Access Key. Console display name: "AWS Access Key".
 * `region` (string): The AWS Region. Console display name: "AWS Region".
+* `secondaryAccessKeyId` (string): Optional fallback AWS Access Key used if the primary call times out or cannot connect. Console display name: "Secondary AWS Access Key".
+* `secondaryRegion` (string): Optional fallback AWS Region used if the primary call times out or cannot connect. Console display name: "Secondary AWS Region".
+* `secondarySecretAccessKey` (string): Optional fallback AWS Access Secret used if the primary call times out or cannot connect. Console display name: "Secondary AWS Access Secret".
 * `secretAccessKey` (string): The AWS Access Secret. Console display name: "AWS Access Secret".
 
 
@@ -132,6 +135,24 @@ resource "davinci_connection" "connectorAmazonAwsSecretsManager" {
     name  = "region"
     type  = "string"
     value = "eu-west-1"
+  }
+
+  property {
+    name  = "secondaryAccessKeyId"
+    type  = "string"
+    value = var.connectoramazonawssecretsmanager_property_secondary_access_key_id
+  }
+
+  property {
+    name  = "secondaryRegion"
+    type  = "string"
+    value = var.connectoramazonawssecretsmanager_property_secondary_region
+  }
+
+  property {
+    name  = "secondarySecretAccessKey"
+    type  = "string"
+    value = var.connectoramazonawssecretsmanager_property_secondary_secret_access_key
   }
 
   property {
@@ -2261,6 +2282,32 @@ resource "davinci_connection" "errorConnector" {
 ```
 
 
+## FAPI Baseline (mTLS)
+
+Connector ID (`connector_id` in the resource): `fapiConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "fapiConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "fapiConnector"
+  name         = "My awesome fapiConnector"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.fapiconnector_property_custom_auth
+  }
+}
+```
+
+
 ## Facebook Login
 
 Connector ID (`connector_id` in the resource): `facebookIdpConnector`
@@ -3702,6 +3749,32 @@ resource "davinci_connection" "intellicheckConnector" {
 ```
 
 
+## Island
+
+Connector ID (`connector_id` in the resource): `connectorIsland`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `customAuth` (json):  Console display name: "Custom Parameters".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorIsland" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorIsland"
+  name         = "My awesome connectorIsland"
+
+  property {
+    name  = "customAuth"
+    type  = "json"
+    value = var.connectorisland_property_custom_auth
+  }
+}
+```
+
+
 ## Jamf
 
 Connector ID (`connector_id` in the resource): `connectorJamf`
@@ -4670,6 +4743,53 @@ resource "davinci_connection" "melissaConnector" {
 ```
 
 
+## Microsoft Defender for Endpoint
+
+Connector ID (`connector_id` in the resource): `microsoftDefenderConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `baseUrl` (string): The regional API endpoint for your Microsoft Defender for Endpoint tenant. Select the region where your tenant data is stored. Console display name: "Base URL".
+* `clientId` (string): The Application (client) ID assigned to your app registration in the Microsoft Entra admin center. Console display name: "Client ID".
+* `clientSecret` (string): The confidential client secret generated for your application to authenticate against the Microsoft identity platform. Console display name: "Client Secret".
+* `tenantId` (string): The unique identifier of your Microsoft Entra ID (Azure AD) tenant. Console display name: "Tenant ID".
+
+
+Example:
+```terraform
+resource "davinci_connection" "microsoftDefenderConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "microsoftDefenderConnector"
+  name         = "My awesome microsoftDefenderConnector"
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.microsoftdefenderconnector_property_base_url
+  }
+
+  property {
+    name  = "clientId"
+    type  = "string"
+    value = var.microsoftdefenderconnector_property_client_id
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.microsoftdefenderconnector_property_client_secret
+  }
+
+  property {
+    name  = "tenantId"
+    type  = "string"
+    value = var.microsoftdefenderconnector_property_tenant_id
+  }
+}
+```
+
+
 ## Microsoft Dynamics - Customer Insights
 
 Connector ID (`connector_id` in the resource): `microsoftDynamicsCustomerInsightsConnector`
@@ -4865,6 +4985,60 @@ resource "davinci_connection" "microsoftTeamsConnector" {
     name  = "customAuth"
     type  = "json"
     value = jsonencode({})
+  }
+}
+```
+
+
+## Mitek
+
+Connector ID (`connector_id` in the resource): `mitekConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `clientId` (string): Mitek Client ID. Console display name: "Client ID".
+* `clientSecret` (string): Mitek Client Secret. Console display name: "Client Secret".
+* `hostURL` (string): The host URL of the Mitek API (do not include `https://`). Console display name: "Mitek Host URL".
+* `requstAPIVersion` (string): Mitek Request API Version. Console display name: "Request API Version".
+* `skWebhookUri` (string): Use this url as the Webhook URL in the Third Party Integration's configuration. Console display name: "Redirect Webhook URI".
+
+
+Example:
+```terraform
+resource "davinci_connection" "mitekConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "mitekConnector"
+  name         = "My awesome mitekConnector"
+
+  property {
+    name  = "clientId"
+    type  = "string"
+    value = var.mitekconnector_property_client_id
+  }
+
+  property {
+    name  = "clientSecret"
+    type  = "string"
+    value = var.mitekconnector_property_client_secret
+  }
+
+  property {
+    name  = "hostURL"
+    type  = "string"
+    value = var.mitekconnector_property_host_u_r_l
+  }
+
+  property {
+    name  = "requstAPIVersion"
+    type  = "string"
+    value = var.mitekconnector_property_requst_a_p_i_version
+  }
+
+  property {
+    name  = "skWebhookUri"
+    type  = "string"
+    value = var.mitekconnector_property_sk_webhook_uri
   }
 }
 ```
@@ -5355,7 +5529,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 * `baseURL` (string): Prisma Base URL. Console display name: "Prisma Base URL".
 * `prismaPassword` (string): Secret Key. Console display name: "Prisma - Secret Key".
-* `prismaUsername` (string): Access Key. Console display name: "Prisma - Access Key".
+* `prismaUsername` (string): User name. Console display name: "Username".
 
 
 Example:
@@ -6791,6 +6965,53 @@ resource "davinci_connection" "screenConnector" {
 
   connector_id = "screenConnector"
   name         = "My awesome screenConnector"
+}
+```
+
+
+## Secret Double Octopus
+
+Connector ID (`connector_id` in the resource): `secretDoubleOctopusConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiToken` (string): The 128-character API Token found in the Management Console under Service > Sign-On tab. Console display name: "API Token".
+* `baseUrl` (string): The root URL of your Secret Double Octopus authentication server (e.g., https://sdo.example.com). Console display name: "Base URL".
+* `serviceId` (string): The service UUID found in the REST Endpoint URL field in the Management Console under Service > Sign-On tab. Console display name: "Service ID".
+* `x509Certificate` (string): The public certificate from SDO used to verify response signatures, found in the Management Console under Service > Sign-On tab. Console display name: "X.509 Certificate".
+
+
+Example:
+```terraform
+resource "davinci_connection" "secretDoubleOctopusConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "secretDoubleOctopusConnector"
+  name         = "My awesome secretDoubleOctopusConnector"
+
+  property {
+    name  = "apiToken"
+    type  = "string"
+    value = var.secretdoubleoctopusconnector_property_api_token
+  }
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.secretdoubleoctopusconnector_property_base_url
+  }
+
+  property {
+    name  = "serviceId"
+    type  = "string"
+    value = var.secretdoubleoctopusconnector_property_service_id
+  }
+
+  property {
+    name  = "x509Certificate"
+    type  = "string"
+    value = var.secretdoubleoctopusconnector_property_x509_certificate
+  }
 }
 ```
 
@@ -8475,11 +8696,8 @@ Connector ID (`connector_id` in the resource): `userPolicyConnector`
 
 Properties (used in the `property` block in the resource as the `name` parameter):
 
-* `passwordExpiryInDays` (number): Choose 0 for never expire. Console display name: "Expires in the specified number of days".
-* `passwordExpiryNotification` (boolean):  Console display name: "Notify user before password expires".
 * `passwordLengthMax` (number):  Console display name: "Maximum Password Length".
 * `passwordLengthMin` (number):  Console display name: "Minimum Password Length".
-* `passwordLockoutAttempts` (number):  Console display name: "Number of failed login attempts before account is locked".
 * `passwordPreviousXPasswords` (number): Choose 0 if any previous passwords are allowed. This is not recommended. Console display name: "Number of unique user passwords associated with a user".
 * `passwordRequireLowercase` (boolean): Should the password contain lowercase characters?. Console display name: "Require Lowercase Characters".
 * `passwordRequireNumbers` (boolean): Should the password contain numbers?. Console display name: "Require Numbers".
@@ -8487,7 +8705,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `passwordRequireUppercase` (boolean): Should the password contain uppercase characters?. Console display name: "Require Uppercase Characters".
 * `passwordSpacesOk` (boolean): Are spaces allowed in the password?. Console display name: "Spaces Accepted".
 * `passwordsEnabled` (boolean):  Console display name: "Passwords Feature Enabled?".
-* `temporaryPasswordExpiryInDays` (number): If an administrator sets a temporary password, choose how long before it expires. Console display name: "Temporary password expires in the specified number of days".
 
 
 Example:
@@ -8499,18 +8716,6 @@ resource "davinci_connection" "userPolicyConnector" {
   name         = "My awesome userPolicyConnector"
 
   property {
-    name  = "passwordExpiryInDays"
-    type  = "number"
-    value = var.userpolicyconnector_property_password_expiry_in_days
-  }
-
-  property {
-    name  = "passwordExpiryNotification"
-    type  = "boolean"
-    value = var.userpolicyconnector_property_password_expiry_notification
-  }
-
-  property {
     name  = "passwordLengthMax"
     type  = "number"
     value = var.userpolicyconnector_property_password_length_max
@@ -8520,12 +8725,6 @@ resource "davinci_connection" "userPolicyConnector" {
     name  = "passwordLengthMin"
     type  = "number"
     value = var.userpolicyconnector_property_password_length_min
-  }
-
-  property {
-    name  = "passwordLockoutAttempts"
-    type  = "number"
-    value = var.userpolicyconnector_property_password_lockout_attempts
   }
 
   property {
@@ -8568,12 +8767,6 @@ resource "davinci_connection" "userPolicyConnector" {
     name  = "passwordsEnabled"
     type  = "boolean"
     value = var.userpolicyconnector_property_passwords_enabled
-  }
-
-  property {
-    name  = "temporaryPasswordExpiryInDays"
-    type  = "number"
-    value = var.userpolicyconnector_property_temporary_password_expiry_in_days
   }
 }
 ```
