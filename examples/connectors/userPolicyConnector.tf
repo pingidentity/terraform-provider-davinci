@@ -5,18 +5,6 @@ resource "davinci_connection" "userPolicyConnector" {
   name         = "My awesome userPolicyConnector"
 
   property {
-    name  = "passwordExpiryInDays"
-    type  = "number"
-    value = var.userpolicyconnector_property_password_expiry_in_days
-  }
-
-  property {
-    name  = "passwordExpiryNotification"
-    type  = "boolean"
-    value = var.userpolicyconnector_property_password_expiry_notification
-  }
-
-  property {
     name  = "passwordLengthMax"
     type  = "number"
     value = var.userpolicyconnector_property_password_length_max
@@ -26,12 +14,6 @@ resource "davinci_connection" "userPolicyConnector" {
     name  = "passwordLengthMin"
     type  = "number"
     value = var.userpolicyconnector_property_password_length_min
-  }
-
-  property {
-    name  = "passwordLockoutAttempts"
-    type  = "number"
-    value = var.userpolicyconnector_property_password_lockout_attempts
   }
 
   property {
@@ -74,11 +56,5 @@ resource "davinci_connection" "userPolicyConnector" {
     name  = "passwordsEnabled"
     type  = "boolean"
     value = var.userpolicyconnector_property_passwords_enabled
-  }
-
-  property {
-    name  = "temporaryPasswordExpiryInDays"
-    type  = "number"
-    value = var.userpolicyconnector_property_temporary_password_expiry_in_days
   }
 }
