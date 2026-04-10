@@ -37,3 +37,11 @@ bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.61.0 => 0.68.0
 ```release-note:note
 bump `github.com/samir-gandhi/davinci-client-go` 0.11.1 => 0.12.0
 ```
+
+```release-note:bug
+`resource/davinci_flow`: Fixes an "`flow_configuration_json` inconsistent values after apply" issue introduced as a result of necessary API changes on the 6th April 2026.
+```
+
+```release-note:note
+`resource/davinci_flow`: Introduces a compatibility fix for upcoming necessary API changes to support flows used in PingOne authentication policies, which may result in "`flow_configuration_json` inconsistent values after apply" errors.
+```
