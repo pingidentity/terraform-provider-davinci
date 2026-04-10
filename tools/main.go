@@ -4,7 +4,7 @@
 package main
 
 //go:generate go install github.com/bflad/tfproviderlint/cmd/tfproviderlintx
-//go:generate go install github.com/golangci/golangci-lint/cmd/golangci-lint
+//go:generate go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 //go:generate go install github.com/hashicorp/go-changelog/cmd/changelog-build
 //go:generate go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 //go:generate go install github.com/katbyte/terrafmt
@@ -14,7 +14,7 @@ package main
 
 import (
 	_ "github.com/bflad/tfproviderlint/cmd/tfproviderlintx"
-	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
+	_ "github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
 	_ "github.com/hashicorp/go-changelog/cmd/changelog-build"
 	_ "github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs"
 	_ "github.com/katbyte/terrafmt"
