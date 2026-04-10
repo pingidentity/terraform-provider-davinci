@@ -569,6 +569,42 @@ func TestAccResourceFlow_ComputeDifferences_ModifySettings(t *testing.T) {
 	})
 }
 
+func TestAccResourceFlow_ComputeDifferences_P1Flow(t *testing.T) {
+
+	// Baseline
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/p1sessionmainflow.json")
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	var flow dv.Flow
+	if err := json.Unmarshal([]byte(mainFlowJson), &flow); err != nil {
+		t.Fatalf("Failed to unmarshal flow: %v", err)
+	}
+
+	testAccResourceFlow_ComputeDifferences(t, computeDifferencesTest{
+		BaselineFlow: flow,
+		ModifiedFlow: func() dv.Flow {
+			newFlow := flow
+			newFlow.Trigger = &dv.Trigger{
+				TriggerType: func() *string {
+					v := "AUTHENTICATION"
+					return &v
+				}(),
+			}
+			newFlow.Settings = &dv.FlowSettings{
+				PingOneFlow: func() *bool {
+					v := true
+					return &v
+				}(),
+			}
+
+			return newFlow
+		}(),
+		ExpectNonEmptyPlan: false,
+	})
+}
+
 func TestAccResourceFlow_ComputeDifferences_CompanyId(t *testing.T) {
 
 	// Baseline
