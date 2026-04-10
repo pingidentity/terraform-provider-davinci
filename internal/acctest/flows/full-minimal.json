@@ -37,6 +37,7 @@
               "name": "Error Message",
               "label": "Error Message",
               "status": "configured",
+              "capabilityClass": "backend",
               "capabilityName": "customErrorMessage",
               "type": "action",
               "properties": {
