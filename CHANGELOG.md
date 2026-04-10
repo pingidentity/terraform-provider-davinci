@@ -1,5 +1,24 @@
 ## 0.5.4 (Unreleased)
 
+NOTES:
+
+* Update Connector Reference Guide (01 April 2026). ([#573](https://github.com/pingidentity/terraform-provider-davinci/issues/573))
+* Upgraded go version to 1.25.6 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* `resource/davinci_flow`: Introduces a compatibility fix for upcoming necessary API changes to support flows used in PingOne authentication policies, which may result in "`flow_configuration_json` inconsistent values after apply" errors. ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/hashicorp/terraform-plugin-framework-validators` 0.18.0 => 0.19.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/hashicorp/terraform-plugin-framework` 1.16.1 => 1.19.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/hashicorp/terraform-plugin-go` 0.29.0 => 0.31.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/hashicorp/terraform-plugin-log` 0.9.0 => 0.10.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/hashicorp/terraform-plugin-mux` 0.20.0 => 0.23.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/hashicorp/terraform-plugin-sdk/v2` 2.38.1 => 2.40.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.61.0 => 0.68.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` v0.14.2 => 0.14.12 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+* bump `github.com/samir-gandhi/davinci-client-go` 0.11.1 => 0.12.0 ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+
+BUG FIXES:
+
+* `resource/davinci_flow`: Fixes an "`flow_configuration_json` inconsistent values after apply" issue introduced as a result of necessary API changes on the 6th April 2026. ([#575](https://github.com/pingidentity/terraform-provider-davinci/issues/575))
+
 ## 0.5.3 (21 November 2025)
 
 NOTES:
