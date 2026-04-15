@@ -111,6 +111,12 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 
 		var diags diag.Diagnostics
 
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "Deprecated Provider",
+			Detail:   "The DaVinci Terraform provider is deprecated and will eventually be removed from support. Migrate all DaVinci configuration to equivalent resources in the PingOne Terraform provider (https://registry.terraform.io/providers/pingidentity/pingone/latest). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). For any questions or concerns, please reach out to Ping Identity support.",
+		})
+
 		userAgent := fmt.Sprintf("terraform-provider-davinci/%s", version)
 
 		if v := strings.TrimSpace(os.Getenv("DAVINCI_TF_APPEND_USER_AGENT")); v != "" {

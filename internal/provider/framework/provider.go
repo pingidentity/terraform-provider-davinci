@@ -123,6 +123,11 @@ func (p *davinciProvider) Configure(ctx context.Context, req provider.ConfigureR
 	tflog.Debug(ctx, "[v6] Provider configure start")
 	var data davinciProviderModel
 
+	resp.Diagnostics.AddWarning(
+		"Deprecated Provider",
+		"The DaVinci Terraform provider is deprecated and will eventually be removed from support. Migrate all DaVinci configuration to equivalent resources in the PingOne Terraform provider (https://registry.terraform.io/providers/pingidentity/pingone/latest). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). For any questions or concerns, please reach out to Ping Identity support.",
+	)
+
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return

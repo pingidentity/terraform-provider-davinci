@@ -1,0 +1,3 @@
+```release-note:note
+`provider`: Added deprecation warning to encourage migration to the equivalent DaVinci resources in the `pingidentity/pingone` provider.
+```
