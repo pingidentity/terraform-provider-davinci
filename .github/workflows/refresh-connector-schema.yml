@@ -80,7 +80,7 @@ jobs:
         run: |
           make build
 
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
         if: steps.check_changes.outputs.CONTENT_CHANGED == 'true'
       
       - run: cd tools && go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
