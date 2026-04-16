@@ -127,7 +127,7 @@ func (r *VariableResource) Schema(ctx context.Context, req resource.SchemaReques
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		Description:        "Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
-		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_variable` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone).",
+		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_variable` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_variable).",
 
 		Attributes: map[string]schema.Attribute{
 			"id": framework.Attr_ID(),

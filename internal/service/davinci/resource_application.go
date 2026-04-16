@@ -16,7 +16,7 @@ import (
 
 func ResourceApplication() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_application` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone).",
+		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_application` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_application).",
 		CreateContext:      resourceApplicationCreate,
 		ReadContext:        resourceApplicationRead,
 		UpdateContext:      resourceApplicationUpdate,

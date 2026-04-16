@@ -17,7 +17,7 @@ import (
 
 func ResourceApplicationFlowPolicy() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_application_flow_policy` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone).",
+		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_application_flow_policy` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_application_flow_policy).",
 		CreateContext:      resourceApplicationFlowPolicyCreate,
 		ReadContext:        resourceApplicationFlowPolicyRead,
 		UpdateContext:      resourceApplicationFlowPolicyUpdate,
