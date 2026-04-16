@@ -18,7 +18,8 @@ import (
 
 func DataSourceConnections() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceConnectionsRead,
+		DeprecationMessage: "This data source is deprecated and will be removed in a future release. Use the `pingone_davinci_connector_instance` data source in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone).",
+		ReadContext:        dataSourceConnectionsRead,
 		Schema: map[string]*schema.Schema{
 			"environment_id": {
 				Type:        schema.TypeString,

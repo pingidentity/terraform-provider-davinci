@@ -12,6 +12,8 @@ A resource to create and manage connections in DaVinci.
 
 A full connector reference, with Terraform examples, can be found in the [DaVinci Connector Reference guide](../guides/connector-reference).
 
+!> **Deprecation Notice** The DaVinci Terraform provider is deprecated and will be removed from support. Migrate all DaVinci configuration to equivalent resources in the PingOne Terraform provider (https://registry.terraform.io/providers/pingidentity/pingone/latest). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). This DaVinci provider will no longer be maintained after 30th April 2027. For questions or issues, please report to the provider maintainers at https://github.com/pingidentity/terraform-provider-davinci/issues.
+
 ## Example Usage
 
 ```terraform
