@@ -1,3 +1,9 @@
+## 0.5.5 (Unreleased)
+
+NOTES:
+
+* Deprecated the DaVinci Terraform provider in favor of DaVinci resources in the PingOne Terraform provider. Please plan to migrate DaVinci Terraform HCL using the guide at https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider ([#593](https://github.com/pingidentity/terraform-provider-davinci/issues/593))
+
 ## 0.5.4 (10 April 2026)
 
 NOTES:
