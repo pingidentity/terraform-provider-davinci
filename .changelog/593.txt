@@ -1,0 +1,3 @@
+```release-note:note
+Deprecated the DaVinci Terraform provider in favor of DaVinci resources in the PingOne Terraform provider. Please plan to migrate DaVinci Terraform HCL using the guide at https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider
+```

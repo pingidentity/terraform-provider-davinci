@@ -15,7 +15,8 @@ import (
 
 func DataSourceApplication() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceApplicationRead,
+		DeprecationMessage: "This data source is deprecated and will be removed in a future release. Use the `pingone_davinci_application` data source in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/data-sources/davinci_application).",
+		ReadContext:        dataSourceApplicationRead,
 		Schema: map[string]*schema.Schema{
 			"application_id": {
 				Type:         schema.TypeString,

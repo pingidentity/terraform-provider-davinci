@@ -9,6 +9,8 @@ description: |-
 
 {{ .Description | trimspace }}
 
+!> **Deprecation Notice** This data source is deprecated and will be removed from support. Use the `pingone_davinci_connector_instance` data source in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/data-sources/davinci_connector_instances). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). This DaVinci provider will no longer be maintained after 30th April 2027. For questions or issues, please report to the provider maintainers at https://github.com/pingidentity/terraform-provider-davinci/issues.
+
 {{ if .HasExample -}}
 ## Example Usage
 

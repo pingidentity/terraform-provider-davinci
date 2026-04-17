@@ -9,6 +9,8 @@ description: |-
 
 Resource to import and manage a DaVinci variable in an environment.  Connection and Subvariable references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.
 
+!> **Deprecation Notice** This resource is deprecated and will be removed from support. Use the `pingone_davinci_variable` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_variable). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). This DaVinci provider will no longer be maintained after 30th April 2027. For questions or issues, please report to the provider maintainers at https://github.com/pingidentity/terraform-provider-davinci/issues.
+
 ~> When using "company" or "flow instance" variables, it is recommended to define these variables before the flows that depend on them. This is shown in the example using the `depends_on` meta argument.
 
 ~> When using "flow" variables, it is recommended to define these variables after the flows that depends on them have been imported, as shown in the example.

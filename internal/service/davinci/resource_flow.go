@@ -202,7 +202,8 @@ func (r *FlowResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		Description: "Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
+		Description:        "Resource to import and manage a DaVinci flow in an environment.  Connection and Subflow references in the JSON export can be overridden with ones managed by Terraform, see the examples and schema below for details.",
+		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_flow` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_flow).",
 
 		Attributes: map[string]schema.Attribute{
 			"id": framework.Attr_ID(),

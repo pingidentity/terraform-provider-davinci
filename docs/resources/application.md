@@ -9,6 +9,8 @@ description: |-
 
 
 
+!> **Deprecation Notice** This resource is deprecated and will be removed from support. Use the `pingone_davinci_application` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_application). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). This DaVinci provider will no longer be maintained after 30th April 2027. For questions or issues, please report to the provider maintainers at https://github.com/pingidentity/terraform-provider-davinci/issues.
+
 ~> DaVinci Application Flow Policies are managed as individual resources. Review the migration guidance here: https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-application-flow-policy
 
 ## Example Usage
