@@ -3,6 +3,7 @@
 > [!WARNING]
 > **The DaVinci Terraform provider is now deprecated as of April 2026.**
 > The provider will continue to be maintained **until 30th April 2027** after which there will be no further updates.
+> Replacement resources and data sources are now fully supported in the [PingOne Terraform provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs).
 > For more information, see [issue #601](https://github.com/pingidentity/terraform-provider-davinci/issues/601).
 
 The PingOne DaVinci Terraform provider is a plugin for [Terraform](https://www.terraform.io/) that allows for the full lifecycle management of DaVinci configuration in a PingOne tenant. This provider is maintained internally by the Ping Identity team.
