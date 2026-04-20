@@ -2,7 +2,7 @@
 
 NOTES:
 
-* Deprecated the DaVinci Terraform provider in favor of DaVinci resources in the PingOne Terraform provider. ([#593](https://github.com/pingidentity/terraform-provider-davinci/issues/593))
+* Deprecated the DaVinci Terraform provider in favor of DaVinci resources in the PingOne Terraform provider. See [issue 601](https://github.com/pingidentity/terraform-provider-davinci/issues/601) for more information. ([#593](https://github.com/pingidentity/terraform-provider-davinci/issues/593)) ([#602](https://github.com/pingidentity/terraform-provider-davinci/issues/602))
 
 ## 0.5.4 (10 April 2026)
 
