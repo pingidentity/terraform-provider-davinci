@@ -1,6 +1,6 @@
 module github.com/pingidentity/terraform-provider-davinci/tools
 
-go 1.25.6
+go 1.26.2
 
 require (
 	github.com/bflad/tfproviderlint v0.31.0
@@ -10,7 +10,7 @@ require (
 	github.com/katbyte/terrafmt v0.5.6
 	github.com/patrickcping/davinci-pingcli v0.0.2
 	github.com/pavius/impi v0.0.3
-	github.com/terraform-linters/tflint v0.61.0
+	github.com/terraform-linters/tflint v0.62.0
 )
 
 require (
@@ -210,7 +210,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-checkpoint v0.5.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-getter v1.8.4 // indirect
+	github.com/hashicorp/go-getter v1.8.6 // indirect
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
 	github.com/hashicorp/go-immutable-radix/v2 v2.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
