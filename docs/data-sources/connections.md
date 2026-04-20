@@ -8,8 +8,9 @@ description: |-
 # davinci_connections (Data Source)
 
 
+!> **Provider Deprecation Notice** **The DaVinci Terraform provider is now deprecated as of April 2026.** The provider will continue to be maintained **until 30th April 2027** after which there will be no further updates.  Please migrate all DaVinci Terraform projects to use equivalent, fully supported resources and data sources in the [PingOne Terraform provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs). Migration guidance can be found in the [Migrate from Legacy DaVinci Provider](https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider) guide. For more information, see [issue 601 on the project's GitHub repository](https://github.com/pingidentity/terraform-provider-davinci/issues/601).
 
-!> **Deprecation Notice** This data source is deprecated and will be removed from support. Use the `pingone_davinci_connector_instance` data source in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/data-sources/davinci_connector_instances). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). This DaVinci provider will no longer be maintained after 30th April 2027. For questions or issues, please report to the provider maintainers at https://github.com/pingidentity/terraform-provider-davinci/issues.
+!> **Data Source Deprecation Notice** **This data source is now deprecated as of April 2026.** Use the [`pingone_davinci_connector_instances` data source in the PingOne Terraform provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/data-sources/davinci_connector_instances) instead. Migration guidance can be found in the [Migrate from Legacy DaVinci Provider](https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider) guide.
 
 ## Example Usage
 

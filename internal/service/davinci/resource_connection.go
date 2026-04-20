@@ -21,7 +21,7 @@ func ResourceConnection() *schema.Resource {
 	return &schema.Resource{
 
 		Description:        "A resource to create and manage connections in DaVinci.\n\nA full connector reference, with Terraform examples, can be found in the [DaVinci Connector Reference guide](../guides/connector-reference).",
-		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_connector_instance` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_connector_instance).",
+		DeprecationMessage: "This resource is deprecated and will be removed in a future release. Use the `pingone_davinci_connector_instance` resource in the PingOne Terraform provider instead (https://registry.terraform.io/providers/pingidentity/pingone/latest/docs/resources/davinci_connector_instance). For more information, see https://github.com/pingidentity/terraform-provider-davinci/issues/601",
 
 		CreateContext: resourceConnectionCreate,
 		ReadContext:   resourceConnectionRead,

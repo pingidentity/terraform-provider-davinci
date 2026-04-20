@@ -6,7 +6,7 @@ description: |-
 
 # DaVinci Provider
 
-!> **Deprecation Notice** The DaVinci Terraform provider is deprecated and will be removed from support. Migrate all DaVinci configuration to equivalent resources in the PingOne Terraform provider (https://registry.terraform.io/providers/pingidentity/pingone/latest). Migration guidance can be found in the Terraform Registry (https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider). This DaVinci provider will no longer be maintained after 30th April 2027. For questions or issues, please report to the provider maintainers at https://github.com/pingidentity/terraform-provider-davinci/issues.
+!> **Provider Deprecation Notice** **The DaVinci Terraform provider is now deprecated as of April 2026.** The provider will continue to be maintained **until 30th April 2027** after which there will be no further updates.  Please migrate all DaVinci Terraform projects to use equivalent, fully supported resources and data sources in the [PingOne Terraform provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs). Migration guidance can be found in the [Migrate from Legacy DaVinci Provider](https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/guides/migrate-from-legacy-provider) guide. For more information, see [issue 601 on the project's GitHub repository](https://github.com/pingidentity/terraform-provider-davinci/issues/601).
 
 The "davinci" provider allows operators to manage PingOne DaVinci infrastructure as code. This provider can be used along with the [PingOne provider](https://registry.terraform.io/providers/pingidentity/pingone/latest/docs) to stand up fully orchestrated PingOne IAM Experiences.
 
