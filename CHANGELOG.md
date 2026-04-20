@@ -3,6 +3,10 @@
 NOTES:
 
 * Deprecated the DaVinci Terraform provider in favor of DaVinci resources in the PingOne Terraform provider. See [issue 601](https://github.com/pingidentity/terraform-provider-davinci/issues/601) for more information. ([#593](https://github.com/pingidentity/terraform-provider-davinci/issues/593)) ([#602](https://github.com/pingidentity/terraform-provider-davinci/issues/602))
+* Upgraded go version to 1.26.2 ([#603](https://github.com/pingidentity/terraform-provider-davinci/issues/603))
+* bump `github.com/hashicorp/terraform-plugin-mux` 0.23.0 => 0.23.1 ([#603](https://github.com/pingidentity/terraform-provider-davinci/issues/603))
+* bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.68.0 => 0.69.0 ([#603](https://github.com/pingidentity/terraform-provider-davinci/issues/603))
+* bump `github.com/patrickcping/pingone-go-sdk-v2` 0.14.12 => 0.14.13 ([#603](https://github.com/pingidentity/terraform-provider-davinci/issues/603))
 
 ## 0.5.4 (10 April 2026)
 
