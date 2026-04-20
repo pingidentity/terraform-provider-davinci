@@ -78,7 +78,7 @@ Occasionally, development may include changes to the [DaVinci GO SDK](https://gi
 ```
 module github.com/pingidentity/terraform-provider-davinci
 
-go 1.25.6
+go 1.26.2
 
 replace github.com/samir-gandhi/davinci-client-go => ../davinci-client-go
 

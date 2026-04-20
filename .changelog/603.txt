@@ -1,0 +1,15 @@
+```release-note:note
+Upgraded go version to 1.26.2
+```
+
+```release-note:note
+bump `github.com/hashicorp/terraform-plugin-mux` 0.23.0 => 0.23.1
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2` 0.14.12 => 0.14.13
+```
+
+```release-note:note
+bump `github.com/patrickcping/pingone-go-sdk-v2/management` 0.68.0 => 0.69.0
+```
