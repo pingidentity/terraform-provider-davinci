@@ -11,8 +11,8 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.10.0
 	github.com/hashicorp/terraform-plugin-mux v0.23.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.0
-	github.com/patrickcping/pingone-go-sdk-v2 v0.14.13
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.69.0
+	github.com/patrickcping/pingone-go-sdk-v2 v0.14.14
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.70.0
 	github.com/samir-gandhi/davinci-client-go v0.12.0
 )
 
@@ -55,7 +55,7 @@ require (
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/authorize v0.8.3 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/credentials v0.12.1 // indirect
-	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.25.0 // indirect
+	github.com/patrickcping/pingone-go-sdk-v2/mfa v0.25.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/risk v0.21.1 // indirect
 	github.com/patrickcping/pingone-go-sdk-v2/verify v0.11.2 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
