@@ -12,7 +12,7 @@ require (
 	github.com/hashicorp/terraform-plugin-mux v0.23.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.40.0
 	github.com/patrickcping/pingone-go-sdk-v2 v0.14.13
-	github.com/patrickcping/pingone-go-sdk-v2/management v0.69.0
+	github.com/patrickcping/pingone-go-sdk-v2/management v0.70.0
 	github.com/samir-gandhi/davinci-client-go v0.12.0
 )
 
