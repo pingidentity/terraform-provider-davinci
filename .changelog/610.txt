@@ -1,0 +1,7 @@
+```release-note:enhancement
+`resource/davinci_application_flow_policy`: Added `trigger` block supporting PingOne flow policy trigger configuration, including `trigger.configuration.mfa` and `trigger.configuration.pwd` sub-blocks. The `trigger.type` attribute is computed from the DaVinci API.
+```
+
+```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.12.0 => 0.13.0
+```
