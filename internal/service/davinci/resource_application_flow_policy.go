@@ -80,6 +80,83 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 					},
 				},
 			},
+			"trigger": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "A block that specifies the trigger configuration for PingOne flow policies.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "A string that specifies the trigger type. Set by the DaVinci API.",
+						},
+						"configuration": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "A block that specifies the trigger configuration details.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"mfa": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "A block that specifies the MFA trigger configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "A boolean that specifies whether MFA trigger is enabled.",
+												},
+												"time": {
+													Type:        schema.TypeFloat,
+													Optional:    true,
+													Description: "A number that specifies the MFA trigger time.",
+												},
+												"time_format": {
+													Type:             schema.TypeString,
+													Optional:         true,
+													Description:      "A string that specifies the MFA trigger time format. Valid values are `min`, `hour`, `day`.",
+													ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"min", "hour", "day"}, false)),
+												},
+											},
+										},
+									},
+									"pwd": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										MaxItems:    1,
+										Description: "A block that specifies the password trigger configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enabled": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "A boolean that specifies whether password trigger is enabled.",
+												},
+												"time": {
+													Type:        schema.TypeFloat,
+													Optional:    true,
+													Description: "A number that specifies the password trigger time.",
+												},
+												"time_format": {
+													Type:             schema.TypeString,
+													Optional:         true,
+													Description:      "A string that specifies the password trigger time format. Valid values are `min`, `hour`, `day`.",
+													ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"min", "hour", "day"}, false)),
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"status": {
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -322,6 +399,63 @@ func expandAppPolicy(d *schema.ResourceData) (*dv.Policy, error) {
 		policy.PolicyFlows = policyFlows
 	}
 
+	if v, ok := d.GetOk("trigger"); ok {
+		triggerList := v.([]interface{})
+		if len(triggerList) > 0 && triggerList[0] != nil {
+			triggerMap := triggerList[0].(map[string]interface{})
+			policyTrigger := &dv.PolicyTrigger{}
+
+			// NOTE: policyTrigger.Type is intentionally NOT set here.
+			// The DaVinci API rejects "type" as an additional property on POST/PUT.
+			// The API sets the type itself and returns it on GET; flattenAppPolicy reads it from state.
+
+			if configList, ok := triggerMap["configuration"].([]interface{}); ok && len(configList) > 0 && configList[0] != nil {
+				configMap := configList[0].(map[string]interface{})
+				triggerConfig := &dv.TriggerConfiguration{}
+
+				if mfaList, ok := configMap["mfa"].([]interface{}); ok && len(mfaList) > 0 && mfaList[0] != nil {
+					mfaMap := mfaList[0].(map[string]interface{})
+					mfaConfig := &dv.TriggerConfigurationMFA{}
+
+					if enabled, ok := mfaMap["enabled"].(bool); ok {
+						mfaConfig.Enabled = &enabled
+					}
+					if timeVal, ok := mfaMap["time"].(float64); ok {
+						v := float32(timeVal)
+						mfaConfig.Time = &v
+					}
+					if timeFormat, ok := mfaMap["time_format"].(string); ok && timeFormat != "" {
+						mfaConfig.TimeFormat = &timeFormat
+					}
+
+					triggerConfig.MFA = mfaConfig
+				}
+
+				if pwdList, ok := configMap["pwd"].([]interface{}); ok && len(pwdList) > 0 && pwdList[0] != nil {
+					pwdMap := pwdList[0].(map[string]interface{})
+					pwdConfig := &dv.TriggerConfigurationPassword{}
+
+					if enabled, ok := pwdMap["enabled"].(bool); ok {
+						pwdConfig.Enabled = &enabled
+					}
+					if timeVal, ok := pwdMap["time"].(float64); ok {
+						v := float32(timeVal)
+						pwdConfig.Time = &v
+					}
+					if timeFormat, ok := pwdMap["time_format"].(string); ok && timeFormat != "" {
+						pwdConfig.TimeFormat = &timeFormat
+					}
+
+					triggerConfig.PWD = pwdConfig
+				}
+
+				policyTrigger.Configuration = triggerConfig
+			}
+
+			policy.Trigger = policyTrigger
+		}
+	}
+
 	return &policy, nil
 }
 
@@ -375,6 +509,56 @@ func flattenAppPolicy(app *dv.App, policyId string) (map[string]interface{}, err
 	}
 
 	a["policy_flow"] = polFlows
+
+	if policy.Trigger != nil {
+		triggerMap := map[string]interface{}{}
+
+		if policy.Trigger.Type != nil {
+			triggerMap["type"] = *policy.Trigger.Type
+		}
+
+		if policy.Trigger.Configuration != nil {
+			configMap := map[string]interface{}{}
+
+			if policy.Trigger.Configuration.MFA != nil {
+				mfaMap := map[string]interface{}{}
+				mfa := policy.Trigger.Configuration.MFA
+
+				if mfa.Enabled != nil {
+					mfaMap["enabled"] = *mfa.Enabled
+				}
+				if mfa.Time != nil {
+					mfaMap["time"] = float64(*mfa.Time)
+				}
+				if mfa.TimeFormat != nil {
+					mfaMap["time_format"] = *mfa.TimeFormat
+				}
+
+				configMap["mfa"] = []interface{}{mfaMap}
+			}
+
+			if policy.Trigger.Configuration.PWD != nil {
+				pwdMap := map[string]interface{}{}
+				pwd := policy.Trigger.Configuration.PWD
+
+				if pwd.Enabled != nil {
+					pwdMap["enabled"] = *pwd.Enabled
+				}
+				if pwd.Time != nil {
+					pwdMap["time"] = float64(*pwd.Time)
+				}
+				if pwd.TimeFormat != nil {
+					pwdMap["time_format"] = *pwd.TimeFormat
+				}
+
+				configMap["pwd"] = []interface{}{pwdMap}
+			}
+
+			triggerMap["configuration"] = []interface{}{configMap}
+		}
+
+		a["trigger"] = []interface{}{triggerMap}
+	}
 
 	//Return
 	return a, nil
