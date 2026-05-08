@@ -59,6 +59,7 @@ resource "davinci_application_flow_policy" "my_awesome_registration_flow_applica
 ### Optional
 
 - `status` (String) A boolan that specifies whether the policy should be enabled. Valid values are: `enabled`, `disabled`. Defaults to `enabled`.
+- `trigger` (Block List, Max: 1) A block that specifies the trigger configuration for PingOne flow policies. (see [below for nested schema](#nestedblock--trigger))
 
 ### Read-Only
 
@@ -78,6 +79,45 @@ Optional:
 - `allowed_ip_list` (Set of String) A list of IP CIDR entries that are allowed use of the application policy flow.
 - `success_nodes` (Set of String) A list of node ids used by analytics for tracking user interaction.
 - `weight` (Number) If multiple flows are specified, the weight determines the probability of the flow being used. The weights across all policy flows must add up to `100`.
+
+
+<a id="nestedblock--trigger"></a>
+### Nested Schema for `trigger`
+
+Optional:
+
+- `configuration` (Block List, Max: 1) A block that specifies the trigger configuration details. (see [below for nested schema](#nestedblock--trigger--configuration))
+
+Read-Only:
+
+- `type` (String) A string that specifies the trigger type. Set by the DaVinci API.
+
+<a id="nestedblock--trigger--configuration"></a>
+### Nested Schema for `trigger.configuration`
+
+Optional:
+
+- `mfa` (Block List, Max: 1) A block that specifies the MFA trigger configuration. (see [below for nested schema](#nestedblock--trigger--configuration--mfa))
+- `pwd` (Block List, Max: 1) A block that specifies the password trigger configuration. (see [below for nested schema](#nestedblock--trigger--configuration--pwd))
+
+<a id="nestedblock--trigger--configuration--mfa"></a>
+### Nested Schema for `trigger.configuration.mfa`
+
+Optional:
+
+- `enabled` (Boolean) A boolean that specifies whether MFA trigger is enabled.
+- `time` (Number) A number that specifies the MFA trigger time.
+- `time_format` (String) A string that specifies the MFA trigger time format. Valid values are `min`, `hour`, `day`.
+
+
+<a id="nestedblock--trigger--configuration--pwd"></a>
+### Nested Schema for `trigger.configuration.pwd`
+
+Optional:
+
+- `enabled` (Boolean) A boolean that specifies whether password trigger is enabled.
+- `time` (Number) A number that specifies the password trigger time.
+- `time_format` (String) A string that specifies the password trigger time format. Valid values are `min`, `hour`, `day`.
 
 ## Import
 

@@ -1,3 +1,13 @@
+## 0.6.0 (20 April 2026)
+
+NOTES:
+
+* bump `github.com/samir-gandhi/davinci-client-go` 0.12.0 => 0.13.0 ([#610](https://github.com/pingidentity/terraform-provider-davinci/issues/610))
+
+ENHANCEMENTS:
+
+* `resource/davinci_application_flow_policy`: Added `trigger` block supporting PingOne flow policy trigger configuration, including `trigger.configuration.mfa` and `trigger.configuration.pwd` sub-blocks. The `trigger.type` attribute is computed from the DaVinci API. ([#610](https://github.com/pingidentity/terraform-provider-davinci/issues/610))
+
 ## 0.5.5 (20 April 2026)
 
 NOTES:
