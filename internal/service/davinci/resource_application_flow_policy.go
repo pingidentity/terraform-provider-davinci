@@ -83,6 +83,7 @@ func ResourceApplicationFlowPolicy() *schema.Resource {
 			"trigger": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "A block that specifies the trigger configuration for PingOne flow policies.",
 				Elem: &schema.Resource{
