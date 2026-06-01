@@ -312,6 +312,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/authenticIdConnector.tf") }}
 
 
+## Authentication
+
+Connector ID (`connector_id` in the resource): `authenticationUseCaseConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/authenticationUseCaseConnector.tf") }}
+
+
 ## Authomize API
 
 Connector ID (`connector_id` in the resource): `connector-oai-authomizeapireference`
@@ -772,6 +783,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorDeBounce.tf") }}
+
+
+## Deduce
+
+Connector ID (`connector_id` in the resource): `connectorDeduce`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string): The key used to access Deduce Insights. Console display name: "API Key".
+* `siteId` (string): The site identifier Deduce Insights will use to query data. Console display name: "Site ID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorDeduce.tf") }}
 
 
 ## Device Policy
@@ -1722,6 +1747,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/locationPolicyConnector.tf") }}
 
 
+## MFA
+
+Connector ID (`connector_id` in the resource): `mfaUseCaseConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/mfaUseCaseConnector.tf") }}
+
+
 ## Mailchimp
 
 Connector ID (`connector_id` in the resource): `connectorMailchimp`
@@ -2289,6 +2325,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/privateidConnector.tf") }}
+
+
+## Protect
+
+Connector ID (`connector_id` in the resource): `pingOneSnodeRiskConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingOneSnodeRiskConnector.tf") }}
 
 
 ## Prove
@@ -2906,6 +2953,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `providerName` (string):  Console display name: "Provider Name".
 * `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
 * `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `skWebhookUri` (string): Use this url as the Webhook URL in the Third Party Integration's configuration. Console display name: "Redirect Webhook URI".
 * `title` (string):  Console display name: "Title".
 * `toolTip` (string):  Console display name: "Tooltip".
 * `username` (string):  Console display name: "Username".

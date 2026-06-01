@@ -900,6 +900,24 @@ resource "davinci_connection" "authenticIdConnector" {
 ```
 
 
+## Authentication
+
+Connector ID (`connector_id` in the resource): `authenticationUseCaseConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "authenticationUseCaseConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "authenticationUseCaseConnector"
+  name         = "My awesome authenticationUseCaseConnector"
+}
+```
+
+
 ## Authomize API
 
 Connector ID (`connector_id` in the resource): `connector-oai-authomizeapireference`
@@ -2055,6 +2073,39 @@ resource "davinci_connection" "connectorDeBounce" {
     name  = "apiKey"
     type  = "string"
     value = var.connectordebounce_property_api_key
+  }
+}
+```
+
+
+## Deduce
+
+Connector ID (`connector_id` in the resource): `connectorDeduce`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string): The key used to access Deduce Insights. Console display name: "API Key".
+* `siteId` (string): The site identifier Deduce Insights will use to query data. Console display name: "Site ID".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorDeduce" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorDeduce"
+  name         = "My awesome connectorDeduce"
+
+  property {
+    name  = "apikey"
+    type  = "string"
+    value = var.connectordeduce_property_apikey
+  }
+
+  property {
+    name  = "siteId"
+    type  = "string"
+    value = var.connectordeduce_property_site_id
   }
 }
 ```
@@ -4644,6 +4695,24 @@ resource "davinci_connection" "locationPolicyConnector" {
 ```
 
 
+## MFA
+
+Connector ID (`connector_id` in the resource): `mfaUseCaseConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "mfaUseCaseConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "mfaUseCaseConnector"
+  name         = "My awesome mfaUseCaseConnector"
+}
+```
+
+
 ## Mailchimp
 
 Connector ID (`connector_id` in the resource): `connectorMailchimp`
@@ -6376,6 +6445,24 @@ resource "davinci_connection" "privateidConnector" {
 ```
 
 
+## Protect
+
+Connector ID (`connector_id` in the resource): `pingOneSnodeRiskConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "pingOneSnodeRiskConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "pingOneSnodeRiskConnector"
+  name         = "My awesome pingOneSnodeRiskConnector"
+}
+```
+
+
 ## Prove
 
 Connector ID (`connector_id` in the resource): `payfoneConnector`
@@ -8062,6 +8149,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `providerName` (string):  Console display name: "Provider Name".
 * `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
 * `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `skWebhookUri` (string): Use this url as the Webhook URL in the Third Party Integration's configuration. Console display name: "Redirect Webhook URI".
 * `title` (string):  Console display name: "Title".
 * `toolTip` (string):  Console display name: "Tooltip".
 * `username` (string):  Console display name: "Username".
@@ -8139,6 +8227,12 @@ resource "davinci_connection" "telesignConnector" {
     name  = "showCredAddedVia"
     type  = "boolean"
     value = var.telesignconnector_property_show_cred_added_via
+  }
+
+  property {
+    name  = "skWebhookUri"
+    type  = "string"
+    value = var.telesignconnector_property_sk_webhook_uri
   }
 
   property {
