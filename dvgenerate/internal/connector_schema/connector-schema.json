@@ -352,6 +352,21 @@
     }
   },
   {
+    "name": "Authentication",
+    "connectorId": "authenticationUseCaseConnector",
+    "connectorCategories": [
+      {
+        "name": "Authenticate",
+        "value": "authenticate"
+      },
+      {
+        "name": "Profile",
+        "value": "profile"
+      }
+    ],
+    "properties": {}
+  },
+  {
     "name": "AWS Login",
     "connectorId": "awsIdpConnector",
     "connectorCategories": [
@@ -1603,6 +1618,28 @@
         "createdDate": 1694542169671,
         "preferredControlType": "textField",
         "info": "A DeBounce API Key is physically a token/code of 13 random alphanumeric characters. If you need to create an API key, please log in to your DeBounce account and then navigate to the API section."
+      }
+    }
+  },
+  {
+    "name": "Deduce",
+    "connectorId": "connectorDeduce",
+    "connectorCategories": [
+      {
+        "name": "Operate",
+        "value": "operate"
+      }
+    ],
+    "properties": {
+      "apikey": {
+        "displayName": "API Key",
+        "preferredControlType": "textField",
+        "info": "The key used to access Deduce Insights"
+      },
+      "siteId": {
+        "displayName": "Site ID",
+        "preferredControlType": "textField",
+        "info": "The site identifier Deduce Insights will use to query data"
       }
     }
   },
@@ -4496,6 +4533,17 @@
     }
   },
   {
+    "name": "MFA",
+    "connectorId": "mfaUseCaseConnector",
+    "connectorCategories": [
+      {
+        "name": "Authenticate",
+        "value": "authenticate"
+      }
+    ],
+    "properties": {}
+  },
+  {
     "name": "Microsoft Defender for Endpoint",
     "connectorId": "microsoftDefenderConnector",
     "connectorCategories": [
@@ -5576,6 +5624,17 @@
     }
   },
   {
+    "name": "Protect",
+    "connectorId": "pingOneSnodeRiskConnector",
+    "connectorCategories": [
+      {
+        "name": "Authorize",
+        "value": "authorize"
+      }
+    ],
+    "properties": {}
+  },
+  {
     "name": "PingOne Verify",
     "connectorId": "pingOneVerifyConnector",
     "connectorCategories": [
@@ -6504,6 +6563,13 @@
         "createdDate": 1694542169610,
         "preferredControlType": "toggleSwitch",
         "info": ""
+      },
+      "skWebhookUri": {
+        "type": "string",
+        "displayName": "Redirect Webhook URI",
+        "createdDate": 1694542169615,
+        "preferredControlType": "textField",
+        "info": "Use this url as the Webhook URL in the Third Party Integration's configuration"
       },
       "title": {
         "type": "string",
