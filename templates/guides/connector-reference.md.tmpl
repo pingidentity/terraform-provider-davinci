@@ -11,6 +11,17 @@ Below is a list of all available DaVinci Connections available for use in `davin
 If the `value` type of a property is not defined it must be inferred.
 
 
+## 
+
+Connector ID (`connector_id` in the resource): `pingoneRecognizeConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingoneRecognizeConnector.tf") }}
+
+
 ## 1Kosmos connector
 
 Connector ID (`connector_id` in the resource): `connector1Kosmos`
@@ -310,6 +321,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/authenticIdConnector.tf") }}
+
+
+## Authentication
+
+Connector ID (`connector_id` in the resource): `authenticationUseCaseConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/authenticationUseCaseConnector.tf") }}
 
 
 ## Authomize API
@@ -772,6 +794,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorDeBounce.tf") }}
+
+
+## Deduce
+
+Connector ID (`connector_id` in the resource): `connectorDeduce`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string): The key used to access Deduce Insights. Console display name: "API Key".
+* `siteId` (string): The site identifier Deduce Insights will use to query data. Console display name: "Site ID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorDeduce.tf") }}
 
 
 ## Device Policy
@@ -1722,6 +1758,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/locationPolicyConnector.tf") }}
 
 
+## MFA
+
+Connector ID (`connector_id` in the resource): `mfaUseCaseConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/mfaUseCaseConnector.tf") }}
+
+
 ## Mailchimp
 
 Connector ID (`connector_id` in the resource): `connectorMailchimp`
@@ -2291,6 +2338,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/privateidConnector.tf") }}
 
 
+## Protect
+
+Connector ID (`connector_id` in the resource): `pingOneSnodeRiskConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingOneSnodeRiskConnector.tf") }}
+
+
 ## Prove
 
 Connector ID (`connector_id` in the resource): `payfoneConnector`
@@ -2358,6 +2416,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/inveridConnector.tf") }}
+
+
+## SAML
+
+Connector ID (`connector_id` in the resource): `samlConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/samlConnector.tf") }}
 
 
 ## SAML IdP
@@ -2582,6 +2651,20 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/sentilinkConnector.tf") }}
 
 
+## SentinelOne
+
+Connector ID (`connector_id` in the resource): `sentineloneConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): The SentinelOne API token. Paste only the raw token value. Console display name: "API Token".
+* `baseUrl` (string): The root URL of your SentinelOne Management Console (e.g., https://usea1-partners.sentinelone.net). Console display name: "Base URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/sentineloneConnector.tf") }}
+
+
 ## ServiceNow
 
 Connector ID (`connector_id` in the resource): `servicenowConnector`
@@ -2726,6 +2809,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/socureConnector.tf") }}
+
+
+## Socure RiskOS
+
+Connector ID (`connector_id` in the resource): `socureriskosConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Your Socure RiskOS API key. The connector sends it as a Bearer token in the Authorization header. Console display name: "API Key".
+* `baseUrl` (string): The RiskOS API base URL (e.g. https://riskos.socure.com or https://riskos.sandbox.socure.com). Do not include a trailing slash. Console display name: "Base URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/socureriskosConnector.tf") }}
 
 
 ## Splunk
@@ -2906,6 +3003,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `providerName` (string):  Console display name: "Provider Name".
 * `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
 * `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `skWebhookUri` (string): Use this url as the Webhook URL in the Third Party Integration's configuration. Console display name: "Redirect Webhook URI".
 * `title` (string):  Console display name: "Title".
 * `toolTip` (string):  Console display name: "Tooltip".
 * `username` (string):  Console display name: "Username".
