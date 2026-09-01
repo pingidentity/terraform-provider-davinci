@@ -11,6 +11,24 @@ Below is a list of all available DaVinci Connections available for use in `davin
 If the `value` type of a property is not defined it must be inferred.
 
 
+## 
+
+Connector ID (`connector_id` in the resource): `pingoneRecognizeConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "pingoneRecognizeConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "pingoneRecognizeConnector"
+  name         = "My awesome pingoneRecognizeConnector"
+}
+```
+
+
 ## 1Kosmos connector
 
 Connector ID (`connector_id` in the resource): `connector1Kosmos`
@@ -896,6 +914,24 @@ resource "davinci_connection" "authenticIdConnector" {
     type  = "string"
     value = var.authenticidconnector_property_secret_token
   }
+}
+```
+
+
+## Authentication
+
+Connector ID (`connector_id` in the resource): `authenticationUseCaseConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "authenticationUseCaseConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "authenticationUseCaseConnector"
+  name         = "My awesome authenticationUseCaseConnector"
 }
 ```
 
@@ -2055,6 +2091,39 @@ resource "davinci_connection" "connectorDeBounce" {
     name  = "apiKey"
     type  = "string"
     value = var.connectordebounce_property_api_key
+  }
+}
+```
+
+
+## Deduce
+
+Connector ID (`connector_id` in the resource): `connectorDeduce`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string): The key used to access Deduce Insights. Console display name: "API Key".
+* `siteId` (string): The site identifier Deduce Insights will use to query data. Console display name: "Site ID".
+
+
+Example:
+```terraform
+resource "davinci_connection" "connectorDeduce" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "connectorDeduce"
+  name         = "My awesome connectorDeduce"
+
+  property {
+    name  = "apikey"
+    type  = "string"
+    value = var.connectordeduce_property_apikey
+  }
+
+  property {
+    name  = "siteId"
+    type  = "string"
+    value = var.connectordeduce_property_site_id
   }
 }
 ```
@@ -3949,329 +4018,6 @@ resource "davinci_connection" "connectorJiraServiceDesk" {
 ```
 
 
-## Jumio
-
-Connector ID (`connector_id` in the resource): `jumioConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string):  Console display name: "API Key".
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `authUrl` (string):  Console display name: "Base URL for Authentication".
-* `authorizationTokenLifetime` (number): default: 1800 (30 minutes). maximum: 5184000 (60 days). Console display name: "Time Transaction URL Valid (seconds)".
-* `baseColor` (string): Must be passed with bgColor. Console display name: "HEX Main Color".
-* `bgColor` (string): Must be passed with baseColor. Console display name: "HEX Background Color.".
-* `callbackUrl` (string):  Console display name: "Callback URL".
-* `clientSecret` (string):  Console display name: "API Secret".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `doNotShowInIframe` (boolean): If this is true, user will be redirected to the verification url and then redirected back when complete. Console display name: "Do not show in iFrame".
-* `docVerificationUrl` (string):  Console display name: "Document Verification Url".
-* `headerImageUrl` (string): Logo must be: landscape (16:9 or 4:3), min. height of 192 pixels, size 8-64 KB. Console display name: "Custom Header Logo URL".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `locale` (string): Renders content in the specified language. Console display name: "Locale".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-```terraform
-resource "davinci_connection" "jumioConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "jumioConnector"
-  name         = "My awesome jumioConnector"
-
-  property {
-    name  = "apiKey"
-    type  = "string"
-    value = var.jumioconnector_property_api_key
-  }
-
-  property {
-    name  = "authDescription"
-    type  = "string"
-    value = var.jumioconnector_property_auth_description
-  }
-
-  property {
-    name  = "authUrl"
-    type  = "string"
-    value = var.jumioconnector_property_auth_url
-  }
-
-  property {
-    name  = "authorizationTokenLifetime"
-    type  = "number"
-    value = var.jumioconnector_property_authorization_token_lifetime
-  }
-
-  property {
-    name  = "baseColor"
-    type  = "string"
-    value = var.jumioconnector_property_base_color
-  }
-
-  property {
-    name  = "bgColor"
-    type  = "string"
-    value = var.jumioconnector_property_bg_color
-  }
-
-  property {
-    name  = "callbackUrl"
-    type  = "string"
-    value = var.jumioconnector_property_callback_url
-  }
-
-  property {
-    name  = "clientSecret"
-    type  = "string"
-    value = var.jumioconnector_property_client_secret
-  }
-
-  property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.jumioconnector_property_connector_name
-  }
-
-  property {
-    name  = "description"
-    type  = "string"
-    value = var.jumioconnector_property_description
-  }
-
-  property {
-    name  = "details1"
-    type  = "string"
-    value = var.jumioconnector_property_details1
-  }
-
-  property {
-    name  = "details2"
-    type  = "string"
-    value = var.jumioconnector_property_details2
-  }
-
-  property {
-    name  = "doNotShowInIframe"
-    type  = "boolean"
-    value = var.jumioconnector_property_do_not_show_in_iframe
-  }
-
-  property {
-    name  = "docVerificationUrl"
-    type  = "string"
-    value = var.jumioconnector_property_doc_verification_url
-  }
-
-  property {
-    name  = "headerImageUrl"
-    type  = "string"
-    value = var.jumioconnector_property_header_image_url
-  }
-
-  property {
-    name  = "iconUrl"
-    type  = "string"
-    value = var.jumioconnector_property_icon_url
-  }
-
-  property {
-    name  = "iconUrlPng"
-    type  = "string"
-    value = var.jumioconnector_property_icon_url_png
-  }
-
-  property {
-    name  = "locale"
-    type  = "string"
-    value = var.jumioconnector_property_locale
-  }
-
-  property {
-    name  = "showCredAddedOn"
-    type  = "boolean"
-    value = var.jumioconnector_property_show_cred_added_on
-  }
-
-  property {
-    name  = "showCredAddedVia"
-    type  = "boolean"
-    value = var.jumioconnector_property_show_cred_added_via
-  }
-
-  property {
-    name  = "title"
-    type  = "string"
-    value = var.jumioconnector_property_title
-  }
-
-  property {
-    name  = "toolTip"
-    type  = "string"
-    value = var.jumioconnector_property_tool_tip
-  }
-}
-```
-
-
-## KBA
-
-Connector ID (`connector_id` in the resource): `kbaConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `formFieldsList` (json):  Console display name: "Fields List".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-```terraform
-resource "davinci_connection" "kbaConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "kbaConnector"
-  name         = "My awesome kbaConnector"
-
-  property {
-    name  = "authDescription"
-    type  = "string"
-    value = var.kbaconnector_property_auth_description
-  }
-
-  property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.kbaconnector_property_connector_name
-  }
-
-  property {
-    name  = "description"
-    type  = "string"
-    value = var.kbaconnector_property_description
-  }
-
-  property {
-    name  = "details1"
-    type  = "string"
-    value = var.kbaconnector_property_details1
-  }
-
-  property {
-    name  = "details2"
-    type  = "string"
-    value = var.kbaconnector_property_details2
-  }
-
-  property {
-    name  = "formFieldsList"
-    type  = "json"
-    value = var.kbaconnector_property_form_fields_list
-  }
-
-  property {
-    name  = "iconUrl"
-    type  = "string"
-    value = var.kbaconnector_property_icon_url
-  }
-
-  property {
-    name  = "iconUrlPng"
-    type  = "string"
-    value = var.kbaconnector_property_icon_url_png
-  }
-
-  property {
-    name  = "showCredAddedOn"
-    type  = "boolean"
-    value = var.kbaconnector_property_show_cred_added_on
-  }
-
-  property {
-    name  = "showCredAddedVia"
-    type  = "boolean"
-    value = var.kbaconnector_property_show_cred_added_via
-  }
-
-  property {
-    name  = "title"
-    type  = "string"
-    value = var.kbaconnector_property_title
-  }
-
-  property {
-    name  = "toolTip"
-    type  = "string"
-    value = var.kbaconnector_property_tool_tip
-  }
-}
-```
-
-
-## KF Kerberos Connector
-
-Connector ID (`connector_id` in the resource): `kfKerberosConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
-* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
-* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
-* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
-
-
-Example:
-```terraform
-resource "davinci_connection" "kfKerberosConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "kfKerberosConnector"
-  name         = "My awesome kfKerberosConnector"
-
-  property {
-    name  = "clientId"
-    type  = "string"
-    value = var.kfkerberosconnector_property_client_id
-  }
-
-  property {
-    name  = "clientSecret"
-    type  = "string"
-    value = var.kfkerberosconnector_property_client_secret
-  }
-
-  property {
-    name  = "envId"
-    type  = "string"
-    value = var.kfkerberosconnector_property_env_id
-  }
-
-  property {
-    name  = "region"
-    type  = "string"
-    value = var.kfkerberosconnector_property_region
-  }
-}
-```
-
-
 ## KYXStart
 
 Connector ID (`connector_id` in the resource): `kyxstartConnector`
@@ -4307,116 +4053,6 @@ resource "davinci_connection" "kyxstartConnector" {
     name  = "tenantName"
     type  = "string"
     value = var.kyxstartconnector_property_tenant_name
-  }
-}
-```
-
-
-## Kaizen Secure Voiz
-
-Connector ID (`connector_id` in the resource): `kaizenVoizConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiUrl` (string): example: http://<server_root>/ksvvoiceservice/rest/service. Console display name: "API Server URL".
-* `applicationName` (string):  Console display name: "Application Name".
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-```terraform
-resource "davinci_connection" "kaizenVoizConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "kaizenVoizConnector"
-  name         = "My awesome kaizenVoizConnector"
-
-  property {
-    name  = "apiUrl"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_api_url
-  }
-
-  property {
-    name  = "applicationName"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_application_name
-  }
-
-  property {
-    name  = "authDescription"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_auth_description
-  }
-
-  property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_connector_name
-  }
-
-  property {
-    name  = "description"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_description
-  }
-
-  property {
-    name  = "details1"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_details1
-  }
-
-  property {
-    name  = "details2"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_details2
-  }
-
-  property {
-    name  = "iconUrl"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_icon_url
-  }
-
-  property {
-    name  = "iconUrlPng"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_icon_url_png
-  }
-
-  property {
-    name  = "showCredAddedOn"
-    type  = "boolean"
-    value = var.kaizenvoizconnector_property_show_cred_added_on
-  }
-
-  property {
-    name  = "showCredAddedVia"
-    type  = "boolean"
-    value = var.kaizenvoizconnector_property_show_cred_added_via
-  }
-
-  property {
-    name  = "title"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_title
-  }
-
-  property {
-    name  = "toolTip"
-    type  = "string"
-    value = var.kaizenvoizconnector_property_tool_tip
   }
 }
 ```
@@ -4640,6 +4276,24 @@ resource "davinci_connection" "locationPolicyConnector" {
 
   connector_id = "locationPolicyConnector"
   name         = "My awesome locationPolicyConnector"
+}
+```
+
+
+## MFA
+
+Connector ID (`connector_id` in the resource): `mfaUseCaseConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "mfaUseCaseConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "mfaUseCaseConnector"
+  name         = "My awesome mfaUseCaseConnector"
 }
 ```
 
@@ -5098,144 +4752,6 @@ resource "davinci_connection" "nudataConnector" {
 
   connector_id = "nudataConnector"
   name         = "My awesome nudataConnector"
-}
-```
-
-
-## Nuance
-
-Connector ID (`connector_id` in the resource): `nuanceConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `configSetName` (string): The Config Set Name for accessing Nuance API. Console display name: "Config Set Name".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `passphrase1` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase One".
-* `passphrase2` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Two".
-* `passphrase3` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Three".
-* `passphrase4` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Four".
-* `passphrase5` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Five".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-```terraform
-resource "davinci_connection" "nuanceConnector" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "nuanceConnector"
-  name         = "My awesome nuanceConnector"
-
-  property {
-    name  = "authDescription"
-    type  = "string"
-    value = var.nuanceconnector_property_auth_description
-  }
-
-  property {
-    name  = "configSetName"
-    type  = "string"
-    value = var.nuanceconnector_property_config_set_name
-  }
-
-  property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.nuanceconnector_property_connector_name
-  }
-
-  property {
-    name  = "description"
-    type  = "string"
-    value = var.nuanceconnector_property_description
-  }
-
-  property {
-    name  = "details1"
-    type  = "string"
-    value = var.nuanceconnector_property_details1
-  }
-
-  property {
-    name  = "details2"
-    type  = "string"
-    value = var.nuanceconnector_property_details2
-  }
-
-  property {
-    name  = "iconUrl"
-    type  = "string"
-    value = var.nuanceconnector_property_icon_url
-  }
-
-  property {
-    name  = "iconUrlPng"
-    type  = "string"
-    value = var.nuanceconnector_property_icon_url_png
-  }
-
-  property {
-    name  = "passphrase1"
-    type  = "string"
-    value = var.nuanceconnector_property_passphrase1
-  }
-
-  property {
-    name  = "passphrase2"
-    type  = "string"
-    value = var.nuanceconnector_property_passphrase2
-  }
-
-  property {
-    name  = "passphrase3"
-    type  = "string"
-    value = var.nuanceconnector_property_passphrase3
-  }
-
-  property {
-    name  = "passphrase4"
-    type  = "string"
-    value = var.nuanceconnector_property_passphrase4
-  }
-
-  property {
-    name  = "passphrase5"
-    type  = "string"
-    value = var.nuanceconnector_property_passphrase5
-  }
-
-  property {
-    name  = "showCredAddedOn"
-    type  = "boolean"
-    value = var.nuanceconnector_property_show_cred_added_on
-  }
-
-  property {
-    name  = "showCredAddedVia"
-    type  = "boolean"
-    value = var.nuanceconnector_property_show_cred_added_via
-  }
-
-  property {
-    name  = "title"
-    type  = "string"
-    value = var.nuanceconnector_property_title
-  }
-
-  property {
-    name  = "toolTip"
-    type  = "string"
-    value = var.nuanceconnector_property_tool_tip
-  }
 }
 ```
 
@@ -6376,6 +5892,24 @@ resource "davinci_connection" "privateidConnector" {
 ```
 
 
+## Protect
+
+Connector ID (`connector_id` in the resource): `pingOneSnodeRiskConnector`
+
+*No properties*
+
+
+Example:
+```terraform
+resource "davinci_connection" "pingOneSnodeRiskConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "pingOneSnodeRiskConnector"
+  name         = "My awesome pingOneSnodeRiskConnector"
+}
+```
+
+
 ## Prove
 
 Connector ID (`connector_id` in the resource): `payfoneConnector`
@@ -7184,6 +6718,39 @@ resource "davinci_connection" "sentilinkConnector" {
 ```
 
 
+## SentinelOne
+
+Connector ID (`connector_id` in the resource): `sentineloneConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): The SentinelOne API token. Paste only the raw token value. Console display name: "API Token".
+* `baseUrl` (string): The root URL of your SentinelOne Management Console (e.g., https://usea1-partners.sentinelone.net). Console display name: "Base URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "sentineloneConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "sentineloneConnector"
+  name         = "My awesome sentineloneConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.sentineloneconnector_property_api_key
+  }
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.sentineloneconnector_property_base_url
+  }
+}
+```
+
+
 ## ServiceNow
 
 Connector ID (`connector_id` in the resource): `servicenowConnector`
@@ -7556,6 +7123,39 @@ resource "davinci_connection" "socureConnector" {
 ```
 
 
+## Socure RiskOS
+
+Connector ID (`connector_id` in the resource): `socureriskosConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Your Socure RiskOS API key. The connector sends it as a Bearer token in the Authorization header. Console display name: "API Key".
+* `baseUrl` (string): The RiskOS API base URL (e.g. https://riskos.socure.com or https://riskos.sandbox.socure.com). Do not include a trailing slash. Console display name: "Base URL".
+
+
+Example:
+```terraform
+resource "davinci_connection" "socureriskosConnector" {
+  environment_id = var.pingone_environment_id
+
+  connector_id = "socureriskosConnector"
+  name         = "My awesome socureriskosConnector"
+
+  property {
+    name  = "apiKey"
+    type  = "string"
+    value = var.socureriskosconnector_property_api_key
+  }
+
+  property {
+    name  = "baseUrl"
+    type  = "string"
+    value = var.socureriskosconnector_property_base_url
+  }
+}
+```
+
+
 ## Splunk
 
 Connector ID (`connector_id` in the resource): `splunkConnector`
@@ -7662,123 +7262,6 @@ resource "davinci_connection" "stringsConnector" {
 
   connector_id = "stringsConnector"
   name         = "My awesome stringsConnector"
-}
-```
-
-
-## Symantec VIP
-
-Connector ID (`connector_id` in the resource): `symc`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `pfxBase64` (string):  Console display name: "PFX File (Base64 encoded)".
-* `pfxPassword` (string):  Console display name: "PFX Password".
-* `pushLoginEnabled` (boolean):  Console display name: "Enable Push Sign On".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-```terraform
-resource "davinci_connection" "symc" {
-  environment_id = var.pingone_environment_id
-
-  connector_id = "symc"
-  name         = "My awesome symc"
-
-  property {
-    name  = "authDescription"
-    type  = "string"
-    value = var.symc_property_auth_description
-  }
-
-  property {
-    name  = "connectorName"
-    type  = "string"
-    value = var.symc_property_connector_name
-  }
-
-  property {
-    name  = "description"
-    type  = "string"
-    value = var.symc_property_description
-  }
-
-  property {
-    name  = "details1"
-    type  = "string"
-    value = var.symc_property_details1
-  }
-
-  property {
-    name  = "details2"
-    type  = "string"
-    value = var.symc_property_details2
-  }
-
-  property {
-    name  = "iconUrl"
-    type  = "string"
-    value = var.symc_property_icon_url
-  }
-
-  property {
-    name  = "iconUrlPng"
-    type  = "string"
-    value = var.symc_property_icon_url_png
-  }
-
-  property {
-    name  = "pfxBase64"
-    type  = "string"
-    value = var.symc_property_pfx_base64
-  }
-
-  property {
-    name  = "pfxPassword"
-    type  = "string"
-    value = var.symc_property_pfx_password
-  }
-
-  property {
-    name  = "pushLoginEnabled"
-    type  = "boolean"
-    value = var.symc_property_push_login_enabled
-  }
-
-  property {
-    name  = "showCredAddedOn"
-    type  = "boolean"
-    value = var.symc_property_show_cred_added_on
-  }
-
-  property {
-    name  = "showCredAddedVia"
-    type  = "boolean"
-    value = var.symc_property_show_cred_added_via
-  }
-
-  property {
-    name  = "title"
-    type  = "string"
-    value = var.symc_property_title
-  }
-
-  property {
-    name  = "toolTip"
-    type  = "string"
-    value = var.symc_property_tool_tip
-  }
 }
 ```
 
@@ -8062,6 +7545,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `providerName` (string):  Console display name: "Provider Name".
 * `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
 * `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `skWebhookUri` (string): Use this url as the Webhook URL in the Third Party Integration's configuration. Console display name: "Redirect Webhook URI".
 * `title` (string):  Console display name: "Title".
 * `toolTip` (string):  Console display name: "Tooltip".
 * `username` (string):  Console display name: "Username".
@@ -8139,6 +7623,12 @@ resource "davinci_connection" "telesignConnector" {
     name  = "showCredAddedVia"
     type  = "boolean"
     value = var.telesignconnector_property_show_cred_added_via
+  }
+
+  property {
+    name  = "skWebhookUri"
+    type  = "string"
+    value = var.telesignconnector_property_sk_webhook_uri
   }
 
   property {

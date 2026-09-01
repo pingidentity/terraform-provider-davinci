@@ -11,6 +11,17 @@ Below is a list of all available DaVinci Connections available for use in `davin
 If the `value` type of a property is not defined it must be inferred.
 
 
+## 
+
+Connector ID (`connector_id` in the resource): `pingoneRecognizeConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingoneRecognizeConnector.tf") }}
+
+
 ## 1Kosmos connector
 
 Connector ID (`connector_id` in the resource): `connector1Kosmos`
@@ -310,6 +321,17 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/authenticIdConnector.tf") }}
+
+
+## Authentication
+
+Connector ID (`connector_id` in the resource): `authenticationUseCaseConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/authenticationUseCaseConnector.tf") }}
 
 
 ## Authomize API
@@ -772,6 +794,20 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/connectorDeBounce.tf") }}
+
+
+## Deduce
+
+Connector ID (`connector_id` in the resource): `connectorDeduce`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apikey` (string): The key used to access Deduce Insights. Console display name: "API Key".
+* `siteId` (string): The site identifier Deduce Insights will use to query data. Console display name: "Site ID".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/connectorDeduce.tf") }}
 
 
 ## Device Policy
@@ -1513,80 +1549,6 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/connectorJiraServiceDesk.tf") }}
 
 
-## Jumio
-
-Connector ID (`connector_id` in the resource): `jumioConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiKey` (string):  Console display name: "API Key".
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `authUrl` (string):  Console display name: "Base URL for Authentication".
-* `authorizationTokenLifetime` (number): default: 1800 (30 minutes). maximum: 5184000 (60 days). Console display name: "Time Transaction URL Valid (seconds)".
-* `baseColor` (string): Must be passed with bgColor. Console display name: "HEX Main Color".
-* `bgColor` (string): Must be passed with baseColor. Console display name: "HEX Background Color.".
-* `callbackUrl` (string):  Console display name: "Callback URL".
-* `clientSecret` (string):  Console display name: "API Secret".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `doNotShowInIframe` (boolean): If this is true, user will be redirected to the verification url and then redirected back when complete. Console display name: "Do not show in iFrame".
-* `docVerificationUrl` (string):  Console display name: "Document Verification Url".
-* `headerImageUrl` (string): Logo must be: landscape (16:9 or 4:3), min. height of 192 pixels, size 8-64 KB. Console display name: "Custom Header Logo URL".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `locale` (string): Renders content in the specified language. Console display name: "Locale".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/jumioConnector.tf") }}
-
-
-## KBA
-
-Connector ID (`connector_id` in the resource): `kbaConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `formFieldsList` (json):  Console display name: "Fields List".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/kbaConnector.tf") }}
-
-
-## KF Kerberos Connector
-
-Connector ID (`connector_id` in the resource): `kfKerberosConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `clientId` (string): The Client ID of your PingOne Worker application. Console display name: "Client ID".
-* `clientSecret` (string): The Client Secret of your PingOne Worker application. Console display name: "Client Secret".
-* `envId` (string): Your PingOne environment ID. Console display name: "Environment ID".
-* `region` (string): The region in which your PingOne environment exists. Console display name: "Region".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/kfKerberosConnector.tf") }}
-
-
 ## KYXStart
 
 Connector ID (`connector_id` in the resource): `kyxstartConnector`
@@ -1600,31 +1562,6 @@ Properties (used in the `property` block in the resource as the `name` parameter
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/kyxstartConnector.tf") }}
-
-
-## Kaizen Secure Voiz
-
-Connector ID (`connector_id` in the resource): `kaizenVoizConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `apiUrl` (string): example: http://<server_root>/ksvvoiceservice/rest/service. Console display name: "API Server URL".
-* `applicationName` (string):  Console display name: "Application Name".
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/kaizenVoizConnector.tf") }}
 
 
 ## Keyless
@@ -1720,6 +1657,17 @@ Connector ID (`connector_id` in the resource): `locationPolicyConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/locationPolicyConnector.tf") }}
+
+
+## MFA
+
+Connector ID (`connector_id` in the resource): `mfaUseCaseConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/mfaUseCaseConnector.tf") }}
 
 
 ## Mailchimp
@@ -1896,35 +1844,6 @@ Connector ID (`connector_id` in the resource): `nudataConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/nudataConnector.tf") }}
-
-
-## Nuance
-
-Connector ID (`connector_id` in the resource): `nuanceConnector`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `configSetName` (string): The Config Set Name for accessing Nuance API. Console display name: "Config Set Name".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `passphrase1` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase One".
-* `passphrase2` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Two".
-* `passphrase3` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Three".
-* `passphrase4` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Four".
-* `passphrase5` (string): Passphrase that the user will need to speak for voice sample. Console display name: "Passphrase Five".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/nuanceConnector.tf") }}
 
 
 ## OIDC & OAuth IdP
@@ -2291,6 +2210,17 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/privateidConnector.tf") }}
 
 
+## Protect
+
+Connector ID (`connector_id` in the resource): `pingOneSnodeRiskConnector`
+
+*No properties*
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/pingOneSnodeRiskConnector.tf") }}
+
+
 ## Prove
 
 Connector ID (`connector_id` in the resource): `payfoneConnector`
@@ -2582,6 +2512,20 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/sentilinkConnector.tf") }}
 
 
+## SentinelOne
+
+Connector ID (`connector_id` in the resource): `sentineloneConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): The SentinelOne API token. Paste only the raw token value. Console display name: "API Token".
+* `baseUrl` (string): The root URL of your SentinelOne Management Console (e.g., https://usea1-partners.sentinelone.net). Console display name: "Base URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/sentineloneConnector.tf") }}
+
+
 ## ServiceNow
 
 Connector ID (`connector_id` in the resource): `servicenowConnector`
@@ -2728,6 +2672,20 @@ Example:
 {{ tffile (printf "%s" "examples/connectors/socureConnector.tf") }}
 
 
+## Socure RiskOS
+
+Connector ID (`connector_id` in the resource): `socureriskosConnector`
+
+Properties (used in the `property` block in the resource as the `name` parameter):
+
+* `apiKey` (string): Your Socure RiskOS API key. The connector sends it as a Bearer token in the Authorization header. Console display name: "API Key".
+* `baseUrl` (string): The RiskOS API base URL (e.g. https://riskos.socure.com or https://riskos.sandbox.socure.com). Do not include a trailing slash. Console display name: "Base URL".
+
+
+Example:
+{{ tffile (printf "%s" "examples/connectors/socureriskosConnector.tf") }}
+
+
 ## Splunk
 
 Connector ID (`connector_id` in the resource): `splunkConnector`
@@ -2778,32 +2736,6 @@ Connector ID (`connector_id` in the resource): `stringsConnector`
 
 Example:
 {{ tffile (printf "%s" "examples/connectors/stringsConnector.tf") }}
-
-
-## Symantec VIP
-
-Connector ID (`connector_id` in the resource): `symc`
-
-Properties (used in the `property` block in the resource as the `name` parameter):
-
-* `authDescription` (string):  Console display name: "Authentication Description".
-* `connectorName` (string):  Console display name: "Connector Name".
-* `description` (string):  Console display name: "Description".
-* `details1` (string):  Console display name: "Credentials Details 1".
-* `details2` (string):  Console display name: "Credentials Details 2".
-* `iconUrl` (string):  Console display name: "Icon URL".
-* `iconUrlPng` (string):  Console display name: "Icon URL in PNG".
-* `pfxBase64` (string):  Console display name: "PFX File (Base64 encoded)".
-* `pfxPassword` (string):  Console display name: "PFX Password".
-* `pushLoginEnabled` (boolean):  Console display name: "Enable Push Sign On".
-* `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
-* `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
-* `title` (string):  Console display name: "Title".
-* `toolTip` (string):  Console display name: "Tooltip".
-
-
-Example:
-{{ tffile (printf "%s" "examples/connectors/symc.tf") }}
 
 
 ## TMT Analysis
@@ -2906,6 +2838,7 @@ Properties (used in the `property` block in the resource as the `name` parameter
 * `providerName` (string):  Console display name: "Provider Name".
 * `showCredAddedOn` (boolean):  Console display name: "Show Credentials Added On?".
 * `showCredAddedVia` (boolean):  Console display name: "Show Credentials Added through ?".
+* `skWebhookUri` (string): Use this url as the Webhook URL in the Third Party Integration's configuration. Console display name: "Redirect Webhook URI".
 * `title` (string):  Console display name: "Title".
 * `toolTip` (string):  Console display name: "Tooltip".
 * `username` (string):  Console display name: "Username".
