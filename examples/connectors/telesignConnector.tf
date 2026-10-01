@@ -71,6 +71,12 @@ resource "davinci_connection" "telesignConnector" {
   }
 
   property {
+    name  = "skWebhookUri"
+    type  = "string"
+    value = var.telesignconnector_property_sk_webhook_uri
+  }
+
+  property {
     name  = "title"
     type  = "string"
     value = var.telesignconnector_property_title
