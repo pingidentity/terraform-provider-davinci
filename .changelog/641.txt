@@ -1,0 +1,7 @@
+```release-note:enhancement
+`resource/davinci_flow`: Supports the `useCustomTimeoutErrorScreen`, `customTimeoutErrorScreenMessage`, `customTimeoutErrorScreenHTML`, and `customTimeoutErrorScreenCSS` flow settings attributes in `flow_json`, matching the `pingone_davinci_flow` resource in the PingOne Terraform provider. The unknown properties warning is no longer emitted for these settings.
+```
+
+```release-note:note
+bump `github.com/samir-gandhi/davinci-client-go` 0.13.0 => 0.14.0
+```

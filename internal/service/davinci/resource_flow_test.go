@@ -569,6 +569,43 @@ func TestAccResourceFlow_ComputeDifferences_ModifySettings(t *testing.T) {
 	})
 }
 
+func TestAccResourceFlow_ComputeDifferences_TimeoutErrorScreen(t *testing.T) {
+
+	// Baseline
+	mainFlowJson, err := acctest.ReadFlowJsonFile("flows/full-minimal.json")
+	if err != nil {
+		t.Fatalf("Failed to get HCL: %v", err)
+	}
+
+	var flow dv.Flow
+	if err := json.Unmarshal([]byte(mainFlowJson), &flow); err != nil {
+		t.Fatalf("Failed to unmarshal flow: %v", err)
+	}
+
+	testAccResourceFlow_ComputeDifferences(t, computeDifferencesTest{
+		BaselineFlow: flow,
+		ModifiedFlow: func() dv.Flow {
+			useCustomTimeoutErrorScreen := true
+			newFlow := flow
+			newFlow.Settings = &dv.FlowSettings{
+				CustomTimeoutErrorScreenMessage: &dv.FlowSettingsStringValue{
+					ValueString: utils.StringPtr("The session timed out. Please try again."),
+				},
+				CustomTimeoutErrorScreenHTML: &dv.FlowSettingsStringValue{
+					ValueString: utils.StringPtr("<div class=\"timeout-error\">The flow has timed out</div>"),
+				},
+				CustomTimeoutErrorScreenCSS: &dv.FlowSettingsStringValue{
+					ValueString: utils.StringPtr("body { background-color: #f0f0f0; }"),
+				},
+				UseCustomTimeoutErrorScreen: &useCustomTimeoutErrorScreen,
+			}
+
+			return newFlow
+		}(),
+		ExpectNonEmptyPlan: true,
+	})
+}
+
 func TestAccResourceFlow_ComputeDifferences_P1Flow(t *testing.T) {
 
 	// Baseline
